@@ -6,7 +6,7 @@ const BackgroundOverlay = () => (
         <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-                backgroundImage: "url('path/to/your/image.jpg')"
+                backgroundImage: `url('/smartdesk_bg.png')`,
             }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-[#4A5578]/95 to-[#4A5578]/90 backdrop-blur-[2px]" />

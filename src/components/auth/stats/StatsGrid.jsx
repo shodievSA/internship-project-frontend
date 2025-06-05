@@ -7,8 +7,9 @@ const statsData = [
     { value: '24/7', label: 'Support' }
 ];
 
+
 const StatsGrid = () => (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 w-full max-w-md md:max-w-2xl px-4">
+    <div className="grid grid-cols-2 gap-6 w-full max-w-2xl px-4">
         {statsData.map((stat, index) => (
             <StatCard key={index} {...stat} />
         ))}

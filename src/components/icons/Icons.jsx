@@ -1,18 +1,52 @@
-export const ProjectLogo = ({ className = "w-12 h-12" }) => (
+export const ProjectLogo = ({ className = "w-6 h-6" }) => (
     <svg
         className={className}
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
-        <path
-            d="M11.9999 2L2.47363 11.2646C2.1753 11.5519 2.1753 12.0281 2.47363 12.3154L11.9999 21.58L21.5262 12.3154C21.8245 12.0281 21.8245 11.5519 21.5262 11.2646L11.9999 2Z"
-            fill="currentColor"
+        {/* Gradient definitions */}
+        <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{ stopColor: '#60A5FA', stopOpacity: 1 }} />
+                <stop offset="100%" style={{ stopColor: '#3B82F6', stopOpacity: 1 }} />
+            </linearGradient>
+        </defs>
+
+        {/* Main square with rounded corners */}
+        <rect
+            x="2"
+            y="2"
+            width="20"
+            height="20"
+            rx="6"
+            fill="url(#logoGradient)"
+            className="opacity-20"
         />
+
+        {/* Task board lines */}
         <path
-            d="M8.57233 11.7899C8.27399 11.5026 8.27399 11.0264 8.57233 10.7391L11.9999 7.42L15.4275 10.7391C15.7258 11.0264 15.7258 11.5026 15.4275 11.7899L11.9999 15.109L8.57233 11.7899Z"
-            fill="#0052CC"
+            d="M7 8H17M7 12H13M7 16H15"
+            stroke="url(#logoGradient)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            className="opacity-90"
         />
+
+        {/* Check mark overlay */}
+        <path
+            d="M16 15L18 17L21 14"
+            stroke="url(#logoGradient)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="opacity-90"
+        />
+
+        {/* Connection dots */}
+        <circle cx="4" cy="8" r="1" fill="url(#logoGradient)" className="opacity-90" />
+        <circle cx="4" cy="12" r="1" fill="url(#logoGradient)" className="opacity-90" />
+        <circle cx="4" cy="16" r="1" fill="url(#logoGradient)" className="opacity-90" />
     </svg>
 );
 
