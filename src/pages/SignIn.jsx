@@ -1,12 +1,12 @@
-import BrandSection from '../components/auth/BrandSection';
-import SignInForm from '../components/auth/SignInForm';
+import GoogleSignIn from '../components/auth/GoogleSignIn';
 
 const SignIn = () => {
     return (
-        <div className="flex flex-col md:flex-row min-h-screen">
-            <BrandSection />
-            <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
-                <SignInForm />
+        <div className="min-h-screen bg-gray-50">
+            <div className="flex flex-col lg:flex-row min-h-screen lg:gap-8">
+                <div className="flex-1">
+                    <GoogleSignIn />
+                </div>
             </div>
         </div>
     );
