@@ -6,8 +6,9 @@ function AuthSpinner() {
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-8">
                 {/* Logo Section */}
                 <div className="flex justify-center">
-                    <div className="h-12 w-12 bg-indigo-600 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl font-bold text-white">SD</span>
+
+                    <div className="h-16 w-40 bg-indigo-600 rounded-xl flex items-center justify-center ">
+                        <span className="text-2xl font-bold text-white">SmartDesk</span>
                     </div>
                 </div>
 
