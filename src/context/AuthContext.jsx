@@ -4,7 +4,7 @@ const AuthContext = createContext();
 
 function AuthContextProvider({ children }) {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState("Abbos");
     const [isUserFetched, setIsUserFetched] = useState(false);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ function AuthContextProvider({ children }) {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, isUserFetched }} >
+        <AuthContext.Provider value={{ user, setUser, isUserFetched }}>
             { children }
         </AuthContext.Provider>
     )
