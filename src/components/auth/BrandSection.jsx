@@ -4,7 +4,7 @@ const BrandSection = () => {
     return (
         <div className="w-full lg:w-[70%] p-6 md:p-12 lg:p-16 xl:p-20  lg:flex lg:flex-col">
             <div className="max-w-4xl">
-                {/* Header */}
+                {/*#1 Header */}
                 <div className="mb-12 lg:mb-16">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-4 lg:mb-6">
                         SmartDesk
@@ -14,7 +14,7 @@ const BrandSection = () => {
                     </p>
                 </div>
 
-                {/* Statistics */}
+                {/*#2 Statistics */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12 lg:mb-16">
                     <div className="bg-white rounded-lg p-4 lg:p-6">
                         <div className="text-2xl lg:text-3xl font-bold text-blue-600 mb-1">10K+</div>
@@ -34,7 +34,7 @@ const BrandSection = () => {
                     </div>
                 </div>
 
-                {/* Features Section */}
+                {/*#3 Features Section */}
                 <div>
                     <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 lg:mb-8">Why teams choose SmartDesk</h2>
                     <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
