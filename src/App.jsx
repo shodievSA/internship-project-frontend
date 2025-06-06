@@ -10,8 +10,8 @@ import TaskComments from "./pages/TaskComments";
 import Notifications from "./pages/Notifications";
 import NotificationsOutlet from "./layouts/NotificationsOutlet";
 import NotificationDetails from "./pages/NotificationDetails";
-import AiPlanner from "./pages/AIPlanner";
-import SignIn from "./pages/Signin";
+import AiPlanner from "./pages/AiPlanner";
+import SignIn from "./pages/SignIn";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
