@@ -1,6 +1,7 @@
-import { Outlet, Navigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
-import AuthSpinner from "./AuthSpinner";
+import { Outlet, Navigate } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
+import AuthSpinner from './AuthSpinner';
+import AppLayout from '../layouts/AppLayout';
 
 function PrivateRoute() {
 
@@ -9,9 +10,11 @@ function PrivateRoute() {
     return (
         isUserFetched ? (
             user ? (
-                <Outlet />
+                <AppLayout>
+                    <Outlet />
+                </AppLayout>
             ) : (
-                <Navigate replace={true} to={"/sign-in"} />
+                <Navigate replace={true} to={'/sign-in'} />
             )
         ) : (
             <AuthSpinner />
