@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom"
 import { Calendar, Users, CheckCircle } from "lucide-react"
-import { statusColors } from "../constants/index"
+import { useNavigate } from "react-router-dom"
+import { statusColors } from "../utils/constant"
 import ProgressBar from "./ProgressBar"
 
 const ProjectCard = ({ project }) => {

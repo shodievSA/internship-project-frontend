@@ -1,6 +1,4 @@
-const getProgressColor = (progress) => {
-    return progress === 100 ? "bg-green-500 dark:bg-green-500" : "bg-gray-500 dark:bg-white"
-}
+import { getProgressColor } from "../utils/constant"
 
 const ProgressBar = ({ progress, showLabel = true }) => {
     const progressColor = getProgressColor(progress)
