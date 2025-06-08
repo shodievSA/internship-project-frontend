@@ -13,7 +13,7 @@ const ProgressBar = ({ progress, showLabel = true }) => {
                     </span>
                 </div>
             )}
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
                 <div
                     className={`${progressColor} h-2 rounded-full transition-all duration-300`}
                     style={{ width: `${progress}%` }}

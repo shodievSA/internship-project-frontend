@@ -16,7 +16,7 @@ const ProjectCard = ({ project }) => {
         <div className="card" onClick={handleClick}>
             {/* Header with title and badges */}
             <div className="flex items-start justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{name}</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">{name}</h2>
                 <div className="flex gap-2">
                     {isOwner ? (
                         <span className="owner-badge">
