@@ -1,6 +1,6 @@
 import { Plus, House, Bot, Bell } from "lucide-react";
 
-function EmptyDashboard() {
+function EmptyDashboard({ setShowNewProjectModal }) {
 
     return (
         <div className="h-full flex justify-center pt-10 lg:px-10">
@@ -11,7 +11,8 @@ function EmptyDashboard() {
                     team, and achieving your goals.
                 </p>
                 <button className="flex items-center gap-x-2 self-center bg-gradient-to-r from-purple-600 
-                to-blue-600 hover:from-purple-700 hover:to-blue-700 py-3 px-6 rounded-md">
+                to-blue-600 hover:from-purple-700 hover:to-blue-700 py-3 px-6 rounded-md"
+                onClick={() => setShowNewProjectModal(true)}>
                     <Plus className="text-white w-4 h-4" />
                     <span className="text-white lg:text-lg font-medium">Create First Project</span>
                 </button>
