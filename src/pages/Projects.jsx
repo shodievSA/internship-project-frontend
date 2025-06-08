@@ -18,7 +18,7 @@ function Projects() {
     const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
     return (
-        <div className="h-full pt-10 lg:px-10">
+        <div className="h-full px-5 pt-10 lg:px-10">
             {
                 showNewProjectModal && (
                     <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
