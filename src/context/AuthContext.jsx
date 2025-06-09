@@ -6,7 +6,7 @@ const AuthContext = createContext();
 function AuthContextProvider({ children }) {
 
     const [user, setUser] = useState();
-    const [isUserFetched, setIsUserFetched] = useState(true);
+    const [isUserFetched, setIsUserFetched] = useState(false);
 
     useEffect(() => {
 
@@ -18,6 +18,7 @@ function AuthContextProvider({ children }) {
                     method: 'GET',
                     credentials: 'include'
                 });
+
                 const { user } = await res.json();
 
                 setUser(user);
