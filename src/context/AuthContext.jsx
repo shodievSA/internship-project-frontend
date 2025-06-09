@@ -14,7 +14,10 @@ function AuthContextProvider({ children }) {
 
             try {
 
-                const res = await fetch(`${SERVER_BASE_URL}/api/v1/me`);
+                const res = await fetch(`${SERVER_BASE_URL}/api/v1/me`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
                 const { user } = await res.json();
 
                 setUser(user);
