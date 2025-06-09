@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 import { House, Sparkles, Bell, LogOut } from 'lucide-react';
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
+    const { user } = useAuthContext();
+
     const [signoutButtonClicked, setSignoutButtonClicked] = useState(false);
+
+
 
     return (
         <>
@@ -25,7 +30,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 onClick={() => setSignoutButtonClicked(false)}>Cancel</button>
                                 <button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black 
                                 bg-neutral-900 hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-lg 
-                                font-medium text-sm lg:text-base">Sign Out</button>
+                                font-medium text-sm lg:text-base" >Sign Out</button>
                             </div>
                         </div>
                     </div>
@@ -45,12 +50,12 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                         gap-y-8`}>
                             <div className="flex gap-x-3 items-center justify-center px-2">
                                 <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full">
-                                    {/* <img src="user_avatar_url_from _db" className='w-full h-full' /> */}
+                                    <img src={user.avatarUrl} className='w-full h-full rounded-full' />
                                 </div>
                                 <div className="flex flex-col">
-                                    <p className="text-sm md:text-lg font-medium">John Doe</p>
+                                    <p className="text-sm md:text-lg font-medium">{ user.fullName }</p>
                                     <p className="dark:text-neutral-400 text-neutral-500 text-sm md:text-base">
-                                        john.doe.@company.com
+                                        { user.email }
                                     </p>
                                 </div>
                             </div>
