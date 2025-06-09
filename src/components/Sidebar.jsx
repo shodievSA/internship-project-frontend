@@ -2,14 +2,41 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { House, Sparkles, Bell, LogOut } from 'lucide-react';
+const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
-    const { user } = useAuthContext();
+    const { user, setUser } = useAuthContext();
 
     const [signoutButtonClicked, setSignoutButtonClicked] = useState(false);
+    const [isUserBeingSignedOut, setIsUserBeingSignedOut] = useState(false);
 
+    async function logOutUser() {
 
+        setIsUserBeingSignedOut(true);
+
+        try {
+
+            const res = await fetch(`${SERVER_BASE_URL}/auth/logout`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (res.ok) {
+                setUser(null);
+            }
+
+        } catch {
+
+            console.log('Error occured while logging out the user.')
+
+        } finally {
+
+            setIsUserBeingSignedOut(false);
+
+        }
+
+    }
 
     return (
         <>
@@ -23,14 +50,37 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 Are you sure you want to sign out? You will need to log in again 
                                 to access your workspace.
                             </p>
-                            <div className="flex justify-end gap-x-4">
-                                <button className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
-                                dark:hover:bg-neutral-800 bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] 
-                                rounded-lg font-medium text-sm lg:text-base"
-                                onClick={() => setSignoutButtonClicked(false)}>Cancel</button>
-                                <button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black 
-                                bg-neutral-900 hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-lg 
-                                font-medium text-sm lg:text-base" >Sign Out</button>
+                            <div className="flex justify-end gap-x-4 mt-2">
+                                <button 
+                                    disabled={isUserBeingSignedOut} 
+                                    className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
+                                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
+                                    ${isUserBeingSignedOut ? 'cursor-not-allowed' : 'cursor-pointer'} disabled:opacity-50`}
+                                    onClick={() => setSignoutButtonClicked(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    disabled={isUserBeingSignedOut} 
+                                    className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 
+                                    hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-lg font-medium text-sm 
+                                    lg:text-base disabled:opacity-50'
+                                    onClick={logOutUser}
+                                >
+                                    {
+                                        isUserBeingSignedOut ? (
+                                            <div className="flex justify-center">
+                                                <div className="relative w-5 h-5">
+                                                    <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
+                                                    <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
+                                                    dark:border-t-black rounded-full animate-spin"></div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            "Signed Out"
+                                        )
+                                    }
+                                </button>
                             </div>
                         </div>
                     </div>
