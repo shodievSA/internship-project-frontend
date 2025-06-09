@@ -5,7 +5,7 @@ import ProjectCard from "../components/ProjectCard";
 import { projects } from "../utils/data";
 import ProjectHeader from "../components/ProjectHeader";
 import useProjectFilters from "../hooks/useProjectFilters";
-import EmptySearchResults from "../components/EmptySearch";
+import EmptySearch from "../components/EmptySearch";
 
 const Projects = () => {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
@@ -36,7 +36,7 @@ const Projects = () => {
         />
 
         {filteredProjects.length === 0 ? (
-          <EmptySearchResults onClearFilters={clearFilters} />
+          <EmptySearch onClearFilters={clearFilters} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
             {filteredProjects.map((project) => (
