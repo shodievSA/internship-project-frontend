@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { House, Sparkles, Bell, LogOut } from 'lucide-react';
@@ -102,4 +103,4 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
 }
 
-export default Sidebar; 
+export default Sidebar;
