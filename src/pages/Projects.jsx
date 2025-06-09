@@ -2,41 +2,51 @@ import { useState } from "react";
 import EmptyDashboard from "../components/EmptyDashboard";
 import NewProjectModal from "../components/NewProjectModal";
 import ProjectCard from "../components/ProjectCard";
-import { projects } from "../utils/data"
+import { projects } from "../utils/data";
+import ProjectHeader from "../components/ProjectHeader";
+import useProjectFilters from "../hooks/useProjectFilters";
+import EmptySearchResults from "../components/EmptySearch";
 
-function Projects() {
+const Projects = () => {
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const {
+    filters,
+    filteredProjects,
+    handleSearch,
+    handleFilterChange,
+    clearFilters,
+  } = useProjectFilters(projects);
 
-    const [projectCount, setProjectsCount] = useState(() => {
-        try {
-            const count = JSON.parse(localStorage.getItem('projectCount'));
-            return (Number.isInteger(count) && Number.isFinite(count)) ? count : 0; // validating data
-        } catch {
-            return 0;
-        }
-    });
+  if (projects.length === 0) {
+    return <EmptyDashboard setShowNewProjectModal={setShowNewProjectModal} />;
+  }
 
-    const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  return (
+    <div className="h-full px-5 pt-10 lg:px-10">
+      {showNewProjectModal && (
+        <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
+      )}
 
-    return (
-        <div className="h-full px-5 pt-10 lg:px-10">
-            {
-                showNewProjectModal && (
-                    <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
-                )
-            }
-            {
-                !projectCount > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-                        {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyDashboard setShowNewProjectModal={setShowNewProjectModal} />
-                )
-            }
-        </div>
-    )
-}
+      <div className="flex flex-col gap-y-6">
+        <ProjectHeader
+          filters={filters}
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          onClearFilters={clearFilters}
+        />
+
+        {filteredProjects.length === 0 ? (
+          <EmptySearchResults onClearFilters={clearFilters} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default Projects;

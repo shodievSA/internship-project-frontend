@@ -4,9 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @layer components {
     .card {
         @apply bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-neutral-800 rounded-md p-6 w-full max-w-[550px] text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.02] transition-transform;
+    }
+
+    .card-container {
+        @apply bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6;
     }
 
     .owner-badge {
@@ -27,5 +33,25 @@
 
     .projects-grid {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    .empty-search-results {
+        @apply flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700
+    }
+
+    .search-bar {
+        @apply w-full pl-10 pr-4 py-2.5 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all
+    }
+
+    .search-icon {
+        @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4
+    }
+
+    .project-header_container {
+        @apply dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6
+    }
+
+    .dropdown-button {
+        @apply flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition-all text-sm font-medium min-w-0
     }
 }

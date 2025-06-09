@@ -7,12 +7,12 @@ function EmptyDashboard({ setShowNewProjectModal }) {
             <div className="flex flex-col gap-y-8 w-11/12 md:w-2/3 my-auto">
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">Ready to start your first project?</h1>
                 <p className="dark:text-gray-400 text-neutral-600 md:text-lg lg:text-xl text-balance text-center lg:px-5">
-                    Create your first project and begin organizing your tasks, collaborating with your 
+                    Create your first project and begin organizing your tasks, collaborating with your
                     team, and achieving your goals.
                 </p>
                 <button className="flex items-center gap-x-2 self-center bg-gradient-to-r from-purple-600 
                 to-blue-600 hover:from-purple-700 hover:to-blue-700 py-3 px-6 rounded-md"
-                onClick={() => setShowNewProjectModal(true)}>
+                    onClick={() => setShowNewProjectModal(true)}>
                     <Plus className="text-white w-4 h-4" />
                     <span className="text-white lg:text-lg font-medium">Create First Project</span>
                 </button>

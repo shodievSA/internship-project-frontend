@@ -9,3 +9,24 @@ export const statusColors = {
 } 
 
 
+
+export const statusOptions = [
+    "All Status",
+    "Active",
+    "Completed",
+    "Paused"
+];
+
+export const ownerOptions = [
+    "All Projects",
+    "Owner",
+    "Member"
+];
+
+export const timeOptions = [
+    "All Time",
+    "Last 7 days",
+    "Last 30 days",
+    "Last 3 months",
+    "Last year"
+];
