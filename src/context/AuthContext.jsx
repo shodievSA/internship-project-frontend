@@ -1,19 +1,38 @@
 import { createContext, useContext, useState, useEffect } from "react";
+const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const AuthContext = createContext();
 
 function AuthContextProvider({ children }) {
 
-    const [user, setUser] = useState("Abbos");
-    const [isUserFetched, setIsUserFetched] = useState(false);
+    const [user, setUser] = useState();
+    const [isUserFetched, setIsUserFetched] = useState(true);
 
     useEffect(() => {
 
-        setTimeout(() => {
+        async function getUserData() {
 
-            setIsUserFetched(true);
+            try {
 
-        }, 5000); // immitating fetch request
+                const res = await fetch(`${SERVER_BASE_URL}/api/v1/me`);
+                const { user } = await res.json();
+
+                setUser(user);
+
+            } catch {
+
+                console.log('error occured while fetching user data');
+                setUser(null);
+
+            } finally {
+
+                setIsUserFetched(true);
+
+            }
+
+        }
+
+        getUserData();
 
     }, []);
 
