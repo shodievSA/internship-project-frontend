@@ -28,4 +28,12 @@
     .projects-grid {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
     }
+
+
+    /* AI Planner Empty State */
+
+
+    .feature-card {
+        @apply opacity-0 bg-white dark:bg-zinc-950 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-neutral-800 animate-feature-pop-delay-1 hover:shadow-lg transition-all duration-300
+    }
 }

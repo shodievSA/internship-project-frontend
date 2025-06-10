@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 
 function AuthSpinner() {
     return (
-        <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950 p-4">
+        <div className="min-h-screen w-full flex flex-col items-center justify-center  p-4">
             <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-8">
                 {/* Logo Section */}
                 <div className="flex justify-center">
