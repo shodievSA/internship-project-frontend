@@ -42,7 +42,7 @@ function ThemeContextProvider({ children }) {
 
     return (
         <ThemeContext.Provider value={{ themeMode, setThemeMode }}>
-            { children }
+            {children}
         </ThemeContext.Provider>
     )
 
