@@ -22,18 +22,21 @@ export default function FilterDropdown({
   }, []);
 
   const handleSelect = (option) => {
+    console.log('Selected option:', option);
     onChange(option);
     setIsOpen(false);
   };
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="dropdown-button">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="dropdown-button flex items-center gap-2 px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-sm"
+      >
         <Icon className="w-4 h-4 flex-shrink-0" />
         <span className="truncate">{value}</span>
         <ChevronDown
-          className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
-            }`}
+          className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 

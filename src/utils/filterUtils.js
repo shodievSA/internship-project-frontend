@@ -27,6 +27,8 @@ export const filterProjects = (projects, filters) => {
 
     // Time frame filter
     if (filters.timeFrame && filters.timeFrame !== "All Time") {
+      console.log('Filtering by timeFrame:', filters.timeFrame);
+      console.log('Project date:', project?.createdAt);
       if (!matchesTimeFrame(project?.createdAt, filters.timeFrame)) {
         return false;
       }
@@ -51,29 +53,88 @@ const matchesSearch = (project, searchTerm) => {
 };
 
 const matchesTimeFrame = (date, timeFrame) => {
-  if (!date) return false;
+  if (!date) {
+    console.log('No date provided');
+    return false;
+  }
   
   try {
+    console.log('Processing date:', date, 'for timeFrame:', timeFrame);
     // Parse date in DD.MM.YYYY format
     const [day, month, year] = date.split('.');
+    console.log('Parsed components:', { day, month, year });
+    
     const projectDate = new Date(year, month - 1, day);
-    if (isNaN(projectDate.getTime())) return false;
+    console.log('Project date object:', projectDate.toISOString());
+    
+    if (isNaN(projectDate.getTime())) {
+      console.error('Invalid date created');
+      return false;
+    }
 
     const now = new Date();
-    const daysDiff = (now - projectDate) / (1000 * 60 * 60 * 24);
+    console.log('Current date:', now.toISOString());
+    
+    // Set time to midnight for accurate day comparison
+    now.setHours(0, 0, 0, 0);
+    projectDate.setHours(0, 0, 0, 0);
 
+    let result = false;
+    
+    // Use exact string matching for timeFrame
     switch (timeFrame) {
-      case "Last 7 Days":
-        return daysDiff <= 7;
-      case "Last 30 Days":
-        return daysDiff <= 30;
-      case "Last 3 Months":
-        return daysDiff <= 90;
-      case "Last Year":
-        return daysDiff <= 365;
-      default:
-        return true;
+      case "Last 7 Days": {
+        const sevenDaysAgo = new Date(now);
+        sevenDaysAgo.setDate(now.getDate() - 7);
+        result = projectDate >= sevenDaysAgo;
+        console.log('Last 7 Days - Compare:', {
+          sevenDaysAgo: sevenDaysAgo.toISOString(),
+          projectDate: projectDate.toISOString(),
+          result
+        });
+        break;
+      }
+      case "Last 30 Days": {
+        const thirtyDaysAgo = new Date(now);
+        thirtyDaysAgo.setDate(now.getDate() - 30);
+        result = projectDate >= thirtyDaysAgo;
+        console.log('Last 30 Days - Compare:', {
+          thirtyDaysAgo: thirtyDaysAgo.toISOString(),
+          projectDate: projectDate.toISOString(),
+          result
+        });
+        break;
+      }
+      case "Last 3 Months": {
+        const threeMonthsAgo = new Date(now);
+        threeMonthsAgo.setMonth(now.getMonth() - 3);
+        result = projectDate >= threeMonthsAgo;
+        console.log('Last 3 Months - Compare:', {
+          threeMonthsAgo: threeMonthsAgo.toISOString(),
+          projectDate: projectDate.toISOString(),
+          result
+        });
+        break;
+      }
+      case "Last Year": {
+        const oneYearAgo = new Date(now);
+        oneYearAgo.setFullYear(now.getFullYear() - 1);
+        result = projectDate >= oneYearAgo;
+        console.log('Last Year - Compare:', {
+          oneYearAgo: oneYearAgo.toISOString(),
+          projectDate: projectDate.toISOString(),
+          result
+        });
+        break;
+      }
+      default: {
+        console.log('No matching timeFrame, returning true');
+        result = true;
+      }
     }
+    
+    console.log('Final result for', timeFrame, ':', result);
+    return result;
   } catch (error) {
     console.error("Error processing date:", error);
     return false;

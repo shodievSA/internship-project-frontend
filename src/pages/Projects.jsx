@@ -19,6 +19,7 @@ const Projects = () => {
 
   // Filter projects using memoization to prevent unnecessary recalculations
   const filteredProjects = useMemo(() => {
+    console.log('Current filters:', currentFilters);
     return filterProjects(mockProjects, currentFilters);
   }, [searchParams]);
 
@@ -33,6 +34,7 @@ const Projects = () => {
   };
 
   const handleFilterChange = (filterType, value) => {
+    console.log('Filter change:', filterType, value);
     const newParams = new URLSearchParams(searchParams);
     const defaultValues = {
       status: "All Status",
@@ -40,11 +42,12 @@ const Projects = () => {
       timeFrame: "All Time"
     };
 
-    if (value && value !== defaultValues[filterType]) {
-      newParams.set(filterType, value);
-    } else {
+    if (value === defaultValues[filterType]) {
       newParams.delete(filterType);
+    } else {
+      newParams.set(filterType, value);
     }
+
     setSearchParams(newParams);
   };
 

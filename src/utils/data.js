@@ -86,7 +86,7 @@ export const projects = [
     {
         id: "8",
         name: "API Integration",
-        createdAt: "20.04.2024",
+        createdAt: "20.04.2025",
         members: 4,
         isOwner: true,
         status: "active",
@@ -110,7 +110,7 @@ export const projects = [
     {
         id: "10",
         name: "AI Integration Project",
-        createdAt: "15.01.2025",
+        createdAt: "15.01.2024",
         members: 8,
         isOwner: true,
         status: "active",
@@ -122,7 +122,7 @@ export const projects = [
     {
         id: "11",
         name: "Blockchain Implementation",
-        createdAt: "01.03.2025",
+        createdAt: "01.03.2024",
         members: 6,
         isOwner: false,
         status: "paused",
@@ -134,7 +134,7 @@ export const projects = [
     {
         id: "12",
         name: "IoT Platform Development",
-        createdAt: "20.04.2025",
+        createdAt: "20.04.2023",
         members: 10,
         isOwner: true,
         status: "active",
@@ -143,7 +143,7 @@ export const projects = [
     {
         id: "22",
         name: "Social Media Integration",
-        createdAt: "01.07.2024",
+        createdAt: "01.07.2023",
         members: 4,
         isOwner: false,
         status: "paused",
@@ -152,7 +152,7 @@ export const projects = [
     {
         id: "13",
         name: "5G Network Integration",
-        createdAt: "10.06.2025",
+        createdAt: "10.06.2023",
         members: 12,
         isOwner: true,
         status: "active",
@@ -164,7 +164,7 @@ export const projects = [
     {
         id: "14",
         name: "Quantum Computing Research",
-        createdAt: "01.05.2025",
+        createdAt: "01.05.2023",
         members: 7,
         isOwner: false,
         status: "paused",
