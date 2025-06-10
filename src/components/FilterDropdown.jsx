@@ -45,8 +45,8 @@ export default function FilterDropdown({
                 key={option}
                 onClick={() => handleSelect(option)}
                 className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${value === option
-                    ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800 font-medium"
-                    : "text-black dark:text-white"
+                  ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800 font-medium"
+                  : "text-black dark:text-white"
                   }`}
               >
                 {option}

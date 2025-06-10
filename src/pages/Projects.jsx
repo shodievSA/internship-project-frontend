@@ -1,13 +1,15 @@
 import { useSearchParams } from "react-router-dom";
 import { projects as mockProjects } from "../utils/data";
+import { filterProjects } from "../utils/filterUtils";
 import ProjectCard from "../components/ProjectCard";
 import ProjectHeader from "../components/ProjectHeader";
+import EmptySearch from "../components/EmptySearch";
+import { useMemo } from "react";
 
 const Projects = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-
-  // Keep track of filter values for UI only
+  // Keep track of filter values
   const currentFilters = {
     search: searchParams.get("search") || "",
     status: searchParams.get("status") || "All Status",
@@ -15,7 +17,11 @@ const Projects = () => {
     timeFrame: searchParams.get("timeFrame") || "All Time"
   };
 
-  // UI handlers - no actual filtering
+  // Filter projects using memoization to prevent unnecessary recalculations
+  const filteredProjects = useMemo(() => {
+    return filterProjects(mockProjects, currentFilters);
+  }, [searchParams]);
+
   const handleSearch = (searchTerm) => {
     const newParams = new URLSearchParams(searchParams);
     if (searchTerm) {
@@ -28,7 +34,13 @@ const Projects = () => {
 
   const handleFilterChange = (filterType, value) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value && value !== "All Status" && value !== "All Projects" && value !== "All Time") {
+    const defaultValues = {
+      status: "All Status",
+      owner: "All Projects",
+      timeFrame: "All Time"
+    };
+
+    if (value && value !== defaultValues[filterType]) {
       newParams.set(filterType, value);
     } else {
       newParams.delete(filterType);
@@ -50,11 +62,15 @@ const Projects = () => {
           onClearFilters={clearFilters}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-          {mockProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        {filteredProjects.length === 0 ? (
+          <EmptySearch onClearFilters={clearFilters} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
