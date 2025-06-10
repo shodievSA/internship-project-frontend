@@ -1,5 +1,3 @@
-"use client"
-
 import { Search } from "lucide-react"
 
 const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
@@ -8,7 +6,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
             <Search className="search-icon" />
             <input
                 type="text"
-                value={value}
+                value={value || ""}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 className="search-bar"

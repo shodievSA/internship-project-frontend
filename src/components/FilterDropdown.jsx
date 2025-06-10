@@ -32,9 +32,8 @@ export default function FilterDropdown({
         <Icon className="w-4 h-4 flex-shrink-0" />
         <span className="truncate">{value}</span>
         <ChevronDown
-          className={`w-4 h-4 flex-shrink-0 transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
+            }`}
         />
       </button>
 
@@ -45,11 +44,10 @@ export default function FilterDropdown({
               <button
                 key={option}
                 onClick={() => handleSelect(option)}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                  value === option
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${value === option
                     ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800 font-medium"
                     : "text-black dark:text-white"
-                }`}
+                  }`}
               >
                 {option}
               </button>

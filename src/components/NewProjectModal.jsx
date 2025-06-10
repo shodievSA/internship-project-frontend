@@ -100,11 +100,10 @@ function NewProjectModal({ setShowNewProjectModal }) {
             disabled={isNewProjectBeingCreated}
             className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
                         bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
-                        disabled:opacity-50 ${
-                          isNewProjectBeingCreated
-                            ? "cursor-not-allowed"
-                            : "cursor-pointer"
-                        }`}
+                        disabled:opacity-50 ${isNewProjectBeingCreated
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+              }`}
             onClick={() => setShowNewProjectModal(false)}
           >
             Cancel
