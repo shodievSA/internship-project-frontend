@@ -18,7 +18,7 @@
     }
 
     .status-badge {
-        @apply rounded-full font-medium capitalize;
+        @apply px-2 py-0.5 rounded-full text-xs font-medium capitalize;
     }
 
     .progress-badge {
@@ -28,10 +28,4 @@
     .projects-grid {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
     }
-}
-
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
 }

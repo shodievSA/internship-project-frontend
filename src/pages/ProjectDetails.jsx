@@ -1,13 +1,11 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function ProjectDetails() {
 
-    const location = useLocation();
-    const { state: { projectInfo } } = location;
-
     return (
         <div>
-            
+            <h1>This is project details page</h1>
+            <Outlet />
         </div>
     )
 

@@ -3,21 +3,17 @@ import { useNavigate } from "react-router-dom"
 import { statusColors } from "../utils/constant"
 import ProgressBar from "./ProgressBar"
 
-function ProjectCard({ project }) {
-
+const ProjectCard = ({ project }) => {
     const { id, name, createdAt, members, isOwner, status, tasks } = project
-
     const progress = Math.round((tasks.completed / tasks.total) * 100)
     const navigate = useNavigate()
 
-    function handleNavigate() {
-
-        navigate(`/projects/${id}`, { state: { projectInfo: project } });
-
+    const handleClick = () => {
+        navigate(`/projects/${id}`)
     }
 
     return (
-        <div className="card" onClick={handleNavigate}>
+        <div className="card" onClick={handleClick}>
             {/* Header with title and badges */}
             <div className="flex items-start justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">{name}</h2>
