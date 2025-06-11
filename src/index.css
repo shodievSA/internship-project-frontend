@@ -8,11 +8,11 @@
 
 @layer components {
     .card {
-        @apply bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-neutral-800 rounded-md p-6 w-full max-w-[550px] text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.02] transition-transform;
+        @apply bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-neutral-800 rounded-md p-6 w-full text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.02] transition-transform;
     }
 
     .card-container {
-        @apply bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6;
+        @apply bg-gray-50 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700;
     }
 
     .owner-badge {
@@ -36,7 +36,7 @@
     }
 
     .empty-search-results {
-        @apply flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700
+        @apply flex flex-col items-center justify-center py-12 text-center
     }
 
     .search-bar {
@@ -48,7 +48,7 @@
     }
 
     .project-header_container {
-        @apply dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6
+        @apply rounded-lg mb-4
     }
 
     .dropdown-button {

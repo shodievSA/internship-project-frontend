@@ -4,10 +4,12 @@ import { filterProjects } from "../utils/filterUtils";
 import ProjectCard from "../components/ProjectCard";
 import ProjectHeader from "../components/ProjectHeader";
 import EmptySearch from "../components/EmptySearch";
-import { useMemo } from "react";
+import NewProjectModal from "../components/NewProjectModal";
+import { useMemo, useState } from "react";
 
 const Projects = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
   // Keep track of filter values
   const currentFilters = {
@@ -19,9 +21,8 @@ const Projects = () => {
 
   // Filter projects using memoization to prevent unnecessary recalculations
   const filteredProjects = useMemo(() => {
-    console.log('Current filters:', currentFilters);
     return filterProjects(mockProjects, currentFilters);
-  }, [searchParams]);
+  }, [currentFilters]);
 
   const handleSearch = (searchTerm) => {
     const newParams = new URLSearchParams(searchParams);
@@ -34,7 +35,6 @@ const Projects = () => {
   };
 
   const handleFilterChange = (filterType, value) => {
-    console.log('Filter change:', filterType, value);
     const newParams = new URLSearchParams(searchParams);
     const defaultValues = {
       status: "All Status",
@@ -56,25 +56,28 @@ const Projects = () => {
   };
 
   return (
-    <div className="h-full px-5 pt-10 lg:px-10">
-      <div className="flex flex-col gap-y-6">
+    <div className="min-h-screen px-5 pt-10 lg:px-10">
+      <div className="flex flex-col gap-y-4">
         <ProjectHeader
           filters={currentFilters}
           onSearch={handleSearch}
           onFilterChange={handleFilterChange}
-          onClearFilters={clearFilters}
+          setShowNewProjectModal={setShowNewProjectModal}
         />
 
         {filteredProjects.length === 0 ? (
           <EmptySearch onClearFilters={clearFilters} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         )}
       </div>
+      {showNewProjectModal && (
+        <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
+      )}
     </div>
   );
 };

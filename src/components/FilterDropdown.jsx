@@ -28,13 +28,13 @@ export default function FilterDropdown({
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-full lg:w-auto" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="dropdown-button flex items-center gap-2 px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-sm"
+        className="dropdown-button w-full flex items-center justify-between lg:justify-start gap-2 px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-sm"
       >
         <Icon className="w-4 h-4 flex-shrink-0" />
-        <span className="truncate">{value}</span>
+        <span className="flex-1 text-center lg:text-left truncate">{value}</span>
         <ChevronDown
           className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
