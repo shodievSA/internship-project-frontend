@@ -4,7 +4,7 @@ import ThemeContextProvider from "./context/ThemeContext";
 import Projects from "./pages/Projects";
 import ProjectsOutlet from "./layouts/ProjectsOutlet";
 import ProjectDetails from "./pages/ProjectDetails";
-import ProjectDetailsOutlet from "./layouts/ProjectDetailsOutlet";
+import ProjectDetailsLayout from "./layouts/ProjectDetailsLayout";
 import TeamMemberInfo from "./pages/TeamMemberInfo";
 import TaskComments from "./pages/TaskComments";
 import Notifications from "./pages/Notifications";
@@ -25,7 +25,7 @@ function App() {
 							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
 							<Route path="/projects" element={<ProjectsOutlet />}>
 								<Route index element={<Projects />} />
-								<Route path=":projectId" element={<ProjectDetailsOutlet />}>
+								<Route path=":projectId" element={<ProjectDetailsLayout />}>
 									<Route index element={<ProjectDetails />} />
 									<Route path="members/:memberId" element={<TeamMemberInfo />} />
 									<Route path="tasks/:taskId/comments" element={<TaskComments />} />
