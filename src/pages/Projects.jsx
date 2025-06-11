@@ -27,9 +27,11 @@ function Projects() {
             {
                 !projectCount > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-                        {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
+                        {
+                            projects.map((project) => (
+                                <ProjectCard key={project.id} project={project} />
+                            ))
+                        }
                     </div>
                 ) : (
                     <EmptyDashboard setShowNewProjectModal={setShowNewProjectModal} />
