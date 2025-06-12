@@ -1,3 +1,5 @@
+import { Calendar, CheckSquare, Clock } from "lucide-react"
+
 export const getProgressColor = (progress) => {
     return "bg-blue-600 dark:bg-gray-300"
 }
@@ -30,3 +32,47 @@ export const timeOptions = [
     "Last 3 Months",
     "Last Year"
 ];
+
+
+export const features = [
+    {
+        icon: Calendar,
+        title: "Daily Reports",
+        description: "Receive comprehensive daily summaries of your tasks and progress",
+        color: "blue",
+        delay: 1
+    },
+    {
+        icon: CheckSquare,
+        title: "Task Management",
+        description: "Smart task prioritization and completion tracking",
+        color: "green",
+        delay: 2
+    },
+    {
+        icon: Clock,
+        title: "Time Insights",
+        description: "Analyze your productivity patterns and optimize your schedule",
+        color: "purple",
+        delay: 3
+    }
+]
+
+
+export const colorMap = {
+    blue: {
+        bg: "bg-blue-100 dark:bg-blue-950/50",
+        text: "text-blue-600 dark:text-blue-400",
+        hover: "group-hover:text-blue-600 dark:group-hover:text-blue-400"
+    },
+    green: {
+        bg: "bg-green-100 dark:bg-green-950/50",
+        text: "text-green-600 dark:text-green-400",
+        hover: "group-hover:text-green-600 dark:group-hover:text-green-400"
+    },
+    purple: {
+        bg: "bg-purple-100 dark:bg-purple-950/50",
+        text: "text-purple-600 dark:text-purple-400",
+        hover: "group-hover:text-purple-600 dark:group-hover:text-purple-400"
+    }
+}

@@ -1,8 +1,10 @@
-function AiPlanner() {
+import EmptyAiPlanner from "../components/EmptyAiPlanner";
 
+
+function AiPlanner() {
     return (
-        <div>
-            <h1>This is daily AI report page</h1>
+        <div className="h-full px-5 pt-10 lg:px-10 ">
+            <EmptyAiPlanner />
         </div>
     )
 
