@@ -1,17 +1,34 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, NavLink } from "react-router-dom";
 import NewTaskModal from "../components/NewTaskModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
 
-function ProjectDetailsLayout() {
+function ProjectLayout() {
 
     const location = useLocation();
-    const { state: { projectInfo, section = 'team' } } = location;
+    const { state: { projectInfo } } = location;
 
-    const [selectedSection, setSelectionSection] = useState(section);
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
+
+    const teamMembers = [
+        {
+            id: 0,
+            fullName: "John Doe",
+            position: "QA Engineer"
+        },
+        {
+            id: 1,
+            fullName: "John Doe 2",
+            position: "Backend Developer"
+        },
+        {
+            id: 2,
+            fullName: "John Doe 3",
+            position: "Frontend Developer"
+        }
+    ];
 
     useEffect(() => {
 
@@ -33,32 +50,26 @@ function ProjectDetailsLayout() {
 
     }, [settingsButtonClicked]);
 
-    const teamMembers = [
-        {
-            id: 0,
-            fullName: "John Doe",
-            position: "QA Engineer"
-        },
-        {
-            id: 1,
-            fullName: "John Doe 2",
-            position: "Backend Developer"
-        },
-        {
-            id: 2,
-            fullName: "John Doe 3",
-            position: "Frontend Developer"
-        }
-    ];
+    useEffect(() => {
+
+        console.log('fetching project data');
+
+        setTimeout(() => {
+
+            console.log('project data fetched');
+
+        }, 3000);
+
+    }, []); // this useEffect hook will fetch all information related to the project including project members, tasks, invites and etc.
 
     return (
-        <div className="flex flex-col h-full px-6 pt-6 md:px-8 md:pt-8">
+        <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
             {
                 showNewTaskModal && (
                     <NewTaskModal setShowNewTaskModal={setShowNewTaskModal} teamMembers={teamMembers} />  
                 )
             }
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 md:gap-8 md:pb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
                     <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">{ projectInfo.name }</h1>
                     <div className={`${statusColors[projectInfo.status]} status-badge px-3 py-1 text-xs md:text-sm`}>
@@ -111,62 +122,68 @@ function ProjectDetailsLayout() {
                     </button>
                 </div>
             </div>
-            <div className="dark:bg-neutral-900 bg-neutral-100 p-1.5 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
-            xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>button]:text-center [&>button]:p-2 
-            [&>button]:font-medium [&>button]:rounded-md rounded-md">
-                <button 
-                    className={`${selectedSection === 'team' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('team')}
+            <ul className="dark:bg-neutral-900 bg-neutral-100 p-1.5 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
+            xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
+            rounded-md">
+                <NavLink 
+                    to='team'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
                 >
                     Team
-                </button>
-                <button
-                    className={`${selectedSection === 'all-tasks' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('all-tasks')}
+                </NavLink>
+                <NavLink
+                    to='all-tasks'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
                 >
                     All Tasks
-                </button>
-                <button 
-                    className={`${selectedSection === 'my-tasks' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('my-tasks')}
+                </NavLink>
+                <NavLink 
+                    to='my-tasks'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
                 >
                     My Tasks
-                </button>
-                <button
-                    className={`${selectedSection === 'assigned' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('assigned')}
+                </NavLink>
+                <NavLink
+                    to='assigned-tasks'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
                 >
                     Assigned
-                </button>
-                <button
-                    className={`${selectedSection === 'reviews' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('reviews')}
-                    >
+                </NavLink>
+                <NavLink
+                    to='review-tasks'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
+                >
                     Reviews
-                </button>
-                <button
-                    className={`${selectedSection === 'invites' ? 'dark:bg-black dark:text-white bg-white' : 
-                    'bg-transparent dark:text-neutral-500 text-neutral-500'} transition-[background-color]
-                    duration-300 text-sm md:text-base`}
-                    onClick={() => setSelectionSection('invites')}
+                </NavLink>
+                <NavLink
+                    to='project-invites'
+                    state={{ projectInfo: projectInfo }}
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
+                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
+                    }
                 >
                     Invites
-                </button>
-            </div>
-            <Outlet />
+                </NavLink>
+            </ul>
+            <Outlet context={{ projectData: projectInfo }} />
         </div>
-    )
+    );
 
 }
 
-export default ProjectDetailsLayout;
+export default ProjectLayout;
