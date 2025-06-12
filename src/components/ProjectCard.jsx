@@ -9,9 +9,9 @@ const ProjectCard = ({ project }) => {
   const progress = Math.round((tasks.completed / tasks.total) * 100)
   const navigate = useNavigate()
 
-  const handleClick = () => {
-    navigate(`/projects/${id}`)
-  }
+    const handleClick = () => {
+        navigate(`/projects/${id}/team`, { state: { projectInfo: project } });
+    }
 
   return (
     <div className="card" onClick={handleClick}>

@@ -1,8 +1,10 @@
 import { useThemeContext } from '../context/ThemeContext';
 import { PanelRight, Sun, Moon } from 'lucide-react';
+import { useAuthContext } from '../context/AuthContext';
 
 function Topbar({ sidebarCollapsed, setSidebarCollapsed }) {
 
+    const { user } = useAuthContext();
     const { themeMode, setThemeMode } = useThemeContext();
 
     return (
@@ -17,7 +19,7 @@ function Topbar({ sidebarCollapsed, setSidebarCollapsed }) {
                 </button>
                 <div>
                     <h3 className='font-medium text-sm lg:text-lg'>
-                        { displayGreetingMessage("Abbos") }
+                        { displayGreetingMessage(user.fullName.split(" ")[0]) }
                     </h3>
                 </div>
             </div> 

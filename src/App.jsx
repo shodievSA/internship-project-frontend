@@ -2,11 +2,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import AuthContextProvider from "./context/AuthContext";
 import ThemeContextProvider from "./context/ThemeContext";
 import Projects from "./pages/Projects";
-import ProjectsOutlet from "./layouts/ProjectsOutlet";
-import ProjectDetails from "./pages/ProjectDetails";
-import ProjectDetailsOutlet from "./layouts/ProjectDetailsOutlet";
-import TeamMemberInfo from "./pages/TeamMemberInfo";
-import TaskComments from "./pages/TaskComments";
+import ProjectLayout from "./layouts/ProjectLayout";
+import TeamPage from "./pages/TeamPage";
+import AllTasksPage from "./pages/AllTasksPage";
+import MyTasksPage from "./pages/MyTasksPage";
+import AssignedTasksPage from "./pages/AssignedTasksPage";
+import ReviewTasksPage from "./pages/ReviewTasksPage";
+import InvitesPage from "./pages/InvitesPage";
 import Notifications from "./pages/Notifications";
 import NotificationsOutlet from "./layouts/NotificationsOutlet";
 import NotificationDetails from "./pages/NotificationDetails";
@@ -22,15 +24,16 @@ function App() {
 				<Router>
 					<Routes>
 						<Route element={<PrivateRoute />}>
-							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
-							<Route path="/projects" element={<ProjectsOutlet />}>
-								<Route index element={<Projects />} />
-								<Route path=":projectId" element={<ProjectDetailsOutlet />}>
-									<Route index element={<ProjectDetails />} />
-									<Route path="members/:memberId" element={<TeamMemberInfo />} />
-									<Route path="tasks/:taskId/comments" element={<TaskComments />} />
-								</Route>
-							</Route>
+							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />						
+							<Route path="/projects" element={<Projects />} />
+							<Route path="/projects/:projectId" element={<ProjectLayout />}>
+								<Route path="team" element={<TeamPage />} />
+								<Route path="all-tasks" element={<AllTasksPage />} />
+								<Route path="my-tasks" element={<MyTasksPage />} />
+								<Route path="assigned-tasks" element={<AssignedTasksPage />} />
+								<Route path="review-tasks" element={<ReviewTasksPage /> } />
+								<Route path="project-invites" element={<InvitesPage />} />
+							</Route>							
 							<Route path="/notifications" element={<NotificationsOutlet />}>
 								<Route index element={<Notifications />} />
 								<Route path=":notificationId" element={<NotificationDetails />} />

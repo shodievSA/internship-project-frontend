@@ -11,7 +11,8 @@ function AppLayout({ children }) {
             <Sidebar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
             <div className='flex flex-col grow'>               
                 <Topbar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-                <div className='dark:bg-black dark:text-white grow overflow-auto'>
+                <div className='dark:bg-black dark:text-white grow overflow-auto scrollbar-thin 
+                dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800'>
                     { children }
                 </div>
             </div>
