@@ -9,7 +9,7 @@ const ProjectCard = ({ project }) => {
     const navigate = useNavigate()
 
     const handleClick = () => {
-        navigate(`/projects/${id}`, { state: { projectInfo: project } });
+        navigate(`/projects/${id}/team`, { state: { projectInfo: project } });
     }
 
     return (
