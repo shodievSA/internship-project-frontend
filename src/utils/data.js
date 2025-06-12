@@ -2,7 +2,7 @@ export const projects = [
     {
         id: "1",
         name: "Website Redesign",
-        createdAt: "15.01.2024",
+        createdAt: "03.06.2024",
         members: 5,
         isOwner: true,
         status: "active",
@@ -14,7 +14,7 @@ export const projects = [
     {
         id: "2",
         name: "Mobile App Development",
-        createdAt: "03.02.2024",
+        createdAt: "11.05.2024",
         members: 8,
         isOwner: false,
         status: "paused",
@@ -26,7 +26,7 @@ export const projects = [
     {
         id: "3",
         name: "Marketing Campaign",
-        createdAt: "22.03.2024",
+        createdAt: "10.03.2024",
         members: 3,
         isOwner: true,
         status: "completed",
@@ -38,7 +38,7 @@ export const projects = [
     {
         id: "4",
         name: "Data Analytics Dashboard",
-        createdAt: "01.04.2024",
+        createdAt: "10.06.2024",
         members: 6,
         isOwner: true,
         status: "active",
@@ -62,7 +62,7 @@ export const projects = [
     {
         id: "6",
         name: "Cloud Migration",
-        createdAt: "10.04.2024",
+        createdAt: "12.05.2024",
         members: 7,
         isOwner: true,
         status: "active",
@@ -86,7 +86,7 @@ export const projects = [
     {
         id: "8",
         name: "API Integration",
-        createdAt: "20.04.2024",
+        createdAt: "20.04.2025",
         members: 4,
         isOwner: true,
         status: "active",
@@ -107,4 +107,70 @@ export const projects = [
             completed: 3,
         },
     },
+    {
+        id: "10",
+        name: "AI Integration Project",
+        createdAt: "15.01.2024",
+        members: 8,
+        isOwner: true,
+        status: "active",
+        tasks: {
+            total: 25,
+            completed: 0,
+        },
+    },
+    {
+        id: "11",
+        name: "Blockchain Implementation",
+        createdAt: "01.03.2024",
+        members: 6,
+        isOwner: false,
+        status: "paused",
+        tasks: {
+            total: 18,
+            completed: 2,
+        },
+    },
+    {
+        id: "12",
+        name: "IoT Platform Development",
+        createdAt: "20.04.2023",
+        members: 10,
+        isOwner: true,
+        status: "active",
+        tasks: { total: 32, completed: 22 }
+    },
+    {
+        id: "22",
+        name: "Social Media Integration",
+        createdAt: "01.07.2023",
+        members: 4,
+        isOwner: false,
+        status: "paused",
+        tasks: { total: 16, completed: 4 }
+    },
+    {
+        id: "13",
+        name: "5G Network Integration",
+        createdAt: "10.06.2023",
+        members: 12,
+        isOwner: true,
+        status: "active",
+        tasks: {
+            total: 40,
+            completed: 0,
+        },
+    },
+    {
+        id: "14",
+        name: "Quantum Computing Research",
+        createdAt: "01.05.2023",
+        members: 7,
+        isOwner: false,
+        status: "paused",
+        tasks: {
+            total: 15,
+            completed: 3,
+        },
+    }
 ] 

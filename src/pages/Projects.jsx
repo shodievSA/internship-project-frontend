@@ -1,42 +1,85 @@
-import { useState } from "react";
-import EmptyDashboard from "../components/EmptyDashboard";
-import NewProjectModal from "../components/NewProjectModal";
+import { useSearchParams } from "react-router-dom";
+import { projects as mockProjects } from "../utils/data";
+import { filterProjects } from "../utils/filterUtils";
 import ProjectCard from "../components/ProjectCard";
-import { projects } from "../utils/data"
+import ProjectHeader from "../components/ProjectHeader";
+import EmptySearch from "../components/EmptySearch";
+import NewProjectModal from "../components/NewProjectModal";
+import { useMemo, useState } from "react";
 
-function Projects() {
+const Projects = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
-    const [projectCount, setProjectsCount] = useState(() => {
-        try {
-            const count = JSON.parse(localStorage.getItem('projectCount'));
-            return (Number.isInteger(count) && Number.isFinite(count)) ? count : 0; // validating data
-        } catch {
-            return 0;
-        }
-    });
+  // Keep track of filter values
+  const currentFilters = {
+    search: searchParams.get("search") || "",
+    status: searchParams.get("status") || "All Status",
+    owner: searchParams.get("owner") || "All Projects",
+    timeFrame: searchParams.get("timeFrame") || "All Time"
+  };
 
-    const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  // Filter projects using memoization to prevent unnecessary recalculations
+  const filteredProjects = useMemo(() => {
+    return filterProjects(mockProjects, currentFilters);
+  }, [currentFilters]);
 
-    return (
-        <div className="h-full px-5 pt-10 lg:px-10">
-            {
-                showNewProjectModal && (
-                    <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
-                )
-            }
-            {
-                !projectCount > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-                        {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyDashboard setShowNewProjectModal={setShowNewProjectModal} />
-                )
-            }
-        </div>
-    )
-}
+  const handleSearch = (searchTerm) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (searchTerm) {
+      newParams.set("search", searchTerm);
+    } else {
+      newParams.delete("search");
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    const newParams = new URLSearchParams(searchParams);
+    const defaultValues = {
+      status: "All Status",
+      owner: "All Projects",
+      timeFrame: "All Time"
+    };
+
+    if (value === defaultValues[filterType]) {
+      newParams.delete(filterType);
+    } else {
+      newParams.set(filterType, value);
+    }
+
+    setSearchParams(newParams);
+  };
+
+  const clearFilters = () => {
+    setSearchParams({});
+  };
+
+  return (
+    <div className="min-h-screen px-5 pt-10 lg:px-10">
+      <div className="flex flex-col gap-y-4">
+        <ProjectHeader
+          filters={currentFilters}
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          setShowNewProjectModal={setShowNewProjectModal}
+        />
+
+        {filteredProjects.length === 0 ? (
+          <EmptySearch onClearFilters={clearFilters} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
+        )}
+      </div>
+      {showNewProjectModal && (
+        <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
+      )}
+    </div>
+  );
+};
 
 export default Projects;
