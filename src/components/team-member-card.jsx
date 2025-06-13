@@ -1,10 +1,11 @@
+"use client"
+
 import { useState, useRef } from "react"
 import { Mail, MoreVertical, User } from "lucide-react"
 import { StatusBadge } from "./status-badge"
 import { ActionMenu } from "./action-menu"
-import { getAvatarUrl } from "../utils/constant"
 
-export function TeamMemberCard({ member, currentUser, onRemoveMember, index }) {
+export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
     const [menuOpen, setMenuOpen] = useState(false)
     const buttonRef = useRef(null)
 
@@ -13,15 +14,14 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember, index }) {
         setMenuOpen(!menuOpen)
     }
 
+    // Generate avatar URL using UI Avatars
+    const getAvatarUrl = (name) => {
+        const encodedName = encodeURIComponent(name)
+        return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=56`
+    }
+
     return (
-        <div
-            className="border border-gray-200/75 dark:border-gray-700/60 rounded-lg p-4 bg-white dark:bg-black relative hover:border-gray-300/75 dark:hover:border-gray-600/60 transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
-            style={{
-                animationDelay: `${index * 50}ms`,
-                opacity: 0,
-                animationFillMode: 'forwards'
-            }}
-        >
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-black relative">
             <div className="flex items-start justify-between">
                 <div className="flex items-start flex-grow min-w-0">
                     <div className="flex-shrink-0 mr-3">
