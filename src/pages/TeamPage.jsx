@@ -31,25 +31,7 @@ export default function TeamMembersPage() {
             <Toaster
                 position="bottom-right"
                 toastOptions={{
-                    className: "",
                     duration: 3000,
-                    style: {
-                        background: "var(--background)",
-                        color: "var(--foreground)",
-                        border: "1px solid var(--border)",
-                    },
-                    success: {
-                        iconTheme: {
-                            primary: "#10B981",
-                            secondary: "white",
-                        },
-                    },
-                    error: {
-                        iconTheme: {
-                            primary: "#EF4444",
-                            secondary: "white",
-                        },
-                    },
                 }}
             />
         </div>

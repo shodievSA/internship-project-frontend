@@ -1,9 +1,8 @@
-"use client"
-
 import { useState, useRef } from "react"
 import { Mail, MoreVertical, User } from "lucide-react"
 import { StatusBadge } from "./status-badge"
 import { ActionMenu } from "./action-menu"
+import { getAvatarUrl } from "../utils/constant"
 
 export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
     const [menuOpen, setMenuOpen] = useState(false)
@@ -14,14 +13,9 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
         setMenuOpen(!menuOpen)
     }
 
-    // Generate avatar URL using UI Avatars
-    const getAvatarUrl = (name) => {
-        const encodedName = encodeURIComponent(name)
-        return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=56`
-    }
 
     return (
-        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-black relative">
+        <div className="border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-black relative transition-all duration-200 ease-in-out hover:shadow-md hover:border-gray-300 dark:hover:border-gray-700">
             <div className="flex items-start justify-between">
                 <div className="flex items-start flex-grow min-w-0">
                     <div className="flex-shrink-0 mr-3">
@@ -56,7 +50,7 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
 
                 <button
                     ref={buttonRef}
-                    className="flex-shrink-0 ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    className="flex-shrink-0 ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors duration-200"
                     onClick={handleMenuToggle}
                     aria-label="Member options"
                     aria-expanded={menuOpen}
