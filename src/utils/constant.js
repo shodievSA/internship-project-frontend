@@ -76,3 +76,9 @@ export const colorMap = {
         hover: "group-hover:text-purple-600 dark:group-hover:text-purple-400"
     }
 }
+
+
+export const getAvatarUrl = (name) => {
+    const encodedName = encodeURIComponent(name)
+    return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=56`
+}

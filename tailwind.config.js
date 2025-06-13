@@ -5,7 +5,7 @@ export default {
   darkMode: ['class', '.dark-mode'],
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
@@ -54,6 +54,16 @@ export default {
         'feature-bounce': {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' }
+        },
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          },
         }
       },
       animation: {
@@ -75,7 +85,8 @@ export default {
         'feature-pop-delay-2': 'feature-pop 0.8s ease-out 0.8s forwards',
         'feature-pop-delay-3': 'feature-pop 0.8s ease-out 1.2s forwards',
         'icon-spin': 'icon-spin 1s linear infinite',
-        'feature-bounce': 'feature-bounce 2s ease-in-out infinite'
+        'feature-bounce': 'feature-bounce 2s ease-in-out infinite',
+        'fade-in-up': 'fade-in-up 0.5s ease-out'
       }
     },
   },
