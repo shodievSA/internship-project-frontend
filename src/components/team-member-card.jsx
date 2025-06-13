@@ -1,0 +1,79 @@
+import { useState, useRef } from "react"
+import { Mail, MoreVertical, User } from "lucide-react"
+import { StatusBadge } from "./status-badge"
+import { ActionMenu } from "./action-menu"
+import { getAvatarUrl } from "../utils/constant"
+
+export function TeamMemberCard({ member, currentUser, onRemoveMember, index }) {
+    const [menuOpen, setMenuOpen] = useState(false)
+    const buttonRef = useRef(null)
+
+    const handleMenuToggle = (e) => {
+        e.stopPropagation()
+        setMenuOpen(!menuOpen)
+    }
+
+    return (
+        <div
+            className="border border-gray-200/75 dark:border-gray-700/60 rounded-lg p-4 bg-white dark:bg-black relative hover:border-gray-300/75 dark:hover:border-gray-600/60 transition-all duration-200 ease-in-out hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
+            style={{
+                animationDelay: `${index * 50}ms`,
+                opacity: 0,
+                animationFillMode: 'forwards'
+            }}
+        >
+            <div className="flex items-start justify-between">
+                <div className="flex items-start flex-grow min-w-0">
+                    <div className="flex-shrink-0 mr-3">
+                        <img
+                            src={getAvatarUrl(member.name)}
+                            alt={member.name}
+                            width={56}
+                            height={56}
+                            className="rounded-full bg-gray-100 dark:bg-gray-800 object-cover"
+                        />
+                    </div>
+
+                    <div className="flex-grow min-w-0">
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-lg truncate">{member.name}</h3>
+                            <StatusBadge status={member.status} />
+                        </div>
+
+                        <div className="mt-2 space-y-1">
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                <User className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">{member.role}</span>
+                            </div>
+
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">{member.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    ref={buttonRef}
+                    className="flex-shrink-0 ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    onClick={handleMenuToggle}
+                    aria-label="Member options"
+                    aria-expanded={menuOpen}
+                    aria-haspopup="true"
+                >
+                    <MoreVertical className="h-5 w-5" />
+                </button>
+            </div>
+
+            <ActionMenu
+                isOpen={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                anchorEl={buttonRef.current}
+                member={member}
+                currentUser={currentUser}
+                onRemoveMember={onRemoveMember}
+            />
+        </div>
+    )
+}
