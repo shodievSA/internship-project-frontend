@@ -174,3 +174,48 @@ export const projects = [
         },
     }
 ] 
+
+
+
+export const mockInvitations = [
+    {
+        id: 1,
+        projectName: "Website Redesign",
+        inviterName: "Sarah Johnson",
+        inviterEmail: "sarah.johnson@company.com",
+        role: "Developer",
+        date: "2/15/2024",
+        status: "pending",
+        avatar: "/placeholder.svg?height=40&width=40",
+    },
+    {
+        id: 2,
+        projectName: "Mobile App Development",
+        inviterName: "Mike Chen",
+        inviterEmail: "mike.chen@startup.io",
+        role: "UI Designer",
+        date: "2/12/2024",
+        status: "pending",
+        avatar: "/placeholder.svg?height=40&width=40",
+    },
+    {
+        id: 3,
+        projectName: "Marketing Campaign",
+        inviterName: "Emily Davis",
+        inviterEmail: "emily.davis@agency.com",
+        role: "Content Writer",
+        date: "2/10/2024",
+        status: "accepted",
+        avatar: "/placeholder.svg?height=40&width=40",
+    },
+    {
+        id: 4,
+        projectName: "API Integration",
+        inviterName: "Alex Rodriguez",
+        inviterEmail: "alex.rodriguez@tech.com",
+        role: "Backend Developer",
+        date: "2/08/2024",
+        status: "rejected",
+        avatar: "/placeholder.svg?height=40&width=40",
+    },
+]

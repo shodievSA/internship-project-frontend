@@ -24,21 +24,22 @@ function App() {
 				<Router>
 					<Routes>
 						<Route element={<PrivateRoute />}>
-							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />						
+							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
 							<Route path="/projects" element={<Projects />} />
 							<Route path="/projects/:projectId" element={<ProjectLayout />}>
 								<Route path="team" element={<TeamPage />} />
 								<Route path="all-tasks" element={<AllTasksPage />} />
 								<Route path="my-tasks" element={<MyTasksPage />} />
 								<Route path="assigned-tasks" element={<AssignedTasksPage />} />
-								<Route path="review-tasks" element={<ReviewTasksPage /> } />
+								<Route path="review-tasks" element={<ReviewTasksPage />} />
 								<Route path="project-invites" element={<InvitesPage />} />
-							</Route>							
+							</Route>
 							<Route path="/notifications" element={<NotificationsOutlet />}>
 								<Route index element={<Notifications />} />
 								<Route path=":notificationId" element={<NotificationDetails />} />
 							</Route>
 							<Route path="/ai-planner" element={<AiPlanner />} />
+							<Route path="/project-invites" element={<InvitesPage />} />
 						</Route>
 						<Route path="/sign-in" element={<SignIn />} />
 					</Routes>

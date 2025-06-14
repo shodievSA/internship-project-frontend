@@ -1,11 +1,9 @@
-function InvitesPage() {
+import { ProjectInvitations } from "../components/ProjectInvitation";
 
-    return (
-        <div>
-            <h1>This is Invites Page</h1>
-        </div>
-    )
-
+export default function InvitesPage() {
+  return (
+    <div className="min-h-screen ">
+      <ProjectInvitations />
+    </div>
+  );
 }
-
-export default InvitesPage;
