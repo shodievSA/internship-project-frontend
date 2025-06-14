@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { House, Sparkles, Bell, LogOut } from 'lucide-react';
+import { House, Sparkles, Bell, LogOut, Mail } from 'lucide-react';
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
@@ -52,8 +51,8 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 to access your workspace.
                             </p>
                             <div className="flex justify-end gap-x-4 mt-2">
-                                <button 
-                                    disabled={isUserBeingSignedOut} 
+                                <button
+                                    disabled={isUserBeingSignedOut}
                                     className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
                                     bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
                                     ${isUserBeingSignedOut ? 'cursor-not-allowed' : 'cursor-pointer'} disabled:opacity-50`}
@@ -61,8 +60,8 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 >
                                     Cancel
                                 </button>
-                                <button 
-                                    disabled={isUserBeingSignedOut} 
+                                <button
+                                    disabled={isUserBeingSignedOut}
                                     className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 
                                     hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-lg font-medium text-sm 
                                     lg:text-base disabled:opacity-50'
@@ -104,9 +103,9 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     <img src={user.avatarUrl} className='w-full h-full rounded-full' />
                                 </div>
                                 <div className="flex flex-col">
-                                    <p className="text-sm md:text-lg font-medium">{ user.fullName }</p>
+                                    <p className="text-sm md:text-lg font-medium">{user.fullName}</p>
                                     <p className="dark:text-neutral-400 text-neutral-500 text-sm md:text-base">
-                                        { user.email }
+                                        {user.email}
                                     </p>
                                 </div>
                             </div>
@@ -133,6 +132,13 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Bell className="w-5 h-5" />
                                         <span>Notifications</span>
+                                    </NavLink>
+                                    <NavLink to={'/project-invites'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
+                                    dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
+                                    items-center gap-x-3 py-2 px-3 rounded-md relative'>
+                                        <Mail className="w-5 h-5" />
+                                        <span>Invitations</span>
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 bg-red-500 rounded-full"></span>
                                     </NavLink>
                                 </ul>
                             </div>
