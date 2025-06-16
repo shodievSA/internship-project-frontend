@@ -1,19 +1,20 @@
-function Input({ label, placeholder, text, setText, isBeingSubmitted }) {
+function Input({  
+    placeholder, 
+    value, 
+    disabled,
+    onChange
+}) {
 
     return (
-        <div className="flex flex-col gap-y-3">
-            <label className="text-sm md:text-base flex gap-x-0.5 font-semibold">
-                { label }
-            </label>
+        <div className="flex flex-col gap-y-3 w-full">
             <input 
-                disabled={isBeingSubmitted}
+                disabled={disabled}
                 placeholder={placeholder}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+                value={value}
+                onChange={onChange}
+                className="dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
                 focus:border-black bg-white rounded-md text-sm lg:text-base border-[1px] py-2 px-4 
-                outline-none disabled:opacity-50 ${isBeingSubmitted ? 'cursor-not-allowed' : 
-                'cursor-text'}`}
+                outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-text"
             />
         </div>
     );
