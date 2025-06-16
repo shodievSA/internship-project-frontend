@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, NavLink } from "react-router-dom";
 import NewTaskModal from "../components/NewTaskModal";
+import EditProjectModal from "../components/EditProjectModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
 
@@ -11,6 +12,7 @@ function ProjectLayout() {
 
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
+    const [showEditProjectModal, setShowEditProjectModal] = useState(false);
 
     const teamMembers = [
         {
@@ -66,7 +68,20 @@ function ProjectLayout() {
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
             {
                 showNewTaskModal && (
-                    <NewTaskModal setShowNewTaskModal={setShowNewTaskModal} teamMembers={teamMembers} />  
+                    <NewTaskModal 
+                        setShowNewTaskModal={setShowNewTaskModal} 
+                        teamMembers={teamMembers} 
+                    />  
+                )
+            }
+            {
+                showEditProjectModal && (
+                    <EditProjectModal 
+                        projectId={projectInfo.id}
+                        currentProjectTitle={projectInfo.name} 
+                        currentProjectStatus={projectInfo.status}  
+                        showModal={setShowEditProjectModal}
+                    />
                 )
             }
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
@@ -88,8 +103,14 @@ function ProjectLayout() {
                             rounded-md flex flex-col absolute w-[200px] mt-3 ${settingsButtonClicked ? 'opacity-100' : 
                             'opacity-0 pointer-events-none'} transition-[opacity] duration-200`}>
                             <div className="flex flex-col border-b-[1px] dark:border-neutral-800 border-neutral-200 p-1.5">
-                                <button className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 
-                                items-center gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200">
+                                <button 
+                                    className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 
+                                    items-center gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200"
+                                    onClick={() => {
+                                        setSettingsButtonClicked(false);
+                                        setShowEditProjectModal(true);
+                                    }}
+                                >
                                     <SquarePen className="w-4 h-4" />
                                     <span>Edit Project</span>
                                 </button>
