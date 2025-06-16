@@ -39,7 +39,6 @@ function App() {
 								<Route path=":notificationId" element={<NotificationDetails />} />
 							</Route>
 							<Route path="/ai-planner" element={<AiPlanner />} />
-							<Route path="/project-invites" element={<InvitesPage />} />
 						</Route>
 						<Route path="/sign-in" element={<SignIn />} />
 					</Routes>

@@ -133,13 +133,6 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                         <Bell className="w-5 h-5" />
                                         <span>Notifications</span>
                                     </NavLink>
-                                    <NavLink to={'/project-invites'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
-                                    dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
-                                    items-center gap-x-3 py-2 px-3 rounded-md relative'>
-                                        <Mail className="w-5 h-5" />
-                                        <span>Invitations</span>
-                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 bg-red-500 rounded-full"></span>
-                                    </NavLink>
                                 </ul>
                             </div>
                             <div className="mt-auto flex flex-col gap-y-5 dark:border-t-neutral-800 border-t-neutral-200 

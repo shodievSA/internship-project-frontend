@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Calendar, Mail, User, Check, X, Filter } from "lucide-react";
+import { Search, Calendar, Mail, User, Filter, Plus } from "lucide-react";
 import { CustomDropdown } from "./CustomDropdown";
 import { mockInvitations } from "../utils/data";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
@@ -10,20 +10,6 @@ export function ProjectInvitations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
-
-  const handleAccept = (id) => {
-    setInvitations((prev) =>
-      prev.map((inv) => (inv.id === id ? { ...inv, status: "accepted" } : inv))
-    );
-    const invitation = invitations.find((inv) => inv.id === id);
-  };
-
-  const handleReject = (id) => {
-    setInvitations((prev) =>
-      prev.map((inv) => (inv.id === id ? { ...inv, status: "rejected" } : inv))
-    );
-    const invitation = invitations.find((inv) => inv.id === id);
-  };
 
   const filteredInvitations = invitations.filter((invitation) => {
     const matchesSearch =
@@ -68,7 +54,7 @@ export function ProjectInvitations() {
         {/* Header with Search and Filters */}
         <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
           {/* Search Bar (left on desktop) */}
-          <div className="flex justify-start w-full lg:w-1/2">
+          <div className="flex justify-start w-full lg:w-1/3">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-neutral-400" />
               <input
@@ -80,22 +66,39 @@ export function ProjectInvitations() {
               />
             </div>
           </div>
-          {/* Dropdowns (right on desktop) */}
-          <div className="flex gap-3 items-center">
-            <CustomDropdown
-              value={statusFilter}
-              onChange={setStatusFilter}
-              options={statusOptionsInviation}
-              placeholder="All Status"
-              icon={Filter}
-            />
-            <CustomDropdown
-              value={dateFilter}
-              onChange={setDateFilter}
-              options={dateOptions}
-              placeholder="All Dates"
-              icon={Calendar}
-            />
+          {/* Dropdowns and Send Invitation Button (right on desktop) */}
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <CustomDropdown
+                value={statusFilter}
+                onChange={setStatusFilter}
+                options={statusOptionsInviation}
+                placeholder="All Status"
+                icon={Filter}
+                className="w-full sm:w-auto"
+              />
+              <CustomDropdown
+                value={dateFilter}
+                onChange={setDateFilter}
+                options={dateOptions}
+                placeholder="All Dates"
+                icon={Calendar}
+                className="w-full sm:w-auto"
+              />
+            </div>
+            <button
+              onClick={() => {
+                // TODO: Implement invitation sending logic
+                console.log("Send invitation clicked");
+              }}
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-base font-bold transition-colors focus:outline-none
+                bg-gray-900 text-white hover:bg-gray-800
+                dark:bg-white dark:text-black dark:hover:bg-neutral-100
+                w-full sm:w-auto"
+            >
+              <Plus className="h-4 w-4" />
+              Send Invitation
+            </button>
           </div>
         </div>
 
@@ -118,13 +121,6 @@ export function ProjectInvitations() {
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                       {invitation.projectName}
                     </h3>
-                    <p className="text-gray-600 dark:text-neutral-400 mb-4">
-                      Invited by{" "}
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        {invitation.inviterName}
-                      </span>
-                    </p>
-
                     {/* Info Row */}
                     <div className="flex flex-wrap gap-6 text-sm text-gray-600 dark:text-neutral-400 mb-6">
                       <div className="flex items-center gap-2">
@@ -148,32 +144,6 @@ export function ProjectInvitations() {
                   {getStatusBadge(invitation.status)}
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              {invitation.status === "pending" && (
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleAccept(invitation.id)}
-                    className="flex items-center gap-2 px-6 py-2 rounded-lg text-base font-bold transition-colors focus:outline-none
-                                        bg-gray-900 text-white hover:bg-gray-800
-                                        dark:bg-white dark:text-black dark:hover:bg-neutral-100
-                                        "
-                  >
-                    <Check className="h-4 w-4 dark:text-black" />
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => handleReject(invitation.id)}
-                    className="flex items-center gap-2 px-6 py-2 rounded-lg text-base font-bold transition-colors focus:outline-none
-                                        bg-transparent text-gray-700 hover:bg-gray-100
-                                        border border-gray-300
-                                        dark:bg-transparent dark:text-white dark:border-neutral-700 dark:hover:bg-white/10"
-                  >
-                    <X className="h-4 w-4 dark:text-white" />
-                    Reject
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>
