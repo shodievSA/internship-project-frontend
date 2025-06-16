@@ -17,15 +17,17 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
     }
 
     const handleCardClick = () => {
-        navigate(`/projects/${projectId}/team/${member.id}`, {
-            state: {
-                projectInfo: {
-                    id: projectId,
-                    name: member.projectName || "Project Name",
-                    status: "active"
+        if (!menuOpen) {
+            navigate(`/projects/${projectId}/team/${member.id}`, {
+                state: {
+                    projectInfo: {
+                        id: projectId,
+                        name: member.projectName || "Project Name",
+                        status: "active"
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     return (
