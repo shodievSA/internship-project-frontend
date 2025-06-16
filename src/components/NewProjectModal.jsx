@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { CircleAlert } from "lucide-react";
+import projectService from "../services/projectService";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 
 function NewProjectModal({ setShowNewProjectModal }) {
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
   const [newProjectTitle, setNewProjectTitle] = useState("");
   const [newProjectUserPosition, setNewProjectUserPosition] = useState("");
   const [showNewProjectTitleError, setShowNewProjectTitleError] =
@@ -10,8 +15,9 @@ function NewProjectModal({ setShowNewProjectModal }) {
     useState(false);
   const [isNewProjectBeingCreated, setIsNewProjectBeingCreated] =
     useState(false);
+  const [error, setError] = useState("");
 
-  function createNewProject() {
+  async function createNewProject() {
     const isValid = isNewProjectInputValid(
       newProjectTitle,
       newProjectUserPosition,
@@ -22,10 +28,18 @@ function NewProjectModal({ setShowNewProjectModal }) {
     if (!isValid) return;
 
     setIsNewProjectBeingCreated(true);
+    setError("");
 
-    setTimeout(() => {
+    try {
+      const response = await projectService.createProject(user.id, newProjectTitle, newProjectUserPosition);
+      setShowNewProjectModal(false);
+      // Navigate to the new project
+      navigate(`/projects`);
+    } catch (err) {
+      setError(err.message || "Failed to create project. Please try again.");
+    } finally {
       setIsNewProjectBeingCreated(false);
-    }, 3000);
+    }
   }
 
   return (
@@ -74,6 +88,12 @@ function NewProjectModal({ setShowNewProjectModal }) {
               </div>
             )}
           </div>
+          {error && (
+            <div className="flex gap-x-1.5 text-red-500">
+              <CircleAlert className="w-4 h-4" />
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
