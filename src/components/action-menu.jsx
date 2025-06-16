@@ -1,16 +1,17 @@
-
-
 import { useRef, useEffect, useState } from "react"
-import { Shield, BarChart2, UserMinus } from "lucide-react"
+import { Shield, UserMinus, UserPlus, UserMinus2 } from "lucide-react"
 import { ModalOverlay } from "./modal-overlay"
 import { ConfirmationDialog } from "./confirmation-dialog"
-import toast from "react-hot-toast"
+import { RoleConfirmationDialog } from "./RoleConfirmationDialog"
 
 export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onRemoveMember }) {
     const menuRef = useRef(null)
     const isAdmin = member.status === "admin"
+    const isManager = member.status === "manager"
     const isSelf = member.id === currentUser?.id
     const [showConfirmation, setShowConfirmation] = useState(false)
+    const [showRoleConfirmation, setShowRoleConfirmation] = useState(false)
+    const [roleAction, setRoleAction] = useState(null)
 
     // Close menu when clicking outside
     useEffect(() => {
@@ -46,7 +47,6 @@ export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onR
         console.log("Confirmed: Remove from project:", member.name)
         if (onRemoveMember) {
             onRemoveMember(member.id)
-            toast.success(`${member.name} has been removed from the project`)
         }
         setShowConfirmation(false)
     }
@@ -55,13 +55,31 @@ export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onR
         setShowConfirmation(false)
     }
 
-    const handlePromoteToAdmin = () => {
-        console.log("Promote to admin:", member.name)
-        toast.success(`${member.name} has been promoted to admin`)
+    const handlePromoteToManager = () => {
+        setRoleAction("promote")
+        setShowRoleConfirmation(true)
         onClose()
     }
 
-    if (!isOpen && !showConfirmation) return null
+    const handleDemoteToMember = () => {
+        setRoleAction("demote")
+        setShowRoleConfirmation(true)
+        onClose()
+    }
+
+    const handleConfirmRoleChange = () => {
+        console.log(`Confirmed: ${roleAction} ${member.name}`)
+        // Here you would typically call an API to update the member's role
+        setShowRoleConfirmation(false)
+        setRoleAction(null)
+    }
+
+    const handleCancelRoleChange = () => {
+        setShowRoleConfirmation(false)
+        setRoleAction(null)
+    }
+
+    if (!isOpen && !showConfirmation && !showRoleConfirmation) return null
 
     return (
         <>
@@ -75,36 +93,35 @@ export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onR
                     }}
                 >
                     <div className="py-1">
-                        <button
-                            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                            onClick={() => {
-                                console.log("View analytics for", member.name)
-                                onClose()
-                            }}
-                        >
-                            <BarChart2 className="h-4 w-4 mr-2" />
-                            View Analytics
-                        </button>
-
-                        {!isAdmin && (
+                        {!isAdmin && !isManager && (
                             <button
-                                className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
-                                onClick={handlePromoteToAdmin}
+                                className="flex items-center w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                onClick={handlePromoteToManager}
                             >
-                                <Shield className="h-4 w-4 mr-2" />
-                                Promote to Admin
+                                <UserPlus className="h-4 w-4 mr-2" />
+                                Promote to Manager
+                            </button>
+                        )}
+
+                        {isManager && (
+                            <button
+                                className="flex items-center w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                onClick={handleDemoteToMember}
+                            >
+                                <UserMinus2 className="h-4 w-4 mr-2" />
+                                Demote to Member
                             </button>
                         )}
 
                         {isAdmin && isSelf ? (
-                            <div className="flex items-center w-full px-4 py-2 text-sm text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center w-full px-4 py-2 text-base text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700">
                                 <UserMinus className="h-4 w-4 mr-2" />
                                 Cannot remove yourself
                             </div>
                         ) : (
                             !isAdmin && (
                                 <button
-                                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+                                    className="flex items-center w-full px-4 py-2 text-base text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
                                     onClick={handleRemoveClick}
                                 >
                                     <UserMinus className="h-4 w-4 mr-2" />
@@ -118,6 +135,15 @@ export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onR
 
             <ModalOverlay isOpen={showConfirmation} onClose={handleCancelRemove}>
                 <ConfirmationDialog member={member} onConfirm={handleConfirmRemove} onCancel={handleCancelRemove} />
+            </ModalOverlay>
+
+            <ModalOverlay isOpen={showRoleConfirmation} onClose={handleCancelRoleChange}>
+                <RoleConfirmationDialog
+                    member={member}
+                    action={roleAction}
+                    onConfirm={handleConfirmRoleChange}
+                    onCancel={handleCancelRoleChange}
+                />
             </ModalOverlay>
         </>
     )

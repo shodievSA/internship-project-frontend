@@ -1,17 +1,18 @@
 import { useState } from "react"
 import { TeamMembersList } from "../components/team-members-list"
 import { teamMembers as initialTeamMembers } from "../utils/data"
-import { Toaster } from "react-hot-toast"
 import { useOutletContext } from "react-router-dom"
 
 export default function TeamMembersPage() {
-
     const { projectData } = useOutletContext();
 
-    console.log(projectData);
-
     // For demo purposes, we'll assume the current user is the admin (John Doe)
-    const [teamMembers, setTeamMembers] = useState(initialTeamMembers)
+    const [teamMembers, setTeamMembers] = useState(
+        initialTeamMembers.map(member => ({
+            ...member,
+            projectName: projectData?.name || "Project Name"
+        }))
+    )
     const [currentUser] = useState(teamMembers[0])
 
     const handleRemoveMember = (memberId) => {
@@ -28,12 +29,6 @@ export default function TeamMembersPage() {
 
                 <TeamMembersList members={teamMembers} currentUser={currentUser} onRemoveMember={handleRemoveMember} />
             </div>
-            <Toaster
-                position="bottom-right"
-                toastOptions={{
-                    duration: 3000,
-                }}
-            />
         </div>
     )
 }

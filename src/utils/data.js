@@ -193,7 +193,7 @@ export const teamMembers = [
       name: "Sarah Johnson",
       role: "Lead Developer",
       email: "sarah.johnson@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -201,7 +201,7 @@ export const teamMembers = [
       name: "Mike Chen",
       role: "UI/UX Designer",
       email: "mike.chen@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -225,7 +225,7 @@ export const teamMembers = [
       name: "Lisa Wang",
       role: "Frontend Developer",
       email: "lisa.wang@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -241,7 +241,7 @@ export const teamMembers = [
       name: "Maria Garcia",
       role: "Product Owner",
       email: "maria.garcia@company.com",
-      status: "admin",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -265,7 +265,7 @@ export const teamMembers = [
       name: "Raj Patel",
       role: "Full Stack Developer",
       email: "raj.patel@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -289,7 +289,7 @@ export const teamMembers = [
       name: "Aisha Khan",
       role: "Data Scientist",
       email: "aisha.khan@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -297,7 +297,7 @@ export const teamMembers = [
       name: "Thomas Lee",
       role: "System Architect",
       email: "thomas.lee@company.com",
-      status: "admin",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
@@ -321,7 +321,7 @@ export const teamMembers = [
       name: "Isabella Martinez",
       role: "QA Lead",
       email: "isabella.martinez@company.com",
-      status: "member",
+      status: "manager",
       avatar: "/placeholder.svg?height=80&width=80",
     },
     {
