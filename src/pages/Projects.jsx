@@ -1,3 +1,4 @@
+import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { projects as mockProjects } from "../utils/data";
 import { filterProjects } from "../utils/filterUtils";
@@ -5,10 +6,21 @@ import ProjectCard from "../components/ProjectCard";
 import ProjectHeader from "../components/ProjectHeader";
 import EmptySearch from "../components/EmptySearch";
 import NewProjectModal from "../components/NewProjectModal";
-import { useMemo, useState } from "react";
+import EmptyDashboard from "../components/EmptyDashboard";
+const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Projects() {
 
+	const [projectCount, setProjectCount] = useState(() => {
+		try {
+			const count = JSON.parse(localStorage.getItem('projectCount'));
+			(Number.isInteger(count) && Number.isFinite(count)) ? count : 0
+		} catch {
+			return 0;
+		}
+	});
+	const [projectsFetched, setProjectsFetched] = useState(false);
+	const [projects, setProjects] = useState([]);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
@@ -28,9 +40,9 @@ function Projects() {
 	const handleSearch = (searchTerm) => {
 		const newParams = new URLSearchParams(searchParams);
 		if (searchTerm) {
-		newParams.set("search", searchTerm);
+			newParams.set("search", searchTerm);
 		} else {
-		newParams.delete("search");
+			newParams.delete("search");
 		}
 		setSearchParams(newParams);
 	};
@@ -38,15 +50,15 @@ function Projects() {
 	const handleFilterChange = (filterType, value) => {
 		const newParams = new URLSearchParams(searchParams);
 		const defaultValues = {
-		status: "All Status",
-		owner: "All Projects",
-		timeFrame: "All Time"
+			status: "All Status",
+			owner: "All Projects",
+			timeFrame: "All Time"
 		};
 
 		if (value === defaultValues[filterType]) {
-		newParams.delete(filterType);
+			newParams.delete(filterType);
 		} else {
-		newParams.set(filterType, value);
+			newParams.set(filterType, value);
 		}
 
 		setSearchParams(newParams);
@@ -56,29 +68,87 @@ function Projects() {
 		setSearchParams({});
 	};
 
+	useEffect(() => {
+
+		getProjects();
+
+		async function getProjects() {
+
+			try {
+
+				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
+					method: 'GET',
+					credentials: 'include'
+				});
+
+				if (!res.ok) {
+
+					throw new Error('Error fetching user projects');
+
+				} else {
+
+					const { projects } = await res.json();
+					setProjects(projects);
+
+				}
+
+			} catch (err) {
+
+				console.log(err);
+
+			} finally {
+
+				setProjectsFetched(true);
+
+			}
+
+		}
+
+	}, []);
+
+	useEffect(() => {
+
+		if (projectsFetched) {
+
+			localStorage.setItem('projectCount', projects.length);
+
+		}
+
+	}, [projects, projectsFetched]);
+
 	return (
-		<div className="min-h-screen px-5 pt-10 lg:px-10">
-			<div className="flex flex-col gap-y-4">
-				<ProjectHeader
-					filters={currentFilters}
-					onSearch={handleSearch}
-					onFilterChange={handleFilterChange}
-					setShowNewProjectModal={setShowNewProjectModal}
-				/>
-				{
-					filteredProjects.length === 0 ? (
-						<EmptySearch onClearFilters={clearFilters} />
-					) : (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		<div className="h-full px-5 pt-10 lg:px-10">
+			{
+				projectCount > 0 ? (
+					projectsFetched ? (
+						<div className="flex flex-col gap-y-4">
+							<ProjectHeader
+								filters={currentFilters}
+								onSearch={handleSearch}
+								onFilterChange={handleFilterChange}
+								setShowNewProjectModal={setShowNewProjectModal}
+							/>
 							{
-								filteredProjects.map((project) => (
-									<ProjectCard key={project.id} project={project} />
-								))
+								filteredProjects.length === 0 ? (
+									<EmptySearch onClearFilters={clearFilters} />
+								) : (
+									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+										{
+											filteredProjects.map((project) => (
+												<ProjectCard key={project.id} project={project} />
+											))
+										}
+									</div>
+								)
 							}
 						</div>
+					) : (
+						<div>Skeleton</div> // this section will contain skeletons
 					)
-				}
-			</div>
+				) : (
+					<EmptyDashboard showNewProjectModal={setShowNewProjectModal} />
+				)
+			}
 			{
 				showNewProjectModal && (
 					<NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
