@@ -1,15 +1,36 @@
 import { useSearchParams } from "react-router-dom";
-import { projects as mockProjects } from "../utils/data";
 import { filterProjects } from "../utils/filterUtils";
 import ProjectCard from "../components/ProjectCard";
 import ProjectHeader from "../components/ProjectHeader";
 import EmptySearch from "../components/EmptySearch";
 import NewProjectModal from "../components/NewProjectModal";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import projectService from "../services/projectService";
 
 const Projects = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Fetch projects from server on mount
+  useEffect(() => {
+    async function fetchProjects() {
+      setLoading(true);
+      setError("");
+      try {
+        const response = await projectService.getProjects();
+        setProjects(response.projects);
+        console.log("Project data", response.projects);
+      } catch (err) {
+        setError(err.message || "Failed to load projects");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProjects();
+  }, []);
 
   // Keep track of filter values
   const currentFilters = {
@@ -19,10 +40,13 @@ const Projects = () => {
     timeFrame: searchParams.get("timeFrame") || "All Time"
   };
 
-  // Filter projects using memoization to prevent unnecessary recalculations
+  // Always sort projects by createdAt descending before filtering
   const filteredProjects = useMemo(() => {
-    return filterProjects(mockProjects, currentFilters);
-  }, [currentFilters]);
+    const sorted = [...projects].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    return filterProjects(sorted, currentFilters);
+  }, [projects, currentFilters]);
 
   const handleSearch = (searchTerm) => {
     const newParams = new URLSearchParams(searchParams);
@@ -55,6 +79,15 @@ const Projects = () => {
     setSearchParams({});
   };
 
+  // Handler to add new project to state
+  const handleProjectCreated = (newProject) => {
+    // If the API does not return isAdmin, set it manually
+    if (typeof newProject.isAdmin === 'undefined') {
+      newProject.isAdmin = true;
+    }
+    setProjects((prev) => [newProject, ...prev]);
+  };
+
   return (
     <div className="min-h-screen px-5 pt-10 lg:px-10">
       <div className="flex flex-col gap-y-4">
@@ -65,7 +98,11 @@ const Projects = () => {
           setShowNewProjectModal={setShowNewProjectModal}
         />
 
-        {filteredProjects.length === 0 ? (
+        {loading ? (
+          <div>Loading projects...</div>
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
+        ) : filteredProjects.length === 0 ? (
           <EmptySearch onClearFilters={clearFilters} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -76,7 +113,7 @@ const Projects = () => {
         )}
       </div>
       {showNewProjectModal && (
-        <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} />
+        <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} onProjectCreated={handleProjectCreated} />
       )}
     </div>
   );

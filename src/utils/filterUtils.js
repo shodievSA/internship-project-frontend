@@ -18,9 +18,9 @@ export const filterProjects = (projects, filters) => {
 
     // Owner filter
     if (filters.owner && filters.owner !== "All Projects") {
-      if (filters.owner === "Owner" && !project?.isOwner) {
+      if (filters.owner === "Owner" && !project?.isAdmin) {
         return false;
-      } else if (filters.owner === "Member" && project?.isOwner) {
+      } else if (filters.owner === "Member" && project?.isAdmin) {
         return false;
       }
     }
@@ -43,12 +43,8 @@ const matchesSearch = (project, searchTerm) => {
   
   const searchLower = searchTerm.toLowerCase();
   return (
-    (project.name?.toLowerCase() || "").includes(searchLower) ||
-    (project.description?.toLowerCase() || "").includes(searchLower) ||
-    (project.status?.toLowerCase() || "").includes(searchLower) ||
-    Array.isArray(project.team) && project.team.some(member => 
-      member?.name && member.name.toLowerCase().includes(searchLower)
-    )
+    (project.title?.toLowerCase() || "").includes(searchLower) ||
+    (project.status?.toLowerCase() || "").includes(searchLower)
   );
 };
 

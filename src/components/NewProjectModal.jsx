@@ -4,7 +4,7 @@ import projectService from "../services/projectService";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 
-function NewProjectModal({ setShowNewProjectModal }) {
+function NewProjectModal({ setShowNewProjectModal, onProjectCreated }) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const [newProjectTitle, setNewProjectTitle] = useState("");
@@ -31,10 +31,13 @@ function NewProjectModal({ setShowNewProjectModal }) {
     setError("");
 
     try {
-      const response = await projectService.createProject(user.id, newProjectTitle, newProjectUserPosition);
+      const response = await projectService.createProject(newProjectTitle, newProjectUserPosition);
       setShowNewProjectModal(false);
+      if (onProjectCreated) {
+        onProjectCreated(response.project);
+      }
       // Navigate to the new project
-      navigate(`/projects`);
+      // navigate(`/projects`); // Navigation can be handled by parent if needed
     } catch (err) {
       setError(err.message || "Failed to create project. Please try again.");
     } finally {
