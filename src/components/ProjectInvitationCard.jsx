@@ -27,8 +27,8 @@ function getStatusBadge(status) {
 
 export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
     return (
-        <div className="bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow relative">
-            <div className="flex items-start justify-between">
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-lg px-5 py-3 shadow-sm hover:shadow-md transition-shadow relative flex items-center min-h-[112px]">
+            <div className="flex items-center justify-between w-full">
                 <div className="flex items-start gap-4 flex-1">
                     <img
                         src={getAvatarUrl(invitation.inviterName)}
