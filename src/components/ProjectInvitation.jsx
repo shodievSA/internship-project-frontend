@@ -25,31 +25,6 @@ export function ProjectInvitations() {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "pending":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
-            Pending
-          </span>
-        );
-      case "accepted":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-            Accepted
-          </span>
-        );
-      case "rejected":
-        return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
-            Rejected
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="bg-white dark:bg-black text-gray-900 dark:text-white">
       <div className="">
@@ -107,12 +82,7 @@ export function ProjectInvitations() {
         {/* Invitations List */}
         <div className="space-y-4">
           {filteredInvitations.map((invitation) => (
-            <div key={invitation.id} className="relative">
-              <ProjectInvitationCard invitation={invitation} getAvatarUrl={getAvatarUrl} />
-              <div className="absolute top-4 right-4">
-                {getStatusBadge(invitation.status)}
-              </div>
-            </div>
+            <ProjectInvitationCard key={invitation.id} invitation={invitation} getAvatarUrl={getAvatarUrl} />
           ))}
         </div>
 

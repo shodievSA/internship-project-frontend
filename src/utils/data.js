@@ -209,7 +209,6 @@ export const mockInvitations = [
         position: "Backend Developer",
         date: "2/10/2024",
         status: "accepted",
-        extraRole: "Designer",
         avatar: "/placeholder.svg?height=40&width=40",
     },
     {

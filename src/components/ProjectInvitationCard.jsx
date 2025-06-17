@@ -1,8 +1,33 @@
 import { Mail, User, Calendar } from "lucide-react";
 
+function getStatusBadge(status) {
+    switch (status) {
+        case "pending":
+            return (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">
+                    Pending
+                </span>
+            );
+        case "accepted":
+            return (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
+                    Accepted
+                </span>
+            );
+        case "rejected":
+            return (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
+                    Rejected
+                </span>
+            );
+        default:
+            return null;
+    }
+}
+
 export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
     return (
-        <div className="bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow relative">
             <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4 flex-1">
                     <img
@@ -30,12 +55,6 @@ export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
                                     <span>{invitation.position}</span>
                                 </div>
                             )}
-                            {invitation.status === "accepted" && invitation.extraRole && (
-                                <div className="flex items-center gap-2">
-                                    <span className="font-semibold">Extra Role:</span>
-                                    <span>{invitation.extraRole}</span>
-                                </div>
-                            )}
                             <div className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4" />
                                 <span>{invitation.date}</span>
@@ -43,10 +62,10 @@ export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
                         </div>
                     </div>
                 </div>
-                {/* Status Badge */}
-                <div className="flex-shrink-0">
-                    {/* Status badge logic should be passed in or duplicated here if needed */}
-                </div>
+            </div>
+            {/* Status Badge */}
+            <div className="absolute top-4 right-4">
+                {getStatusBadge(invitation.status)}
             </div>
         </div>
     );
