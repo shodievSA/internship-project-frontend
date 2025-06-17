@@ -41,8 +41,8 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
                         <img
                             src={getAvatarUrl(member.name)}
                             alt={member.name}
-                            width={56}
-                            height={56}
+                            width={48}
+                            height={48}
                             className="rounded-full bg-gray-100 dark:bg-gray-800 object-cover"
                         />
                     </div>
