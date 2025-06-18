@@ -8,18 +8,20 @@ function Button({
 }) {
 
     const variants = {
-        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50',
-        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 bg-white hover:bg-slate-100 py-3 px-6 border-[1px] rounded-md font-medium text-sm lg:text-base disabled:opacity-50'
-    }
+        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
+        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 py-3 px-6 border-[1px] rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
+		destructive: 'bg-red-800 hover:bg-red-900 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
+		alert: 'bg-orange-800 hover:bg-orange-900 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none'
+    };
 
     return (
         <button 
             onClick={onClick}
-            disabled={disabled}
+            disabled={disabled || loading}
             className={`${variants[variant]} ${className}`}>
             {
                 loading ? (
-                    <div className="flex justify-center relative w-5 h-5">
+                    <div className="flex justify-center relative w-5 h-5 w-full">
                         <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
                         <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
                         dark:border-t-black rounded-full animate-spin"></div>
