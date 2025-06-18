@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Outlet, useLocation, NavLink } from "react-router-dom";
 import NewTaskModal from "../components/NewTaskModal";
 import EditProjectModal from "../components/EditProjectModal";
+import DeleteProjectModal from "../components/DeleteProjectModal";
+import LeaveProjectModal from "../components/LeaveProjectModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
 
@@ -13,6 +15,8 @@ function ProjectLayout() {
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+	const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
+	const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
 
     const teamMembers = [
         {
@@ -66,24 +70,6 @@ function ProjectLayout() {
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
-            {
-                showNewTaskModal && (
-                    <NewTaskModal 
-                        setShowNewTaskModal={setShowNewTaskModal} 
-                        teamMembers={teamMembers} 
-                    />  
-                )
-            }
-            {
-                showEditProjectModal && (
-                    <EditProjectModal 
-                        projectId={projectInfo.id}
-                        currentProjectTitle={projectInfo.name} 
-                        currentProjectStatus={projectInfo.status}  
-                        showModal={setShowEditProjectModal}
-                    />
-                )
-            }
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
                     <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">{ projectInfo.name }</h1>
@@ -121,13 +107,25 @@ function ProjectLayout() {
                                 </button>
                             </div>
                             <div className="flex flex-col p-1.5">
-                                <button className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
-                                gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200">
+                                <button 
+									className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
+                                	gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200"
+									onClick={() => {
+										setSettingsButtonClicked(false);
+										setShowLeaveProjectModal(true);
+									}}
+								>
                                     <UserMinus className="w-4 h-4 text-orange-500" />
                                     <span className="text-orange-500">Leave Project</span>
                                 </button>
-                                <button className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
-                                gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200">
+                                <button 
+									className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
+                                	gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200"
+									onClick={() => {
+										setSettingsButtonClicked(false);
+										setShowDeleteProjectModal(true);
+									}}
+								>
                                     <Trash2 className="w-4 h-4 text-red-500" />
                                     <span className="text-red-500">Delete Project</span>
                                 </button>
@@ -202,6 +200,42 @@ function ProjectLayout() {
                 </NavLink>
             </ul>
             <Outlet context={{ projectData: projectInfo }} />
+			{
+                showNewTaskModal && (
+                    <NewTaskModal 
+                        setShowNewTaskModal={setShowNewTaskModal} 
+                        teamMembers={teamMembers} 
+                    />  
+                )
+            }
+            {
+                showEditProjectModal && (
+                    <EditProjectModal 
+                        projectId={projectInfo.id}
+                        currentProjectTitle={projectInfo.title} 
+                        currentProjectStatus={projectInfo.status}  
+                        showModal={setShowEditProjectModal}
+                    />
+                )
+            }
+			{
+				showDeleteProjectModal && (
+					<DeleteProjectModal
+					 	projectId={projectInfo.id}
+						projectTitle={projectInfo.title}
+						showModal={setShowDeleteProjectModal}
+					/>
+				)
+			}
+			{
+				showLeaveProjectModal && (
+					<LeaveProjectModal 
+						projectId={projectInfo.id}
+						projectTitle={projectInfo.title}
+						showModal={setShowLeaveProjectModal}
+					/>
+				)
+			}
         </div>
     );
 
