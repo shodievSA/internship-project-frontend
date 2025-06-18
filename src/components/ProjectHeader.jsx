@@ -36,12 +36,6 @@ const ProjectHeader = ({
             onChange={(value) => onFilterChange("owner", value)}
             options={ownerOptions}
           />
-          <FilterDropdown
-            icon={Clock}
-            value={filters.timeFrame}
-            onChange={(value) => onFilterChange("timeFrame", value)}
-            options={timeOptions}
-          />
           <Button
             onClick={() => setShowNewProjectModal(true)}
             variant="primary"

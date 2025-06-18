@@ -35,9 +35,8 @@ const Projects = () => {
   // Keep track of filter values
   const currentFilters = {
     search: searchParams.get("search") || "",
-    status: searchParams.get("status") || "All Status",
-    owner: searchParams.get("owner") || "All Projects",
-    timeFrame: searchParams.get("timeFrame") || "All Time"
+    status: searchParams.get("status") || "all",
+    owner: searchParams.get("owner") || "all"
   };
 
   // Always sort projects by createdAt descending before filtering
@@ -61,9 +60,8 @@ const Projects = () => {
   const handleFilterChange = (filterType, value) => {
     const newParams = new URLSearchParams(searchParams);
     const defaultValues = {
-      status: "All Status",
-      owner: "All Projects",
-      timeFrame: "All Time"
+      status: "all",
+      owner: "all"
     };
 
     if (value === defaultValues[filterType]) {
