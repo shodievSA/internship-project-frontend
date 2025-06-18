@@ -10,16 +10,15 @@ const ProjectCard = ({ project }) => {
   const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
   const navigate = useNavigate()
 
-  // Format createdAt to human-readable
+  // Format createdAt to 'YYYY, MM.DD'
   let createdAtDisplay = 'Unknown';
   if (createdAt) {
     const dateObj = new Date(createdAt);
     if (!isNaN(dateObj)) {
-      createdAtDisplay = dateObj.toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      createdAtDisplay = `${year},${month},${day}`;
     }
   }
 

@@ -2,7 +2,7 @@ import { User, FolderOpen, Clock, Plus } from "lucide-react";
 import SearchBar from "./SearchBar";
 import FilterDropdown from "./FilterDropdown";
 import Button from "./ui/Button";
-import { statusOptions, ownerOptions, timeOptions } from "../utils/constant";
+import { statusOptions, ownerOptions } from "../utils/constant";
 
 const ProjectHeader = ({
   filters,
