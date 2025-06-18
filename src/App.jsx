@@ -4,6 +4,7 @@ import ThemeContextProvider from "./context/ThemeContext";
 import Projects from "./pages/Projects";
 import ProjectLayout from "./layouts/ProjectLayout";
 import TeamPage from "./pages/TeamPage";
+import TeamMemberDetailsPage from "./pages/TeamMemberDetailsPage";
 import AllTasksPage from "./pages/AllTasksPage";
 import MyTasksPage from "./pages/MyTasksPage";
 import AssignedTasksPage from "./pages/AssignedTasksPage";
@@ -28,6 +29,7 @@ function App() {
 							<Route path="/projects" element={<Projects />} />
 							<Route path="/projects/:projectId" element={<ProjectLayout />}>
 								<Route path="team" element={<TeamPage />} />
+								<Route path="team/:memberId" element={<TeamMemberDetailsPage />} />
 								<Route path="all-tasks" element={<AllTasksPage />} />
 								<Route path="my-tasks" element={<MyTasksPage />} />
 								<Route path="assigned-tasks" element={<AssignedTasksPage />} />
