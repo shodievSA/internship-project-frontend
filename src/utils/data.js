@@ -1,7 +1,7 @@
 export const projects = [
     {
         id: "1",
-        name: "Website Redesign",
+        title: "Website Redesign",
         createdAt: "03.06.2024",
         members: 5,
         isOwner: true,
@@ -13,7 +13,7 @@ export const projects = [
     },
     {
         id: "2",
-        name: "Mobile App Development",
+        title: "Mobile App Development",
         createdAt: "11.05.2024",
         members: 8,
         isOwner: false,
@@ -25,7 +25,7 @@ export const projects = [
     },
     {
         id: "3",
-        name: "Marketing Campaign",
+        title: "Marketing Campaign",
         createdAt: "10.03.2024",
         members: 3,
         isOwner: true,
@@ -37,7 +37,7 @@ export const projects = [
     },
     {
         id: "4",
-        name: "Data Analytics Dashboard",
+        title: "Data Analytics Dashboard",
         createdAt: "10.06.2024",
         members: 6,
         isOwner: true,
@@ -49,7 +49,7 @@ export const projects = [
     },
     {
         id: "5",
-        name: "User Authentication System",
+        title: "User Authentication System",
         createdAt: "05.04.2024",
         members: 4,
         isOwner: false,
@@ -61,7 +61,7 @@ export const projects = [
     },
     {
         id: "6",
-        name: "Cloud Migration",
+        title: "Cloud Migration",
         createdAt: "12.05.2024",
         members: 7,
         isOwner: true,
@@ -73,7 +73,7 @@ export const projects = [
     },
     {
         id: "7",
-        name: "Mobile App Testing",
+        title: "Mobile App Testing",
         createdAt: "15.04.2024",
         members: 5,
         isOwner: false,
@@ -85,7 +85,7 @@ export const projects = [
     },
     {
         id: "8",
-        name: "API Integration",
+        title: "API Integration",
         createdAt: "20.04.2025",
         members: 4,
         isOwner: true,
@@ -97,7 +97,7 @@ export const projects = [
     },
     {
         id: "9",
-        name: "Performance Optimization",
+        title: "Performance Optimization",
         createdAt: "25.04.2024",
         members: 3,
         isOwner: true,
@@ -109,7 +109,7 @@ export const projects = [
     },
     {
         id: "10",
-        name: "AI Integration Project",
+        title: "AI Integration Project",
         createdAt: "15.01.2024",
         members: 8,
         isOwner: true,
@@ -121,7 +121,7 @@ export const projects = [
     },
     {
         id: "11",
-        name: "Blockchain Implementation",
+        title: "Blockchain Implementation",
         createdAt: "01.03.2024",
         members: 6,
         isOwner: false,
@@ -133,7 +133,7 @@ export const projects = [
     },
     {
         id: "12",
-        name: "IoT Platform Development",
+        title: "IoT Platform Development",
         createdAt: "20.04.2023",
         members: 10,
         isOwner: true,
@@ -142,7 +142,7 @@ export const projects = [
     },
     {
         id: "22",
-        name: "Social Media Integration",
+        title: "Social Media Integration",
         createdAt: "01.07.2023",
         members: 4,
         isOwner: false,
@@ -151,7 +151,7 @@ export const projects = [
     },
     {
         id: "13",
-        name: "5G Network Integration",
+        title: "5G Network Integration",
         createdAt: "10.06.2023",
         members: 12,
         isOwner: true,
@@ -163,7 +163,7 @@ export const projects = [
     },
     {
         id: "14",
-        name: "Quantum Computing Research",
+        title: "Quantum Computing Research",
         createdAt: "01.05.2023",
         members: 7,
         isOwner: false,
