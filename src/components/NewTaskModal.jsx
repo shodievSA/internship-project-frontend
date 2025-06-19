@@ -2,25 +2,24 @@ import { useState, useEffect, useRef } from "react";
 import AiEditor from "./AiEditor";
 import InputField from "./InputField";
 import Modal from "./ui/Modal";
+import Button from "./ui/Button";
 import { Asterisk, Calendar, ChevronRight, Check, Plus, X, CircleAlert  } from "lucide-react";
 
 function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
 
     const [showTaskPrioritySelect, setShowTaskPrioritySelect] = useState(false);
     const [showTeamMembersSelect, setShowTeamMembersSelect] = useState(false);
-    const [showTaskDescriptionError, setShowTaskDescriptionError] = useState(false);
-    const [showTaskPriorityError, setShowTaskPriorityError] = useState(false);
-    const [showTaskDeadlineError, setShowTaskDeadlineError] = useState(false);
-    const [showTaskAssignToError, setShowTaskAssignToError] = useState(false);
     const [subtask, setSubtask] = useState(null);
     const [isTaskDescriptionBeingEnhanced, setIsTaskDescriptionBeingEnhanced] = useState(false);
     const [isNewTaskBeingCreated, setIsNewTaskBeingCreated] = useState(false);
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
+	const [taskDescriptionAiChangesAccepted, setTaskDescriptionAiChangesAccepted] = useState(true);
     const [taskPriority, setTaskPriority] = useState('');
     const [taskDeadline, setTaskDeadline] = useState(null);
     const [taskAssignedTo, setTaskAssignedTo] = useState(null);
     const [subtasks, setSubtasks] = useState([]);
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
     const dateInput = useRef();
     const subtaskInputRef = useRef();
@@ -79,28 +78,37 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
 
     async function createNewTask() {
 
-        const isValid = isNewTaskInputValid(
-            taskDescription,
-            taskPriority,
-            taskDeadline,
-            taskAssignedTo,
-            setShowTaskDescriptionError,
-            setShowTaskPriorityError,
-            setShowTaskDeadlineError,
-            setShowTaskAssignToError
-        );
-
-        if (!isValid) return;
-
        setIsNewTaskBeingCreated(true);
 
        setTimeout(() => {
 
-            setIsNewTaskBeingCreated(false);
+           setIsNewTaskBeingCreated(false);
 
        }, 3000);
 
     }
+
+	useEffect(() => {
+
+		if (
+			taskDescription &&
+			taskPriority &&
+			taskDeadline &&
+			taskAssignedTo &&
+			taskDescriptionAiChangesAccepted
+		) {
+			setSubmitButtonDisabled(false);
+		} else {
+			setSubmitButtonDisabled(true);
+		}
+
+	}, [
+		taskDescription,
+		taskPriority,
+		taskDeadline,
+		taskAssignedTo,
+		taskDescriptionAiChangesAccepted
+	]);
 
     return (
         <Modal title="Create New Task" size="lg">
@@ -118,15 +126,15 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
                     <AiEditor 
                         label="Description"
                         placeholder="Describe the task requirements, goals, and any important details..."
-                        isRequired={true}
-                        showError={showTaskDescriptionError}
-                        errorMessage="You must include task description"
-                        textareaRows={7}
-                        text={taskDescription}
-                        setText={setTaskDescription}
-                        isTextBeingEnhanced={isTaskDescriptionBeingEnhanced}
-                        setIsTextBeingEnhanced={setIsTaskDescriptionBeingEnhanced}
-                        isBeingSubmitted={isNewTaskBeingCreated}
+                        required={true}
+                        error="You must include task description"
+                        rows={7}
+                        value={taskDescription}
+                        setValue={setTaskDescription}
+                        disabled={isNewTaskBeingCreated}
+                        textBeingEnhancedWithAi={isTaskDescriptionBeingEnhanced}
+                        setTextBeingEnhancedWithAi={setIsTaskDescriptionBeingEnhanced}
+						setChangesAccepted={setTaskDescriptionAiChangesAccepted}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-8">
                         <div className="flex flex-col gap-y-2">
@@ -221,14 +229,6 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
                                     </li>
                                 </ul>
                             </div>
-                            {
-                                showTaskPriorityError && (
-                                    <div className="flex gap-x-1.5 text-red-500">
-                                        <CircleAlert className="w-4 h-4" />
-                                        <p className="text-sm">You must include task priority</p>
-                                    </div>
-                                )
-                            }
                         </div>
                         <div className="flex flex-col gap-y-2">                                    
                             <label className="flex gap-x-0.5">
@@ -251,14 +251,6 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
                                     ${isNewTaskBeingCreated ? 'opacity-50' : 'opacity-100'} cursor-pointer`}
                                 />
                             </div>
-                            {
-                                showTaskDeadlineError && (
-                                    <div className="flex gap-x-1.5 text-red-500">
-                                        <CircleAlert className="w-4 h-4" />
-                                        <p className="text-sm">You must include task deadline</p>
-                                    </div>
-                                )
-                            }
                         </div>                         
                     </div>
                     <div className="flex flex-col gap-y-2">
@@ -314,14 +306,6 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
                                 }
                             </ul>
                         </div>
-                        {
-                            showTaskAssignToError && (
-                                <div className="flex gap-x-1.5 text-red-500">
-                                    <CircleAlert className="w-4 h-4" />
-                                    <p className="text-sm">You must include task deadline</p>
-                                </div>
-                            )
-                        }
                     </div>
                     <div className="flex flex-col gap-y-5">
                         <div className="flex flex-col gap-y-3">
@@ -386,81 +370,26 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers }) {
             </div>
             <div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
             border-neutral-200 p-4">
-                <button 
-                    disabled={isNewTaskBeingCreated} 
-                    className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
-                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
-                    disabled:opacity-50 ${isNewTaskBeingCreated ? 'cursor-not-allowed' : 'cursor-pointer'}`} 
-                    onClick={() => setShowNewTaskModal(false)}
-                >
-                    Cancel
-                </button>
-                <button 
-                    disabled={isNewTaskBeingCreated || isTaskDescriptionBeingEnhanced}
-                    className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 
-                    text-white py-2.5 px-4 rounded-lg font-medium text-sm lg:text-base flex justify-center'
-                    onClick={createNewTask}
-                >
-                    {
-                        isNewTaskBeingCreated ? (
-                            <div className="flex justify-center relative w-5 h-5">
-                                <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
-                                <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
-                                dark:border-t-black rounded-full animate-spin"></div>
-                            </div>
-                        ) : (
-                            "Create Task"
-                        )
-                    }
-                </button>                                
+				<Button
+					variant="secondary"
+					size="lg"
+					disabled={isNewTaskBeingCreated}
+					onClick={() => setShowNewTaskModal(false)}
+				>
+					Cancel
+				</Button>
+				<Button
+					variant="primary"
+					size="lg"
+					disabled={submitButtonDisabled}
+					loading={isNewTaskBeingCreated}
+					onClick={createNewTask}
+				>
+					Create Task
+				</Button>
             </div>
         </Modal>
     )
-
-}
-
-function isNewTaskInputValid(
-    taskDescription,
-    taskPriority,
-    taskDeadline,
-    taskAssignedTo,
-    displayTaskDescriptionError,
-    displayTaskPriorityError,
-    displayTaskDeadlineError,
-    displayTaskAssignToError
-) {
-
-    let isValid = true;
-
-    if (!taskDescription) {
-        displayTaskDescriptionError(true);
-        isValid = false;
-    } else {
-        displayTaskDescriptionError(false);
-    }
-
-    if (!taskPriority) {
-        displayTaskPriorityError(true);
-        isValid = false;
-    } else {
-        displayTaskPriorityError(false);
-    }
-
-    if (!taskDeadline) {
-        displayTaskDeadlineError(true);
-        isValid = false;
-    } else {
-        displayTaskDeadlineError(false);
-    }
-
-    if (!taskAssignedTo) {
-        displayTaskAssignToError(true);
-        isValid = false;
-    } else {
-        displayTaskAssignToError(false);
-    }
-
-    return isValid;
 
 }
 
