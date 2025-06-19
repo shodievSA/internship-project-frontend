@@ -5,7 +5,7 @@ import { statusColors } from "../utils/constant"
 import ProgressBar from "./ProgressBar"
 
 const ProjectCard = ({ project }) => {
-  const { id, name, createdAt, members, isOwner, status, tasks } = project
+  const { id, title, createdAt, members, isOwner, status, tasks } = project
   const progress = Math.round((tasks.completed / tasks.total) * 100)
   const navigate = useNavigate()
 
@@ -17,7 +17,7 @@ const ProjectCard = ({ project }) => {
     <div className="card" onClick={handleClick}>
       {/* Header with title and badges */}
       <div className="flex items-start justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">{name}</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1">{title}</h2>
         <div className="flex gap-2">
           {isOwner ? (
             <span className="owner-badge">
