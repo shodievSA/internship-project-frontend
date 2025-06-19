@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { House, Sparkles, Bell, LogOut } from 'lucide-react';
+import { House, Sparkles, Bell, LogOut, Mail } from 'lucide-react';
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {

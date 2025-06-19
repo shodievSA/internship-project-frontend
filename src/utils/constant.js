@@ -70,7 +70,25 @@ export const colorMap = {
 }
 
 
+
+
+export const statusOptionsInviation = [
+    { value: "all", label: "All Status" },
+    { value: "pending", label: "Pending" },
+    { value: "accepted", label: "Accepted" },
+    { value: "rejected", label: "Rejected" },
+]
+
+export const dateOptions = [
+    { value: "all", label: "All Dates" },
+    { value: "today", label: "Today" },
+    { value: "week", label: "This Week" },
+    { value: "month", label: "This Month" },
+]
+
+
 export const getAvatarUrl = (name) => {
     const encodedName = encodeURIComponent(name)
     return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=56`
 }
+
