@@ -5,7 +5,7 @@ const GoogleSignInSection = () => {
 
     function handleRedirect() {
 
-        window.location.href = `${SERVER_BASE_URL}/auth/google`;
+        window.location.href = `${SERVER_BASE_URL}/api/v1/auth/google`;
 
     }
 

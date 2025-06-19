@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
@@ -18,7 +17,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/auth/logout`, {
+            const res = await fetch(`${SERVER_BASE_URL}/api/v1/auth/logout`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
