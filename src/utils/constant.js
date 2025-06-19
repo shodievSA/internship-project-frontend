@@ -13,24 +13,16 @@ export const statusColors = {
 
 
 export const statusOptions = [
-    "All Status",
-    "Active",
-    "Completed",
-    "Paused"
+    { label: "All Status", value: "all" },
+    { label: "Active", value: "active" },
+    { label: "Completed", value: "completed" },
+    { label: "Paused", value: "paused" }
 ];
 
 export const ownerOptions = [
-    "All Projects",
-    "Owner",
-    "Member"
-];
-
-export const timeOptions = [
-    "All Time",
-    "Last 7 Days",
-    "Last 30 Days",
-    "Last 3 Months",
-    "Last Year"
+    { label: "All Projects", value: "all" },
+    { label: "Owner", value: "owner" },
+    { label: "Member", value: "member" }
 ];
 
 

@@ -22,10 +22,11 @@ export default function FilterDropdown({
   }, []);
 
   const handleSelect = (option) => {
-    console.log('Selected option:', option);
-    onChange(option);
+    onChange(option.value);
     setIsOpen(false);
   };
+
+  const selectedOption = options.find(opt => opt.value === value) || options[0];
 
   return (
     <div className="relative w-full lg:w-auto" ref={dropdownRef}>
@@ -34,7 +35,7 @@ export default function FilterDropdown({
         className="dropdown-button w-full flex items-center justify-between lg:justify-start gap-2 px-3 py-2 bg-white dark:bg-black border border-gray-300 dark:border-gray-600 rounded-lg text-sm"
       >
         <Icon className="w-4 h-4 flex-shrink-0" />
-        <span className="flex-1 text-center lg:text-left truncate">{value}</span>
+        <span className="flex-1 text-center lg:text-left truncate">{selectedOption.label}</span>
         <ChevronDown
           className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
@@ -45,14 +46,14 @@ export default function FilterDropdown({
           <div className="py-1">
             {options.map((option) => (
               <button
-                key={option}
+                key={option.value}
                 onClick={() => handleSelect(option)}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${value === option
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${value === option.value
                   ? "text-black dark:text-white bg-gray-100 dark:bg-gray-800 font-medium"
                   : "text-black dark:text-white"
                   }`}
               >
-                {option}
+                {option.label}
               </button>
             ))}
           </div>
