@@ -6,7 +6,7 @@ function InputField({
     label, 
     disabled,
     placeholder, 
-    required,
+    required = false,
     value, 
     setValue, 
     error,
@@ -18,7 +18,7 @@ function InputField({
     return (
         <div className="flex flex-col gap-y-3 w-full">
             <label className="flex gap-x-0.5">
-                <span className="dark:text-neutral-400 text-slate-500 text-sm md:text-base font-semibold">{ label }</span>
+                <span className="dark:text-white text-sm md:text-base font-semibold">{ label }</span>
                 { required && <Asterisk className="w-3 h-3 mt-0.5 text-red-500" /> }
             </label>
             {

@@ -1,5 +1,6 @@
 function Button({
     variant = "primary",
+	size="lg",
     children,
     loading = false,
     disabled,
@@ -8,17 +9,23 @@ function Button({
 }) {
 
     const variants = {
-        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
-        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 py-3 px-6 border-[1px] rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
-		destructive: 'bg-red-800 hover:bg-red-900 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none',
-		alert: 'bg-orange-800 hover:bg-orange-900 text-white py-3 px-6 rounded-md font-medium text-sm lg:text-base disabled:opacity-50 disabled:pointer-events-none'
+        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
+        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
+		destructive: 'bg-red-800 hover:bg-red-900 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
+		alert: 'bg-orange-800 hover:bg-orange-900 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none'
     };
+
+	const sizes = {
+		sm: 'text-sm px-3 py-2',
+		md: '',
+		lg: 'text-base py-3 px-6 text-sm md:text-base'
+	}
 
     return (
         <button 
             onClick={onClick}
             disabled={disabled || loading}
-            className={`${variants[variant]} ${className}`}>
+            className={`${variants[variant]} ${sizes[size]} ${className}`}>
             {
                 loading ? (
                     <div className="flex justify-center relative w-5 h-5 w-full">

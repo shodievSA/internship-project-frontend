@@ -5,22 +5,23 @@ const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 function AiEditor({ 
     label, 
     placeholder, 
-    isRequired,
-    showError = false,
-    errorMessage = '',
-    textareaRows,
-    text, 
-    setText, 
-    isBeingSubmitted, 
-    isTextBeingEnhanced, 
-    setIsTextBeingEnhanced 
+    required,
+    error = '',
+    rows,
+    value, 
+    setValue, 
+    disabled, 
+    textBeingEnhancedWithAi, 
+    setTextBeingEnhancedWithAi,
+	setChangesAccepted
 }) {
 
     const [enhancedText, setEnhancedText] = useState(null);
+	const [showError, setShowError] = useState(false);
 
     async function enhanceTaskDescription() {
 
-        setIsTextBeingEnhanced(true);
+        setTextBeingEnhancedWithAi(true);
 
         try {
 
@@ -30,7 +31,7 @@ function AiEditor({
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: text })
+                body: JSON.stringify({ text: value })
             });
 
             const { enhancedVersion } = await res.json();
@@ -42,7 +43,8 @@ function AiEditor({
 
         } finally {
 
-            setIsTextBeingEnhanced(false);
+            setTextBeingEnhancedWithAi(false);
+			setChangesAccepted(false);
 
         }
 
@@ -59,19 +61,23 @@ function AiEditor({
                     enhancedText ? (
                         <div className="flex gap-x-3 text-sm">
                             <button 
-                                className="text-white hover:bg-green-900 bg-green-800 flex items-center gap-x-2 px-3 py-1.5 
-                                rounded-md font-medium"
+                                className="text-white hover:bg-green-900 bg-green-800 flex items-center gap-x-2 
+								px-3 py-1.5 rounded-md font-medium text-xs"
                                 onClick={() => {
-                                    setText(enhancedText);
+                                    setValue(enhancedText);
                                     setEnhancedText(null);
+									setChangesAccepted(true);
                                 }}
                             >
                                 Accept
                             </button>
                             <button 
-                                className="text-white hover:bg-red-900 bg-red-800 flex items-center gap-x-2 px-4 py-1.5 
-                                rounded-md font-medium"
-                                onClick={() => setEnhancedText(null)}
+                                className="text-white hover:bg-red-900 bg-red-800 flex items-center gap-x-2 
+								px-4 py-1.5 rounded-md font-medium text-xs"
+                                onClick={() => {
+									setEnhancedText(null);
+									setChangesAccepted(true);
+								}}
                             >
                                 Reject
                             </button>
@@ -79,15 +85,15 @@ function AiEditor({
                     ) : (
                         <div className="relative group inline-block">
                             <button 
-                                disabled={isBeingSubmitted || text.trim().split(/\s+/).length < 20 }
+                                disabled={disabled || value.trim().split(/\s+/).length < 20 }
                                 className={`dark:bg-neutral-950 dark:border-neutral-800 dark:hover:bg-neutral-900 
                                 hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2.5 rounded-md flex justify-center 
-                                items-center gap-x-2 w-36 md:w-40 ${isBeingSubmitted ? 'cursor-not-allowed' : 
+                                items-center gap-x-2 w-36 md:w-40 ${disabled ? 'cursor-not-allowed' : 
                                 'cursor-pointer'} disabled:opacity-50 peer`}
                                 onClick={enhanceTaskDescription}
                             >
                                 {
-                                    isTextBeingEnhanced ? (
+                                    textBeingEnhancedWithAi ? (
                                         <div className="flex justify-center relative w-5 h-5">
                                             <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
                                             <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
@@ -111,23 +117,42 @@ function AiEditor({
                 }
             </div>
             <div className="flex flex-col gap-y-2">
-                <textarea 
-                    disabled={isBeingSubmitted}
-                    value={ enhancedText ? enhancedText : text } 
-                    placeholder={placeholder}
-                    rows={textareaRows} 
-                    className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
-                    focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-                    py-2.5 px-4 outline-none disabled:opacity-50 ${isBeingSubmitted ? 'cursor-not-allowed' : 
-                    'cursor-text'} scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-                    onChange={(e) => setText(e.target.value)}
-                />
                 {
-                    isRequired && (
+					required ? (
+						<textarea 
+							disabled={disabled}
+							value={ enhancedText ? enhancedText : value } 
+							placeholder={placeholder}
+							rows={rows} 
+							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+							focus:border-black/30 bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
+							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
+							onChange={(e) => {								
+								setShowError(!e.target.value > 0);								
+								setValue(e.target.value);
+							}}
+						/>
+					) : (
+						<textarea 
+							disabled={disabled}
+							value={ enhancedText ? enhancedText : value } 
+							placeholder={placeholder}
+							rows={rows} 
+							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+							focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
+							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
+							onChange={(e) => setValue(e.target.value)}
+						/>
+					)
+				}
+                {
+                    required && (
                         showError && (
                             <div className="flex gap-x-1.5 text-red-500">
                                 <CircleAlert className="w-4 h-4" />
-                                <p className="text-sm">{ errorMessage }</p>
+                                <p className="text-sm">{ error }</p>
                             </div>
                         )
                     )
