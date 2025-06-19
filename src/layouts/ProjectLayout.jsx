@@ -4,6 +4,7 @@ import NewTaskModal from "../components/NewTaskModal";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import LeaveProjectModal from "../components/LeaveProjectModal";
+import GroupEmailModal from "../components/GroupEmailModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
 
@@ -17,22 +18,26 @@ function ProjectLayout() {
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
 	const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
 	const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
+	const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
 
     const teamMembers = [
         {
             id: 0,
             fullName: "John Doe",
-            position: "QA Engineer"
+            position: "QA Engineer",
+			email: "johndoe@gmail.com"
         },
         {
             id: 1,
             fullName: "John Doe 2",
-            position: "Backend Developer"
+            position: "Backend Developer",
+			email: "johndoe@gmail.com"
         },
         {
             id: 2,
             fullName: "John Doe 3",
-            position: "Frontend Developer"
+            position: "Frontend Developer",
+			email: "johndoe@gmail.com"
         }
     ];
 
@@ -72,7 +77,7 @@ function ProjectLayout() {
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
-                    <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">{ projectInfo.name }</h1>
+                    <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">{ projectInfo.title }</h1>
                     <div className={`${statusColors[projectInfo.status]} status-badge px-3 py-1 text-xs md:text-sm`}>
                         { projectInfo.status }
                     </div>
@@ -100,8 +105,14 @@ function ProjectLayout() {
                                     <SquarePen className="w-4 h-4" />
                                     <span>Edit Project</span>
                                 </button>
-                                <button className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
-                                gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200">
+                                <button 
+									className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
+                                	gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200"
+									onClick={() => {
+										setSettingsButtonClicked(false);
+										setShowGroupEmailModal(true);
+									}}
+								>
                                     <Mail className="w-4 h-4" />
                                     <span>Send Email</span>
                                 </button>
@@ -233,6 +244,14 @@ function ProjectLayout() {
 						projectId={projectInfo.id}
 						projectTitle={projectInfo.title}
 						showModal={setShowLeaveProjectModal}
+					/>
+				)
+			}
+			{
+				showGroupEmailModal && (
+					<GroupEmailModal 
+						teamMembers={teamMembers}
+						showModal={setShowGroupEmailModal}
 					/>
 				)
 			}
