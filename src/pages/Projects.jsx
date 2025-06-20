@@ -26,16 +26,16 @@ const Projects = () => {
 			try {
 
 				const response = await projectService.getProjects();
-				setProjects(response.projects);
+				setProjects(response);
 
-				console.log("Project data", response.projects);
+				console.log("Project data", response);
 
 			} catch (err) {
 
 				setError(err.message || "Failed to load projects");
 
 			} finally {
-				
+
 				setLoading(false);
 
 			}
@@ -52,17 +52,12 @@ const Projects = () => {
 		search: searchParams.get("search") || "",
 		status: searchParams.get("status") || "all",
 		owner: searchParams.get("owner") || "all"
-		
+
 	};
 
-	// Always sort projects by createdAt descending before filtering
+
 	const filteredProjects = useMemo(() => {
-
-		const sorted = [...projects].sort(
-		(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-		);
-		return filterProjects(sorted, currentFilters);
-
+		return filterProjects(projects, currentFilters);
 	}, [projects, currentFilters]);
 
 	const handleSearch = (searchTerm) => {
@@ -131,15 +126,15 @@ const Projects = () => {
 				) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{filteredProjects.map((project) => (
-						<ProjectCard key={project.id} project={project} />
+							<ProjectCard key={project.id} project={project} />
 						))}
 					</div>
 				)}
 			</div>
 			{showNewProjectModal && (
-				<NewProjectModal 
-					setShowNewProjectModal={setShowNewProjectModal} 
-					onProjectCreated={handleProjectCreated} 
+				<NewProjectModal
+					setShowNewProjectModal={setShowNewProjectModal}
+					onProjectCreated={handleProjectCreated}
 				/>
 			)}
 		</div>
