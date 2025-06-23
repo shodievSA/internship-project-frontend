@@ -1,83 +1,197 @@
-import { useRef, useEffect, useState } from "react"
-import { Shield, UserMinus, UserPlus, UserMinus2 } from "lucide-react"
-import { ModalOverlay } from "./modal-overlay"
-import { ConfirmationDialog } from "./confirmation-dialog"
-import { RoleConfirmationDialog } from "./RoleConfirmationDialog"
+import { useRef, useEffect, useState } from "react";
+import RemoveMemberModal from "./RemoveMemberModal";
+import { UserMinus, UserPlus, UserMinus2 } from "lucide-react";
+import ChangeRoleModal from "./ChangeRoleModal";
+const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onRemoveMember }) {
-    const menuRef = useRef(null)
-    const isAdmin = member.status === "admin"
-    const isManager = member.status === "manager"
-    const isSelf = member.id === currentUser?.id
-    const [showConfirmation, setShowConfirmation] = useState(false)
-    const [showRoleConfirmation, setShowRoleConfirmation] = useState(false)
-    const [roleAction, setRoleAction] = useState(null)
+export function ActionMenu({ 
+	isOpen, 
+	onClose, 
+	anchorEl, 
+	member, 
+	currentUser, 
+	onRemoveMember 
+}) {
+
+    const menuRef = useRef(null);
+    const isAdmin = member.status === "admin";
+    const isManager = member.status === "manager";
+    const isSelf = member.id === currentUser?.id;
+
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showRoleConfirmation, setShowRoleConfirmation] = useState(false);
+    const [roleAction, setRoleAction] = useState(null);
+	const [memberBeingRemoved, setMemberBeingRemoved] = useState(false);
+	const [memberRoleBeingChanged, setMemberRoleBeingChanged] = useState(false);
 
     // Close menu when clicking outside
     useEffect(() => {
+
         function handleClickOutside(event) {
-            if (menuRef.current && !menuRef.current.contains(event.target) && anchorEl && !anchorEl.contains(event.target)) {
-                onClose()
+
+            if (
+				menuRef.current 
+				&& 
+				!menuRef.current.contains(event.target) 
+				&& 
+				anchorEl 
+				&& 
+				!anchorEl.contains(event.target)
+			) {
+                onClose();
             }
+
         }
 
         function handleEscape(event) {
+
             if (event.key === "Escape") {
-                onClose()
+                onClose();
             }
+
         }
 
         if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside)
-            document.addEventListener("keydown", handleEscape)
+
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("keydown", handleEscape);
+
         }
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside)
-            document.removeEventListener("keydown", handleEscape)
+
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleEscape);
+
         }
-    }, [isOpen, onClose, anchorEl])
+
+    }, [isOpen, onClose, anchorEl]);
 
     const handleRemoveClick = () => {
+
         setShowConfirmation(true)
-        onClose() // Close the menu
+        onClose();
+
     }
 
-    const handleConfirmRemove = () => {
-        console.log("Confirmed: Remove from project:", member.name)
-        if (onRemoveMember) {
-            onRemoveMember(member.id)
-        }
-        setShowConfirmation(false)
+    async function removeMember(event) {
+
+		setMemberBeingRemoved(true);
+
+		try {
+
+			const res = await fetch(
+				`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${member.id}`,
+				{
+					method: 'DELETE',
+					credentials: 'include'
+				}
+			);
+
+			if (!res.ok) {
+
+				throw new Error('Error occured while deleting the user.');
+
+			} else {
+
+				if (onRemoveMember) {
+					onRemoveMember(member.id);
+				}
+
+				setShowConfirmation(false);
+
+			}
+
+		} catch(error) {
+
+			console.log("The following error occured while updating team member's role: " + error.message);
+
+		} finally {
+
+			setMemberBeingRemoved(false);
+
+		}
+
+		event.stopPropagation();
+
     }
 
-    const handleCancelRemove = () => {
-        setShowConfirmation(false)
+	function closeRemoveMemberModal(event) {
+
+		setShowConfirmation(false);
+		event.stopPropagation();
+
+	}
+
+    function handlePromoteToManager() {
+
+        setRoleAction("promote");
+        setShowRoleConfirmation(true);
+        onClose();
+
     }
 
-    const handlePromoteToManager = () => {
-        setRoleAction("promote")
-        setShowRoleConfirmation(true)
-        onClose()
+    function handleDemoteToMember() {
+
+        setRoleAction("demote");
+        setShowRoleConfirmation(true);
+        onClose();
+
     }
 
-    const handleDemoteToMember = () => {
-        setRoleAction("demote")
-        setShowRoleConfirmation(true)
-        onClose()
+    async function changeMemberRole(event) {
+
+		setMemberRoleBeingChanged(true);
+
+		try {
+
+			const res = await fetch(
+				`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${member.id}`,
+				{
+					method: 'PATCH',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						newRole: (roleAction === 'promote' ? 'manager' : 'member')
+					})
+				}
+			);
+
+			if (!res.ok) {
+
+				throw new Error("Error occured while changing member's role")
+
+			} else {
+
+				console.log('role updated');
+
+			}
+
+		} catch(error) {
+
+			console.log("The following error occured while updating team member's role: " + error.message);
+
+		} finally {
+
+			setShowRoleConfirmation(false);
+        	setRoleAction(null);
+
+		}
+
+		event.stopPropagation();
+
     }
 
-    const handleConfirmRoleChange = () => {
-        console.log(`Confirmed: ${roleAction} ${member.name}`)
-        // Here you would typically call an API to update the member's role
-        setShowRoleConfirmation(false)
-        setRoleAction(null)
-    }
+	function closeChangeRoleModal(event) {
 
-    const handleCancelRoleChange = () => {
-        setShowRoleConfirmation(false)
-        setRoleAction(null)
-    }
+		setShowRoleConfirmation(false);
+        setRoleAction(null);
+
+		event.stopPropagation();
+
+	}
 
     if (!isOpen && !showConfirmation && !showRoleConfirmation) return null
 
@@ -86,65 +200,84 @@ export function ActionMenu({ isOpen, onClose, anchorEl, member, currentUser, onR
             {isOpen && (
                 <div
                     ref={menuRef}
-                    className="fixed z-50 bg-white dark:bg-gray-900 shadow-lg rounded-md border border-gray-200 dark:border-gray-800 w-56"
+                    className="fixed z-50 bg-white dark:bg-black shadow-lg rounded-md border border-gray-200 
+					dark:border-neutral-700 max-w-60"
                     style={{
                         top: anchorEl ? anchorEl.getBoundingClientRect().top + window.scrollY + 40 : 0,
                         left: anchorEl ? anchorEl.getBoundingClientRect().left + window.scrollX - 180 : 0,
                     }}
                 >
-                    <div className="py-1">
-                        {!isAdmin && !isManager && (
-                            <button
-                                className="flex items-center w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                onClick={handlePromoteToManager}
-                            >
-                                <UserPlus className="h-4 w-4 mr-2" />
-                                Promote to Manager
-                            </button>
-                        )}
-
-                        {isManager && (
-                            <button
-                                className="flex items-center w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                onClick={handleDemoteToMember}
-                            >
-                                <UserMinus2 className="h-4 w-4 mr-2" />
-                                Demote to Member
-                            </button>
-                        )}
-
-                        {isAdmin && isSelf ? (
-                            <div className="flex items-center w-full px-4 py-2 text-base text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700">
-                                <UserMinus className="h-4 w-4 mr-2" />
-                                Cannot remove yourself
-                            </div>
-                        ) : (
-                            !isAdmin && (
-                                <button
-                                    className="flex items-center w-full px-4 py-2 text-base text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
-                                    onClick={handleRemoveClick}
-                                >
-                                    <UserMinus className="h-4 w-4 mr-2" />
-                                    Remove from Project
-                                </button>
-                            )
-                        )}
+                    <div className="p-1.5 flex flex-col gap-y-1">
+                        {
+							!isAdmin && !isManager && (
+								<button
+									className="flex items-center w-full gap-y-2 px-4 py-2 text-base text-gray-700 
+									dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-900 rounded-md 
+									text-sm"
+									onClick={handlePromoteToManager}
+								>
+									<UserPlus className="h-4 w-4 mr-2" />
+									<span>Promote to Manager</span>
+								</button>
+                        	)
+						}
+                        {
+							isManager && (
+								<button
+									className="flex items-center w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 
+									hover:bg-gray-100 dark:hover:bg-neutral-900 rounded-md text-sm"
+									onClick={handleDemoteToMember}
+								>
+									<UserMinus2 className="h-4 w-4 mr-2" />
+									<span>Demote to <span className="font-semibold">Member</span></span>
+								</button>
+                        	)
+						}
+                        {
+							isAdmin && isSelf ? (
+								<div className="flex items-center w-full px-4 py-2 text-base text-gray-400 dark:text-gray-200 
+								border-gray-200 dark:border-gray-700 text-sm dark:hover:bg-neutral-900 rounded-md">
+									<UserMinus className="h-4 w-4 mr-2" />
+									<span>Cannot remove yourself</span>
+								</div>
+							) : (
+								!isAdmin && (
+									<button
+										className="flex items-center w-full px-4 py-2 text-base text-red-500 
+										hover:bg-gray-100 dark:hover:bg-neutral-900 border-gray-200 dark:border-gray-700
+										text-sm rounded-md"
+										onClick={handleRemoveClick}
+									>
+										<UserMinus className="h-4 w-4 mr-2" />
+										<span>Remove from project</span>
+									</button>
+								)
+							)
+						}
                     </div>
                 </div>
             )}
-
-            <ModalOverlay isOpen={showConfirmation} onClose={handleCancelRemove}>
-                <ConfirmationDialog member={member} onConfirm={handleConfirmRemove} onCancel={handleCancelRemove} />
-            </ModalOverlay>
-
-            <ModalOverlay isOpen={showRoleConfirmation} onClose={handleCancelRoleChange}>
-                <RoleConfirmationDialog
-                    member={member}
-                    action={roleAction}
-                    onConfirm={handleConfirmRoleChange}
-                    onCancel={handleCancelRoleChange}
-                />
-            </ModalOverlay>
+			{
+				showConfirmation && (
+					<RemoveMemberModal
+						member={member}
+						memberBeingRemoved={memberBeingRemoved}
+						onConfirm={removeMember}
+						onCancel={closeRemoveMemberModal}
+					/>
+				)
+			}
+			{
+				showRoleConfirmation && (
+					<ChangeRoleModal
+						member={member}
+						memberRoleBeingChanged={memberRoleBeingChanged}
+						onConfirm={changeMemberRole}
+						onCancel={closeChangeRoleModal}
+						action={roleAction}
+					/>
+				)
+			}
         </>
     )
 }

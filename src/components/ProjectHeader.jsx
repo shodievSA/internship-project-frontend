@@ -43,9 +43,9 @@ const ProjectHeader = ({
 						size="md"
 						className="w-full lg:w-auto"
 					>
-						<div className="flex items-center gap-x-3">
+						<div className="flex items-center gap-x-2">
 							<Plus className="w-4 h-4" />
-							<span>New Project</span>
+							<span className="font-medium">New Project</span>
 						</div>
 					</Button>
 				</div>

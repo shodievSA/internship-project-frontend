@@ -3,21 +3,21 @@ function Button({
 	size="lg",
     children,
     loading = false,
-    disabled,
+    disabled = false,
     onClick,
     className
 }) {
 
     const variants = {
-        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
-        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
-		destructive: 'bg-red-800 hover:bg-red-900 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none',
-		alert: 'bg-orange-800 hover:bg-orange-900 text-white rounded-md font-medium disabled:opacity-50 disabled:pointer-events-none'
+        primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
+        secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
+		destructive: 'bg-red-800 hover:bg-red-900 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
+		alert: 'dark:bg-orange-800 bg-orange-600 dark:hover:bg-orange-900 hover:bg-orange-700 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200'
     };
 
 	const sizes = {
 		sm: 'text-sm px-3 py-2',
-		md: 'text-base py-2 px-6 text-sm md:text-base',
+		md: 'text-base py-2 px-4 text-sm md:text-base',
 		lg: 'text-base py-3 px-6 text-sm md:text-base'
 	}
 

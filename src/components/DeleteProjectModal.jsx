@@ -60,7 +60,7 @@ function DeleteProjectModal({ projectId, projectTitle, showModal }) {
 	return (
 		<Modal 
 			title="Delete Project" 
-			titleIcon={<TriangleAlert className="text-red-700 w-5 h-5" />}
+			titleIcon={<TriangleAlert className="text-red-700 w-6 h-6" />}
 			subtitle={`Are you sure you want to delete "${projectTitle}"?`}
 			size="md"
 		>

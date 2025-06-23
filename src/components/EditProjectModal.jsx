@@ -78,7 +78,7 @@ function EditProjectModal({
         try {
 
             const res = await fetch(`${SERVER_BASE_URL}/api/v1/update-project/${projectId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'

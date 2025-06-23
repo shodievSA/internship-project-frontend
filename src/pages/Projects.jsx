@@ -6,6 +6,7 @@ import EmptySearch from "../components/EmptySearch";
 import NewProjectModal from "../components/NewProjectModal";
 import { useMemo, useState, useEffect } from "react";
 import projectService from "../services/projectService";
+import EmptyDashboard from "../components/EmptyDashboard";
 
 const Projects = () => {
 
@@ -65,6 +66,8 @@ const Projects = () => {
 
 	}, [projects, currentFilters]);
 
+	console.log(projects)
+
 	const handleSearch = (searchTerm) => {
 
 		const newParams = new URLSearchParams(searchParams);
@@ -113,8 +116,8 @@ const Projects = () => {
 	};
 
 	return (
-		<div className="min-h-screen px-5 pt-10 lg:px-10">
-			<div className="flex flex-col gap-y-4">
+		<div className="h-full px-5 pt-5 lg:px-8">
+			<div className="flex flex-col gap-y-4 h-full">
 				<ProjectHeader
 					filters={currentFilters}
 					onSearch={handleSearch}
@@ -126,6 +129,8 @@ const Projects = () => {
 					<div>Loading projects...</div>
 				) : error ? (
 					<div className="text-red-500">{error}</div>
+				) : projects.length === 0 ? (
+					<EmptyDashboard />
 				) : filteredProjects.length === 0 ? (
 					<EmptySearch onClearFilters={clearFilters} />
 				) : (
