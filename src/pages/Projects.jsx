@@ -6,6 +6,7 @@ import EmptySearch from "../components/EmptySearch";
 import NewProjectModal from "../components/NewProjectModal";
 import { useMemo, useState, useEffect } from "react";
 import projectService from "../services/projectService";
+import EmptyDashboard from "../components/EmptyDashboard";
 
 const Projects = () => {
 
@@ -35,7 +36,7 @@ const Projects = () => {
 				setError(err.message || "Failed to load projects");
 
 			} finally {
-				
+
 				setLoading(false);
 
 			}
@@ -46,20 +47,25 @@ const Projects = () => {
 
 	}, []);
 
+	// Sync projectCount in localStorage whenever projects change
+	useEffect(() => {
+		localStorage.setItem('projectCount', projects.length);
+	}, [projects]);
+
 	// Keep track of filter values
 	const currentFilters = {
 
 		search: searchParams.get("search") || "",
 		status: searchParams.get("status") || "all",
 		owner: searchParams.get("owner") || "all"
-		
+
 	};
 
 	// Always sort projects by createdAt descending before filtering
 	const filteredProjects = useMemo(() => {
 
 		const sorted = [...projects].sort(
-		(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+			(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
 		);
 		return filterProjects(sorted, currentFilters);
 
@@ -126,20 +132,22 @@ const Projects = () => {
 					<div>Loading projects...</div>
 				) : error ? (
 					<div className="text-red-500">{error}</div>
+				) : projects.length === 0 ? (
+					<EmptyDashboard showNewProjectModal={setShowNewProjectModal} />
 				) : filteredProjects.length === 0 ? (
 					<EmptySearch onClearFilters={clearFilters} />
 				) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{filteredProjects.map((project) => (
-						<ProjectCard key={project.id} project={project} />
+							<ProjectCard key={project.id} project={project} />
 						))}
 					</div>
 				)}
 			</div>
 			{showNewProjectModal && (
-				<NewProjectModal 
-					setShowNewProjectModal={setShowNewProjectModal} 
-					onProjectCreated={handleProjectCreated} 
+				<NewProjectModal
+					setShowNewProjectModal={setShowNewProjectModal}
+					onProjectCreated={handleProjectCreated}
 				/>
 			)}
 		</div>
