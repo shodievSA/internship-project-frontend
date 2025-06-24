@@ -27,9 +27,9 @@ const Projects = () => {
 			try {
 
 				const response = await projectService.getProjects();
-				setProjects(response.projects);
+				setProjects(response);
 
-				console.log("Project data", response.projects);
+				console.log("Project data", response);
 
 			} catch (err) {
 
@@ -61,14 +61,9 @@ const Projects = () => {
 
 	};
 
-	// Always sort projects by createdAt descending before filtering
+
 	const filteredProjects = useMemo(() => {
-
-		const sorted = [...projects].sort(
-			(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-		);
-		return filterProjects(sorted, currentFilters);
-
+		return filterProjects(projects, currentFilters);
 	}, [projects, currentFilters]);
 
 	const handleSearch = (searchTerm) => {

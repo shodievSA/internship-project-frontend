@@ -5,11 +5,12 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function EditProjectModal({ 
-    projectId, 
-    currentProjectTitle, 
-    currentProjectStatus, 
-    showModal 
+function EditProjectModal({
+    projectId,
+    currentProjectTitle,
+    currentProjectStatus,
+    showModal,
+    onProjectUpdated
 }) {
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
@@ -43,20 +44,20 @@ function EditProjectModal({
         });
 
     }, [
-            newProjectTitle, 
-            newProjectStatus,
-            currentProjectStatus,
-            currentProjectTitle
-       ]
+        newProjectTitle,
+        newProjectStatus,
+        currentProjectStatus,
+        currentProjectTitle
+    ]
     );
 
     useEffect(() => {
 
         if (areProjectChangesValid(
-            newProjectTitleValid, 
+            newProjectTitleValid,
             newProjectStatusValid,
-            updatedProjectProps, 
-            changesBeingSaved, 
+            updatedProjectProps,
+            changesBeingSaved,
         )) {
             setSubmitButtonDisabled(false);
         } else {
@@ -64,11 +65,11 @@ function EditProjectModal({
         }
 
     }, [
-            newProjectTitleValid, 
-            updatedProjectProps, 
-            newProjectStatusValid, 
-            changesBeingSaved
-       ]
+        newProjectTitleValid,
+        updatedProjectProps,
+        newProjectStatusValid,
+        changesBeingSaved
+    ]
     );
 
     async function updateProject() {
@@ -77,8 +78,8 @@ function EditProjectModal({
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/update-project/${projectId}`, {
-                method: 'PUT',
+            const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
+                method: 'PATCH',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
@@ -91,6 +92,8 @@ function EditProjectModal({
                 const { updatedProject } = await res.json();
 
                 console.log(updatedProject);
+                if (onProjectUpdated) onProjectUpdated(updatedProject);
+                showModal(false);
 
             } else {
 
@@ -138,8 +141,8 @@ function EditProjectModal({
                     isValid={setNewProjectStatusValid}
                 />
                 <div className="grid grid-cols-2 gap-4">
-                    <Button 
-                        variant="secondary" 
+                    <Button
+                        variant="secondary"
                         disabled={changesBeingSaved}
                         onClick={() => showModal(false)}
                     >
@@ -161,15 +164,15 @@ function EditProjectModal({
 }
 
 function areProjectChangesValid(
-    titleValid, 
-    statusValid, 
-    updatedProps, 
+    titleValid,
+    statusValid,
+    updatedProps,
     changesBeingSaved
 ) {
 
     if (
         !titleValid
-        || 
+        ||
         Object.keys(updatedProps).length === 0
         ||
         changesBeingSaved
