@@ -2,7 +2,7 @@ const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const projectService = {
     createProject: async (title, userPosition) => {
-        const response = await fetch(`${SERVER_BASE_URL}/api/v1/new-project`, {
+        const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
