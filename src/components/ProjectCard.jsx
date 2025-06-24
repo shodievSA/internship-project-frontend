@@ -18,7 +18,7 @@ const ProjectCard = ({ project }) => {
       const year = dateObj.getFullYear();
       const month = String(dateObj.getMonth() + 1).padStart(2, '0');
       const day = String(dateObj.getDate()).padStart(2, '0');
-      createdAtDisplay = `${year},${month},${day}`;
+      createdAtDisplay = `${year}/${month}/${day}`;
     }
   }
 

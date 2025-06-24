@@ -12,7 +12,7 @@ const ProjectHeader = ({
 }) => {
 
 	return (
-		<div className="project-header_container">
+		<div className="rounded-lg">
 			<div className="flex flex-col lg:flex-row md:items-center justify-between">
 				{/* Search Bar */}
 				<div className="w-full lg:w-96 mb-4 lg:mb-0">
