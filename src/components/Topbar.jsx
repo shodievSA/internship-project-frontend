@@ -9,7 +9,7 @@ function Topbar({ sidebarCollapsed, setSidebarCollapsed }) {
 
     return (
         <div className='dark:bg-black dark:text-white dark:border-neutral-800 flex items-center 
-        justify-between pl-4 pr-6 h-16 flex-shrink-0 border-b-[1px] border-neutral-200'>
+        justify-between px-6 lg:px-8 h-16 flex-shrink-0 border-b-[1px] border-neutral-200'>
             <div className='flex items-center gap-x-1'>
                 <button 
                 className='dark:hover:bg-neutral-900 hover:bg-neutral-50 p-2 rounded-md'

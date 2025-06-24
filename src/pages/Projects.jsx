@@ -112,37 +112,48 @@ const Projects = () => {
 	};
 
 	return (
-		<div className="h-full px-5 pt-5 lg:px-8">
+		<div className="h-full px-6 pt-8 lg:px-8">
 			<div className="flex flex-col gap-y-4 h-full">
-				<ProjectHeader
-					filters={currentFilters}
-					onSearch={handleSearch}
-					onFilterChange={handleFilterChange}
-					setShowNewProjectModal={setShowNewProjectModal}
-				/>
-
-				{loading ? (
-					<div>Loading projects...</div>
-				) : error ? (
-					<div className="text-red-500">{error}</div>
-				) : projects.length === 0 ? (
-					<EmptyDashboard showNewProjectModal={setShowNewProjectModal} />
-				) : filteredProjects.length === 0 ? (
-					<EmptySearch onClearFilters={clearFilters} />
-				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{filteredProjects.map((project) => (
-							<ProjectCard key={project.id} project={project} />
-						))}
-					</div>
-				)}
+				{
+					loading ? (
+						<div>Loading projects...</div>
+					) : error ? (
+						<div className="text-red-500">{error}</div>
+					) : projects.length === 0 ? (
+						<EmptyDashboard showNewProjectModal={setShowNewProjectModal} />
+					) : (
+						<div className="h-full flex flex-col gap-y-8">
+							<ProjectHeader
+								filters={currentFilters}
+								onSearch={handleSearch}
+								onFilterChange={handleFilterChange}
+								setShowNewProjectModal={setShowNewProjectModal}
+							/>
+							{
+								filteredProjects.length === 0 ? (
+									<div className="flex grow items-center justify-center">
+										<EmptySearch onClearFilters={clearFilters} />
+									</div>
+								) : (
+									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+										{filteredProjects.map((project) => (
+											<ProjectCard key={project.id} project={project} />
+										))}
+									</div>
+								)
+							}
+						</div>
+					)
+				}
 			</div>
-			{showNewProjectModal && (
-				<NewProjectModal
-					setShowNewProjectModal={setShowNewProjectModal}
-					onProjectCreated={handleProjectCreated}
-				/>
-			)}
+			{
+				showNewProjectModal && (
+					<NewProjectModal
+						setShowNewProjectModal={setShowNewProjectModal}
+						onProjectCreated={handleProjectCreated}
+					/>
+				)
+			}
 		</div>
 	);
 
