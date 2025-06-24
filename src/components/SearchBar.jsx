@@ -1,16 +1,16 @@
 import { Search } from "lucide-react"
+import Input from "./ui/Input";
 
 const SearchBar = ({ value, onChange, placeholder = "Search..." }) => {
     return (
         <div className="relative">
             <Search className="search-icon" />
-            <input
-                type="text"
-                value={value || ""}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-                className="search-bar"
-            />
+			<Input 
+				placeholder={placeholder} 
+				className="pl-10"
+				value={value || ""}
+				onChange={(e) => onChange(e.target.value)}
+			/>
         </div>
     )
 }

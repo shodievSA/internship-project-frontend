@@ -26,10 +26,8 @@ const Projects = () => {
 
 			try {
 
-				const response = await projectService.getProjects();
-				setProjects(response);
-
-				console.log("Project data", response);
+				const projects = await projectService.getProjects();
+				setProjects(projects);
 
 			} catch (err) {
 
@@ -114,8 +112,8 @@ const Projects = () => {
 	};
 
 	return (
-		<div className="min-h-screen px-5 pt-10 lg:px-10">
-			<div className="flex flex-col gap-y-4">
+		<div className="h-full px-5 pt-5 lg:px-8">
+			<div className="flex flex-col gap-y-4 h-full">
 				<ProjectHeader
 					filters={currentFilters}
 					onSearch={handleSearch}

@@ -1,6 +1,7 @@
 import { AlertTriangle } from "lucide-react"
 
 export function RoleConfirmationDialog({ member, action, onConfirm, onCancel }) {
+
     const isPromotion = action === "promote"
     const title = isPromotion ? "Promote Team Member" : "Demote Team Member"
     const actionText = isPromotion ? "Promote" : "Demote"
@@ -53,5 +54,6 @@ export function RoleConfirmationDialog({ member, action, onConfirm, onCancel }) 
                 </button>
             </div>
         </div>
-    )
+    );
+	
 } 

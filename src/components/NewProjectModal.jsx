@@ -101,6 +101,18 @@ function NewProjectModal({ setShowNewProjectModal, onProjectCreated }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
             disabled={isNewProjectBeingCreated}
+            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
+                        bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
+                        disabled:opacity-50 ${isNewProjectBeingCreated
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+              }`}
+            onClick={() => setShowNewProjectModal(false)}
+          >
+            Cancel
+          </button>
+		  <button
+            disabled={isNewProjectBeingCreated}
             className="dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 
                         text-white py-2.5 px-4 rounded-lg font-medium text-sm lg:text-base"
             onClick={createNewProject}
@@ -118,18 +130,6 @@ function NewProjectModal({ setShowNewProjectModal, onProjectCreated }) {
             ) : (
               "Create Project"
             )}
-          </button>
-          <button
-            disabled={isNewProjectBeingCreated}
-            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
-                        bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
-                        disabled:opacity-50 ${isNewProjectBeingCreated
-                ? "cursor-not-allowed"
-                : "cursor-pointer"
-              }`}
-            onClick={() => setShowNewProjectModal(false)}
-          >
-            Cancel
           </button>
         </div>
       </div>

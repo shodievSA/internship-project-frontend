@@ -19,8 +19,13 @@ function AuthContextProvider({ children }) {
                     credentials: 'include'
                 });
 
-                const { user } = await res.json();
+				if (!res.ok) {
 
+					throw new Error('request for fetching user data was unsuccessfull');
+
+				}
+
+                const { user } = await res.json();
                 setUser(user);
 
             } catch {

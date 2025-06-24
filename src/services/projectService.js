@@ -32,7 +32,9 @@ const projectService = {
             throw new Error(error.message || 'Failed to fetch projects');
         }
 
-        return response.json();
+        const { projects } = await response.json();
+
+		return projects;
     }
 };
 

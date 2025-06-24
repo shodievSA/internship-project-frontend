@@ -15,7 +15,7 @@ function Modal({ title, titleIcon, subtitle, size, children }) {
 						{ titleIcon && titleIcon }
                     	<h1 className="text-base md:text-xl font-semibold">{ title }</h1>
 					</div>
-					{ subtitle && <h3 className="dark:text-neutral-400 text-slate-500">{ subtitle }</h3> }
+					{ subtitle && <h3 className="dark:text-neutral-400 text-slate-500 text-pretty">{ subtitle }</h3> }
                 </div>
                 { children }
             </div>
