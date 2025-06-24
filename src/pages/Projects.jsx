@@ -29,8 +29,6 @@ const Projects = () => {
 				const response = await projectService.getProjects();
 				setProjects(response.projects);
 
-				console.log("Project data", response.projects);
-
 			} catch (err) {
 
 				setError(err.message || "Failed to load projects");
@@ -65,8 +63,6 @@ const Projects = () => {
 		return filterProjects(sorted, currentFilters);
 
 	}, [projects, currentFilters]);
-
-	console.log(projects)
 
 	const handleSearch = (searchTerm) => {
 

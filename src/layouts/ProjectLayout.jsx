@@ -7,6 +7,7 @@ import LeaveProjectModal from "../components/LeaveProjectModal";
 import GroupEmailModal from "../components/GroupEmailModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
+const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function ProjectLayout() {
 
@@ -63,15 +64,38 @@ function ProjectLayout() {
 
     useEffect(() => {
 
-        console.log('fetching project data');
+		async function getProjectDetails() {
 
-        setTimeout(() => {
+			try {
 
-            console.log('project data fetched');
+				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectInfo.id}`, {
+					method: 'GET',
+					credentials: 'include'
+				});
 
-        }, 3000);
+				if (!res.ok) {
 
-    }, []); // this useEffect hook will fetch all information related to the project including project members, tasks, invites and etc.
+					throw new Error("Error occured while getting project's details");
+
+				} else {
+
+					const { projectDetails } = await res.json();
+
+					console.log(projectDetails);
+
+				}
+
+			} catch(error) {
+
+				console.log('The following error while fetching project detaisl: ' + error);
+
+			}
+
+		}
+
+		getProjectDetails();
+
+    }, [projectInfo.id]);
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
