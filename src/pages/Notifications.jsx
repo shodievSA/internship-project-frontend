@@ -1,35 +1,94 @@
 import { useState } from "react";
-import EmptyNotifications from "../components/EmptyNotifications";
+import {
+    Calendar,
+    Filter,
+} from "lucide-react";
+import { NotificationCard } from "../components/NotificationCard";
+import { CustomDropdown } from "../components/CustomDropdown";
+import { statusOptionsInviation, dateOptions } from "../utils/constant";
+import { filterInvitations } from "../utils/filterUtils";
+import SearchBar from "../components/SearchBar";
+import { mockInvitations } from "../utils/data";
+import { EmptyInvitation } from "../components/EmptyInvitation";
 
-function Notifications() {
-    const [notificationCount, setNotificationCount] = useState(() => {
-        try {
-            const count = JSON.parse(localStorage.getItem('notificationCount'));
-            return (Number.isInteger(count) && Number.isFinite(count)) ? count : 0;
-        } catch {
-            return 0;
-        }
+export default function Notifications() {
+    const [invitations, setInvitations] = useState(mockInvitations);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [dateFilter, setDateFilter] = useState("all");
+
+    const handleAccept = (id) => {
+        setInvitations((prev) =>
+            prev.map((inv) => (inv.id === id ? { ...inv, status: "accepted" } : inv))
+        );
+    };
+
+    const handleReject = (id) => {
+        setInvitations((prev) =>
+            prev.map((inv) => (inv.id === id ? { ...inv, status: "rejected" } : inv))
+        );
+    };
+
+    const filteredInvitations = filterInvitations(invitations, {
+        search: searchTerm,
+        status: statusFilter,
+        date: dateFilter,
     });
 
-    if (notificationCount === 0) {
-        return (
-            <div className="h-full px-5 pt-10 lg:px-10">
-                <EmptyNotifications />
-            </div>
-        );
-    }
-
     return (
-        <div className="h-full px-5 pt-10 lg:px-10">
+        <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white p-4 md:p-6">
+            <div className="w-full">
+                {/* Header with Search and Filters */}
+                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
+                    {/* Search Bar (left on desktop) */}
+                    <div className="flex justify-start w-full lg:w-1/3">
+                        <div className="relative w-full">
+                            <SearchBar
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Search by project, inviter name or email..."
+                            />
+                        </div>
+                    </div>
 
-            {/* Other Notifications Section */}
-            {notificationCount > 0 && (
-                <div>
-                    {/* Add your other notifications content here */}
+                    {/* Dropdowns (right on desktop) */}
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                        <CustomDropdown
+                            value={statusFilter}
+                            onChange={setStatusFilter}
+                            options={statusOptionsInviation}
+                            placeholder="All Status"
+                            icon={Filter}
+                            className="w-full sm:w-auto"
+                        />
+                        <CustomDropdown
+                            value={dateFilter}
+                            onChange={setDateFilter}
+                            options={dateOptions}
+                            placeholder="All Dates"
+                            icon={Calendar}
+                            className="w-full sm:w-auto"
+                        />
+                    </div>
                 </div>
-            )}
+
+                {/* Invitations List */}
+                <div className="space-y-4">
+                    {filteredInvitations.map((invitation) => (
+                        <NotificationCard
+                            key={invitation.id}
+                            invitation={invitation}
+                            onAccept={handleAccept}
+                            onReject={handleReject}
+                        />
+                    ))}
+                </div>
+
+                {/* Empty State */}
+                {filteredInvitations.length === 0 && (
+                    <EmptyInvitation />
+                )}
+            </div>
         </div>
     );
-}
-
-export default Notifications;
+}   
