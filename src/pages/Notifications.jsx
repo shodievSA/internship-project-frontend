@@ -39,20 +39,17 @@ export default function Notifications() {
         <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white p-4 md:p-6">
             <div className="w-full">
                 {/* Header with Search and Filters */}
-                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
+                <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-x-6 mb-6 w-full">
                     {/* Search Bar (left on desktop) */}
-                    <div className="flex justify-start w-full lg:w-1/3">
-                        <div className="relative w-full">
-                            <SearchBar
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Search by project, inviter name or email..."
-                            />
-                        </div>
+                    <div className="w-full lg:w-96 mb-4 lg:mb-0">
+                        <SearchBar
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Search by project, inviter name or email..."
+                        />
                     </div>
-
                     {/* Dropdowns (right on desktop) */}
-                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full lg:w-auto lg:ml-auto">
                         <CustomDropdown
                             value={statusFilter}
                             onChange={setStatusFilter}

@@ -56,6 +56,7 @@ export function CustomDropdown({
 				onClick={() => setIsOpen(!isOpen)}
 				variant="secondary"
 				size="md"
+				className={`relative w-full sm:w-auto`}
 			>
 				{/* Mobile Layout */}
 				<div className="flex items-center justify-between w-full sm:hidden">
