@@ -1,7 +1,5 @@
-// Reusable UI utility functions that return JSX elements
-
-// Reusable status badge function for invitations
 export const getStatusBadge = (status) => {
+
     switch (status) {
         case "pending":
             return (
@@ -17,11 +15,12 @@ export const getStatusBadge = (status) => {
             );
         case "rejected":
             return (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-500 text-white dark:bg-red-600 dark:text-white">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-white dark:bg-red-900 dark:text-white">
                     Rejected
                 </span>
             );
         default:
             return null;
     }
+	
 }; 

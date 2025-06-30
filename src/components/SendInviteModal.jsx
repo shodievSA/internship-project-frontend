@@ -118,6 +118,8 @@ function SendInviteModal({ closeModal }) {
 
 			console.log(data);
 
+			closeModal();
+
 		} catch(err) {
 
 			console.log('Error occured while sending project invite: ' + err);
