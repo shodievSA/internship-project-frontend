@@ -5,12 +5,12 @@ import { useOutletContext } from "react-router-dom"
 
 function TeamMembersPage() {
 
-    const { projectData } = useOutletContext();
+    const { project } = useOutletContext();
 
     const [teamMembers, setTeamMembers] = useState(
         initialTeamMembers.map(member => ({
             ...member,
-            projectName: projectData?.name || "Project Name"
+            projectName: project?.name || "Project Name"
         }))
     );
     const [currentUser] = useState(teamMembers[0]);

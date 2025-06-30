@@ -12,9 +12,10 @@ const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 function ProjectLayout() {
 
     const location = useLocation();
-    const { state: { projectInfo: initialProjectInfo } } = location;
+    const { state: { projectPreview } } = location;
 
-    const [projectInfo, setProjectInfo] = useState(initialProjectInfo);
+    const [projectInfo, setProjectInfo] = useState(projectPreview);
+	const [fullProject, setFullProject] = useState(null);
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
@@ -65,11 +66,11 @@ function ProjectLayout() {
 
     useEffect(() => {
 
-		async function getProjectDetails() {
+		async function getProject() {
 
 			try {
 
-				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectInfo.id}`, {
+				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectPreview.id}`, {
 					method: 'GET',
 					credentials: 'include'
 				});
@@ -82,7 +83,7 @@ function ProjectLayout() {
 
 					const { projectDetails } = await res.json();
 
-					console.log(projectDetails);
+					setFullProject(projectDetails);
 
 				}
 
@@ -94,17 +95,22 @@ function ProjectLayout() {
 
 		}
 
-		getProjectDetails();
+		getProject();
 
-    }, [projectInfo.id]);
+    }, [projectPreview.id]);
+
+
+	console.log(fullProject);
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
-                    <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">{projectInfo.title}</h1>
-                    <div className={`${statusColors[projectInfo.status]} status-badge px-3 py-1 text-xs md:text-sm`}>
-                        {projectInfo.status}
+                    <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">
+						{projectPreview.title}
+					</h1>
+                    <div className={`${statusColors[projectPreview.status]} status-badge px-3 py-1 text-xs md:text-sm`}>
+                        {projectPreview.status}
                     </div>
                 </div>
                 <div className="md:justify-end flex items-center gap-x-5">
@@ -117,7 +123,7 @@ function ProjectLayout() {
                         </button>
                         <div className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md border-neutrals-200 border-[1px] 
 						rounded-md flex flex-col absolute w-[200px] mt-3 left-0 ${settingsButtonClicked ? 'opacity-100' :
-                                'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-10`}>
+                        'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-10`}>
                             <div className="flex flex-col border-b-[1px] dark:border-neutral-800 border-neutral-200 p-1.5">
                                 <button
                                     className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 
@@ -182,7 +188,7 @@ function ProjectLayout() {
             rounded-md">
                 <NavLink
                     to='team'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -191,7 +197,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='all-tasks'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -200,7 +206,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='my-tasks'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -209,7 +215,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='assigned-tasks'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -218,7 +224,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='review-tasks'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -227,7 +233,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='project-invites'
-                    state={{ projectInfo: projectInfo }}
+                    state={{ projectPreview: projectPreview }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -235,22 +241,22 @@ function ProjectLayout() {
                     Invites
                 </NavLink>
             </ul>
-            <Outlet context={{ projectData: projectInfo }} />
+            <Outlet context={{ project: fullProject }} />
             {
                 showNewTaskModal && (
                     <NewTaskModal
                         setShowNewTaskModal={setShowNewTaskModal}
                         teamMembers={teamMembers}
-						projectId={projectInfo.id}
+						projectId={projectPreview.id}
                     />
                 )
             }
             {
                 showEditProjectModal && (
                     <EditProjectModal
-                        projectId={projectInfo.id}
-                        currentProjectTitle={projectInfo.title}
-                        currentProjectStatus={projectInfo.status}
+                        projectId={projectPreview.id}
+                        currentProjectTitle={projectPreview.title}
+                        currentProjectStatus={projectPreview.status}
                         showModal={setShowEditProjectModal}
                         onProjectUpdated={(updatedProject) => setProjectInfo((prev) => ({ ...prev, ...updatedProject }))}
                     />
@@ -259,8 +265,8 @@ function ProjectLayout() {
             {
                 showDeleteProjectModal && (
                     <DeleteProjectModal
-                        projectId={projectInfo.id}
-                        projectTitle={projectInfo.title}
+                        projectId={projectPreview.id}
+                        projectTitle={projectPreview.title}
                         showModal={setShowDeleteProjectModal}
                     />
                 )
@@ -268,8 +274,8 @@ function ProjectLayout() {
             {
                 showLeaveProjectModal && (
                     <LeaveProjectModal
-                        projectId={projectInfo.id}
-                        projectTitle={projectInfo.title}
+                        projectId={projectPreview.id}
+                        projectTitle={projectPreview.title}
                         showModal={setShowLeaveProjectModal}
                     />
                 )
