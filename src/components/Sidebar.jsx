@@ -98,13 +98,13 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                     transition-[width] duration-500`}>
                         <div className={`${sidebarCollapsed ? 'invisible' : 'visible'} flex flex-col h-full py-4
                         gap-y-8`}>
-                            <div className="flex gap-x-3 items-center justify-center px-2">
-                                <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full">
+                            <div className="flex gap-x-3 items-center justify-start px-2">
+                                <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full flex-shrink-0">
                                     <img src={user.avatarUrl} className='w-full h-full rounded-full' />
                                 </div>
                                 <div className="flex flex-col">
-                                    <p className="text-sm md:text-lg font-medium">{user.fullName}</p>
-                                    <p className="dark:text-neutral-400 text-neutral-500 text-sm md:text-base">
+                                    <p className="text-sm md:text-base font-medium">{user.fullName}</p>
+                                    <p className="dark:text-neutral-400 text-neutral-500 text-sm truncate">
                                         {user.email}
                                     </p>
                                 </div>
