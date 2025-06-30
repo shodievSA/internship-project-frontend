@@ -15,6 +15,7 @@ import NotificationsOutlet from "./layouts/NotificationsOutlet";
 import NotificationDetails from "./pages/NotificationDetails";
 import AiPlanner from "./pages/AiPlanner";
 import SignIn from "./pages/SignIn";
+import Invites from "./pages/Invites";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
 								<Route path=":notificationId" element={<NotificationDetails />} />
 							</Route>
 							<Route path="/ai-planner" element={<AiPlanner />} />
+							<Route path="/invites" element={<Invites />} />
 						</Route>
 						<Route path="/sign-in" element={<SignIn />} />
 					</Routes>

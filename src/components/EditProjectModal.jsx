@@ -5,6 +5,12 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
+const projectStatusOptions = [
+	{ label: 'Active', value: 'active' },
+	{ label: 'Paused', value: 'paused' },
+	{ label: 'Completed', value: 'completed' }
+];
+
 function EditProjectModal({
     projectId,
     currentProjectTitle,
@@ -14,12 +20,12 @@ function EditProjectModal({
 }) {
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
-    const [newProjectStatus, setNewProjectStatus] = useState(currentProjectStatus);
-    const [newProjectTitleValid, setNewProjectTitleValid] = useState(true);
-    const [newProjectStatusValid, setNewProjectStatusValid] = useState(true);
+    const [newProjectStatus, setNewProjectStatus] = useState(() => projectStatusOptions.find(
+		(option) => option.value === currentProjectStatus
+	));
     const [changesBeingSaved, setChangesBeingSaved] = useState(false);
-    const [updatedProjectProps, setUpdatedProjectProps] = useState({});
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+    const [updatedProjectProps, setUpdatedProjectProps] = useState({});
 
     useEffect(() => {
 
@@ -27,8 +33,8 @@ function EditProjectModal({
 
             const updated = { ...prev };
 
-            if (newProjectStatus.trim() !== currentProjectStatus) {
-                updated.status = newProjectStatus;
+            if (newProjectStatus.value.trim() !== currentProjectStatus) {
+                updated.status = newProjectStatus.value;
             } else {
                 delete updated.status;
             }
@@ -48,29 +54,13 @@ function EditProjectModal({
         newProjectStatus,
         currentProjectStatus,
         currentProjectTitle
-    ]
-    );
+    ]);
 
-    useEffect(() => {
+	useEffect(() => {
 
-        if (areProjectChangesValid(
-            newProjectTitleValid,
-            newProjectStatusValid,
-            updatedProjectProps,
-            changesBeingSaved,
-        )) {
-            setSubmitButtonDisabled(false);
-        } else {
-            setSubmitButtonDisabled(true);
-        }
+		setSubmitButtonDisabled(!areProjectChangesValid(updatedProjectProps));
 
-    }, [
-        newProjectTitleValid,
-        updatedProjectProps,
-        newProjectStatusValid,
-        changesBeingSaved
-    ]
-    );
+	}, [updatedProjectProps]);
 
     async function updateProject() {
 
@@ -91,8 +81,8 @@ function EditProjectModal({
 
                 const { updatedProject } = await res.json();
 
-                console.log(updatedProject);
                 if (onProjectUpdated) onProjectUpdated(updatedProject);
+
                 showModal(false);
 
             } else {
@@ -124,13 +114,12 @@ function EditProjectModal({
                     value={newProjectTitle}
                     setValue={setNewProjectTitle}
                     error="project title can't be empty"
-                    isValid={setNewProjectTitleValid}
                 />
                 <SelectField
                     label="Project Status"
                     disabled={changesBeingSaved}
                     required={true}
-                    value={newProjectStatus}
+                    selected={newProjectStatus}
                     setValue={setNewProjectStatus}
                     options={[
                         { label: 'Active', value: 'active' },
@@ -138,7 +127,6 @@ function EditProjectModal({
                         { label: 'Completed', value: 'completed' }
                     ]}
                     error="select valid project status"
-                    isValid={setNewProjectStatusValid}
                 />
                 <div className="grid grid-cols-2 gap-4">
                     <Button
@@ -163,27 +151,42 @@ function EditProjectModal({
 
 }
 
-function areProjectChangesValid(
-    titleValid,
-    statusValid,
-    updatedProps,
-    changesBeingSaved
-) {
+function areProjectChangesValid(updatedProject) {
 
-    if (
-        !titleValid
-        ||
-        Object.keys(updatedProps).length === 0
-        ||
-        changesBeingSaved
-        ||
-        !statusValid
-    ) {
-        return false;
-    } else {
-        return true;
-    }
+	const projectStatuses = ["active", "paused", "completed"];
 
-}
+	let isValid = true;
+
+    if (Object.keys(updatedProject).length === 0) {
+
+		isValid = false;
+
+	} else {
+
+		if ('title' in updatedProject) {
+
+			if (!updatedProject.title.length > 0) {
+
+				isValid = false;
+
+			} 
+
+		}
+
+		if ('status' in updatedProject) {
+
+			if (!projectStatuses.includes(updatedProject.status)) {
+
+				isValid = false;
+
+			} 
+
+		}
+
+	}
+
+	return isValid;
+
+};
 
 export default EditProjectModal;

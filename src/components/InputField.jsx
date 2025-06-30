@@ -9,8 +9,7 @@ function InputField({
     required = false,
     value, 
     setValue, 
-    error,
-    isValid
+    error
 }) {
 
     const [showError, setShowError] = useState(false);
@@ -27,20 +26,10 @@ function InputField({
                     <Input 
                         placeholder={placeholder}
                         value={value}
-                        onChange={(e) => {
-                            
-                            const value = e.target.value;
-                            
-                            if (!value) {
-                                setShowError(true);
-                                isValid(false);
-                            } else {
-                                setShowError(false);
-                                isValid(true);
-                            }
-                            
-                            setValue(value);
-                            
+                        onChange={(e) => {                           
+                            const value = e.target.value;                                                  
+							setShowError(!value);               
+                            setValue(value);                           
                         }}
                         disabled={disabled}
                     />

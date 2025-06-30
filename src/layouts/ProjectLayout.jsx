@@ -241,6 +241,7 @@ function ProjectLayout() {
                     <NewTaskModal
                         setShowNewTaskModal={setShowNewTaskModal}
                         teamMembers={teamMembers}
+						projectId={projectInfo.id}
                     />
                 )
             }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { House, Sparkles, Bell, LogOut, Mail } from 'lucide-react';
+import { House, Sparkles, Bell, LogOut, MailPlus } from 'lucide-react';
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
@@ -98,13 +98,13 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                     transition-[width] duration-500`}>
                         <div className={`${sidebarCollapsed ? 'invisible' : 'visible'} flex flex-col h-full py-4
                         gap-y-8`}>
-                            <div className="flex gap-x-3 items-center justify-center px-2">
-                                <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full">
+                            <div className="flex gap-x-3 items-center justify-start px-2">
+                                <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full flex-shrink-0">
                                     <img src={user.avatarUrl} className='w-full h-full rounded-full' />
                                 </div>
                                 <div className="flex flex-col">
-                                    <p className="text-sm md:text-lg font-medium">{user.fullName}</p>
-                                    <p className="dark:text-neutral-400 text-neutral-500 text-sm md:text-base">
+                                    <p className="text-sm md:text-base font-medium">{user.fullName}</p>
+                                    <p className="dark:text-neutral-400 text-neutral-500 text-sm truncate">
                                         {user.email}
                                     </p>
                                 </div>
@@ -124,14 +124,19 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Sparkles className="w-5 h-5" />
-                                        <span>AI Planner</span>
-                                        <div className="text-xs md:text-sm bg-purple-600 px-2 rounded-full text-white">new</div>
+                                        <span>Organizer</span>
                                     </NavLink>
                                     <NavLink to={'/notifications'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Bell className="w-5 h-5" />
                                         <span>Notifications</span>
+                                    </NavLink>
+									<NavLink to={'/invites'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
+                                    dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
+                                    items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
+                                        <MailPlus className="w-5 h-5" />
+                                        <span>Invites</span>
                                     </NavLink>
                                 </ul>
                             </div>
