@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { House, Sparkles, Bell, LogOut, Mail } from 'lucide-react';
+import { House, Sparkles, Bell, LogOut, MailPlus } from 'lucide-react';
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
@@ -124,14 +124,19 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Sparkles className="w-5 h-5" />
-                                        <span>AI Planner</span>
-                                        <div className="text-xs md:text-sm bg-purple-600 px-2 rounded-full text-white">new</div>
+                                        <span>Organizer</span>
                                     </NavLink>
                                     <NavLink to={'/notifications'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Bell className="w-5 h-5" />
                                         <span>Notifications</span>
+                                    </NavLink>
+									<NavLink to={'/invites'} className='dark:hover:bg-zinc-900 dark:text-neutral-300
+                                    dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
+                                    items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
+                                        <MailPlus className="w-5 h-5" />
+                                        <span>Invites</span>
                                     </NavLink>
                                 </ul>
                             </div>
