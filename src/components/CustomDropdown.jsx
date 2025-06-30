@@ -56,6 +56,7 @@ export function CustomDropdown({
 				onClick={() => setIsOpen(!isOpen)}
 				variant="secondary"
 				size="md"
+				className={`relative w-full sm:w-auto`}
 			>
 				{/* Mobile Layout */}
 				<div className="flex items-center justify-between w-full sm:hidden">
@@ -86,8 +87,8 @@ export function CustomDropdown({
 								}}
 								className={`flex justify-between items-center w-full text-left px-3 py-2 text-sm 
 								hover:bg-gray-100 dark:hover:bg-neutral-900 transition-colors rounded-md
-								${value === option.value ? "text-black dark:text-white bg-gray-100 dark:bg-neutral-900 font-medium" : 
-								"text-black dark:text-white"}`}
+								${value === option.value ? "text-black dark:text-white bg-gray-100 dark:bg-neutral-900 font-medium" :
+										"text-black dark:text-white"}`}
 							>
 								<span>{option.label}</span>
 								{value === option.value && (
