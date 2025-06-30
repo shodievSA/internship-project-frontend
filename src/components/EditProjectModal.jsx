@@ -6,9 +6,9 @@ import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const projectStatusOptions = [
-	{ label: 'Active', value: 'active' },
-	{ label: 'Paused', value: 'paused' },
-	{ label: 'Completed', value: 'completed' }
+    { label: 'Active', value: 'active' },
+    { label: 'Paused', value: 'paused' },
+    { label: 'Completed', value: 'completed' }
 ];
 
 function EditProjectModal({
@@ -21,8 +21,8 @@ function EditProjectModal({
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
     const [newProjectStatus, setNewProjectStatus] = useState(() => projectStatusOptions.find(
-		(option) => option.value === currentProjectStatus
-	));
+        (option) => option.value === currentProjectStatus
+    ));
     const [changesBeingSaved, setChangesBeingSaved] = useState(false);
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
     const [updatedProjectProps, setUpdatedProjectProps] = useState({});
@@ -56,11 +56,11 @@ function EditProjectModal({
         currentProjectTitle
     ]);
 
-	useEffect(() => {
+    useEffect(() => {
 
-		setSubmitButtonDisabled(!areProjectChangesValid(updatedProjectProps));
+        setSubmitButtonDisabled(!areProjectChangesValid(updatedProjectProps));
 
-	}, [updatedProjectProps]);
+    }, [updatedProjectProps]);
 
     async function updateProject() {
 
@@ -153,39 +153,39 @@ function EditProjectModal({
 
 function areProjectChangesValid(updatedProject) {
 
-	const projectStatuses = ["active", "paused", "completed"];
+    const projectStatuses = ["active", "paused", "completed"];
 
-	let isValid = true;
+    let isValid = true;
 
     if (Object.keys(updatedProject).length === 0) {
 
-		isValid = false;
+        isValid = false;
 
-	} else {
+    } else {
 
-		if ('title' in updatedProject) {
+        if ('title' in updatedProject) {
 
-			if (!updatedProject.title.length > 0) {
+            if (!updatedProject.title.length > 0) {
 
-				isValid = false;
+                isValid = false;
 
-			} 
+            }
 
-		}
+        }
 
-		if ('status' in updatedProject) {
+        if ('status' in updatedProject) {
 
-			if (!projectStatuses.includes(updatedProject.status)) {
+            if (!projectStatuses.includes(updatedProject.status)) {
 
-				isValid = false;
+                isValid = false;
 
-			} 
+            }
 
-		}
+        }
 
-	}
+    }
 
-	return isValid;
+    return isValid;
 
 };
 
