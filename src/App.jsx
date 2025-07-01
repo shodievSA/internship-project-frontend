@@ -17,38 +17,41 @@ import AiPlanner from "./pages/AiPlanner";
 import SignIn from "./pages/SignIn";
 import Invites from "./pages/Invites";
 import PrivateRoute from "./components/PrivateRoute";
+import { ToastProvider } from "./components/ui/ToastProvider";
 
 function App() {
 
 	return (
-		<AuthContextProvider>
-			<ThemeContextProvider>
-				<Router>
-					<Routes>
-						<Route element={<PrivateRoute />}>
-							<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
-							<Route path="/projects" element={<Projects />} />
-							<Route path="/projects/:projectId" element={<ProjectLayout />}>
-								<Route path="team" element={<TeamPage />} />
-								<Route path="team/:memberId" element={<TeamMemberDetailsPage />} />
-								<Route path="all-tasks" element={<AllTasksPage />} />
-								<Route path="my-tasks" element={<MyTasksPage />} />
-								<Route path="assigned-tasks" element={<AssignedTasksPage />} />
-								<Route path="review-tasks" element={<ReviewTasksPage />} />
-								<Route path="project-invites" element={<InvitesPage />} />
+		<ToastProvider>
+			<AuthContextProvider>
+				<ThemeContextProvider>
+					<Router>
+						<Routes>
+							<Route element={<PrivateRoute />}>
+								<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
+								<Route path="/projects" element={<Projects />} />
+								<Route path="/projects/:projectId" element={<ProjectLayout />}>
+									<Route path="team" element={<TeamPage />} />
+									<Route path="team/:memberId" element={<TeamMemberDetailsPage />} />
+									<Route path="all-tasks" element={<AllTasksPage />} />
+									<Route path="my-tasks" element={<MyTasksPage />} />
+									<Route path="assigned-tasks" element={<AssignedTasksPage />} />
+									<Route path="review-tasks" element={<ReviewTasksPage />} />
+									<Route path="project-invites" element={<InvitesPage />} />
+								</Route>
+								<Route path="/notifications" element={<NotificationsOutlet />}>
+									<Route index element={<Notifications />} />
+									<Route path=":notificationId" element={<NotificationDetails />} />
+								</Route>
+								<Route path="/ai-planner" element={<AiPlanner />} />
+								<Route path="/invites" element={<Invites />} />
 							</Route>
-							<Route path="/notifications" element={<NotificationsOutlet />}>
-								<Route index element={<Notifications />} />
-								<Route path=":notificationId" element={<NotificationDetails />} />
-							</Route>
-							<Route path="/ai-planner" element={<AiPlanner />} />
-							<Route path="/invites" element={<Invites />} />
-						</Route>
-						<Route path="/sign-in" element={<SignIn />} />
-					</Routes>
-				</Router>
-			</ThemeContextProvider>
-		</AuthContextProvider>
+							<Route path="/sign-in" element={<SignIn />} />
+						</Routes>
+					</Router>
+				</ThemeContextProvider>
+			</AuthContextProvider>
+		</ToastProvider>
 	)
 
 }
