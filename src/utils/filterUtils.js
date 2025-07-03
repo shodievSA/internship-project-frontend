@@ -43,6 +43,10 @@ export const filterInvitations = (invitations, filters) => {
   return filterItems(invitations, filters, ['projectName', 'inviterName', 'inviterEmail']);
 };
 
+export const filterNotifications = (notifications, filters) => {
+  return filterItems(notifications, filters, ['title']);
+};
+
 const matchesSearch = (item, searchTerm, searchFields) => {
   if (!item || !searchTerm) return false;
   
