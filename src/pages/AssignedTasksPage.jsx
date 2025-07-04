@@ -13,7 +13,7 @@ import { Calendar, Filter } from "lucide-react";
 function AssignedTasksPage() {
 
 	const { projectId } = useParams();
-	const { project, projectLoaded } = useOutletContext();
+	const { project, setProject, projectLoaded } = useOutletContext();
 
 	const [filteredTasks, setFilteredTasks] = useState([]);
 	const [tasksFiltered, setTasksFiltered] = useState(false);
@@ -58,6 +58,22 @@ function AssignedTasksPage() {
 		setDateFilter("all");
 
 	};
+
+	function onTaskDelete(taskId) {
+
+		setProject((prevProject) => {
+
+			return {
+				...prevProject,
+				assignedTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
+				allTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
+				myTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
+				reviews: prevProject.assignedTasks.filter((task) => task.id !== taskId)
+			}
+
+		});
+
+	}
 
 	return (
 		<div className="h-full">
@@ -113,6 +129,7 @@ function AssignedTasksPage() {
 												task={task} 
 												projectId={projectId} 
 												team={project.team}
+												onTaskDelete={onTaskDelete}
 											/>
 										))
 									) : (									

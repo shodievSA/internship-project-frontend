@@ -41,6 +41,21 @@ const projectService = {
 		return projects;
 
     },
+	getProject: async (projectId) => {
+
+		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
+			method: 'GET',
+			credentials: 'include'
+		});
+
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.message || "Error occured while getting project's details");
+		} 
+
+		return response.json();
+
+	},
 	createTask: async (projectId, task) => {
 
 		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, {
@@ -74,8 +89,6 @@ const projectService = {
 			const error = await response.json();
 			throw new Error(error.message || 'Failed to delete task');
 		}
-
-		return response.json();
 
 	}
 

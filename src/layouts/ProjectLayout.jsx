@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, NavLink } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import projectService from "../services/projectService";
+import ProjectNavigation from "../components/ProjectNavigation";
 import NewTaskModal from "../components/NewTaskModal";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
@@ -7,7 +9,6 @@ import LeaveProjectModal from "../components/LeaveProjectModal";
 import GroupEmailModal from "../components/GroupEmailModal";
 import { statusColors } from "../utils/constant";
 import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function ProjectLayout() {
 
@@ -49,25 +50,12 @@ function ProjectLayout() {
 
 			try {
 
-				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${basicProject.id}`, {
-					method: 'GET',
-					credentials: 'include'
-				});
-
-				if (!res.ok) {
-
-					throw new Error("Error occured while getting project's details");
-
-				} else {
-
-					const { projectDetails } = await res.json();
-					setFullProject(projectDetails);
-
-				}
+				const { projectDetails } = await projectService.getProject(basicProject.id);
+				setFullProject(projectDetails);
 
 			} catch(err) {
 
-				console.log('The following error while fetching project detaisl: ' + err);
+				console.log('The following error while fetching project details: ' + err.message);
 				setFullProject(null);
 
 			} finally {
@@ -82,8 +70,23 @@ function ProjectLayout() {
 
     }, [basicProject.id]);
 
+	function onNewTaskCreated(newTask) {
+		
+		const updatedProject = {
+			...fullProject,
+			allTasks: [newTask, ...(fullProject.allTasks)],
+			assignedTasks: [newTask, ...(fullProject.assignedTasks)]
+		};
 
-	console.log(fullProject);
+		if (newTask.assignedTo.id === fullProject.userProjectMemberId) {
+
+			updatedProject.myTasks = [newTask, ...(fullProject.myTasks)];
+
+		}
+
+		setFullProject(updatedProject);
+		
+	}
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
@@ -167,64 +170,7 @@ function ProjectLayout() {
                     </button>
                 </div>
             </div>
-            <ul className="dark:bg-neutral-900 bg-neutral-100 p-1.5 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
-            xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
-            rounded-md mb-2">
-                <NavLink
-                    to='team'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Team
-                </NavLink>
-                <NavLink
-                    to='all-tasks'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    All Tasks
-                </NavLink>
-                <NavLink
-                    to='my-tasks'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    My Tasks
-                </NavLink>
-                <NavLink
-                    to='assigned-tasks'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Assigned
-                </NavLink>
-                <NavLink
-                    to='review-tasks'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Reviews
-                </NavLink>
-                <NavLink
-                    to='project-invites'
-                    state={{ projectPreview: basicProject }}
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Invites
-                </NavLink>
-            </ul>
+            <ProjectNavigation projectState={projectPreview} />
             <Outlet 
 				context={{ 
 					project: fullProject, 
@@ -238,6 +184,8 @@ function ProjectLayout() {
                         setShowNewTaskModal={setShowNewTaskModal}
                         teamMembers={fullProject.team}
 						projectId={basicProject.id}
+						onNewTaskCreated={onNewTaskCreated}
+						userProjectMemberId={fullProject.userProjectMemberId}
                     />
                 )
             }

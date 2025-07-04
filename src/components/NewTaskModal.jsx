@@ -9,7 +9,13 @@ import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
 import SubtaskInput from "./SubtaskInput";
 
-function NewTaskModal({ setShowNewTaskModal, teamMembers, projectId }) {
+function NewTaskModal({ 
+	setShowNewTaskModal, 
+	teamMembers, 
+	projectId,
+	onNewTaskCreated,
+	userProjectMemberId
+}) {
 
 	const { showToast } = useToast();
 
@@ -39,18 +45,21 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers, projectId }) {
 
        try {
 	   
-			const response = await projectService.createTask(projectId, 
+			const newTask = await projectService.createTask(projectId, 
 				{
 					title: taskTitle,
 					description: taskDescription,
 					priority: taskPriority.value,
 					deadline: taskDeadline,
 					assignedTo: taskAssignedTo.value,
+					assignedBy: userProjectMemberId,
 					subtasks: subtasks
 				}
 			);
 
-			console.log(response);
+			console.log(newTask)
+
+			onNewTaskCreated(newTask);
 
 			showToast({
 				variant: "success",
@@ -63,6 +72,12 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers, projectId }) {
 	    } catch(err) {
 
 			console.log('The following error occured while creating task: ' + err);
+
+			showToast({
+				variant: "failure",
+				title: "Unexpected error occured!",
+				message: "Unexpected error occured while creating new task"
+			});
 
 	    } finally {
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { 
@@ -19,7 +20,7 @@ import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 
-function AssignedTask({ task, projectId, team }) {
+function AssignedTask({ task, projectId, team, onTaskDelete }) {
 
 	const {
 		id,
@@ -33,6 +34,8 @@ function AssignedTask({ task, projectId, team }) {
 		deadline,
 		history
 	} = task;
+
+	const { showToast } = useToast();
 
 	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 	const [subtasksExpanded, setSubtasksExpanded] = useState(false);
@@ -65,10 +68,18 @@ function AssignedTask({ task, projectId, team }) {
 
 		try {
 
-			const response = await projectService.deleteTask(projectId, id);
+			await projectService.deleteTask(projectId, id);
 
-			console.log(response);
+			onTaskDelete(id);
+			
+			showToast({
+				variant: "success",
+				title: "Task deleted successfully!",
+				message: "Your assigned task has been deleted successfully"
+			});
 
+			showDeleteTaskModal(false);
+			
 		} catch (err) {
 
 			console.log("The following error occured while deleting task: " + err);

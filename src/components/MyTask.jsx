@@ -29,7 +29,9 @@ function MyTask({ task }) {
 				<h1 className="font-semibold md:text-lg">
 					{ title }
 				</h1>
-				<p className="dark:text-neutral-300">{ description }</p>
+				<p className="dark:text-neutral-300 md:text-lg">
+					{ description }
+				</p>
 			</div>
 				<div className="flex gap-x-5">
 					<div className={`flex items-center gap-x-2 ${getPriorityBadge(priority)} px-3 

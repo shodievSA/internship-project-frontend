@@ -118,8 +118,6 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 			const { invite } = await res.json();
 
-			console.log(invite)
-
 			onNewInviteCreated(invite);
 
 			closeModal();

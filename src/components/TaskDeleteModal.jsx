@@ -6,7 +6,7 @@ function TaskDeleteModal({
 	taskTitle, 
 	taskBeingDeleted, 
 	onCancel, 
-	onConfirm 
+	onConfirm
 }) {
 
 	return (
