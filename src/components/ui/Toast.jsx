@@ -24,7 +24,7 @@ export function Toast({ id, variant, title, message, onClose }) {
         setIsLeaving(true)
         setTimeout(() => {
             onClose(id)
-        }, 300) // Match the transition duration
+        }, 500) // Match the transition duration
     }
 
     const baseClasses =

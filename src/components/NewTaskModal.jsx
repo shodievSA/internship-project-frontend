@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useToast } from "./ui/ToastProvider";
 import AiEditor from "./AiEditor";
 import InputField from "./InputField";
 import Modal from "./ui/Modal";
@@ -10,10 +11,12 @@ import SubtaskInput from "./SubtaskInput";
 
 function NewTaskModal({ setShowNewTaskModal, teamMembers, projectId }) {
 
+	const { showToast } = useToast();
+
 	const assignToOptions = teamMembers.map((member) => {
 
 		return {
-			label: `${member.fullName} - ${member.position}`,
+			label: `${member.name} - ${member.position}`,
 			value: member.id
 		}
 
@@ -48,6 +51,14 @@ function NewTaskModal({ setShowNewTaskModal, teamMembers, projectId }) {
 			);
 
 			console.log(response);
+
+			showToast({
+				variant: "success",
+				title: "New task created!",
+				message: "The new task has been created successfully!"
+			});
+
+			setShowNewTaskModal(false);
 
 	    } catch(err) {
 

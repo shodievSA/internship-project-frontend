@@ -1,6 +1,8 @@
+import { formatIsoDate } from "../utils/formatIsoDate";
 import { Mail, User, Calendar, Pickaxe } from "lucide-react";
+import userPlaceholder from "../assets/user-placeholder.png";
 
-export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
+export function ProjectInvitationCard({ invite }) {
 
 	function getStatusBadge(status) {
 
@@ -39,35 +41,35 @@ export function ProjectInvitationCard({ invitation, getAvatarUrl }) {
 		justify-between">
             <div className="flex items-center w-full gap-x-5">
 				<img
-					src={getAvatarUrl(invitation.inviterName)}
-					alt={invitation.inviterName}
+					src={invite.receiverAvatarUrl ?? userPlaceholder}
+					alt={invite.receiverName}
 					className="w-12 h-12 rounded-full bg-gray-100 dark:bg-neutral-900 object-cover 
 					flex-shrink-0"
 				/>
 				<div className="flex flex-col">
-					<span className="font-semibold">John Doe</span>
+					<span className="font-semibold">{invite.receiverName}</span>
 					<div className="flex gap-x-6 text-gray-600 dark:text-neutral-400">
 						<div className="flex items-center gap-2">
 							<Mail className="h-4 w-4" />
-							<span>{ invitation.inviterEmail }</span>
+							<span>{ invite.receiverEmail }</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<User className="h-4 w-4" />
-							<span>{ invitation.role }</span>
+							<span>{ invite.roleOffered }</span>
 						</div>												
 						<div className="flex items-center gap-2">
 							<Pickaxe className="h-4 w-4" />
-							<span>{ invitation.position }</span>
+							<span>{ invite.positionOffered }</span>
 						</div>													
 						<div className="flex items-center gap-2">
 							<Calendar className="h-4 w-4" />
-							<span>{ invitation.date }</span>
+							<span>{ formatIsoDate(invite.createdAt) }</span>
 						</div>
 					</div>
 				</div>
             </div>
             <div>
-                { getStatusBadge(invitation.status) }
+                { getStatusBadge(invite.status) }
             </div>
         </div>
     );

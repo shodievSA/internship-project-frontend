@@ -2,8 +2,7 @@ import { useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatusBadge } from "./status-badge";
 import { ActionMenu } from "./action-menu";
-import { getAvatarUrl } from "../utils/constant";
-import { Mail, MoreVertical, User } from "lucide-react";
+import { Mail, MoreVertical, User, Pickaxe } from "lucide-react";
 
 export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
 
@@ -46,9 +45,9 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
         onClick={handleCardClick}>
             <div className="flex items-start justify-between">
                 <div className="flex items-center justify-center flex-grow min-w-0">
-                    <div className="flex-shrink-0 mr-3">
+                    <div className="flex-shrink-0 mr-4">
                         <img
-                            src={getAvatarUrl(member.name)}
+                            src={member.avatarUrl}
                             alt={member.name}
                             width={48}
                             height={48}
@@ -59,7 +58,7 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2">
                             <h3 className="font-bold text-lg truncate">{member.name}</h3>
-                            <StatusBadge status={member.status} />
+                            <StatusBadge status={member.role} />
                         </div>
 
                         <div className="mt-2 space-y-1">
@@ -67,7 +66,10 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
                                 <User className="h-4 w-4 mr-2 flex-shrink-0" />
                                 <span className="truncate">{member.role}</span>
                             </div>
-
+							<div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+								<Pickaxe className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">{member.position}</span>
+							</div>
                             <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                                 <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
                                 <span className="truncate">{member.email}</span>

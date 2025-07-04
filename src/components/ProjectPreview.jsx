@@ -1,9 +1,12 @@
-import { Calendar, Users, CheckCircle } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-import { statusColors } from "../utils/constant"
-import ProgressBar from "./ProgressBar"
+import { useNavigate } from "react-router-dom";
+import ProgressBar from "./ProgressBar";
+import { formatIsoDate } from "../utils/formatIsoDate";
+import { statusColors } from "../utils/constant";
+import { Calendar, Users, CheckCircle } from "lucide-react";
 
 function ProjectPreview({ projectPreview }) {
+
+	const navigate = useNavigate();
 
 	const { 
 		id, 
@@ -20,7 +23,6 @@ function ProjectPreview({ projectPreview }) {
 	const completed = totalTasksCompleted;
 	const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-	const navigate = useNavigate();
 
 	function handleClick() {
 
@@ -62,13 +64,11 @@ function ProjectPreview({ projectPreview }) {
 				</div>
 			</div>
 
-			{/* Created date */}
 			<div className="flex items-center gap-2 mb-6 text-gray-500 dark:text-gray-400">
 				<Calendar className="w-4 h-4" />
-				<span className="text-sm">Created: { formatDate(createdAt) }</span>
+				<span className="text-sm">Created: { formatIsoDate(createdAt) }</span>
 			</div>
 
-			{/* Members and tasks row */}
 			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
 					<Users className="w-4 h-4" />
@@ -80,24 +80,9 @@ function ProjectPreview({ projectPreview }) {
 				</div>
 			</div>
 
-			{/* Progress section */}
 			<ProgressBar progress={progress} />
 		</div>
 	)
-
-}
-
-function formatDate(date) {
-
-	const dateObj = new Date(date);
-
-	const year = dateObj.getFullYear();
-	const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-	const day = String(dateObj.getDate()).padStart(2, '0');
-
-	const formattedDate = `${year}/${month}/${day}`;
-
-	return formattedDate;
 
 }
 

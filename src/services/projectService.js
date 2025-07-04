@@ -21,7 +21,6 @@ const projectService = {
         return response.json();
 
     },
-
     getProjects: async () => {
 
         const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
@@ -42,7 +41,6 @@ const projectService = {
 		return projects;
 
     },
-
 	createTask: async (projectId, task) => {
 
 		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, {
@@ -61,7 +59,26 @@ const projectService = {
 
         return response.json();
 
+	},
+	deleteTask: async (projectId, taskId) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
+			{
+				method: "DELETE",
+				credentials: "include"
+			}
+		);
+
+		if (!response.ok) {
+			const error = await response.json();
+			throw new Error(error.message || 'Failed to delete task');
+		}
+
+		return response.json();
+
 	}
+
 };
 
 export default projectService; 

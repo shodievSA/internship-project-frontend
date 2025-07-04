@@ -1,37 +1,74 @@
-import { useState } from "react"
-import { TeamMembersList } from "../components/team-members-list"
-import { teamMembers as initialTeamMembers } from "../utils/data"
-import { useOutletContext } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
+import { TeamMemberCard } from "../components/team-member-card";
+import LoadingState from "../components/LoadingState";
+import ErrorState from "../components/ErrorState";
 
 function TeamMembersPage() {
 
-    const { project } = useOutletContext();
+    const { project, setProject, projectLoaded } = useOutletContext();
+	const { user } = useAuthContext();
 
-    const [teamMembers, setTeamMembers] = useState(
-        initialTeamMembers.map(member => ({
-            ...member,
-            projectName: project?.name || "Project Name"
-        }))
-    );
-    const [currentUser] = useState(teamMembers[0]);
+	const [currentUser, setCurrentUser] = useState(null);
 
-    const handleRemoveMember = (memberId) => {
-        setTeamMembers((prevMembers) => prevMembers.filter((member) => member.id !== memberId));
+    function handleRemoveMember(memberId) {
+
+		setProject((prevProject) => {
+
+			const newTeam = prevProject.team.filter((member) => member.id !== memberId);
+
+			return { ...prevProject, team: newTeam }
+
+		});
+
     };
 
+	useEffect(() => {
+
+		if (projectLoaded) {
+
+			setCurrentUser(() => project?.team.find((member) => member.email === user.email));
+
+		}
+
+	}, [projectLoaded, project, user]);
+
     return (
-        <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white pt-4">
-            <div className="">
-                <header className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold">Team Members</h1>
-                    <span className="text-gray-500 dark:text-gray-400">{teamMembers.length} members</span>
-                </header>
-                <TeamMembersList 
-					members={teamMembers} 
-					currentUser={currentUser} 
-					onRemoveMember={handleRemoveMember} 
-				/>
-            </div>
+        <div className="h-full text-gray-900 dark:text-white ">
+			{
+				!projectLoaded ? (
+					<LoadingState message="Calling in the crew - your teammates are on the way!" />
+				) : !project ? (
+					<ErrorState message={"Yikes! Something went sideways while assembling the team. Try again?"} />
+				) : (
+					<>
+						<header className="flex justify-between items-center mb-6">
+							<h1 className="text-2xl font-bold">Team Members</h1>
+							<span className="text-gray-500 dark:text-gray-400">
+								{ 
+									projectLoaded && project ? (
+										`${project.team.length} ${project.team.length > 1 ? "members" : "member"}` 
+									) : "Loading..." 
+								}
+							</span>
+						</header>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 
+						gap-6 md:gap-6 pb-4">
+							{
+								project.team.map((member) => (
+									<TeamMemberCard 
+										key={member.id} 
+										member={member} 
+										currentUser={currentUser} 
+										onRemoveMember={handleRemoveMember}
+									/>
+								))
+							}
+						</div>	
+					</>
+				)			
+			}
         </div>
     );
 

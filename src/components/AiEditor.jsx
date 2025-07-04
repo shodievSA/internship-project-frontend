@@ -25,7 +25,7 @@ function AiEditor({
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/enhance`, {
+            const res = await fetch(`${SERVER_BASE_URL}/api/v1/ai/enhance`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -95,7 +95,8 @@ function AiEditor({
                                 {
                                     textBeingEnhancedWithAi ? (
                                         <div className="flex justify-center relative w-5 h-5">
-                                            <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
+                                            <div className="absolute w-5 h-5 border-2 dark:border-gray-300 
+											border-gray-400 rounded-full"></div>
                                             <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
                                             dark:border-t-black rounded-full animate-spin"></div>
                                         </div>

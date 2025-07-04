@@ -11,38 +11,17 @@ const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function ProjectLayout() {
 
-    const location = useLocation();
-    const { state: { projectPreview } } = location;
+    const { state: { projectPreview } } = useLocation();
 
-    const [projectInfo, setProjectInfo] = useState(projectPreview);
-	const [fullProject, setFullProject] = useState(null);
+    const [basicProject, setBasicProject] = useState(projectPreview);
+	const [fullProject, setFullProject] = useState({});
+	const [fullProjectLoaded, setFullProjectLoaded] = useState(false);
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
     const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
     const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
-
-    const teamMembers = [
-        {
-            id: 0,
-            fullName: "John Doe",
-            position: "QA Engineer",
-            email: "johndoe@gmail.com"
-        },
-        {
-            id: 1,
-            fullName: "John Doe 2",
-            position: "Backend Developer",
-            email: "johndoe@gmail.com"
-        },
-        {
-            id: 2,
-            fullName: "John Doe 3",
-            position: "Frontend Developer",
-            email: "johndoe@gmail.com"
-        }
-    ];
 
     useEffect(() => {
 
@@ -70,7 +49,7 @@ function ProjectLayout() {
 
 			try {
 
-				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectPreview.id}`, {
+				const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${basicProject.id}`, {
 					method: 'GET',
 					credentials: 'include'
 				});
@@ -82,14 +61,18 @@ function ProjectLayout() {
 				} else {
 
 					const { projectDetails } = await res.json();
-
 					setFullProject(projectDetails);
 
 				}
 
-			} catch(error) {
+			} catch(err) {
 
-				console.log('The following error while fetching project detaisl: ' + error);
+				console.log('The following error while fetching project detaisl: ' + err);
+				setFullProject(null);
+
+			} finally {
+
+				setFullProjectLoaded(true);
 
 			}
 
@@ -97,7 +80,7 @@ function ProjectLayout() {
 
 		getProject();
 
-    }, [projectPreview.id]);
+    }, [basicProject.id]);
 
 
 	console.log(fullProject);
@@ -107,10 +90,11 @@ function ProjectLayout() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
                     <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">
-						{projectPreview.title}
+						{basicProject.title}
 					</h1>
-                    <div className={`${statusColors[projectPreview.status]} status-badge px-3 py-1 text-xs md:text-sm`}>
-                        {projectPreview.status}
+                    <div className={`${statusColors[basicProject.status]} status-badge px-3 py-1 
+					text-xs md:text-sm`}>
+                        {basicProject.status}
                     </div>
                 </div>
                 <div className="md:justify-end flex items-center gap-x-5">
@@ -185,10 +169,10 @@ function ProjectLayout() {
             </div>
             <ul className="dark:bg-neutral-900 bg-neutral-100 p-1.5 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
             xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
-            rounded-md">
+            rounded-md mb-2">
                 <NavLink
                     to='team'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -197,7 +181,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='all-tasks'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -206,7 +190,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='my-tasks'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -215,7 +199,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='assigned-tasks'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -224,7 +208,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='review-tasks'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -233,7 +217,7 @@ function ProjectLayout() {
                 </NavLink>
                 <NavLink
                     to='project-invites'
-                    state={{ projectPreview: projectPreview }}
+                    state={{ projectPreview: basicProject }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -241,32 +225,38 @@ function ProjectLayout() {
                     Invites
                 </NavLink>
             </ul>
-            <Outlet context={{ project: fullProject }} />
+            <Outlet 
+				context={{ 
+					project: fullProject, 
+					setProject: setFullProject, 
+					projectLoaded: fullProjectLoaded 
+				}} 
+			/>
             {
                 showNewTaskModal && (
                     <NewTaskModal
                         setShowNewTaskModal={setShowNewTaskModal}
-                        teamMembers={teamMembers}
-						projectId={projectPreview.id}
+                        teamMembers={fullProject.team}
+						projectId={basicProject.id}
                     />
                 )
             }
             {
                 showEditProjectModal && (
                     <EditProjectModal
-                        projectId={projectPreview.id}
-                        currentProjectTitle={projectPreview.title}
-                        currentProjectStatus={projectPreview.status}
+                        projectId={basicProject.id}
+                        currentProjectTitle={basicProject.title}
+                        currentProjectStatus={basicProject.status}
                         showModal={setShowEditProjectModal}
-                        onProjectUpdated={(updatedProject) => setProjectInfo((prev) => ({ ...prev, ...updatedProject }))}
+                        onProjectUpdated={(updatedProject) => setBasicProject((prev) => ({ ...prev, ...updatedProject }))}
                     />
                 )
             }
             {
                 showDeleteProjectModal && (
                     <DeleteProjectModal
-                        projectId={projectPreview.id}
-                        projectTitle={projectPreview.title}
+                        projectId={basicProject.id}
+                        projectTitle={basicProject.title}
                         showModal={setShowDeleteProjectModal}
                     />
                 )
@@ -274,8 +264,8 @@ function ProjectLayout() {
             {
                 showLeaveProjectModal && (
                     <LeaveProjectModal
-                        projectId={projectPreview.id}
-                        projectTitle={projectPreview.title}
+                        projectId={basicProject.id}
+                        projectTitle={basicProject.title}
                         showModal={setShowLeaveProjectModal}
                     />
                 )
@@ -283,7 +273,7 @@ function ProjectLayout() {
             {
                 showGroupEmailModal && (
                     <GroupEmailModal
-                        teamMembers={teamMembers}
+                        teamMembers={fullProject.team}
                         showModal={setShowGroupEmailModal}
                     />
                 )

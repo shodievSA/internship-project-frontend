@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import SearchBar from "./SearchBar";
@@ -8,9 +9,10 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function SendInviteModal({ closeModal }) {
+function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 	const { projectId } = useParams();
+	const { showToast } = useToast();
 
 	const [searchQuery, setSearchQuery] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
@@ -114,15 +116,29 @@ function SendInviteModal({ closeModal }) {
 				throw new Error('response was unsuccessfull');
 			}
 
-			const data = await res.json();
+			const { invite } = await res.json();
 
-			console.log(data);
+			console.log(invite)
+
+			onNewInviteCreated(invite);
 
 			closeModal();
 
+			showToast({ 
+				variant: "success", 
+				title: "Invite sent successfully!", 
+				message: `Your invite to ${email} has been delivered successfully!`
+			});
+
 		} catch(err) {
 
-			console.log('Error occured while sending project invite: ' + err);
+			console.log('Error occured while sending project invite: ' + err.message);
+
+			showToast({ 
+				variant: "failure", 
+				title: "Unexpected error occured!", 
+				message: `Error occured while sending invite to ${email}. Please, try again later!`
+			});
 
 		} finally {
 

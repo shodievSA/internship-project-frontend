@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import RemoveMemberModal from "./RemoveMemberModal";
 import { UserMinus, UserPlus, UserMinus2 } from "lucide-react";
 import ChangeRoleModal from "./ChangeRoleModal";
@@ -12,6 +13,8 @@ export function ActionMenu({
 	currentUser, 
 	onRemoveMember 
 }) {
+
+	const { projectId } = useParams();
 
     const menuRef = useRef(null);
     const isAdmin = member.status === "admin";
@@ -76,6 +79,8 @@ export function ActionMenu({
 
     async function removeMember(event) {
 
+		event.stopPropagation();
+
 		setMemberBeingRemoved(true);
 
 		try {
@@ -111,8 +116,6 @@ export function ActionMenu({
 			setMemberBeingRemoved(false);
 
 		}
-
-		event.stopPropagation();
 
     }
 

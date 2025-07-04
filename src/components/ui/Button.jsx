@@ -11,7 +11,7 @@ function Button({
     const variants = {
         primary: 'dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 hover:bg-neutral-900/90 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
         secondary: 'dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
-		destructive: 'bg-red-800 hover:bg-red-900 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
+		destructive: 'bg-red-900 hover:bg-red-950 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200',
 		alert: 'dark:bg-orange-800 bg-orange-600 dark:hover:bg-orange-900 hover:bg-orange-700 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200'
     };
 
