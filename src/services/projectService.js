@@ -86,12 +86,40 @@ const projectService = {
 		);
 
 		if (!response.ok) {
+
 			const error = await response.json();
 			throw new Error(error.message || 'Failed to delete task');
+
 		}
 
-	}
+	},
+	changeTaskStatus: async ({ projectId, taskId, updatedTaskStatus, updateComment }) => {
 
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}/status`,
+			{
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					updatedTaskStatus: updatedTaskStatus,
+					comment: updateComment
+				})
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to update task");
+
+		}
+
+		return response.json();
+
+	}
 };
 
 export default projectService; 

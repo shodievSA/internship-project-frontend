@@ -1,11 +1,11 @@
 import { useState } from "react";
+import aiService from "../services/aiService";
 import { Asterisk, Sparkles, CircleAlert } from "lucide-react";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function AiEditor({ 
     label, 
     placeholder, 
-    required,
+    required = false,
     error = '',
     rows,
     value, 
@@ -19,27 +19,18 @@ function AiEditor({
     const [enhancedText, setEnhancedText] = useState(null);
 	const [showError, setShowError] = useState(false);
 
-    async function enhanceTaskDescription() {
+    async function enhanceText() {
 
         setTextBeingEnhancedWithAi(true);
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/ai/enhance`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text: value })
-            });
-
-            const { enhancedVersion } = await res.json();
+            const { enhancedVersion } = await aiService.enhanceText(value);
             setEnhancedText(enhancedVersion);
 
-        } catch {
+        } catch(err) {
 
-            console.log('error occured while enhancing your task description');
+            console.log("The following error occured while enhancing your task description: " + err.message);
 
         } finally {
 
@@ -55,7 +46,7 @@ function AiEditor({
             <div className="flex justify-between items-center">
                 <label className="flex gap-x-0.5">
                     <span className="text-sm md:text-base font-semibold">{ label }</span>
-                    <Asterisk className="w-3 h-3 mt-0.5 text-red-500" />
+                    { required && <Asterisk className="w-3 h-3 mt-0.5 text-red-500" /> }
                 </label>
                 {
                     enhancedText ? (
@@ -90,7 +81,7 @@ function AiEditor({
                                 hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2.5 rounded-md flex justify-center 
                                 items-center gap-x-2 w-36 md:w-40 ${disabled ? 'cursor-not-allowed' : 
                                 'cursor-pointer'} disabled:opacity-50 peer`}
-                                onClick={enhanceTaskDescription}
+                                onClick={enhanceText}
                             >
                                 {
                                     textBeingEnhancedWithAi ? (

@@ -1,12 +1,28 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { formatIsoDate } from "../utils/formatIsoDate";
-import { Calendar, Flame, CircleDot, ChevronRight, History, Clock, List, CircleCheckBig, MessageSquare } from "lucide-react";
+import { 
+	Calendar, 
+	Flame, 
+	CircleDot, 
+	ChevronRight, 
+	History, 
+	Clock, 
+	List, 
+	CircleCheckBig, 
+	MessageSquare
+} from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
+import Modal from "./ui/Modal";
+import AiEditor from "./AiEditor";
+import projectService from "../services/projectService";
+import { useToast } from "./ui/ToastProvider";
 
-function MyTask({ task }) {
+function MyTask({ task, onTaskSubmit }) {
 
 	const {
+		id,
 		title,
 		description,
 		priority,
@@ -19,161 +35,248 @@ function MyTask({ task }) {
 		history
 	} = task;
 
+	const { projectId } = useParams();
+
+	const { showToast } = useToast();
+
 	const [subtasksExpanded, setSubtasksExpanded] = useState(false);
 	const [historyExpanded, setHistoryExpanded] = useState(false);
+	const [showSubmitModal, setShowSubmitModal] = useState(false);
+	const [completionNote, setCompletionNote] = useState('');
+	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
+
+	async function submitTask() {
+
+		setTaskBeingSubmitted(true);
+
+		try {
+
+			const { updatedTask } = await projectService.changeTaskStatus(
+				{
+					projectId: projectId,
+					taskId: id,
+					updateComment: completionNote,
+					updatedTaskStatus: "under review"
+				}
+			);
+
+			onTaskSubmit(id, updatedTask);
+
+			showToast({
+				variant: "success",
+				title: "Task submitted for review!",
+				message: "Your task has been successfully submitted for review"
+			});
+
+			setShowSubmitModal(false);
+
+		} catch(err) {
+
+			console.log("The following error occured while submitting task: " + err.message);
+
+		} finally {
+
+			setTaskBeingSubmitted(false);
+
+		}
+
+	}
 
 	return (
-		<div className="flex flex-col gap-y-8 gap-x-5 dark:border-neutral-800 
-		border-[1px] p-6 rounded-md">
-			<div className="flex flex-col gap-y-4">
-				<h1 className="font-semibold md:text-lg">
-					{ title }
-				</h1>
-				<p className="dark:text-neutral-300 md:text-lg">
-					{ description }
-				</p>
-			</div>
-				<div className="flex gap-x-5">
-					<div className={`flex items-center gap-x-2 ${getPriorityBadge(priority)} px-3 
-					py-1 rounded-full`}>
-						<Flame className="w-4 h-4" />
-						<span className="text-sm font-medium">
-							{ priority } priority
-						</span>
-					</div>
-					<div className={`flex items-center gap-x-2 ${getStatusBadge(status)} px-3 
-					py-1 rounded-full`}>
-						<CircleDot className="w-4 h-4" />
-						<span className="text-sm font-medium">{ status }</span>
-					</div>
-					<div className="flex items-center gap-x-5 grow">
-						<div className="flex items-center">
-							<div className="flex gap-x-3 items-center">
-								<span className="dark:text-neutral-300 font-semibold">Assigned by:</span>
-								<img src={assignedBy.avatarUrl ?? userPlaceholder} className="w-8 h-8 rounded-full" /> 
-								<span className="dark:text-neutral-300">{assignedBy.name}</span>
-							</div>
-						</div>
-						<div className="flex items-center">
-							<div className="flex gap-x-3 items-center">
-								<span className="dark:text-neutral-300 font-semibold">Assigned to:</span>
-								<img src={assignedTo.avatarUrl ?? userPlaceholder} className="w-8 h-8 rounded-full" /> 
-								<span className="dark:text-neutral-300">{assignedTo.name}</span>
-							</div>
-						</div>
-					</div>
+		<>
+			<div className="flex flex-col gap-y-8 gap-x-5 dark:border-neutral-800 
+			border-[1px] p-6 rounded-md">
+				<div className="flex flex-col gap-y-4">
+					<h1 className="font-semibold md:text-lg">
+						{ title }
+					</h1>
+					<p className="dark:text-neutral-300 md:text-lg">
+						{ description }
+					</p>
 				</div>
-			<div className="flex flex-col gap-y-5">
-				<div className="flex justify-between">									
-					{
-						subtasks.length > 0 && (
-							<div className="flex flex-col gap-y-3">
-								<div className="flex items-center gap-x-2">
-									<button onClick={() => setSubtasksExpanded(!subtasksExpanded)}>
-										<ChevronRight className={`w-5 h-5 ${subtasksExpanded ? "rotate-90" : "rotate-0"}
-										transform-rotate duration-200`} />
-									</button>
-									<List className="w-5 h-5" />
-									<div className="flex gap-x-2 items-center">
-										<span className="font-medium">Subtasks</span> 
-										<div className="flex items-center justify-center w-8 h-8 bg-gray-400/20 
-										rounded-full text-sm">
-											{subtasks.length}
+					<div className="flex gap-x-5">
+						<div className={`flex items-center gap-x-2 ${getPriorityBadge(priority)} px-3 
+						py-1 rounded-full`}>
+							<Flame className="w-4 h-4" />
+							<span className="text-sm font-medium">
+								{ priority } priority
+							</span>
+						</div>
+						<div className={`flex items-center gap-x-2 ${getStatusBadge(status)} px-3 
+						py-1 rounded-full`}>
+							<CircleDot className="w-4 h-4" />
+							<span className="text-sm font-medium">{ status }</span>
+						</div>
+						<div className="flex items-center gap-x-5 grow">
+							<div className="flex items-center">
+								<div className="flex gap-x-3 items-center">
+									<span className="dark:text-neutral-300 font-semibold">Assigned by:</span>
+									<img src={assignedBy.avatarUrl ?? userPlaceholder} className="w-8 h-8 rounded-full" /> 
+									<span className="dark:text-neutral-300">{assignedBy.name}</span>
+								</div>
+							</div>
+							<div className="flex items-center">
+								<div className="flex gap-x-3 items-center">
+									<span className="dark:text-neutral-300 font-semibold">Assigned to:</span>
+									<img src={assignedTo.avatarUrl ?? userPlaceholder} className="w-8 h-8 rounded-full" /> 
+									<span className="dark:text-neutral-300">{assignedTo.name}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				<div className="flex flex-col gap-y-5">
+					<div className="flex justify-between">									
+						{
+							subtasks.length > 0 && (
+								<div className="flex flex-col gap-y-3">
+									<div className="flex items-center gap-x-2">
+										<button onClick={() => setSubtasksExpanded(!subtasksExpanded)}>
+											<ChevronRight className={`w-5 h-5 ${subtasksExpanded ? "rotate-90" : "rotate-0"}
+											transform-rotate duration-200`} />
+										</button>
+										<List className="w-5 h-5" />
+										<div className="flex gap-x-2 items-center">
+											<span className="font-medium">Subtasks</span> 
+											<div className="flex items-center justify-center w-8 h-8 bg-gray-400/20 
+											rounded-full text-sm">
+												{subtasks.length}
+											</div>
 										</div>
 									</div>
-								</div>
-								{
-									subtasksExpanded && (
-										<ul className="flex flex-col gap-y-3 pl-10 list-disc dark:text-neutral-300
-										border-l-[1px] dark:border-neutral-800 ml-2">
-											{
-												subtasks.map((subtask) => {
-													return (
-														<li>{subtask.title}</li>
-													)
-												})
-											}
-										</ul>
-									)
-								}
-							</div>
-						)
-					}
-					<div className="flex gap-x-12">
-						<div className="dark:text-neutral-300 text-red-600 flex self-start items-center gap-x-2">
-							<div className="p-2 rounded-full bg-gray-400/20">
-								<Calendar className="w-4 h-4" />
-							</div>
-							<span>Created:</span>
-							{ formatIsoDate(createdAt) }
-						</div>															
-						<div className="dark:text-red-500 text-red-600 flex self-start items-center gap-x-2">
-							<div className="p-2 rounded-full bg-red-500/20">
-								<Clock className="w-4 h-4" />
-							</div>
-							<span>Due:</span>
-							{ formatIsoDate(deadline) }
-						</div>
-					</div>
-				</div>
-				<div className="flex flex-col gap-y-3">
-					<div className="flex items-center gap-x-2">
-						<button onClick={() => setHistoryExpanded(!historyExpanded)}>
-							<ChevronRight className={`w-5 h-5 ${historyExpanded ? "rotate-90" : "rotate-0"}
-							transform-rotate duration-200`} />
-						</button>
-						<History className="w-5 h-5" />
-						<div className="flex gap-x-2 items-center">
-							<span className="font-medium">History</span> 
-							<div className="flex items-center justify-center w-8 h-8 bg-gray-400/20 
-							rounded-full text-sm">
-								{history.length}
-							</div>
-						</div>
-					</div>
-					{
-						historyExpanded && (
-							<div className="flex flex-col gap-y-3 pl-6 dark:text-neutral-300
-							dark:text-neutral-300 border-l-[1px] dark:border-neutral-800 ml-2">
-								{
-									history.map((stage, index) => {
-										return (
-											<div className="flex items-center gap-x-3">
-												<span>{ index + 1 }.</span>
-												<div className="flex items-center gap-x-2">
-													<div className="text-sm dark:border-neutral-800 border-[1px] rounded-full py-2 px-4
-													font-medium">
-														{stage.status}
-													</div> 
-													-
-													<span className="font-semibold">
-														{formatIsoDate(stage.createdAt)}
-													</span>
-												</div>
-											</div>
+									{
+										subtasksExpanded && (
+											<ul className="flex flex-col gap-y-3 pl-10 list-disc dark:text-neutral-300
+											border-l-[1px] dark:border-neutral-800 ml-2">
+												{
+													subtasks.map((subtask) => {
+														return (
+															<li>{subtask.title}</li>
+														)
+													})
+												}
+											</ul>
 										)
-									})
-								}
+									}
+								</div>
+							)
+						}
+						<div className="flex gap-x-12">
+							<div className="dark:text-neutral-300 text-red-600 flex self-start items-center gap-x-2">
+								<div className="p-2 rounded-full bg-gray-400/20">
+									<Calendar className="w-4 h-4" />
+								</div>
+								<span>Created:</span>
+								{ formatIsoDate(createdAt) }
+							</div>															
+							<div className="dark:text-red-500 text-red-600 flex self-start items-center gap-x-2">
+								<div className="p-2 rounded-full bg-red-500/20">
+									<Clock className="w-4 h-4" />
+								</div>
+								<span>Due:</span>
+								{ formatIsoDate(deadline) }
 							</div>
-						)
-					}
-				</div>
-				<div className="flex gap-x-5 mt-4">
-					<Button size="md">
-						<div className="flex items-center gap-x-2">
-							<CircleCheckBig className="w-5 h-5" />
-							<span>Complete</span>
 						</div>
-					</Button>
-					<Button variant="secondary" size="md">
+					</div>
+					<div className="flex flex-col gap-y-3">
 						<div className="flex items-center gap-x-2">
-							<MessageSquare className="w-5 h-5" />
-							<span>Comments</span>
+							<button onClick={() => setHistoryExpanded(!historyExpanded)}>
+								<ChevronRight className={`w-5 h-5 ${historyExpanded ? "rotate-90" : "rotate-0"}
+								transform-rotate duration-200`} />
+							</button>
+							<History className="w-5 h-5" />
+							<div className="flex gap-x-2 items-center">
+								<span className="font-medium">History</span> 
+								<div className="flex items-center justify-center w-8 h-8 bg-gray-400/20 
+								rounded-full text-sm">
+									{history.length}
+								</div>
+							</div>
 						</div>
-					</Button>
+						{
+							historyExpanded && (
+								<div className="flex flex-col gap-y-3 pl-6 dark:text-neutral-300
+								dark:text-neutral-300 border-l-[1px] dark:border-neutral-800 ml-2">
+									{
+										history.map((stage, index) => {
+											return (
+												<div className="flex items-center gap-x-3">
+													<span>{ index + 1 }.</span>
+													<div className="flex items-center gap-x-2">
+														<div className="text-sm dark:border-neutral-800 border-[1px] rounded-full py-2 px-4
+														font-medium">
+															{stage.status}
+														</div> 
+														-
+														<span className="font-semibold">
+															{formatIsoDate(stage.createdAt)}
+														</span>
+													</div>
+												</div>
+											)
+										})
+									}
+								</div>
+							)
+						}
+					</div>
+					<div className="flex gap-x-5 mt-4">
+						{
+							status === "ongoing" && (
+								<Button 
+									size="md"
+									onClick={() => setShowSubmitModal(true)}
+									loading={taskBeingSubmitted}
+								>
+									<div className="flex items-center gap-x-2">
+										<CircleCheckBig className="w-5 h-5" />
+										<span>Complete</span>
+									</div>
+								</Button>
+							)
+						}
+						<Button variant="secondary" size="md">
+							<div className="flex items-center gap-x-2">
+								<MessageSquare className="w-5 h-5" />
+								<span>Comments</span>
+							</div>
+						</Button>
+					</div>
 				</div>
 			</div>
-		</div>
+			{
+				showSubmitModal && (
+					<Modal
+						titleIcon={<CircleCheckBig />}
+						title="Complete Task"
+						size="lg"
+					>
+						<div className="flex flex-col gap-y-8 px-7 pb-7">
+							<AiEditor 
+								label="Completion note (optional)"
+								placeholder="Describe how you completed this task..."
+								rows={7}
+								value={completionNote}
+								setValue={setCompletionNote}
+							/>
+							<div className="grid grid-cols-2 gap-4">
+								<Button
+									variant="secondary"
+									onClick={() => setShowSubmitModal(false)}
+								>
+									Cancel
+								</Button>
+								<Button
+									variant="primary"
+									onClick={submitTask}
+								>
+									Complete Task
+								</Button>
+							</div>
+						</div>
+					</Modal>
+				)
+			}
+		</>
 	);
 
 }

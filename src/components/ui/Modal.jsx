@@ -3,7 +3,7 @@ function Modal({ title, titleIcon, subtitle, size, children }) {
     const sizes = {
         sm: "w-[350px]",
         md: "w-[350px] md:w-[500px]",
-        lg: "w-[350px] md:w-[500px] lg:w-[750px] lg:h-[675px]"
+        lg: "w-[350px] md:w-[500px] lg:w-[750px] lg:max-h-[675px]"
     }
 
     return (
