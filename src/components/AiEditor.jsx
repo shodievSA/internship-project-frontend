@@ -1,87 +1,70 @@
 import { useState } from "react";
-import { Asterisk, Sparkles, CircleAlert } from "lucide-react";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
+import aiService from "../services/aiService";
+import { Asterisk, Sparkles, CircleAlert, Undo2 } from "lucide-react";
+import Button from "./ui/Button";
 
 function AiEditor({ 
     label, 
     placeholder, 
-    required,
+    required = false,
     error = '',
     rows,
     value, 
     setValue, 
-    disabled, 
-    textBeingEnhancedWithAi, 
-    setTextBeingEnhancedWithAi,
-	setChangesAccepted
+    disabled
 }) {
 
+	const [loading, setLoading] = useState(false);
+	const [initialText, setInitialText] = useState(value);
     const [enhancedText, setEnhancedText] = useState(null);
 	const [showError, setShowError] = useState(false);
 
-    async function enhanceTaskDescription() {
+    async function enhanceText() {
 
-        setTextBeingEnhancedWithAi(true);
+        setLoading(true);
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/ai/enhance`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ text: value })
-            });
-
-            const { enhancedVersion } = await res.json();
+            const { enhancedVersion } = await aiService.enhanceText(value);
             setEnhancedText(enhancedVersion);
 
-        } catch {
+        } catch(err) {
 
-            console.log('error occured while enhancing your task description');
+            console.log("The following error occured while enhancing your task description: " + err.message);
 
         } finally {
 
-            setTextBeingEnhancedWithAi(false);
-			setChangesAccepted(false);
+            setLoading(false);
 
         }
 
     }
+
+	function undoAiChanges() {
+
+		setValue(initialText);
+		setEnhancedText(null);
+
+	}
 
     return (
         <div className="flex flex-col gap-y-3">
             <div className="flex justify-between items-center">
                 <label className="flex gap-x-0.5">
                     <span className="text-sm md:text-base font-semibold">{ label }</span>
-                    <Asterisk className="w-3 h-3 mt-0.5 text-red-500" />
+                    { required && <Asterisk className="w-3 h-3 mt-0.5 text-red-500" /> }
                 </label>
                 {
                     enhancedText ? (
-                        <div className="flex gap-x-3 text-sm">
-                            <button 
-                                className="text-white hover:bg-green-900 bg-green-800 flex items-center gap-x-2 
-								px-3 py-1.5 rounded-md font-medium text-xs"
-                                onClick={() => {
-                                    setValue(enhancedText);
-                                    setEnhancedText(null);
-									setChangesAccepted(true);
-                                }}
-                            >
-                                Accept
-                            </button>
-                            <button 
-                                className="text-white hover:bg-red-900 bg-red-800 flex items-center gap-x-2 
-								px-4 py-1.5 rounded-md font-medium text-xs"
-                                onClick={() => {
-									setEnhancedText(null);
-									setChangesAccepted(true);
-								}}
-                            >
-                                Reject
-                            </button>
-                        </div>
+						<Button 
+							size="sm"
+							onClick={undoAiChanges}
+						>
+							<div className="flex items-center gap-x-2">
+								<Undo2 className="w-4 h-4" />
+								<span>Undo</span>
+							</div>
+						</Button>
                     ) : (
                         <div className="relative group inline-block">
                             <button 
@@ -90,10 +73,10 @@ function AiEditor({
                                 hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2.5 rounded-md flex justify-center 
                                 items-center gap-x-2 w-36 md:w-40 ${disabled ? 'cursor-not-allowed' : 
                                 'cursor-pointer'} disabled:opacity-50 peer`}
-                                onClick={enhanceTaskDescription}
+                                onClick={enhanceText}
                             >
                                 {
-                                    textBeingEnhancedWithAi ? (
+                                    loading ? (
                                         <div className="flex justify-center relative w-5 h-5">
                                             <div className="absolute w-5 h-5 border-2 dark:border-gray-300 
 											border-gray-400 rounded-full"></div>
@@ -132,6 +115,7 @@ function AiEditor({
 							onChange={(e) => {								
 								setShowError(!e.target.value > 0);								
 								setValue(e.target.value);
+								setInitialText(e.target.value);
 							}}
 						/>
 					) : (
@@ -144,7 +128,10 @@ function AiEditor({
 							focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
 							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
 							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-							onChange={(e) => setValue(e.target.value)}
+							onChange={(e) => {
+								setValue(e.target.value)
+								setInitialText(e.target.value)
+							}}
 						/>
 					)
 				}

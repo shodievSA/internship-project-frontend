@@ -1,5 +1,5 @@
 import { formatIsoDate } from "../utils/formatIsoDate";
-import { Mail, User, Calendar, Pickaxe } from "lucide-react";
+import { Mail, User, Calendar, Pickaxe, Loader } from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 
 export function ProjectInvitationCard({ invite }) {
@@ -11,7 +11,10 @@ export function ProjectInvitationCard({ invite }) {
 				return (
 					<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 
 					text-yellow-800 dark:bg-yellow-600/20 dark:text-yellow-300">
-						Pending
+						<div className="flex gap-x-2 items-center">
+							<Loader className="w-4 h-4 animate-spin-slow" />
+							<span>Pending</span>
+						</div>
 					</span>
 				);
 			case "accepted":

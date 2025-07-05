@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
@@ -13,43 +13,36 @@ import { Calendar, Filter } from "lucide-react";
 function AssignedTasksPage() {
 
 	const { projectId } = useParams();
-	const { project, setProject, projectLoaded } = useOutletContext();
+	const { tasks, setTasks, team, projectLoaded, currentMemberId } = useOutletContext();
 
-	const [filteredTasks, setFilteredTasks] = useState([]);
-	const [tasksFiltered, setTasksFiltered] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [dateFilter, setDateFilter] = useState("all");
 
-	useEffect(() => {
+	const assignedTasks = useMemo(() => {
 
-		if (projectLoaded && project !== null) {
+		if (!projectLoaded || !tasks) return [];
 
-			setTasksFiltered(false);
+		return tasks.filter((task) => task.assignedBy.id === currentMemberId);
 
-			const filtered = project.assignedTasks.filter((task) => {
-				const matchesSearch =
-				task.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) 
-				||
-				task.assignedTo.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+	}, [projectLoaded, tasks, currentMemberId]);
 
-				const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+	const filteredTasks = useMemo(() => {
 
-				return matchesSearch && matchesStatus;
-			});
+		return assignedTasks.filter((task) => {
 
-			setFilteredTasks(filtered);
-			setTasksFiltered(true);
+			const matchesSearch =
+			task.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) 
+			||
+			task.assignedTo.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
 
-		}
+			const matchesStatus = statusFilter === "all" || task.status === statusFilter;
 
-	}, [
-		projectLoaded, 
-		project, 
-		statusFilter, 
-		dateFilter, 
-		searchTerm
-	]);
+			return matchesSearch && matchesStatus;
+
+		});
+
+	}, [searchTerm, statusFilter, assignedTasks]);
 
 	function clearFilters() {
 
@@ -57,93 +50,75 @@ function AssignedTasksPage() {
 		setStatusFilter("all");
 		setDateFilter("all");
 
-	};
+	}
 
 	function onTaskDelete(taskId) {
 
-		setProject((prevProject) => {
-
-			return {
-				...prevProject,
-				assignedTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
-				allTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
-				myTasks: prevProject.assignedTasks.filter((task) => task.id !== taskId),
-				reviews: prevProject.assignedTasks.filter((task) => task.id !== taskId)
-			}
-
-		});
+		setTasks((prevTasks) => prevTasks.filter((task) => {
+			return task.id !== taskId;
+		}));
 
 	}
 
+	if (!projectLoaded) return <LoadingState message={"Loading your assigned tasks"} />
+	if (!tasks) return <ErrorState message={"Uh-oh! Your assigned tasks are playing hide and seek. Try refreshing the page"} />
+	if (assignedTasks.length === 0) return <EmptyState message={"You haven’t assigned any tasks yet... your clipboard is feeling lonely!"} />
+
 	return (
-		<div className="h-full">
-			{
-				!projectLoaded ? (
-					<LoadingState message={"Loading your assigned tasks"} />
-				) : !project ? (
-					<ErrorState message={"Uh-oh! Your assigned tasks are playing hide and seek. Try refreshing the page"} />
-				) : project.assignedTasks.length === 0 ? (
-					<EmptyState 
-						message={"You haven’t assigned any tasks yet... your clipboard is feeling lonely!"} 
-					/>
-				) : (
-					<div className="flex flex-col h-full">
-						<div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
-							<div className="flex justify-start w-full lg:w-1/3">
-								<div className="relative w-full">
-									<SearchBar
-										value={searchTerm}
-										onChange={(e) => setSearchTerm(e.target.value)}
-										placeholder="Search by task title or assignee name"
-									/>
-								</div>
-							</div>
-							<div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-								<div className="flex flex-col sm:flex-row gap-3">
-									<CustomDropdown
-										value={statusFilter}
-										onChange={setStatusFilter}
-										options={taskStatusOptions}
-										placeholder="All Status"
-										icon={Filter}
-										className="w-full sm:w-auto"
-									/>
-									<CustomDropdown
-										value={dateFilter}
-										onChange={setDateFilter}
-										options={dateOptions}
-										placeholder="All Dates"
-										icon={Calendar}
-										className="w-full sm:w-auto"
-									/>
-								</div>
-							</div>
-						</div>
-						<div className="grow flex flex-col gap-y-8 pb-10">
-							{						
-								tasksFiltered && (
-									filteredTasks.length > 0 ? (
-										filteredTasks.map((task) => (
-											<AssignedTask 
-												key={task.id} 
-												task={task} 
-												projectId={projectId} 
-												team={project.team}
-												onTaskDelete={onTaskDelete}
-											/>
-										))
-									) : (									
-										<EmptySearch 
-											message={"No matching assigned tasks found"} 
-											onClearFilters={clearFilters} 
-										/>								
-									)								
-								)		
-							}
+		<div className="h-full">				
+			<div className="flex flex-col h-full">
+				<div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
+					<div className="flex justify-start w-full lg:w-1/3">
+						<div className="relative w-full">
+							<SearchBar
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								placeholder="Search by task title or assignee name"
+							/>
 						</div>
 					</div>
-				)
-			}
+					<div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+						<div className="flex flex-col sm:flex-row gap-3">
+							<CustomDropdown
+								value={statusFilter}
+								onChange={setStatusFilter}
+								options={taskStatusOptions}
+								placeholder="All Status"
+								icon={Filter}
+								className="w-full sm:w-auto"
+							/>
+							<CustomDropdown
+								value={dateFilter}
+								onChange={setDateFilter}
+								options={dateOptions}
+								placeholder="All Dates"
+								icon={Calendar}
+								className="w-full sm:w-auto"
+							/>
+						</div>
+					</div>
+				</div>
+				<div className="grow flex flex-col gap-y-8 pb-10">
+					{												
+						filteredTasks.length > 0 ? (
+							filteredTasks.map((task) => (
+								<AssignedTask 
+									key={task.id} 
+									task={task} 
+									projectId={projectId} 
+									team={team}
+									onTaskDelete={onTaskDelete}
+								/>
+							))
+						) : (									
+							<EmptySearch 
+								message={"No matching assigned tasks found"} 
+								onClearFilters={clearFilters} 
+							/>								
+						)															
+					}
+				</div>
+			</div>
 		</div>
 	);
 

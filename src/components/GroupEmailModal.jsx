@@ -13,32 +13,16 @@ function GroupEmailModal({ projectId, teamMembers, showModal }) {
 	const [recipients, setRecipients] = useState([]);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 	const [messageBeingSent, setMessageBeingSent] = useState(false);
-	const [messageBeingEnhancedWithAi, setMessageBeingEnhancedWithAi] = useState(false);
-	const [messageAiChangesAccepted, setMessageAiChangesAccepted] = useState(true);
 
 	useEffect(() => {
 
-		if (
-			message 
-			&& 
-			recipients.length > 0 
-			&& 
-			!messageBeingEnhancedWithAi 
-			&& 
-			messageAiChangesAccepted
-		) {
+		if (message && recipients.length > 0) {
 			setSubmitButtonDisabled(false);
 		} else {
 			setSubmitButtonDisabled(true);
 		}
 
-	}, [
-	   		message, 
-			recipients, 
-			messageBeingEnhancedWithAi,
-			messageAiChangesAccepted
-	   ]
-	);
+	}, [message, recipients]);
 
 	async function sendMessage() {
 
@@ -163,15 +147,12 @@ function GroupEmailModal({ projectId, teamMembers, showModal }) {
 					value={message}
 					setValue={setMessage}
 					disabled={messageBeingSent}
-					textBeingEnhancedWithAi={messageBeingEnhancedWithAi}
-					setTextBeingEnhancedWithAi={setMessageBeingEnhancedWithAi}
-					setChangesAccepted={setMessageAiChangesAccepted}
 				/>
 			</div>
 			<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
             border-neutral-200 p-4">
 				<Button
-					disabled={messageBeingSent || messageBeingEnhancedWithAi}
+					disabled={messageBeingSent}
 					variant="secondary"
 					size="lg"
 					onClick={() => showModal(false)}

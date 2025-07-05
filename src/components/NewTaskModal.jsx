@@ -28,11 +28,9 @@ function NewTaskModal({
 
 	});
 
-    const [isTaskDescriptionBeingEnhanced, setIsTaskDescriptionBeingEnhanced] = useState(false);
     const [isNewTaskBeingCreated, setIsNewTaskBeingCreated] = useState(false);
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
-	const [taskDescriptionAiChangesAccepted, setTaskDescriptionAiChangesAccepted] = useState(true);
     const [taskPriority, setTaskPriority] = useState(null);
     const [taskDeadline, setTaskDeadline] = useState(null);
     const [taskAssignedTo, setTaskAssignedTo] = useState(null);
@@ -56,8 +54,6 @@ function NewTaskModal({
 					subtasks: subtasks
 				}
 			);
-
-			console.log(newTask)
 
 			onNewTaskCreated(newTask);
 
@@ -93,8 +89,7 @@ function NewTaskModal({
 			taskDescription &&
 			taskPriority &&
 			taskDeadline &&
-			taskAssignedTo &&
-			taskDescriptionAiChangesAccepted
+			taskAssignedTo
 		) {
 			setSubmitButtonDisabled(false);
 		} else {
@@ -106,7 +101,6 @@ function NewTaskModal({
 		taskPriority,
 		taskDeadline,
 		taskAssignedTo,
-		taskDescriptionAiChangesAccepted
 	   ]
 	);
 
@@ -131,9 +125,6 @@ function NewTaskModal({
                         value={taskDescription}
                         setValue={setTaskDescription}
                         disabled={isNewTaskBeingCreated}
-                        textBeingEnhancedWithAi={isTaskDescriptionBeingEnhanced}
-                        setTextBeingEnhancedWithAi={setIsTaskDescriptionBeingEnhanced}
-						setChangesAccepted={setTaskDescriptionAiChangesAccepted}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-8">
 						<SelectField

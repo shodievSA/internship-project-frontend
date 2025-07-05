@@ -18,7 +18,7 @@ const ProjectHeader = ({
 				<div className="w-full lg:w-96 mb-4 lg:mb-0">
 					<SearchBar
 						value={filters.search}
-						onChange={onSearch}
+						onChange={(e) => onSearch(e.target.value)}
 						placeholder="Search projects..."
 					/>
 				</div>

@@ -15,14 +15,19 @@ function ProjectLayout() {
     const { state: { projectPreview } } = useLocation();
 
     const [basicProject, setBasicProject] = useState(projectPreview);
-	const [fullProject, setFullProject] = useState({});
 	const [fullProjectLoaded, setFullProjectLoaded] = useState(false);
+
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
     const [showEditProjectModal, setShowEditProjectModal] = useState(false);
     const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
     const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
     const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
+
+	const [team, setTeam] = useState([]);
+	const [invites, setInvites] = useState([]);
+	const [tasks, setTasks] = useState([]);
+	const [currentMemberId, setCurrentMemberId] = useState();
 
     useEffect(() => {
 
@@ -51,12 +56,20 @@ function ProjectLayout() {
 			try {
 
 				const { projectDetails } = await projectService.getProject(basicProject.id);
-				setFullProject(projectDetails);
+				
+				setTasks(projectDetails.tasks);
+				setTeam(projectDetails.team);
+				setInvites(projectDetails.invites);
+				setCurrentMemberId(projectDetails.currentMemberId);
 
 			} catch(err) {
 
 				console.log('The following error while fetching project details: ' + err.message);
-				setFullProject(null);
+				
+				setTasks(null);
+				setTeam(null);
+				setInvites(null);
+				setCurrentMemberId(null);
 
 			} finally {
 
@@ -72,19 +85,7 @@ function ProjectLayout() {
 
 	function onNewTaskCreated(newTask) {
 		
-		const updatedProject = {
-			...fullProject,
-			allTasks: [newTask, ...(fullProject.allTasks)],
-			assignedTasks: [newTask, ...(fullProject.assignedTasks)]
-		};
-
-		if (newTask.assignedTo.id === fullProject.userProjectMemberId) {
-
-			updatedProject.myTasks = [newTask, ...(fullProject.myTasks)];
-
-		}
-
-		setFullProject(updatedProject);
+		setTasks([newTask, ...tasks]);
 		
 	}
 
@@ -173,8 +174,13 @@ function ProjectLayout() {
             <ProjectNavigation projectState={projectPreview} />
             <Outlet 
 				context={{ 
-					project: fullProject, 
-					setProject: setFullProject, 
+					tasks: tasks,
+					setTasks: setTasks,
+					invites: invites,
+					setInvites: setInvites,
+					team: team,
+					setTeam: setTeam,
+					currentMemberId: currentMemberId,
 					projectLoaded: fullProjectLoaded 
 				}} 
 			/>
@@ -182,10 +188,10 @@ function ProjectLayout() {
                 showNewTaskModal && (
                     <NewTaskModal
                         setShowNewTaskModal={setShowNewTaskModal}
-                        teamMembers={fullProject.team}
+                        teamMembers={team}
 						projectId={basicProject.id}
 						onNewTaskCreated={onNewTaskCreated}
-						userProjectMemberId={fullProject.userProjectMemberId}
+						userProjectMemberId={currentMemberId}
                     />
                 )
             }
@@ -221,7 +227,7 @@ function ProjectLayout() {
             {
                 showGroupEmailModal && (
                     <GroupEmailModal
-                        teamMembers={fullProject.team}
+                        teamMembers={team}
                         showModal={setShowGroupEmailModal}
                     />
                 )

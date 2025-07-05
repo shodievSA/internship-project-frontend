@@ -9,7 +9,7 @@ import SubtaskInput from "./SubtaskInput";
 
 function UpdateTaskModal({ onCancel, task, team }) {
 
-	console.log(team)
+	console.log(task)
 
 	const {
 		title,
@@ -33,13 +33,9 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		}
 	});
 
-	console.log(assignedTo)
-
-	const [taskDescriptionBeingEnhanced, setTaskDescriptionBeingEnhanced] = useState(false);
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
-	const [taskDescriptionAiChangesAccepted, setTaskDescriptionAiChangesAccepted] = useState(true);
 	const [newTaskAssignedTo, setNewTaskAssignedTo] = useState(() => 
 		assignToOptions.find((assignToOption) => assignToOption.value === assignedTo.id)
 	);
@@ -141,9 +137,6 @@ function UpdateTaskModal({ onCancel, task, team }) {
 						value={newTaskDescription}
 						setValue={setNewTaskDescription}
 						disabled={taskBeingUpdated}
-						textBeingEnhancedWithAi={taskDescriptionBeingEnhanced}
-						setTextBeingEnhancedWithAi={setTaskDescriptionBeingEnhanced}
-						setChangesAccepted={setTaskDescriptionAiChangesAccepted}
 					/>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-8">
 						<SelectField
