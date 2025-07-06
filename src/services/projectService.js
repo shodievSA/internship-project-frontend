@@ -1,46 +1,42 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const projectService = {
+  createProject: async (title, userPosition) => {
+    const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ title, userPosition }),
+    });
 
-    createProject: async (title, userPosition) => {
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to create project");
+    }
 
-        const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ title, userPosition })
-        });
+    return response.json();
+  },
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to create project');
-        }
+  getProjects: async () => {
+    const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
 
-        return response.json();
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch projects");
+    }
 
-    },
-    getProjects: async () => {
+    const { projects } = await response.json();
 
-        const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to fetch projects');
-        }
-
-        const { projects } = await response.json();
-
-		return projects;
-
-    },
+    return projects;
+  },
 	getProject: async (projectId) => {
 
 		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
@@ -122,4 +118,4 @@ const projectService = {
 	}
 };
 
-export default projectService; 
+export default projectService;

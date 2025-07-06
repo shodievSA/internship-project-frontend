@@ -77,7 +77,7 @@ export default {
         'slide-up-delay-3': 'slide-up 0.6s ease-out 0.6s both',
         'scale-in': 'scale-in 0.6s ease-out',
         'bounce-in': 'bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'float': 'float 3s ease-in-out infinite',
+        'float': 'float 1.5s ease-in-out infinite',
         'sparkle': 'sparkle 2s ease-in-out infinite',
         'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
         'feature-pop': 'feature-pop 0.8s ease-out forwards',

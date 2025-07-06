@@ -110,13 +110,13 @@ function AssignedTask({ task, projectId, team, onTaskDelete }) {
 							</button>
 							{
 								editButtonClicked && (
-									<ul className="absolute flex flex-col bg-neutral-950 w-max 
-									rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2">
+									<ul className="absolute flex flex-col bg-white dark:bg-neutral-950 w-max 
+									rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2 shadow-md">
 										<li className="flex items-center p-1.5 border-b-[1px] dark:border-neutral-800
 										cursor-pointer">
 											<div 
 												className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
-												w-full"
+												hover:bg-slate-100 w-full"
 												onClick={() => {
 													setShowUpdateTaskModal(true);
 													setEditButtonClicked(false);
@@ -129,7 +129,7 @@ function AssignedTask({ task, projectId, team, onTaskDelete }) {
 										<li className="flex items-center p-1.5 text-red-700 cursor-pointer">
 											<div 
 												className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
-												w-full"
+												hover:bg-slate-100 w-full"
 												onClick={() => {
 													setShowDeleteTaskModal(true);
 													setEditButtonClicked(false);
