@@ -87,7 +87,7 @@ export default {
         'icon-spin': 'icon-spin 1s linear infinite',
         'feature-bounce': 'feature-bounce 2s ease-in-out infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out',
-		'spin-slow': 'spin 2s linear infinite'
+		'spin-slow': 'spin 3s linear infinite'
       }
     },
   },

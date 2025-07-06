@@ -26,7 +26,7 @@ function ProjectPreview({ projectPreview }) {
 
 	function handleClick() {
 
-		navigate(`/projects/${id}/team`, { 
+		navigate(`/projects/${id}/my-tasks`, { 
 			state: { projectPreview: projectPreview } 
 		});
 
