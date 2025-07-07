@@ -31,7 +31,7 @@ function Notifications() {
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1000);
+        }, 600);
       }
     };
 
