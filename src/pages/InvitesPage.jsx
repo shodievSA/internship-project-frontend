@@ -57,10 +57,11 @@ function InvitesPage() {
 
 	if (!projectLoaded) return <LoadingState message={"Hang tight - fetching your project invites!"} />;
 	if (!invites) return <ErrorState message={"Your project invites are being a little shy… try refreshing."} />;
+	if (showInviteModal) return <SendInviteModal closeModal={closeModal} onNewInviteCreated={handleNewInvite} />
 	if (invites.length === 0) return <EmptyProjectInvites openModal={openModal} />
 
 	return (
-		<div className="h-full">		
+		<div className="h-full">
 			<div className="bg-white dark:bg-black text-gray-900 dark:text-white">
 				<div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
 					<div className="flex justify-start w-full lg:w-1/3">
@@ -114,14 +115,6 @@ function InvitesPage() {
 					}
 				</div>				
 			</div>
-			{
-				showInviteModal && (
-					<SendInviteModal 
-						closeModal={closeModal} 
-						onNewInviteCreated={handleNewInvite}
-					/>
-				)
-			}
 		</div>
 	);
 

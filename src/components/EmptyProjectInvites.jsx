@@ -1,4 +1,5 @@
 import { UserPlus, Inbox } from "lucide-react";
+import Button from "./ui/Button";
 
 function EmptyProjectInvites({ openModal }) {
 
