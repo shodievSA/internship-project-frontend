@@ -5,7 +5,7 @@ import { AlertTriangle } from "lucide-react";
 function TaskDeleteModal({ 
 	taskTitle, 
 	taskBeingDeleted, 
-	onCancel, 
+	hideModal, 
 	onConfirm
 }) {
 
@@ -27,7 +27,7 @@ function TaskDeleteModal({
 					<Button
 						size="md"
 						variant="secondary"
-						onClick={onCancel}
+						onClick={hideModal}
 						disabled={taskBeingDeleted}
 					>
 						Cancel

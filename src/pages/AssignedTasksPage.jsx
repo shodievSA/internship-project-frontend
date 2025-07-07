@@ -60,6 +60,14 @@ function AssignedTasksPage() {
 
 	}
 
+	function onTaskUpdate(taskId, updatedTask) {
+
+		setTasks((prevTasks) => prevTasks.map((task) => {
+			return (task.id === taskId) ? updatedTask : task
+		}));
+
+	}
+
 	if (!projectLoaded) return <LoadingState message={"Loading your assigned tasks"} />
 	if (!tasks) return <ErrorState message={"Uh-oh! Your assigned tasks are playing hide and seek. Try refreshing the page"} />
 	if (assignedTasks.length === 0) return <EmptyState message={"You haven’t assigned any tasks yet... your clipboard is feeling lonely!"} />
@@ -108,6 +116,7 @@ function AssignedTasksPage() {
 									projectId={projectId} 
 									team={team}
 									onTaskDelete={onTaskDelete}
+									onTaskUpdate={onTaskUpdate}
 								/>
 							))
 						) : (									

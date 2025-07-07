@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Plus, X } from "lucide-react";
 
-function SubtaskInput({ disabled, subtasks, setSubtasks }) {
+function SubtaskInput({ disabled, subtasks, setSubtasks, lastId }) {
 
 	const [subtask, setSubtask] = useState(null);
 
@@ -11,7 +11,7 @@ function SubtaskInput({ disabled, subtasks, setSubtasks }) {
 
         if (subtask?.title.length > 0) {
 
-            setSubtasks([ ...subtasks, { ...subtask, id: subtasks.length + 1 } ]);
+            setSubtasks([ ...subtasks, { id: lastId + 1, ...subtask } ]);
             subtaskInputRef.current.value = "";
             setSubtask(null);
 
@@ -62,8 +62,8 @@ function SubtaskInput({ disabled, subtasks, setSubtasks }) {
 										justify-between items-center rounded-md">
 											<span className="text-sm md:text-base">{ subtask.title }</span>
 											<button 
-												className="p-2 rounded-full hover:bg-red-900 cursor-pointer transition-[background-color] 
-												duration-200"
+												className="p-2 rounded-full hover:bg-red-900 cursor-pointer 
+												transition-[background-color] duration-200"
 												onClick={() => setSubtasks(() => subtasks.filter((oldSubtask) => oldSubtask.id !== subtask.id ))}
 											>
 												<X className="w-4 h-4" />

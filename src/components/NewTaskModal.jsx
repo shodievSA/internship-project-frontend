@@ -158,6 +158,7 @@ function NewTaskModal({
 						disabled={isNewTaskBeingCreated}
 						subtasks={subtasks}
 						setSubtasks={setSubtasks}
+						lastId={subtasks.length}
 					/>                                
                 </div>
             </div>

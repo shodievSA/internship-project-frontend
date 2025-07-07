@@ -73,7 +73,11 @@ function ProjectLayout() {
 
 			} finally {
 
-				setFullProjectLoaded(true);
+				setTimeout(() => {
+
+					setFullProjectLoaded(true);
+
+				}, 300);
 
 			}
 
@@ -88,6 +92,8 @@ function ProjectLayout() {
 		setTasks([newTask, ...tasks]);
 		
 	}
+
+	console.log(tasks);
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">

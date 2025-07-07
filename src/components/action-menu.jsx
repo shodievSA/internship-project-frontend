@@ -19,7 +19,7 @@ export function ActionMenu({
     const menuRef = useRef(null);
     const isAdmin = member.status === "admin";
     const isManager = member.status === "manager";
-    const isSelf = member.id === currentUser?.id;
+    const isSelf = member.id === currentUser;
 
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showRoleConfirmation, setShowRoleConfirmation] = useState(false);

@@ -20,7 +20,13 @@ import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 
-function AssignedTask({ task, projectId, team, onTaskDelete }) {
+function AssignedTask({ 
+	task, 
+	projectId, 
+	team, 
+	onTaskDelete, 
+	onTaskUpdate 
+}) {
 
 	const {
 		id,
@@ -89,6 +95,18 @@ function AssignedTask({ task, projectId, team, onTaskDelete }) {
 			setTaskBeingDeleted(false);
 
 		}
+
+	}
+
+	function hideDeleteModal() {
+
+		setShowDeleteTaskModal(false);
+
+	}
+
+	function hideUpdateModal() {
+
+		setShowUpdateTaskModal(false);
 
 	}
 
@@ -281,7 +299,7 @@ function AssignedTask({ task, projectId, team, onTaskDelete }) {
 					<TaskDeleteModal 
 						taskTitle={title} 
 						taskBeingDeleted={taskBeingDeleted}
-						onCancel={() => setShowDeleteTaskModal(false)}
+						hideModal={hideDeleteModal}
 						onConfirm={deleteTask}
 					/>
 				)
@@ -289,9 +307,10 @@ function AssignedTask({ task, projectId, team, onTaskDelete }) {
 			{
 				showUpdateTaskModal && (
 					<UpdateTaskModal 
-						onCancel={() => setShowUpdateTaskModal(false)}
 						task={task} 
 						team={team} 
+						hideModal={hideUpdateModal}
+						onTaskUpdate={onTaskUpdate}
 					/>
 				)
 			}

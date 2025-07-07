@@ -115,6 +115,30 @@ const projectService = {
 
 		return response.json();
 
+	},
+	updateTask: async (projectId, taskId, updatedTaskProps) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
+			{
+				method: "PATCH",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({ updatedTaskProps: updatedTaskProps })
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to update the task");
+
+		}
+
+		return response.json();
+
 	}
 };
 

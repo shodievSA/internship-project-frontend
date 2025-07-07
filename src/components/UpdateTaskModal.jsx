@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
+import projectService from "../services/projectService";
 import AiEditor from "./AiEditor";
 import InputField from "./InputField";
 import Modal from "./ui/Modal";
@@ -7,11 +10,14 @@ import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
 import SubtaskInput from "./SubtaskInput";
 
-function UpdateTaskModal({ onCancel, task, team }) {
+function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
-	console.log(task)
+	const { projectId } = useParams();
+
+	const { showToast } = useToast();
 
 	const {
+		id,
 		title,
 		description,
 		priority,
@@ -19,6 +25,8 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		subtasks,
 		deadline
 	} = task;
+
+	const oldSubtaskIds = subtasks.map((subtask) => subtask.id);
 
 	const taskPriorityOptions = [
 		{ label: "High", value: "high" },
@@ -33,6 +41,7 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		}
 	});
 
+
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
@@ -43,13 +52,46 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		taskPriorityOptions.find((priorityOption) => priorityOption.value === priority)
 	);
 	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
-	const [newSubtasks, setNewSubtasks] = useState(subtasks);
+	const [newSubtasks, setNewSubtasks] = useState(() => 
+		subtasks.map((subtask) => ({ id: subtask.id, title: subtask.title }))
+	);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 	const [updatedTaskProps, setUpdatedTaskProps] = useState({});
+	const [newSubtaskIds, setNewSubtaskIds] = useState(() => subtasks.map((subtask) => subtask.id));
 
-	function updateTask() {
+	async function updateTask() {
 
 		setTaskBeingUpdated(true);
+
+		try {
+
+			const { updatedTask } = await projectService.updateTask(projectId, id, updatedTaskProps);
+
+			onTaskUpdate(id, updatedTask);
+
+			hideModal();
+
+			showToast({
+				variant: "success",
+				title: "Task updated successfully!",
+				message: "The task has been updated successfully"
+			});
+
+		} catch(err) {
+
+			console.log("The following error occured while updating the task: " + err.message);
+
+			showToast({
+				variant: "failure",
+				title: "Unexpected error occured",
+				message: err.message
+			});
+
+		} finally {
+
+			setTaskBeingUpdated(false);
+
+		}
 
 	}
 
@@ -89,10 +131,26 @@ function UpdateTaskModal({ onCancel, task, team }) {
 				delete updated.assignedTo;
 			}
 
+			let subtasksChanged = false;
+
 			if (newSubtasks.length !== subtasks.length) {
-				updated.subtasks = newSubtasks;
+
+				subtasksChanged = true;
+
 			} else {
-				delete updated.subtasks
+
+				oldSubtaskIds.forEach((id) => {
+					if (!newSubtaskIds.includes(id)) {
+						subtasksChanged = true;
+					}
+				});
+
+			}
+			
+			if (subtasksChanged) {
+				updated.subtasks = newSubtasks
+			} else {
+				delete updated.subtasks;
 			}
 
 			return updated;
@@ -105,7 +163,8 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		newTaskPriority,
 		newTaskDeadline,
 		newTaskAssignedTo,
-		newSubtasks
+		newSubtasks,
+		newSubtaskIds
 	]);
 
 	useEffect(() => {
@@ -115,6 +174,12 @@ function UpdateTaskModal({ onCancel, task, team }) {
 		);
 
 	}, [updatedTaskProps]);
+
+	useEffect(() => {
+
+		setNewSubtaskIds(newSubtasks.map((subtask) => subtask.id));
+
+	}, [newSubtasks]);
 
 	return (
 		<Modal title="Create New Task" size="lg">
@@ -171,6 +236,7 @@ function UpdateTaskModal({ onCancel, task, team }) {
 						disabled={taskBeingUpdated}
 						subtasks={newSubtasks}
 						setSubtasks={setNewSubtasks}
+						lastId={oldSubtaskIds[oldSubtaskIds.length - 1]}
 					/>                                
 				</div>
 			</div>
@@ -179,7 +245,7 @@ function UpdateTaskModal({ onCancel, task, team }) {
 				<Button
 					variant="secondary"
 					disabled={taskBeingUpdated}
-					onClick={onCancel}
+					onClick={hideModal}
 				>
 					Cancel
 				</Button>
