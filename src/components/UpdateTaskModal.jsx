@@ -12,12 +12,8 @@ import SubtaskInput from "./SubtaskInput";
 
 function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
-	const { projectId } = useParams();
-
-	const { showToast } = useToast();
-
 	const {
-		id,
+		id: taskId,
 		title,
 		description,
 		priority,
@@ -26,7 +22,8 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		deadline
 	} = task;
 
-	const oldSubtaskIds = subtasks.map((subtask) => subtask.id);
+	const { projectId } = useParams();
+	const { showToast } = useToast();
 
 	const taskPriorityOptions = [
 		{ label: "High", value: "high" },
@@ -41,23 +38,25 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		}
 	});
 
-
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
+	const [updatedTaskProps, setUpdatedTaskProps] = useState({});
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
+	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
+
 	const [newTaskAssignedTo, setNewTaskAssignedTo] = useState(() => 
 		assignToOptions.find((assignToOption) => assignToOption.value === assignedTo.id)
 	);
 	const [newTaskPriority, setNewTaskPriority] = useState(() => 
 		taskPriorityOptions.find((priorityOption) => priorityOption.value === priority)
 	);
-	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
 	const [newSubtasks, setNewSubtasks] = useState(() => 
 		subtasks.map((subtask) => ({ id: subtask.id, title: subtask.title }))
 	);
-	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-	const [updatedTaskProps, setUpdatedTaskProps] = useState({});
-	const [newSubtaskIds, setNewSubtaskIds] = useState(() => subtasks.map((subtask) => subtask.id));
+
+	console.log(newSubtasks);
 
 	async function updateTask() {
 
@@ -65,9 +64,13 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
 		try {
 
-			const { updatedTask } = await projectService.updateTask(projectId, id, updatedTaskProps);
+			const { updatedTask } = await projectService.updateTask({
+				projectId: projectId, 
+				taskId: taskId, 
+				updatedTaskProps: updatedTaskProps
+			});
 
-			onTaskUpdate(id, updatedTask);
+			onTaskUpdate(taskId, updatedTask);
 
 			hideModal();
 
@@ -97,65 +100,22 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
 	useEffect(() => {
 
-		setUpdatedTaskProps((prev) => {
-
-			const updated = { ...prev };
-
-			if (newTaskTitle.trim() !== title) {
-				updated.title = newTaskTitle;
-			} else {
-				delete updated.title;
-			}
-
-			if (newTaskDescription.trim() !== description) {
-				updated.description = newTaskDescription;
-			} else {
-				delete updated.description;
-			}
-
-			if (newTaskPriority.value !== priority) {
-				updated.priority = newTaskPriority.value;
-			} else {
-				delete updated.priority;
-			}
-
-			if (newTaskDeadline !== deadline) {
-				updated.deadline = newTaskDeadline;
-			} else {
-				delete updated.deadline;
-			}
-
-			if (newTaskAssignedTo.value !== assignedTo.id) {
-				updated.assignedTo = newTaskAssignedTo.value;
-			} else {
-				delete updated.assignedTo;
-			}
-
-			let subtasksChanged = false;
-
-			if (newSubtasks.length !== subtasks.length) {
-
-				subtasksChanged = true;
-
-			} else {
-
-				oldSubtaskIds.forEach((id) => {
-					if (!newSubtaskIds.includes(id)) {
-						subtasksChanged = true;
-					}
-				});
-
-			}
-			
-			if (subtasksChanged) {
-				updated.subtasks = newSubtasks
-			} else {
-				delete updated.subtasks;
-			}
-
-			return updated;
-
+		const updatedProps = getUpdatedTaskProps(updatedTaskProps, {
+			newTaskTitle: newTaskTitle,
+			oldTaskTitle: title,
+			newTaskDescription: newTaskDescription,
+			oldTaskDescription: description,
+			newTaskPriority: newTaskPriority,
+			oldTaskPriority: priority,
+			newTaskDeadline: newTaskDeadline,
+			oldTaskDeadline: deadline,
+			newTaskAssignedTo: newTaskAssignedTo,
+			oldTaskAssignedTo: assignedTo,
+			newSubtasks: newSubtasks,
+			oldSubtasks: subtasks
 		});
+
+		setUpdatedTaskProps(updatedProps);
 
 	}, [
 		newTaskTitle,
@@ -163,8 +123,7 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		newTaskPriority,
 		newTaskDeadline,
 		newTaskAssignedTo,
-		newSubtasks,
-		newSubtaskIds
+		newSubtasks
 	]);
 
 	useEffect(() => {
@@ -174,12 +133,6 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		);
 
 	}, [updatedTaskProps]);
-
-	useEffect(() => {
-
-		setNewSubtaskIds(newSubtasks.map((subtask) => subtask.id));
-
-	}, [newSubtasks]);
 
 	return (
 		<Modal title="Create New Task" size="lg">
@@ -220,7 +173,7 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 						<DatePicker
 							disabled={taskBeingUpdated} 
 							onChange={(e) => setNewTaskDeadline(e.target.value)}
-							value={deadline.split("T")[0]}
+							value={newTaskDeadline.split("T")[0]}
 						/>
 					</div>
 					<SelectField
@@ -236,7 +189,7 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 						disabled={taskBeingUpdated}
 						subtasks={newSubtasks}
 						setSubtasks={setNewSubtasks}
-						lastId={oldSubtaskIds[oldSubtaskIds.length - 1]}
+						lastId={newSubtasks.length > 0 ? newSubtasks[newSubtasks.length - 1].id : 0}
 					/>                                
 				</div>
 			</div>
@@ -261,5 +214,68 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 	)
 
 };
+
+function getUpdatedTaskProps(prevUpdates, task) {
+
+	const updated = { ...prevUpdates };
+
+	if (task.newTaskTitle.trim() !== task.oldTaskTitle) {
+		updated.title = task.newTaskTitle;
+	} else {
+		delete updated.title;
+	}
+
+	if (task.newTaskDescription.trim() !== task.oldTaskDescription) {
+		updated.description = task.newTaskDescription;
+	} else {
+		delete updated.description;
+	}
+
+	if (task.newTaskPriority.value !== task.oldTaskPriority) {
+		updated.priority = task.newTaskPriority.value;
+	} else {
+		delete updated.priority;
+	}
+
+	if (task.newTaskDeadline !== task.oldTaskDeadline) {
+		updated.deadline = task.newTaskDeadline;
+	} else {
+		delete updated.deadline;
+	}
+
+	if (task.newTaskAssignedTo.value !== task.oldTaskAssignedTo.id) {
+		updated.assignedTo = task.newTaskAssignedTo.value;
+	} else {
+		delete updated.assignedTo;
+	}
+
+	let subtasksChanged = false;
+
+	if (task.newSubtasks.length !== task.oldSubtasks.length) {
+
+		subtasksChanged = true;
+
+	} else {
+
+		const oldSubtaskIds = task.oldSubtasks.map((subtask) => subtask.id);
+		const newSubtaskIds = task.newSubtasks.map((subtask) => subtask.id);
+
+		oldSubtaskIds.forEach((id) => {
+			if (!newSubtaskIds.includes(id)) {
+				subtasksChanged = true;
+			}
+		});
+
+	}
+	
+	if (subtasksChanged) {
+		updated.subtasks = task.newSubtasks
+	} else {
+		delete updated.subtasks;
+	}
+
+	return updated;
+
+}
 
 export default UpdateTaskModal;

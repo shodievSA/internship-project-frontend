@@ -116,7 +116,7 @@ const projectService = {
 		return response.json();
 
 	},
-	updateTask: async (projectId, taskId, updatedTaskProps) => {
+	updateTask: async ({ projectId, taskId, updatedTaskProps }) => {
 
 		const response = await fetch(
 			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,

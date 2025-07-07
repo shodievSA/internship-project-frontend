@@ -17,8 +17,8 @@ export function ActionMenu({
 	const { projectId } = useParams();
 
     const menuRef = useRef(null);
-    const isAdmin = member.status === "admin";
-    const isManager = member.status === "manager";
+    const isAdmin = member.role === "admin";
+    const isManager = member.role === "manager";
     const isSelf = member.id === currentUser;
 
     const [showConfirmation, setShowConfirmation] = useState(false);

@@ -93,8 +93,6 @@ function ProjectLayout() {
 		
 	}
 
-	console.log(tasks);
-
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
