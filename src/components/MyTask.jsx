@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { 
 	Calendar, 
@@ -36,8 +36,9 @@ function MyTask({ task, onTaskSubmit }) {
 	} = task;
 
 	const { projectId } = useParams();
-
 	const { showToast } = useToast();
+
+	const navigate = useNavigate();
 
 	const [subtasksExpanded, setSubtasksExpanded] = useState(false);
 	const [historyExpanded, setHistoryExpanded] = useState(false);
@@ -234,7 +235,13 @@ function MyTask({ task, onTaskSubmit }) {
 								</Button>
 							)
 						}
-						<Button variant="secondary" size="md">
+						<Button 
+							variant="secondary" 
+							size="md" 
+							onClick={() => navigate(`../my-tasks/${id}`, {
+								state: { taskTitle: title }
+							})}
+						>
 							<div className="flex items-center gap-x-2">
 								<MessageSquare className="w-5 h-5" />
 								<span>Comments</span>

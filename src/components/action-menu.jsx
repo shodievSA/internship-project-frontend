@@ -144,6 +144,8 @@ export function ActionMenu({
 
     async function changeMemberRole(event) {
 
+		event.stopPropagation();
+
 		setMemberRoleBeingChanged(true);
 
 		try {
@@ -182,8 +184,6 @@ export function ActionMenu({
         	setRoleAction(null);
 
 		}
-
-		event.stopPropagation();
 
     }
 

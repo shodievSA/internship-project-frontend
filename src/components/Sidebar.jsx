@@ -96,7 +96,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                     <div className={`${sidebarCollapsed ? 'w-0 border-r-0 dark:border-neutral-800 border-neutral-200'
                         : 'w-72 border-r-[1px] dark:border-neutral-800 border-neutral-200'} dark:bg-zinc-950 bg-neutral-50 
                     transition-[width] duration-500`}>
-                        <div className={`${sidebarCollapsed ? 'invisible' : 'visible'} flex flex-col h-full py-4
+                        <div className={`${sidebarCollapsed ? 'invisible' : 'visible'} flex flex-col h-full pt-4
                         gap-y-8`}>
                             <div className="flex gap-x-3 items-center justify-start px-2">
                                 <div className="bg-neutral-200 w-10 h-10 lg:w-12 lg:h-12 rounded-full flex-shrink-0">
@@ -141,7 +141,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 </ul>
                             </div>
                             <div className="mt-auto flex flex-col gap-y-5 dark:border-t-neutral-800 border-t-neutral-200 
-                            border-t-[1px] pt-4 px-4">
+                            border-t-[1px] pt-4 px-4 h-28">
                                 <button className="dark:bg-black dark:hover:bg-neutral-950 dark:border-neutral-800 
                                 dark:text-neutral-300 dark:hover:text-white bg-white hover:bg-neutral-100 border-neutral-200
                                 text-neutral-600 hover:text-black flex items-center justify-left w-full py-2 px-3 rounded-md 

@@ -94,14 +94,14 @@ function ProjectLayout() {
 	}
 
     return (
-        <div className="flex flex-col h-full gap-y-6 px-6 pt-6 md:px-8 md:pt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6 md:gap-x-8">
+        <div className="flex flex-col h-full gap-y-6 px-6 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6">
                 <div className="flex items-center justify-between md:justify-start gap-x-6">
-                    <h1 className="text-xl md:text-2xl lg:text-[28px] font-bold">
+                    <h1 className="text-xl md:text-2xl font-bold">
 						{basicProject.title}
 					</h1>
                     <div className={`${statusColors[basicProject.status]} status-badge px-3 py-1 
-					text-xs md:text-sm`}>
+					text-xs`}>
                         {basicProject.status}
                     </div>
                 </div>
@@ -167,7 +167,7 @@ function ProjectLayout() {
                         </div>
                     </div>
                     <button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black text-white 
-                    bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-3 px-4 py-2.5 rounded-md
+                    bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-3 px-4 py-2 rounded-md
                     grow md:grow-0 text-sm md:text-base"
                         onClick={() => setShowNewTaskModal(true)}>
                         <Plus className="w-4 h-4" />

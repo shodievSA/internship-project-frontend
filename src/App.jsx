@@ -18,6 +18,7 @@ import SignIn from "./pages/SignIn";
 import Invites from "./pages/Invites";
 import PrivateRoute from "./components/PrivateRoute";
 import { ToastProvider } from "./components/ui/ToastProvider";
+import Comments from "./pages/Comments";
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
 									<Route path="review-tasks" element={<ReviewTasksPage />} />
 									<Route path="project-invites" element={<InvitesPage />} />
 								</Route>
+								<Route path="/projects/:projectId/my-tasks/:taskId" element={<Comments />} />
 								<Route path="/notifications" element={<NotificationsOutlet />}>
 									<Route index element={<Notifications />} />
 									<Route path=":notificationId" element={<NotificationDetails />} />

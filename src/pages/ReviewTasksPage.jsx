@@ -23,7 +23,7 @@ function ReviewTasksPage() {
 		if (!projectLoaded || !tasks) return [];
 
 		return tasks.filter((task) => {
-			return task.assignedTo.id === currentMemberId && task.status === "under review"
+			return task.assignedBy.id === currentMemberId && task.status === "under review"
 		});
 
 	}, [tasks, projectLoaded, currentMemberId]);
