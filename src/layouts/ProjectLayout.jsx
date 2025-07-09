@@ -15,7 +15,7 @@ function ProjectLayout() {
     const { state: { projectPreview } } = useLocation();
 
     const [basicProject, setBasicProject] = useState(projectPreview);
-	const [fullProjectLoaded, setFullProjectLoaded] = useState(false);
+    const [fullProjectLoaded, setFullProjectLoaded] = useState(false);
 
     const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
@@ -24,10 +24,11 @@ function ProjectLayout() {
     const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
     const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
 
-	const [team, setTeam] = useState([]);
-	const [invites, setInvites] = useState([]);
-	const [tasks, setTasks] = useState([]);
-	const [currentMemberId, setCurrentMemberId] = useState();
+    const [team, setTeam] = useState([]);
+    const [invites, setInvites] = useState([]);
+    const [tasks, setTasks] = useState([]);
+    const [currentMemberId, setCurrentMemberId] = useState();
+    const [currentMemberRole, setCurrentMemberRole] = useState();
 
     useEffect(() => {
 
@@ -51,47 +52,49 @@ function ProjectLayout() {
 
     useEffect(() => {
 
-		async function getProject() {
+        async function getProject() {
 
-			try {
+            try {
 
-				const { projectDetails } = await projectService.getProject(basicProject.id);
-				
-				setTasks(projectDetails.tasks);
-				setTeam(projectDetails.team);
-				setInvites(projectDetails.invites);
-				setCurrentMemberId(projectDetails.currentMemberId);
+                const { projectDetails } = await projectService.getProject(basicProject.id);
 
-			} catch(err) {
+                setTasks(projectDetails.tasks);
+                setTeam(projectDetails.team);
+                setInvites(projectDetails.invites);
+                setCurrentMemberId(projectDetails.currentMemberId);
+                setCurrentMemberRole(projectDetails.currentMemberRole);
 
-				console.log('The following error while fetching project details: ' + err.message);
-				
-				setTasks(null);
-				setTeam(null);
-				setInvites(null);
-				setCurrentMemberId(null);
+            } catch (err) {
 
-			} finally {
+                console.log('The following error while fetching project details: ' + err.message);
 
-				setTimeout(() => {
+                setTasks(null);
+                setTeam(null);
+                setInvites(null);
+                setCurrentMemberId(null);
+                setCurrentMemberRole(null);
 
-					setFullProjectLoaded(true);
+            } finally {
 
-				}, 300);
+                setTimeout(() => {
 
-			}
+                    setFullProjectLoaded(true);
 
-		}
+                }, 300);
 
-		getProject();
+            }
+
+        }
+
+        getProject();
 
     }, [basicProject.id]);
 
-	function onNewTaskCreated(newTask) {
-		
-		setTasks([newTask, ...tasks]);
-		
-	}
+    function onNewTaskCreated(newTask) {
+
+        setTasks([newTask, ...tasks]);
+
+    }
 
     return (
         <div className="flex flex-col h-full gap-y-6 px-6 pt-6">
@@ -115,7 +118,7 @@ function ProjectLayout() {
                         </button>
                         <div className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md border-neutrals-200 border-[1px] 
 						rounded-md flex flex-col absolute w-[200px] mt-3 left-0 ${settingsButtonClicked ? 'opacity-100' :
-                        'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-10`}>
+                                'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-10`}>
                             <div className="flex flex-col border-b-[1px] dark:border-neutral-800 border-neutral-200 p-1.5">
                                 <button
                                     className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 
@@ -176,26 +179,27 @@ function ProjectLayout() {
                 </div>
             </div>
             <ProjectNavigation projectState={projectPreview} />
-            <Outlet 
-				context={{ 
-					tasks: tasks,
-					setTasks: setTasks,
-					invites: invites,
-					setInvites: setInvites,
-					team: team,
-					setTeam: setTeam,
-					currentMemberId: currentMemberId,
-					projectLoaded: fullProjectLoaded 
-				}} 
-			/>
+            <Outlet
+                context={{
+                    tasks: tasks,
+                    setTasks: setTasks,
+                    invites: invites,
+                    setInvites: setInvites,
+                    team: team,
+                    setTeam: setTeam,
+                    currentMemberId: currentMemberId,
+                    projectLoaded: fullProjectLoaded,
+                    currentMemberRole: currentMemberRole,
+                }}
+            />
             {
                 showNewTaskModal && (
                     <NewTaskModal
                         setShowNewTaskModal={setShowNewTaskModal}
                         teamMembers={team}
-						projectId={basicProject.id}
-						onNewTaskCreated={onNewTaskCreated}
-						userProjectMemberId={currentMemberId}
+                        projectId={basicProject.id}
+                        onNewTaskCreated={onNewTaskCreated}
+                        userProjectMemberId={currentMemberId}
                     />
                 )
             }
