@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { Calendar, Filter, UserPlus } from "lucide-react";
 import { CustomDropdown } from "../components/CustomDropdown";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
@@ -13,9 +13,9 @@ import LoadingState from "../components/LoadingState";
 import EmptyProjectInvites from "../components/EmptyProjectInvites";
 import Unauthorized from "../components/Unauthorized";
 
-function InvitesPage() {
+function ProjectInvitesPage() {
 
-    const { invites, setInvites, projectLoaded, currentMemberRole } = useOutletContext();
+    const { invites, setInvites, projectLoaded, currentMemberRole } = useProject();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -122,4 +122,4 @@ function InvitesPage() {
 
 }
 
-export default InvitesPage;
+export default ProjectInvitesPage;

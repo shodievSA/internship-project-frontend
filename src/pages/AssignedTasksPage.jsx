@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
@@ -13,8 +13,15 @@ import Unauthorized from "../components/Unauthorized";
 
 function AssignedTasksPage() {
 
-    const { projectId } = useParams();
-    const { tasks, setTasks, team, projectLoaded, currentMemberId, currentMemberRole } = useOutletContext();
+    const { 
+		projectLoaded, 
+		tasks, 
+		setTasks, 
+		team, 
+		currentMemberId, 
+		currentMemberRole, 
+		metaData 
+	} = useProject();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -114,7 +121,7 @@ function AssignedTasksPage() {
                                 <AssignedTask
                                     key={task.id}
                                     task={task}
-                                    projectId={projectId}
+                                    projectId={metaData.id}
                                     team={team}
                                     onTaskDelete={onTaskDelete}
                                     onTaskUpdate={onTaskUpdate}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import AiEditor from "./AiEditor";
 import InputField from "./InputField";
@@ -10,13 +11,13 @@ import DatePicker from "./DatePicker";
 import SubtaskInput from "./SubtaskInput";
 
 function NewTaskModal({ 
-	setShowNewTaskModal, 
-	teamMembers, 
 	projectId,
-	onNewTaskCreated,
-	userProjectMemberId
+	teamMembers, 
+	currentMemberId,
+	closeModal
 }) {
 
+	const { tasks, setTasks } = useProject();
 	const { showToast } = useToast();
 
 	const assignToOptions = teamMembers.map((member) => {
@@ -50,12 +51,12 @@ function NewTaskModal({
 					priority: taskPriority.value,
 					deadline: taskDeadline,
 					assignedTo: taskAssignedTo.value,
-					assignedBy: userProjectMemberId,
+					assignedBy: currentMemberId,
 					subtasks: subtasks
 				}
 			);
 
-			onNewTaskCreated(newTask);
+			setTasks([newTask, ...tasks]);
 
 			showToast({
 				variant: "success",
@@ -63,7 +64,7 @@ function NewTaskModal({
 				message: "The new task has been created successfully!"
 			});
 
-			setShowNewTaskModal(false);
+			closeModal();
 
 	    } catch(err) {
 
@@ -167,7 +168,7 @@ function NewTaskModal({
 				<Button
 					variant="secondary"
 					disabled={isNewTaskBeingCreated}
-					onClick={() => setShowNewTaskModal(false)}
+					onClick={closeModal}
 				>
 					Cancel
 				</Button>

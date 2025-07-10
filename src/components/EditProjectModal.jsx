@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useProject } from "../context/ProjectContext";
+import { useToast } from "./ui/ToastProvider";
+import projectService from "../services/projectService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const projectStatusOptions = [
     { label: 'Active', value: 'active' },
@@ -15,9 +17,11 @@ function EditProjectModal({
     projectId,
     currentProjectTitle,
     currentProjectStatus,
-    showModal,
-    onProjectUpdated
+    closeModal
 }) {
+
+	const { metaData, setMetaData } = useProject();
+	const { showToast } = useToast();
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
     const [newProjectStatus, setNewProjectStatus] = useState(() => projectStatusOptions.find(
@@ -68,32 +72,25 @@ function EditProjectModal({
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ updatedProjectProps })
-            });
+			const { updatedProject } = await projectService.updateProject(projectId, updatedProjectProps);
 
-            if (res.ok) {
+			setMetaData(() => ({ ...metaData, ...updatedProject }));
 
-                const { updatedProject } = await res.json();
+			closeModal();
 
-                if (onProjectUpdated) onProjectUpdated(updatedProject);
+			showToast({
+				variant: "success",
+				title: "Project updated successfully!"
+			});
 
-                showModal(false);
+        } catch(err) {
 
-            } else {
+            console.log("The following error occured while updating the project: " + err.message);
 
-                throw new Error;
-
-            }
-
-        } catch {
-
-            console.log('Error occured while updating the project');
+			showToast({
+				variant: "failure",
+				title: "Unexpected error occured while updating the project!"
+			});
 
         } finally {
 
@@ -132,7 +129,7 @@ function EditProjectModal({
                     <Button
                         variant="secondary"
                         disabled={changesBeingSaved}
-                        onClick={() => showModal(false)}
+                        onClick={closeModal}
                     >
                         Cancel
                     </Button>

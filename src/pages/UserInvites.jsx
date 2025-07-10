@@ -9,14 +9,13 @@ import { EmptyInvitation } from "../components/EmptyInvitation";
 import LoadingInvites from "../components/LoadingInvites";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function Invites() {
+function UserInvites() {
 
     const [invites, setInvites] = useState([]);
     const [invitesFetched, setInvitesFetched] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
-    const [loading, setLoading] = useState(true)
 
     async function handleInvite(status, projectId, inviteId) {
 
@@ -80,10 +79,12 @@ function Invites() {
                 console.log(err);
 
             } finally {
+
                 setTimeout(() => {
-                    setLoading(false);
+
                     setInvitesFetched(true);
-                }, 600)
+
+                }, 600);
 
             }
 
@@ -153,4 +154,4 @@ function Invites() {
 
 }
 
-export default Invites;
+export default UserInvites;

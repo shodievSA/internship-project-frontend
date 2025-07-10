@@ -1,42 +1,90 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const projectService = {
-  createProject: async (title, userPosition) => {
-    const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ title, userPosition }),
-    });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to create project");
-    }
+	createProject: async (title, userPosition) => {
 
-    return response.json();
-  },
+		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({ title, userPosition }),
+		});
 
-  getProjects: async () => {
-    const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+		if (!response.ok) {
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch projects");
-    }
+			const error = await response.json();
+			throw new Error(error.message || "Failed to create project");
 
-    const { projects } = await response.json();
+		}
 
-    return projects;
-  },
+		return response.json();
+
+	},
+
+	updateProject: async (projectId, updatedProjectProps) => {
+
+		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
+			method: 'PATCH',
+			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ updatedProjectProps })
+		});
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to update project");
+
+		} 
+
+		return response.json();
+
+	},
+
+	deleteProject: async (projectId) => {
+
+		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
+			method: 'DELETE',
+			credentials: 'include'
+		});
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Error occured while deleting the project");
+			
+		} 
+
+	},
+
+	getProjects: async () => {
+
+		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+		});
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to fetch projects");
+
+		}
+
+		const { projects } = await response.json();
+
+		return projects;
+
+	},
+
 	getProject: async (projectId) => {
 
 		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
@@ -45,13 +93,16 @@ const projectService = {
 		});
 
 		if (!response.ok) {
+
 			const error = await response.json();
 			throw new Error(error.message || "Error occured while getting project's details");
+
 		} 
 
 		return response.json();
 
 	},
+
 	createTask: async (projectId, task) => {
 
 		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, {
@@ -64,13 +115,36 @@ const projectService = {
 		});
 
 		if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to create task');
-        }
 
-        return response.json();
+			const error = await response.json();
+			throw new Error(error.message || 'Failed to create task');
+
+		}
+
+		return response.json();
 
 	},
+
+	leaveProject: async (projectId) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/me`, 
+			{
+				method: 'DELETE',
+				credentials: 'include'
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			console.log(error);
+			throw new Error(error.message || 'Error occured while deleting the project.');
+
+		} 
+
+	},
+
 	deleteTask: async (projectId, taskId) => {
 
 		const response = await fetch(
@@ -89,6 +163,7 @@ const projectService = {
 		}
 
 	},
+
 	changeTaskStatus: async ({ projectId, taskId, updatedTaskStatus, updateComment }) => {
 
 		const response = await fetch(
@@ -116,6 +191,7 @@ const projectService = {
 		return response.json();
 
 	},
+
 	updateTask: async ({ projectId, taskId, updatedTaskProps }) => {
 
 		const response = await fetch(
@@ -140,6 +216,7 @@ const projectService = {
 		return response.json();
 
 	}
+
 };
 
 export default projectService;

@@ -1,11 +1,11 @@
-import { useOutletContext } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { TeamMemberCard } from "../components/team-member-card";
 import LoadingState from "../components/LoadingState";
 import ErrorState from "../components/ErrorState";
 
 function TeamMembersPage() {
 
-    const { team, setTeam, projectLoaded, currentMemberId } = useOutletContext();
+    const { team, setTeam, projectLoaded, currentMemberId } = useProject();
 
     function handleRemoveMember(memberId) {
 

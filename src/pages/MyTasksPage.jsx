@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
@@ -12,7 +12,7 @@ import { Calendar, Filter } from "lucide-react";
 
 function MyTasksPage() {
 
-    const { tasks, setTasks, projectLoaded, currentMemberId } = useOutletContext();
+    const { tasks, setTasks, projectLoaded, currentMemberId } = useProject();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");

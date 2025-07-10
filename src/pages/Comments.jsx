@@ -38,7 +38,7 @@ function Comments() {
 	]
 
 	return (
-		<div className="h-full flex flex-col px-8 pt-6 gap-y-8">
+		<div className="h-full flex flex-col px-8 pt-6 gap-y-5">
 			<div className="flex gap-x-5 items-center">
 				<button className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
 				dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2">
@@ -48,7 +48,7 @@ function Comments() {
 			</div>
 			<div className="grow flex flex-col gap-y-8 scrollbar-thin dark:scrollbar-thumb-neutral-950 
 			dark:scrollbar-track-neutral-800 overflow-y-auto">
-				<div className="px-3 flex flex-col gap-y-4 py-5">
+				<div className="px-5 flex flex-col gap-y-4 py-5">
 					{
 						mockData.length === 0 ? (
 							<div>This task doesn't have any comments</div>
@@ -75,10 +75,10 @@ function Comments() {
 					}
 				</div>
 			</div>			
-			<div className="h-28 p-6">
+			<div className="h-40 p-6">
 				<textarea 
-					className="w-full h-full rounded-md resize-none dark:bg-neutral-900 
-					bg-slate-100 focus:outline-none p-3"
+					className="w-full h-full rounded-md resize-none dark:bg-black 
+					focus:outline-none p-3 border dark:border-neutral-800"
 					placeholder="Write your commend here..."
 				/>
 			</div>

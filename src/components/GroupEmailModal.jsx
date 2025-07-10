@@ -6,7 +6,11 @@ import Button from "./ui/Button";
 import { Send, Asterisk, Check } from "lucide-react";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function GroupEmailModal({ projectId, teamMembers, showModal }) {
+function GroupEmailModal({ 
+	projectId, 
+	teamMembers, 
+	closeModal 
+}) {
 
 	const [subject, setSubject] = useState('');
 	const [message, setMessage] = useState('');
@@ -155,7 +159,7 @@ function GroupEmailModal({ projectId, teamMembers, showModal }) {
 					disabled={messageBeingSent}
 					variant="secondary"
 					size="lg"
-					onClick={() => showModal(false)}
+					onClick={closeModal}
 				>
 					Cancel
 				</Button>

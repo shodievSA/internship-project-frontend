@@ -103,6 +103,8 @@ function Projects() {
 
 	};
 
+	console.log(projectPreviews)
+
 	return (
 		<div className="h-full px-6 pt-8 lg:px-8">
 			<div className="flex flex-col gap-y-4 h-full">

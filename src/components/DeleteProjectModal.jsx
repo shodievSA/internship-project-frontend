@@ -1,26 +1,33 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
+import projectService from "../services/projectService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
 import { TriangleAlert } from "lucide-react";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function DeleteProjectModal({ projectId, projectTitle, showModal }) {
+const deleteWarnings = [
+	"Delete all project data and files",
+	"Remove all tasks and assignments",
+	"Delete all project communications",
+	"Remove team member access",
+	"This action cannot be undone"
+];
+
+function DeleteProjectModal({ 
+	projectId, 
+	projectTitle, 
+	closeModal 
+}) {
+
+	const { showToast } = useToast();
 
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 	const [projectBeingDeleted, setProjectBeingDeleted] = useState(false);
 	const [projectName, setProjectName] = useState('');
 
 	const navigate = useNavigate();
-
-	const deleteWarnings = [
-		"Delete all project data and files",
-		"Remove all tasks and assignments",
-		"Delete all project communications",
-		"Remove team member access",
-		"This action cannot be undone"
-	];
 
 	useEffect(() => {
 		
@@ -34,20 +41,23 @@ function DeleteProjectModal({ projectId, projectTitle, showModal }) {
 
 		try {
 
-			const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}`, {
-				method: 'DELETE',
-				credentials: 'include'
-			});
+			await projectService.deleteProject(projectId);
 
-			if (res.ok) {
-				navigate('/projects', { replace: true });
-			} else {
-				throw new Error('Error occured while deleting the project.');
-			}
+			navigate('/projects', { replace: true });
+
+			showToast({
+				variant: "success",
+				message: "The project has been deleted successfully!"
+			});
 
 		} catch(err) {
 
-			console.log(err);
+			console.log("The following error occured while deleting the project: " + err.message);
+
+			showToast({
+				variant: "failure",
+				message: "Unexpected error occured while deleting the project!"
+			});
 
 		} finally {
 
@@ -93,7 +103,7 @@ function DeleteProjectModal({ projectId, projectTitle, showModal }) {
 					<Button 
 						disabled={projectBeingDeleted}
 						variant="secondary"
-						onClick={() => showModal(false)}
+						onClick={() => closeModal(false)}
 					>
 						Cancel
 					</Button>

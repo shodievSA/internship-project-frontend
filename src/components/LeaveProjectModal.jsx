@@ -1,12 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
+import projectService from "../services/projectService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
 import { UserMinus } from "lucide-react";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-function LeaveProjectModal({ projectId, projectTitle, showModal }) {
+function LeaveProjectModal({ 
+	projectId, 
+	projectTitle, 
+	closeModal 
+}) {
+
+	const { showToast } = useToast();
 
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 	const [leavingProject, setLeavingProject] = useState(false);
@@ -34,20 +41,21 @@ function LeaveProjectModal({ projectId, projectTitle, showModal }) {
 
 		try {
 
-			const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/me`, {
-				method: 'DELETE',
-				credentials: 'include'
+			await projectService.leaveProject(projectId);
+			
+			navigate('/projects', { replace: true });
+
+			showToast({
+				variant: "success",
+				title: "You've left the project successfully!"
 			});
-
-			if (res.ok) {
-				navigate('/projects', { replace: true });
-			} else {
-				throw new Error('Error occured while deleting the project.');
-			}
-
+			
 		} catch(err) {
 
-			console.log(err);
+			showToast({
+				variant: "failure",
+				title: err.message
+			});
 
 		} finally {
 
@@ -93,7 +101,7 @@ function LeaveProjectModal({ projectId, projectTitle, showModal }) {
 					<Button 
 						disabled={leavingProject}
 						variant="secondary"
-						onClick={() => showModal(false)}
+						onClick={closeModal}
 					>
 						Cancel
 					</Button>

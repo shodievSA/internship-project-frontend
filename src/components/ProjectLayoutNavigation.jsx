@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function ProjectNavigation({ projectState }) {
+function ProjectLayoutNavigation() {
 
 	return (
 		<ul className="dark:bg-neutral-900 bg-neutral-100 p-1.5 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
@@ -8,7 +8,6 @@ function ProjectNavigation({ projectState }) {
             rounded-md mb-2">
                 <NavLink
                     to='team'
-                    state={{ projectPreview: projectState }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -17,7 +16,6 @@ function ProjectNavigation({ projectState }) {
                 </NavLink>
                 <NavLink
                     to='all-tasks'
-                    state={{ projectPreview: projectState }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -26,7 +24,6 @@ function ProjectNavigation({ projectState }) {
                 </NavLink>
                 <NavLink
                     to='my-tasks'
-                    state={{ projectPreview: projectState }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -35,7 +32,6 @@ function ProjectNavigation({ projectState }) {
                 </NavLink>
                 <NavLink
                     to='assigned-tasks'
-                    state={{ projectPreview: projectState }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -44,7 +40,6 @@ function ProjectNavigation({ projectState }) {
                 </NavLink>
                 <NavLink
                     to='review-tasks'
-                    state={{ projectPreview: projectState }}
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -52,8 +47,7 @@ function ProjectNavigation({ projectState }) {
                     Reviews
                 </NavLink>
                 <NavLink
-                    to='project-invites'
-                    state={{ projectPreview: projectState }}
+                    to='invites'
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
@@ -65,4 +59,4 @@ function ProjectNavigation({ projectState }) {
 
 }
 
-export default ProjectNavigation;
+export default ProjectLayoutNavigation;
