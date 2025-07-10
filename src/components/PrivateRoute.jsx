@@ -8,7 +8,7 @@ function PrivateRoute() {
 	const { user, isUserFetched } = useAuthContext();
 
 	return isUserFetched ? (
-		!user.isInvited && user ? (
+		user && !user.isInvited ? (
 			<AppLayout>
 				<Outlet />
 			</AppLayout>
