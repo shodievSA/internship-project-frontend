@@ -215,6 +215,50 @@ const projectService = {
 
 		return response.json();
 
+	},
+
+	changeMemberRole: async ({ projectId, memberId, newRole }) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${memberId}`,
+			{
+				method: 'PATCH',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ newRole: newRole })
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to change member's role");
+
+		}
+
+		return response.json();
+
+	},
+
+	removeMember: async (projectId, memberId) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${memberId}`,
+			{
+				method: 'DELETE',
+				credentials: 'include'
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Unexpected error occured while deleting the user");
+
+		} 
+
 	}
 
 };

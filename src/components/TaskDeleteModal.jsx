@@ -1,13 +1,53 @@
+import { useState } from "react";
+import { useProject } from "../context/ProjectContext";
+import { useToast } from "./ui/ToastProvider";
+import projectService from "../services/projectService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { AlertTriangle } from "lucide-react";
 
-function TaskDeleteModal({ 
+function TaskDeleteModal({
+	projectId, 
+	taskId,
 	taskTitle, 
-	taskBeingDeleted, 
-	hideModal, 
-	onConfirm
+	closeModal
 }) {
+
+	const { setTasks, tasks } = useProject();
+	const { showToast } = useToast();
+
+
+	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
+
+
+	async function deleteTask() {
+
+		setTaskBeingDeleted(true);
+
+		try {
+
+			await projectService.deleteTask(projectId, taskId);
+
+			setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+			
+			showToast({
+				variant: "success",
+				title: "Task has been deleted successfully!"
+			});
+
+			closeModal(false);
+			
+		} catch (err) {
+
+			console.log("The following error occured while deleting task: " + err);
+
+		} finally {
+
+			setTaskBeingDeleted(false);
+
+		}
+
+	}
 
 	return (
 		<Modal
@@ -27,7 +67,7 @@ function TaskDeleteModal({
 					<Button
 						size="md"
 						variant="secondary"
-						onClick={hideModal}
+						onClick={closeModal}
 						disabled={taskBeingDeleted}
 					>
 						Cancel
@@ -35,7 +75,7 @@ function TaskDeleteModal({
 					<Button 
 						size="md" 
 						variant="destructive"
-						onClick={onConfirm}
+						onClick={deleteTask}
 						loading={taskBeingDeleted}
 					>
 						Delete Task

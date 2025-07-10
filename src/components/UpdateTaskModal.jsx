@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import AiEditor from "./AiEditor";
@@ -10,10 +10,21 @@ import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
 import SubtaskInput from "./SubtaskInput";
 
-function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
+const taskPriorityOptions = [
+	{ label: "High", value: "high" },
+	{ label: "Middle", value: "middle" },
+	{ label: "Low", value: "low" }
+];
+
+function UpdateTaskModal({ 
+	projectId,
+	task, 
+	team, 
+	closeModal 
+}) {
 
 	const {
-		id: taskId,
+		id,
 		title,
 		description,
 		priority,
@@ -22,14 +33,8 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		deadline
 	} = task;
 
-	const { projectId } = useParams();
+	const { setTasks } = useProject();
 	const { showToast } = useToast();
-
-	const taskPriorityOptions = [
-		{ label: "High", value: "high" },
-		{ label: "Middle", value: "middle" },
-		{ label: "Low", value: "low" }
-	];
 
 	const assignToOptions = team.map((member) => {
 		return {
@@ -56,8 +61,6 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 		subtasks.map((subtask) => ({ id: subtask.id, title: subtask.title }))
 	);
 
-	console.log(newSubtasks);
-
 	async function updateTask() {
 
 		setTaskBeingUpdated(true);
@@ -66,13 +69,13 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
 			const { updatedTask } = await projectService.updateTask({
 				projectId: projectId, 
-				taskId: taskId, 
+				taskId: id, 
 				updatedTaskProps: updatedTaskProps
 			});
 
-			onTaskUpdate(taskId, updatedTask);
+			setTasks((prevTasks) => prevTasks.map((task) => (task.id === id) ? updatedTask : task));
 
-			hideModal();
+			closeModal();
 
 			showToast({
 				variant: "success",
@@ -82,12 +85,9 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 
 		} catch(err) {
 
-			console.log("The following error occured while updating the task: " + err.message);
-
 			showToast({
 				variant: "failure",
-				title: "Unexpected error occured",
-				message: err.message
+				title: err.message
 			});
 
 		} finally {
@@ -198,7 +198,7 @@ function UpdateTaskModal({ task, team, hideModal, onTaskUpdate }) {
 				<Button
 					variant="secondary"
 					disabled={taskBeingUpdated}
-					onClick={hideModal}
+					onClick={closeModal}
 				>
 					Cancel
 				</Button>

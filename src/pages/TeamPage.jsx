@@ -5,13 +5,7 @@ import ErrorState from "../components/ErrorState";
 
 function TeamMembersPage() {
 
-    const { team, setTeam, projectLoaded, currentMemberId } = useProject();
-
-    function handleRemoveMember(memberId) {
-
-		setTeam((prevTeam) => prevTeam.filter((member) => member.id !== memberId));
-
-    };
+    const { team, projectLoaded } = useProject();
 
     return (
         <div className="h-full text-gray-900 dark:text-white ">
@@ -36,12 +30,7 @@ function TeamMembersPage() {
 						gap-6 md:gap-6 pb-4">
 							{
 								team.map((member) => (
-									<TeamMemberCard 
-										key={member.id} 
-										member={member} 
-										currentUser={currentMemberId} 
-										onRemoveMember={handleRemoveMember}
-									/>
+									<TeamMemberCard key={member.id} member={member} />
 								))
 							}
 						</div>	

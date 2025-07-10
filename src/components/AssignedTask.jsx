@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useToast } from "./ui/ToastProvider";
-import projectService from "../services/projectService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { 
 	Calendar, 
@@ -20,13 +18,7 @@ import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 
-function AssignedTask({ 
-	task, 
-	projectId, 
-	team, 
-	onTaskDelete, 
-	onTaskUpdate 
-}) {
+function AssignedTask({ projectId, task, team }) {
 
 	const {
 		id,
@@ -41,9 +33,6 @@ function AssignedTask({
 		history
 	} = task;
 
-	const { showToast } = useToast();
-
-	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 	const [subtasksExpanded, setSubtasksExpanded] = useState(false);
 	const [historyExpanded, setHistoryExpanded] = useState(false);
 	const [editButtonClicked, setEditButtonClicked] = useState(false);
@@ -67,48 +56,6 @@ function AssignedTask({
 		return () => document.removeEventListener("click", handleClickOutside);
 		
 	}, [editButtonClicked]);
-	
-	async function deleteTask() {
-
-		setTaskBeingDeleted(true);
-
-		try {
-
-			await projectService.deleteTask(projectId, id);
-
-			onTaskDelete(id);
-			
-			showToast({
-				variant: "success",
-				title: "Task deleted successfully!",
-				message: "Your assigned task has been deleted successfully"
-			});
-
-			showDeleteTaskModal(false);
-			
-		} catch (err) {
-
-			console.log("The following error occured while deleting task: " + err);
-
-		} finally {
-
-			setTaskBeingDeleted(false);
-
-		}
-
-	}
-
-	function hideDeleteModal() {
-
-		setShowDeleteTaskModal(false);
-
-	}
-
-	function hideUpdateModal() {
-
-		setShowUpdateTaskModal(false);
-
-	}
 
 	return (
 		<>
@@ -297,20 +244,20 @@ function AssignedTask({
 			{
 				showDeleteTaskModal && (
 					<TaskDeleteModal 
+						projectId={projectId}
+						taskId={id}
 						taskTitle={title} 
-						taskBeingDeleted={taskBeingDeleted}
-						hideModal={hideDeleteModal}
-						onConfirm={deleteTask}
+						closeModal={() => setShowDeleteTaskModal(false)}
 					/>
 				)
 			}
 			{
 				showUpdateTaskModal && (
 					<UpdateTaskModal 
+						projectId={projectId}
 						task={task} 
 						team={team} 
-						hideModal={hideUpdateModal}
-						onTaskUpdate={onTaskUpdate}
+						closeModal={() => setShowUpdateTaskModal(false)}
 					/>
 				)
 			}

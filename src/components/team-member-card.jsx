@@ -4,7 +4,7 @@ import { StatusBadge } from "./status-badge";
 import { ActionMenu } from "./action-menu";
 import { Mail, MoreVertical, User, Pickaxe } from "lucide-react";
 
-export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
+export function TeamMemberCard({ member }) {
 
     const navigate = useNavigate();
     const { projectId } = useParams();
@@ -39,10 +39,12 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
     }
 
     return (
-        <div className="border border-gray-200 dark:border-neutral-800 rounded-lg p-4 bg-white dark:bg-black 
-		relative transition-all duration-200 ease-in-out hover:shadow-md hover:border-gray-300 
-		hover:dark:border-neutral-700 group cursor-pointer"
-        onClick={handleCardClick}>
+        <div 
+			className="border border-gray-200 dark:border-neutral-800 rounded-lg p-4 bg-white dark:bg-black 
+			relative transition-all duration-200 ease-in-out hover:shadow-md hover:border-gray-300 
+			hover:dark:border-neutral-700 group cursor-pointer"
+        	onClick={handleCardClick}
+		>
             <div className="flex items-start justify-between">
                 <div className="flex items-center justify-center flex-grow min-w-0">
                     <div className="flex-shrink-0 mr-4">
@@ -83,9 +85,6 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
                     className="flex-shrink-0 ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 
 					dark:hover:text-white transition-colors duration-200 opacity-0 group-hover:opacity-100"
                     onClick={handleMenuToggle}
-                    aria-label="Member options"
-                    aria-expanded={menuOpen}
-                    aria-haspopup="true"
                 >
                     <MoreVertical className="h-5 w-5" />
                 </button>
@@ -95,9 +94,7 @@ export function TeamMemberCard({ member, currentUser, onRemoveMember }) {
                 isOpen={menuOpen}
                 onClose={() => setMenuOpen(false)}
                 anchorEl={buttonRef.current}
-                member={member}
-                currentUser={currentUser}
-                onRemoveMember={onRemoveMember}
+                selectedMember={member}
             />
         </div>
     );
