@@ -7,6 +7,7 @@ function FilterDropdown({
 	value,
 	onChange,
 	options,
+	disabled
 }) {
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +40,7 @@ function FilterDropdown({
 				variant="secondary"
 				size="md"
 				onClick={() => setIsOpen(!isOpen)}
+				disabled={disabled}
 			>
 				<div className="flex items-center gap-x-3">
 					<Icon className="w-4 h-4 flex-shrink-0" />

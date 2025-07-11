@@ -12,9 +12,9 @@ function ErrorState({ message }) {
 	return (
 		<div className="h-full flex items-center justify-center">
 			<div className="flex flex-col items-center gap-y-5 w-[500px]">
-				<CloudAlert className="w-20 h-20" />
+				<CloudAlert className="w-32 h-32" />
 				<div className="flex flex-col items-center gap-y-5">
-					<h1 className="text-xl text-center leading-normal">{ message }</h1>
+					<h1 className="text-2xl text-center leading-normal">{ message }</h1>
 					<Button
 						size="lg"
 						onClick={reloadPage}

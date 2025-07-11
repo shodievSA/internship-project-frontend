@@ -7,26 +7,26 @@ import NewProjectModal from "../components/NewProjectModal";
 import { useMemo, useState, useEffect } from "react";
 import projectService from "../services/projectService";
 import EmptyDashboard from "../components/EmptyDashboard";
+import ProjectSkeleton from "../components/ProjectSkeleton";
+import ErrorState from "../components/ErrorState";
 
 function Projects() {
 
+	const [userProjectCount, setUserProjectCount] = useState(() => getProjectCount());
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [showNewProjectModal, setShowNewProjectModal] = useState(false);
-	const [projectPreviews, setProjectPreviews] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [projects, setProjects] = useState([]);
+	const [projectsLoaded, setProjectsLoaded] = useState(false);
 	const [error, setError] = useState("");
 
 	useEffect(() => {
 
 		async function fetchProjects() {
 
-			setLoading(true);
-			setError("");
-
 			try {
 
 				const projectPreviews = await projectService.getProjects();
-				setProjectPreviews(projectPreviews);
+				setProjects(projectPreviews);
 
 			} catch (err) {
 
@@ -34,7 +34,11 @@ function Projects() {
 
 			} finally {
 
-				setLoading(false);
+				setTimeout(() => {
+
+					setProjectsLoaded(true);
+
+				}, 800);
 
 			}
 
@@ -45,22 +49,29 @@ function Projects() {
 	}, []);
 
 	useEffect(() => {
-		localStorage.setItem("projectPreviewsCount", projectPreviews.length);
-	}, [projectPreviews]);
 
-	const currentFilters = {
+		if (projectsLoaded && !error) {
+
+			localStorage.setItem("projectCount", projects.length);
+			setUserProjectCount(projects.length);
+
+		}
+
+	}, [projects, projectsLoaded]);
+
+	const currentFilters = useMemo(() => ({
 
 		search: searchParams.get("search") || "",
 		status: searchParams.get("status") || "all",
 		owner: searchParams.get("owner") || "all"
 
-	};
+	}), [searchParams]);
 
-	const filteredProjectPreviews = useMemo(() => {
+	const filteredProjects = useMemo(() => {
 
-		return filterProjects(projectPreviews, currentFilters);
+		return filterProjects(projects, currentFilters);
 
-	}, [projectPreviews, currentFilters]);
+	}, [projects, currentFilters]);
 
 	function handleSearch(searchTerm) {
 
@@ -99,54 +110,56 @@ function Projects() {
 
 	function handleProjectCreated(newProject) {
 
-		setProjectPreviews((prevProjectPreviews) => [newProject, ...prevProjectPreviews]);
+		setProjects((prevProjectPreviews) => [newProject, ...prevProjectPreviews]);
 
 	};
 
-	console.log(projectPreviews)
+	if (error) return <ErrorState message={"Looks like your projects are playing hide and seek. Can’t find them!"} />;
+	if (userProjectCount === 0) return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
 
 	return (
 		<div className="h-full px-6 pt-8 lg:px-8">
 			<div className="flex flex-col gap-y-4 h-full">
-				{
-					loading ? (
-						<div>Loading projects...</div>
-					) : error ? (
-						<div className="text-red-500">{error}</div>
-					) : projectPreviews.length === 0 ? (
-						<EmptyDashboard showNewProjectModal={setShowNewProjectModal} />
-					) : (
-						<div className="h-full flex flex-col gap-y-8">
-							<ProjectHeader
-								filters={currentFilters}
-								onSearch={handleSearch}
-								onFilterChange={handleFilterChange}
-								setShowNewProjectModal={setShowNewProjectModal}
-							/>
-							{
-								filteredProjectPreviews.length === 0 ? (
-									<div className="flex grow items-center justify-center">
-										<EmptySearch 
-											message="No matching projects found"
-											onClearFilters={clearFilters} 
-										/>
-									</div>
-								) : (
-									<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-										{
-											filteredProjectPreviews.map((projectPreview) => (
-												<ProjectPreview
-													key={projectPreview.id}
-													projectPreview={projectPreview}
-												/>
-											))
-										}
-									</div>
-								)
-							}
-						</div>
-					)
-				}
+				<div className="h-full flex flex-col gap-y-8">
+					<ProjectHeader
+						filters={currentFilters}
+						onSearch={handleSearch}
+						onFilterChange={handleFilterChange}
+						setShowNewProjectModal={setShowNewProjectModal}
+						disabled={!projectsLoaded}
+					/>
+					{
+						!projectsLoaded ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+								{ 
+									Array.from({ length: userProjectCount }, (_, i) => {
+										return <ProjectSkeleton key={i} />
+									})
+								}
+							</div>
+						) : (
+							filteredProjects.length === 0 ? (
+								<div className="flex grow items-center justify-center">
+									<EmptySearch 
+										message="No matching projects found"
+										onClearFilters={clearFilters} 
+									/>
+								</div>
+							) : (
+								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+									{
+										filteredProjects.map((projectPreview) => (
+											<ProjectPreview
+												key={projectPreview.id}
+												projectPreview={projectPreview}
+											/>
+										))
+									}
+								</div>
+							)
+						)
+					}
+				</div>
 			</div>
 			{
 				showNewProjectModal && (
@@ -160,5 +173,22 @@ function Projects() {
 	);
 
 };
+
+function getProjectCount() {
+
+	try {
+
+		const raw = localStorage.getItem("projectCount");
+		const count = raw ? JSON.parse(raw) : null;
+
+		return (Number.isInteger(count) && Number.isFinite(count)) ? count : 0;
+
+	} catch {
+
+		return 0;
+
+	}
+
+}
 
 export default Projects;

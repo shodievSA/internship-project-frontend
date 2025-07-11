@@ -2,12 +2,13 @@ import { Loader2 } from "lucide-react";
 
 function AuthSpinner() {
     return (
-        <div className="min-h-screen w-full flex flex-col items-center justify-center  p-4">
-            <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 space-y-8">
+        <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 dark:bg-black">
+            <div className="max-w-md w-full bg-white dark:bg-neutral-900 rounded-lg shadow-xl p-6 
+			sm:p-8 md:p-10 space-y-8 border dark:border-neutral-700">
                 {/* Logo Section */}
                 <div className="flex justify-center">
-                    <div className="h-16 w-40 bg-indigo-600 dark:bg-indigo-500 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl font-bold text-white">SmartDesk</span>
+                    <div className="rounded-xl flex items-center justify-center">
+                        <span className="text-3xl font-semibold text-white">SmartDesk</span>
                     </div>
                 </div>
 
@@ -24,11 +25,10 @@ function AuthSpinner() {
                     </div>
                 </div>
 
-                {/* Security Message */}
                 <div className="pt-6 text-center">
                     <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
                         <span className="inline-block h-1 w-1 rounded-full bg-gray-400 dark:bg-gray-500"></span>
-                        Secure connection
+                        	Secure connection
                         <span className="inline-block h-1 w-1 rounded-full bg-gray-400 dark:bg-gray-500"></span>
                     </p>
                 </div>

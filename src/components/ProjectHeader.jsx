@@ -9,6 +9,7 @@ const ProjectHeader = ({
 	onSearch,
 	onFilterChange,
 	setShowNewProjectModal,
+	disabled = false
 }) => {
 
 	return (
@@ -20,6 +21,7 @@ const ProjectHeader = ({
 						value={filters.search}
 						onChange={(e) => onSearch(e.target.value)}
 						placeholder="Search projects..."
+						disabled={disabled}
 					/>
 				</div>
 
@@ -30,18 +32,21 @@ const ProjectHeader = ({
 						value={filters.status}
 						onChange={(value) => onFilterChange("status", value)}
 						options={statusOptions}
+						disabled={disabled}
 					/>
 					<FilterDropdown
 						icon={FolderOpen}
 						value={filters.owner}
 						onChange={(value) => onFilterChange("owner", value)}
 						options={ownerOptions}
+						disabled={disabled}
 					/>
 					<Button
 						onClick={() => setShowNewProjectModal(true)}
 						variant="primary"
 						size="md"
 						className="w-full lg:w-auto"
+						disabled={disabled}
 					>
 						<div className="flex items-center gap-x-2">
 							<Plus className="w-4 h-4" />
