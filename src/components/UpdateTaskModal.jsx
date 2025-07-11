@@ -8,7 +8,6 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
-import SubtaskInput from "./SubtaskInput";
 
 const taskPriorityOptions = [
 	{ label: "High", value: "high" },
@@ -29,7 +28,6 @@ function UpdateTaskModal({
 		description,
 		priority,
 		assignedTo,
-		subtasks,
 		deadline
 	} = task;
 
@@ -56,9 +54,6 @@ function UpdateTaskModal({
 	);
 	const [newTaskPriority, setNewTaskPriority] = useState(() => 
 		taskPriorityOptions.find((priorityOption) => priorityOption.value === priority)
-	);
-	const [newSubtasks, setNewSubtasks] = useState(() => 
-		subtasks.map((subtask) => ({ id: subtask.id, title: subtask.title }))
 	);
 
 	async function updateTask() {
@@ -111,8 +106,6 @@ function UpdateTaskModal({
 			oldTaskDeadline: deadline,
 			newTaskAssignedTo: newTaskAssignedTo,
 			oldTaskAssignedTo: assignedTo,
-			newSubtasks: newSubtasks,
-			oldSubtasks: subtasks
 		});
 
 		setUpdatedTaskProps(updatedProps);
@@ -122,8 +115,7 @@ function UpdateTaskModal({
 		newTaskDescription,
 		newTaskPriority,
 		newTaskDeadline,
-		newTaskAssignedTo,
-		newSubtasks
+		newTaskAssignedTo
 	]);
 
 	useEffect(() => {
@@ -184,13 +176,7 @@ function UpdateTaskModal({
 						selected={newTaskAssignedTo}
 						setValue={setNewTaskAssignedTo}
 						options={assignToOptions}
-					/>                   
-					<SubtaskInput
-						disabled={taskBeingUpdated}
-						subtasks={newSubtasks}
-						setSubtasks={setNewSubtasks}
-						lastId={newSubtasks.length > 0 ? newSubtasks[newSubtasks.length - 1].id : 0}
-					/>                                
+					/>                                     
 				</div>
 			</div>
 			<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
@@ -247,31 +233,6 @@ function getUpdatedTaskProps(prevUpdates, task) {
 		updated.assignedTo = task.newTaskAssignedTo.value;
 	} else {
 		delete updated.assignedTo;
-	}
-
-	let subtasksChanged = false;
-
-	if (task.newSubtasks.length !== task.oldSubtasks.length) {
-
-		subtasksChanged = true;
-
-	} else {
-
-		const oldSubtaskIds = task.oldSubtasks.map((subtask) => subtask.id);
-		const newSubtaskIds = task.newSubtasks.map((subtask) => subtask.id);
-
-		oldSubtaskIds.forEach((id) => {
-			if (!newSubtaskIds.includes(id)) {
-				subtasksChanged = true;
-			}
-		});
-
-	}
-	
-	if (subtasksChanged) {
-		updated.subtasks = task.newSubtasks
-	} else {
-		delete updated.subtasks;
 	}
 
 	return updated;

@@ -8,7 +8,6 @@ import Button from "./ui/Button";
 import projectService from "../services/projectService";
 import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
-import SubtaskInput from "./SubtaskInput";
 
 function NewTaskModal({ 
 	projectId,
@@ -35,7 +34,6 @@ function NewTaskModal({
     const [taskPriority, setTaskPriority] = useState(null);
     const [taskDeadline, setTaskDeadline] = useState(null);
     const [taskAssignedTo, setTaskAssignedTo] = useState(null);
-    const [subtasks, setSubtasks] = useState([]);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
     async function createNewTask() {
@@ -51,8 +49,7 @@ function NewTaskModal({
 					priority: taskPriority.value,
 					deadline: taskDeadline,
 					assignedTo: taskAssignedTo.value,
-					assignedBy: currentMemberId,
-					subtasks: subtasks
+					assignedBy: currentMemberId
 				}
 			);
 
@@ -154,13 +151,7 @@ function NewTaskModal({
 						selected={taskAssignedTo}
 						setValue={setTaskAssignedTo}
 						options={assignToOptions}
-					/>                   
-					<SubtaskInput
-						disabled={isNewTaskBeingCreated}
-						subtasks={subtasks}
-						setSubtasks={setSubtasks}
-						lastId={subtasks.length}
-					/>                                
+					/>                               
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
