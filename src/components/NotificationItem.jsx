@@ -25,7 +25,7 @@ function NotificationItem({
 			transition-all duration-300 hover:shadow-md cursor-pointer
 			${
         !notification.isViewed
-          ? "border-l-4 border-l-blue-500 dark:border-l-blue-500"
+          ? "border-l-[6px] border-l-blue-500 dark:border-l-blue-500"
           : "border"
       }
 			${isSelected ? "bg-blue-50/80 dark:bg-neutral-900" : "bg-white dark:bg-black"}
