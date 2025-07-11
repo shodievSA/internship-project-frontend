@@ -10,7 +10,7 @@ function LoadingInvites() {
                 </div>
                 <div>
                     <h1 className="text-xl font-medium text-slate-500 dark:text-neutral-300">
-                        Hang on - your notifications are on their way!
+                        Hang on - your invites are on their way!
                     </h1>
                 </div>
             </div>
