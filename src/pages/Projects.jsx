@@ -57,7 +57,7 @@ function Projects() {
 
 		}
 
-	}, [projects, projectsLoaded]);
+	}, [projects, projectsLoaded, error]);
 
 	const currentFilters = useMemo(() => ({
 
