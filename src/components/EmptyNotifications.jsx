@@ -7,7 +7,7 @@ function EmptyNotifications() {
             <div className="flex flex-col gap-y-4 md:gap-y-5">
                 <div className="flex flex-col gap-y-4 md:gap-y-6 items-center">
                     <div className="p-4 md:p-6 rounded-full dark:bg-neutral-900 bg-slate-100">
-                        <Bell className="w-10 h-10 md:w-14 md:h-14 text-purple-700 animate-pulse" />
+                        <Bell className="w-10 h-10 md:w-14 md:h-14 text-purple-700" />
                     </div>
                     <h1 className="text-lg md:text-2xl font-semibold">You're all caught up!</h1>
                 </div>
