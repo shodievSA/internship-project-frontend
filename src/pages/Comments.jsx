@@ -1,10 +1,12 @@
 import { useLocation } from "react-router-dom";
-import Button from "../components/ui/Button";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 function Comments() {
 
 	const { state: { taskTitle } } = useLocation();
+
+	const navigate = useNavigate();
 
 	const mockData = [
 		{
@@ -40,8 +42,11 @@ function Comments() {
 	return (
 		<div className="h-full flex flex-col px-8 pt-6 gap-y-5">
 			<div className="flex gap-x-5 items-center">
-				<button className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
-				dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2">
+				<button 
+					className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
+					dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2"
+					onClick={() => navigate(-1)}
+				>
 					<ArrowLeft className="w-4 h-4" />
 				</button>
 				<h1 className="text-xl font-semibold">{ taskTitle }</h1>					

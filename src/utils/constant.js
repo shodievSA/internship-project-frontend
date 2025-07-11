@@ -10,6 +10,20 @@ export const statusColors = {
     completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/10 dark:text-slate-400 dark:border dark:border-slate-500/20"
 } 
 
+export const taskStatusColors = {
+	"ongoing": "bg-blue-500 dark:bg-blue-800 text-white dark:text-white",
+	"under review": "bg-purple-500 dark:bg-purple-800 text-white dark:text-white",
+	"closed": "bg-green-500 dark:bg-green-800 text-white dark:text-white",
+	"rejected": "bg-red-500 dark:bg-red-800 text-white dark:text-white",
+	"overdue": "bg-orange-500 dark:bg-orange-800 text-white dark:text-white"
+}
+
+export const taskPriorityColors = {
+	high: "bg-red-500 dark:bg-red-800 text-white dark:text-white",
+	middle: "bg-amber-500 dark:bg-amber-800 text-white dark:text-white",
+	low: "bg-green-500 dark:bg-emerald-800 text-white dark:text-white"
+}
+
 export const statusOptions = [
     { label: "All Status", value: "all" },
     { label: "Active", value: "active" },
