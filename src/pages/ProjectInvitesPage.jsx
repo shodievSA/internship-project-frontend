@@ -8,8 +8,6 @@ import { EmptyInvitation } from "../components/EmptyInvitation";
 import Button from "../components/ui/Button";
 import SearchBar from "../components/SearchBar";
 import SendInviteModal from "../components/SendInviteModal";
-import ErrorState from "../components/ErrorState";
-import LoadingState from "../components/LoadingState";
 import EmptyProjectInvites from "../components/EmptyProjectInvites";
 import Unauthorized from "../components/Unauthorized";
 
@@ -56,9 +54,7 @@ function ProjectInvitesPage() {
 
     }, [projectLoaded, invites, statusFilter, searchTerm]);
 
-    if (!projectLoaded) return <LoadingState message={"Hang tight - fetching your project invites!"} />;
     if (currentMemberRole !== 'admin') return <Unauthorized message={`Oops! Looks like this page is for special eyes only - ${currentMemberRole}s not allowed.`} />
-    if (!invites) return <ErrorState message={"Your project invites are being a little shy… try refreshing."} />;
     if (showInviteModal) return <SendInviteModal closeModal={closeModal} onNewInviteCreated={handleNewInvite} />
     if (invites.length === 0) return <EmptyProjectInvites openModal={openModal} />
 

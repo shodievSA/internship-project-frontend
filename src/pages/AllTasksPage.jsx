@@ -5,8 +5,6 @@ import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
 import RegularTask from "../components/RegularTask";
-import LoadingState from "../components/LoadingState";
-import ErrorState from "../components/ErrorState";
 import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 
@@ -45,8 +43,6 @@ function AllTasksPage() {
 
 	};
 
-	if (!projectLoaded) return <LoadingState message={"Loading project's tasks"} />;
-	if (!tasks) return <ErrorState message={"Well, that didn’t go as planned - couldn’t load the project’s tasks"} />;
 	if (tasks.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />;
 
     return (

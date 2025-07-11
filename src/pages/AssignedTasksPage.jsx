@@ -5,8 +5,6 @@ import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
 import AssignedTask from "../components/AssignedTask";
-import LoadingState from "../components/LoadingState";
-import ErrorState from "../components/ErrorState";
 import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 import Unauthorized from "../components/Unauthorized";
@@ -59,9 +57,7 @@ function AssignedTasksPage() {
 
     }
 
-    if (!projectLoaded) return <LoadingState message={"Loading your assigned tasks"} />
     if (currentMemberRole === 'member') return <Unauthorized message={`Oops! Looks like this page is for special eyes only - ${currentMemberRole}s not allowed.`} />
-    if (!tasks) return <ErrorState message={"Uh-oh! Your assigned tasks are playing hide and seek. Try refreshing the page"} />
     if (assignedTasks.length === 0) return <EmptyState message={"You haven’t assigned any tasks yet... your clipboard is feeling lonely!"} />
 
     return (

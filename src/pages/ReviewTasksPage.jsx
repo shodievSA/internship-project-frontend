@@ -5,8 +5,6 @@ import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
 import ReviewTask from "../components/ReviewTask";
-import LoadingState from "../components/LoadingState";
-import ErrorState from "../components/ErrorState";
 import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 import Unauthorized from "../components/Unauthorized";
@@ -76,9 +74,7 @@ function ReviewTasksPage() {
 
     }
 
-    if (!projectLoaded) return <LoadingState message={"One moment… making sense of your chaos"} />
     if (currentMemberRole === 'member') return <Unauthorized message={`Oops! Looks like this page is for special eyes only - ${currentMemberRole}s not allowed.`} />
-    if (!tasks) return <ErrorState message={"Oops! Something went wrong while loading your tasks. Give it another try."} />
     if (reviewTasks.length === 0) return <EmptyState message={"You’re all caught up - no tasks to review for now. Time to kick back and enjoy the calm!"} />
 
     return (

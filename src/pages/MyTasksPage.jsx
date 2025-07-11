@@ -5,8 +5,6 @@ import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
 import MyTask from "../components/MyTask";
-import LoadingState from "../components/LoadingState";
-import ErrorState from "../components/ErrorState";
 import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 
@@ -59,8 +57,6 @@ function MyTasksPage() {
 
     }
 
-    if (!projectLoaded) return <LoadingState message={"One moment… making sense of your chaos"} />
-    if (!tasks) return <ErrorState message={"Oops! Something went wrong while loading your tasks. Give it another try."} />
     if (myTasks.length === 0) return <EmptyState message={"All clear! No tasks for now - enjoy the calm before the storm"} />
 
     return (
