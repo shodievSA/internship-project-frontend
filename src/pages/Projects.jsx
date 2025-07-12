@@ -115,6 +115,7 @@ function Projects() {
 	};
 
 	if (error) return <ErrorState message={"Looks like your projects are playing hide and seek. Can’t find them!"} />;
+	if (showNewProjectModal) return <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} onProjectCreated={handleProjectCreated} />
 	if (userProjectCount === 0) return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
 
 	return (
@@ -161,14 +162,6 @@ function Projects() {
 					}
 				</div>
 			</div>
-			{
-				showNewProjectModal && (
-					<NewProjectModal
-						setShowNewProjectModal={setShowNewProjectModal}
-						onProjectCreated={handleProjectCreated}
-					/>
-				)
-			}
 		</div>
 	);
 

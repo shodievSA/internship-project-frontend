@@ -132,7 +132,8 @@ function UpdateTaskModal({
 			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex flex-col gap-y-8">
 					<InputField
-						label="Task Title (optional)"
+						label="Task Title"
+						required={true}
 						disabled={taskBeingUpdated}
 						placeholder="Enter a clear and concise task title"
 						value={newTaskTitle}

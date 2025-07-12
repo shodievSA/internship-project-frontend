@@ -84,6 +84,7 @@ function NewTaskModal({
 	useEffect(() => {
 
 		if (
+			taskTitle &&
 			taskDescription &&
 			taskPriority &&
 			taskDeadline &&
@@ -99,6 +100,7 @@ function NewTaskModal({
 		taskPriority,
 		taskDeadline,
 		taskAssignedTo,
+		taskTitle
 	   ]
 	);
 
@@ -108,7 +110,8 @@ function NewTaskModal({
 			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
                 <div className="flex flex-col gap-y-8">
                     <InputField
-                        label="Task Title (optional)"
+                        label="Task Title"
+						required={true}
                         disabled={isNewTaskBeingCreated}
                         placeholder="Enter a clear and concise task title"
                         value={taskTitle}
@@ -140,7 +143,7 @@ function NewTaskModal({
 						/>
 						<DatePicker
 							disabled={isNewTaskBeingCreated} 
-							onChange={(e) => setTaskDeadline(e.target.value)}
+							onChange={(e) => setTaskDeadline(e.target.value + "T00:00:00+05:00")}
 						/>
                     </div>
 					<SelectField
