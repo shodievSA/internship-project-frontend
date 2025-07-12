@@ -36,7 +36,7 @@ function NotificationItem({
         {/* Checkbox */}
         <div
           className="flex items-center justify-center w-5 h-5 bg-white dark:bg-neutral-800 rounded-full 
-					p-0.5 cursor-pointer border border-neutral-500"
+			p-0.5 cursor-pointer border border-neutral-500"
           onClick={(e) => {
             onSelect(notification.id);
             e.stopPropagation();

@@ -63,14 +63,14 @@ function AssignedTask({ projectId, task, team }) {
 
 	return (
 		<>
-			<div className="flex flex-col gap-y-5 gap-x-5 dark:border-neutral-800 
+			<div className="flex flex-col gap-y-4 gap-x-5 dark:border-neutral-800 
 			border-[1px] p-5 rounded-md">
-				<div className="flex flex-col gap-y-4">
-					<div className="flex items-center justify-between">
+				<div className="flex flex-col gap-y-2">
+					<div className="flex items-start justify-between">
 						<h1 className="font-semibold md:text-lg">
 							{ title }
 						</h1>
-						<div className="flex gap-x-6">
+						<div className="flex items-start gap-x-6">
 							<div className="flex gap-x-6">
 								<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
 								py-1.5 rounded-full`}>
@@ -90,7 +90,7 @@ function AssignedTask({ projectId, task, team }) {
 									className="px-1 py-1.5 dark:hover:bg-neutral-900 rounded-md"
 									onClick={() => setEditButtonClicked(!editButtonClicked)}
 								>
-									{ <EllipsisVertical className="w-5 h-5" /> }
+									{ <EllipsisVertical className="w-4 h-4" /> }
 								</button>
 								{
 									editButtonClicked && (

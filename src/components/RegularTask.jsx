@@ -17,9 +17,9 @@ function RegularTask({ task }) {
 	} = task;
 
 	return (
-		<div className="flex flex-col gap-y-5 gap-x-5 dark:border-neutral-800 
+		<div className="flex flex-col gap-y-4 gap-x-5 dark:border-neutral-800 
 		border-[1px] p-5 rounded-md">
-			<div className="flex flex-col gap-y-4">
+			<div className="flex flex-col gap-y-2">
 				<div className="flex justify-between items-center">
 					<h1 className="font-semibold md:text-lg">
 						{ title }
