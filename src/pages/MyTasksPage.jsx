@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
@@ -11,6 +12,7 @@ import { Calendar, Filter } from "lucide-react";
 function MyTasksPage() {
 
     const { tasks, setTasks, projectLoaded, currentMemberId } = useProject();
+	const location = useLocation();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -56,6 +58,35 @@ function MyTasksPage() {
         }));
 
     }
+
+	useEffect(() => {
+
+		if (projectLoaded && location.hash) {
+
+			const elementId = location.hash.substring(1);
+			const element = document.getElementById(elementId);
+
+			if (element) {
+
+				element.scrollIntoView({ behavior: "smooth", block: "start" });
+
+				setTimeout(() => {
+
+					element.classList.add("animate-task-ping-light", "dark:animate-task-ping-dark");
+
+					setTimeout(() => {
+
+						element.classList.remove("animate-task-ping-light", "dark:animate-task-ping-dark");
+
+					}, 500);
+
+				}, 800);
+
+			}
+
+		}
+
+	}, [location, projectLoaded]);
 
     if (myTasks.length === 0) return <EmptyState message={"All clear! No tasks for now - enjoy the calm before the storm"} />
 

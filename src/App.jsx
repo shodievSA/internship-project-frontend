@@ -13,7 +13,7 @@ import AssignedTasksPage from "./pages/AssignedTasksPage";
 import ReviewTasksPage from "./pages/ReviewTasksPage";
 import ProjectInvitesPage from "./pages/ProjectInvitesPage";
 import Notifications from "./pages/Notifications";
-import AiPlanner from "./pages/AiPlanner";
+import Organizer from "./pages/Organizer";
 import SignIn from "./pages/SignIn";
 import UserInvites from "./pages/UserInvites";
 import PrivateRoute from "./components/PrivateRoute";
@@ -46,7 +46,7 @@ function App() {
 								<Route path="/projects/:projectId/assigned-tasks/:taskId/comments" element={<Comments />} />
 								<Route path="/projects/:projectId/team/:memberId" element={<TeamMemberDetailsPage />} />
 								<Route path="/notifications" element={<Notifications />} />
-								<Route path="/ai-planner" element={<AiPlanner />} />
+								<Route path="/organizer" element={<Organizer />} />
 								<Route path="/invites" element={<UserInvites />} />
 							</Route>
 							<Route path="/sign-in" element={<SignIn />} /> 

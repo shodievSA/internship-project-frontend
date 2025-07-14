@@ -20,17 +20,18 @@ function NotificationItem({
 
   return (
     <div
-      className={`
-			relative bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-md p-4 mb-3
-			transition-all duration-300 hover:shadow-md cursor-pointer
-			${
-        !notification.isViewed
-          ? "border-l-[6px] border-l-blue-500 dark:border-l-blue-500"
-          : "border"
-      }
-			${isSelected ? "bg-blue-50/80 dark:bg-neutral-900" : "bg-white dark:bg-black"}
-		`}
-      onClick={() => onSelect(notification.id)}
+		id={"notification-" + notification.id}
+		className={`
+				relative bg-white dark:bg-black border border-gray-200 dark:border-neutral-800 rounded-md p-4 mb-3
+				transition-all duration-300 hover:shadow-md cursor-pointer
+				${
+			!notification.isViewed
+			? "border-l-[6px] border-l-blue-500 dark:border-l-blue-500"
+			: "border"
+		}
+				${isSelected ? "bg-blue-50/80 dark:bg-neutral-900" : "bg-white dark:bg-black"}
+			`}
+		onClick={() => onSelect(notification.id)}
     >
       <div className="flex items-start gap-5">
         {/* Checkbox */}

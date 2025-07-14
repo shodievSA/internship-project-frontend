@@ -64,7 +64,51 @@ export default {
             opacity: '1',
             transform: 'translateY(0)'
           },
-        }
+        },
+		'task-ping-light': {
+			'0%': {
+				backgroundColor: "white"
+			},
+			'50%': {
+				backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity, 1))"
+			},
+			'100%': {
+				backgroundColor: "white"
+			}
+		},
+		'task-ping-dark': {
+			'0%': {
+				backgroundColor: "black"
+			},
+			'50%': {
+				backgroundColor: "rgb(23 23 23 / var(--tw-bg-opacity, 1))"
+			},
+			'100%': {
+				backgroundColor: "black"
+			}
+		},
+		'notification-ping-light': {
+			'0%': {
+				backgroundColor: "white"
+			},
+			'50%': {
+				backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity, 1))"
+			},
+			'100%': {
+				backgroundColor: "white"
+			}
+		},
+		'notification-ping-dark': {
+			'0%': {
+				backgroundColor: "black"
+			},
+			'50%': {
+				backgroundColor: "rgb(23 23 23 / var(--tw-bg-opacity, 1))"
+			},
+			'100%': {
+				backgroundColor: "black"
+			}
+		}
       },
       animation: {
         'fade-in': 'fade-in 0.6s ease-out',
@@ -87,7 +131,11 @@ export default {
         'icon-spin': 'icon-spin 1s linear infinite',
         'feature-bounce': 'feature-bounce 2s ease-in-out infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out',
-		'spin-slow': 'spin 3s linear infinite'
+		'spin-slow': 'spin 3s linear infinite',
+		'task-ping-light': 'task-ping-light 0.75s ease-in-out',
+		'task-ping-dark': 'task-ping-dark 0.75s ease-in-out',
+		'notification-ping-light': 'notification-ping-light 0.75s ease-in-out',
+		'notification-ping-dark': 'notification-ping-dark 0.75s ease-in-out'
       }
     },
   },

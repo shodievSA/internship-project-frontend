@@ -83,8 +83,11 @@ function MyTask({ task, onTaskSubmit }) {
 
 	return (
 		<>
-			<div className="flex flex-col gap-y-4 gap-x-5 dark:border-neutral-800 
-			border-[1px] p-5 rounded-md">
+			<div 
+				id={"task-" + task.id} 
+				className="flex flex-col gap-y-4 gap-x-5 dark:border-neutral-800 
+				border-[1px] p-5 rounded-md"
+			>
 				<div className="flex flex-col gap-y-2">
 					<div className="flex justify-between">
 						<h1 className="font-semibold md:text-lg">

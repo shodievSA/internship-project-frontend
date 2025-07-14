@@ -120,7 +120,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                         <House className="w-5 h-5" />
                                         <span>Dashboard</span>
                                     </NavLink>
-                                    <NavLink to={'/ai-planner'} className='dark:hover:bg-zinc-900/60 dark:text-neutral-300
+                                    <NavLink to={'/organizer'} className='dark:hover:bg-zinc-900/60 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
                                         <Sparkles className="w-5 h-5" />
