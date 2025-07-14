@@ -17,6 +17,8 @@ function Organizer() {
 	const [reportFetched, setReportFetched] = useState(false);
 	const [error, setError] = useState();
 
+	console.log(dailyReport);
+
 	useEffect(() => {
 
 		async function getDailyReport() {
@@ -24,7 +26,7 @@ function Organizer() {
 			try {
 	
 				const { report } = await organizerService.getDailyReport();
-				setDailyReport(report.report);
+				setDailyReport(report ? report.report : null);
 	
 			} catch(err) {
 	
