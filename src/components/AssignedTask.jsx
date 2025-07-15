@@ -20,7 +20,7 @@ import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 
-function AssignedTask({ projectId, task, team }) {
+function AssignedTask({ projectId, currentMemberId, task, team }) {
 
 	const {
 		id,
@@ -58,8 +58,6 @@ function AssignedTask({ projectId, task, team }) {
 		return () => document.removeEventListener("click", handleClickOutside);
 		
 	}, [editButtonClicked]);
-
-	console.log(history)
 
 	return (
 		<>
@@ -263,7 +261,8 @@ function AssignedTask({ projectId, task, team }) {
 							size="md"
 							onClick={() => navigate(`${id}/comments`, {
 								state: {
-									taskTitle: title
+									task: task,
+									currentMemberId: currentMemberId
 								}
 							})}
 						>

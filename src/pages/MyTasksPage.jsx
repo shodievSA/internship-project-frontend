@@ -68,7 +68,7 @@ function MyTasksPage() {
 
 			if (element) {
 
-				element.scrollIntoView({ behavior: "smooth", block: "start" });
+				element.scrollIntoView({ behavior: "smooth", block: "center" });
 
 				setTimeout(() => {
 
@@ -132,6 +132,7 @@ function MyTasksPage() {
                                     key={task.id}
                                     task={task}
                                     onTaskSubmit={onTaskSubmit}
+									currentMemberId={currentMemberId}
                                 />
                             ))
                         ) : (

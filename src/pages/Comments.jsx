@@ -1,94 +1,251 @@
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, SendHorizontal } from "lucide-react";
+import commentService from "../services/commentService";
+import EmptyState from "../components/EmptyState";
+const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
-
-	const { state: { taskTitle } } = useLocation();
+	
+	const { projectId, taskId } = useParams();
+	const { state: { task, currentMemberId } } = useLocation();
 
 	const navigate = useNavigate();
 
-	const mockData = [
-		{
-			sentBy: "John Doe",
-			role: "Project Manager",
-			message: "Let's make sure we follow the design system guidelines for this task.",
-			avatarUrl: "https://lh3.googleusercontent.com/a/ACg8ocJMDbkWRgF0z2vbmrLVfHTYp6WsAC5WH3JNoMsCCFcGnlUfmDI=s96-c",
-			createdAt: "Feb 15, 10:30 AM"
-		},
-		{
-			sentBy: "Sarah Johnson",
-			role: "Lead Developer",
-			message: "I've started working on the wireframes. Will share a draft by tomorrow.",
-			avatarUrl: "https://lh3.googleusercontent.com/a/ACg8ocKWpF6moTyd8FDTVwR9b8WDJx8PSGiNFdfcxikct3-y42SFIw=s96-c",
-			createdAt: "Feb 15, 10:30 AM"
-		},
-		{
-			sentBy: "John Doe",
-			role: "Project Manager",
-			message: "I've looked at some competitor websites and have some ideas for our approach. Let's discuss in the next meeting.",
-			avatarUrl: "https://lh3.googleusercontent.com/a/ACg8ocJMDbkWRgF0z2vbmrLVfHTYp6WsAC5WH3JNoMsCCFcGnlUfmDI=s96-c",
-			createdAt: "Feb 15, 10:30 AM"
-		},
-		{
-			sentBy: "Sarah Johnson",
-			role: "Lead Developer",
-			message: "I've started working on the wireframes. Will share a draft by tomorrow.",
-			avatarUrl: "https://lh3.googleusercontent.com/a/ACg8ocKWpF6moTyd8FDTVwR9b8WDJx8PSGiNFdfcxikct3-y42SFIw=s96-c",
-			createdAt: "Feb 15, 10:30 AM"
-		},
-	]
+	const socketRef = useRef(null);
+	const chatWindowRef = useRef(null);
+
+	const [comments, setComments] = useState([]);
+	const [commentMessage, setCommentMessage] = useState("");
+	const [commentsFetched, setCommentsFetched] = useState(false);
+
+	const chatPartner = useMemo(() => {
+		return (currentMemberId !== task.assignedBy.id ? task.assignedBy : task.assignedTo);
+	}, [task, currentMemberId]);
+
+	const currentUser = useMemo(() => {
+		return (currentMemberId === task.assignedBy.id ? task.assignedBy : task.assignedTo);
+	}, [task, currentMemberId]);
+
+	function sendComment() {
+
+		socketRef.current.send(JSON.stringify({
+			type: "new-comment",
+			message: commentMessage,
+			taskId: taskId,
+			memberId: currentMemberId
+		}));
+
+		setCommentMessage("");
+
+	}
+
+	function handleOnKeyDown(event) {
+
+		if (event.key === "Enter" && !event.shiftKey && commentMessage) {
+
+			event.preventDefault();
+			sendComment();
+
+		}
+
+	}
+
+	useEffect(() => {
+
+		socketRef.current = new WebSocket(`ws://${SERVER_HOST}/comments`);
+
+		socketRef.current.onopen = (event) => {
+
+			if (event.type === "open") {
+
+				socketRef.current.send(JSON.stringify({
+					type: "join-comment-section",
+					taskId: taskId
+				}));
+
+			}
+
+		}
+
+		socketRef.current.onmessage = (event) => {
+
+			const data = JSON.parse(event.data);
+
+			if (data.type === "new-comment") {
+
+				const newComment = data.comment;
+
+				setComments((prevComments) => [...prevComments, newComment]);
+
+			}
+
+		}
+
+		return () => {
+
+			socketRef.current.close(1000, "Closing the websocket connection from the client side normally!");
+
+		}
+
+	}, []);
+
+	useEffect(() => {
+
+		async function getTaskComments() {
+
+			try {
+	
+				const { comments } = await commentService.getTaskComments(projectId, taskId);
+				setComments(comments);
+	
+			} catch(err) {
+
+				console.log(err.message);
+
+			} finally {
+
+				setCommentsFetched(true);
+
+			}
+
+		}
+
+		getTaskComments();
+
+	}, []);
+
+	useEffect(() => {
+
+		if (commentsFetched && chatWindowRef.current) {
+
+			chatWindowRef.current.scrollTo({
+				top: chatWindowRef.current.scrollHeight,
+				behavior: "smooth"
+			});
+
+		}
+
+	}, [comments, commentsFetched]);
+
+	if (!commentsFetched) return <div>Loading task's comments</div>;
 
 	return (
-		<div className="h-full flex flex-col px-8 pt-6 gap-y-5">
-			<div className="flex gap-x-5 items-center">
-				<button 
-					className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
-					dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2"
-					onClick={() => navigate(-1)}
-				>
-					<ArrowLeft className="w-4 h-4" />
-				</button>
-				<h1 className="text-xl font-semibold">{ taskTitle }</h1>					
+		<div className="h-full flex flex-col px-8 pt-4">
+			<div className="flex justify-between items-center pb-6">
+				<div className="flex items-center gap-x-5">
+					<button 
+						className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
+						dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2"
+						onClick={() => navigate(-1)}
+					>
+						<ArrowLeft className="w-4 h-4" />
+					</button>
+					<h1 className="text-lg font-medium">{ task.title }</h1>	
+				</div>		
+				<div>
+					<div className="flex items-center gap-x-2">
+						<img src={chatPartner.avatarUrl} className="w-10 h-10 rounded-full" />
+						<div className="flex flex-col text-sm">
+							<span className="font-medium">{chatPartner.name}</span>
+							<span>{chatPartner.position}</span>
+						</div>
+					</div>
+				</div>		
 			</div>
-			<div className="grow flex flex-col gap-y-8 scrollbar-thin dark:scrollbar-thumb-neutral-950 
-			dark:scrollbar-track-neutral-800 overflow-y-auto">
-				<div className="px-5 flex flex-col gap-y-4 py-5">
-					{
-						mockData.length === 0 ? (
-							<div>This task doesn't have any comments</div>
-						) : (
-							mockData.map((comment) => {
-								return (
-									<div className="flex flex-col p-4 border dark:border-neutral-800 
-									rounded-md gap-y-4">
-										<div className="flex gap-x-2">
-											<img src={comment.avatarUrl} className="w-10 h-10 rounded-full" />
-											<div className="flex flex-col">
-												<h1 className="text-sm">{ comment.sentBy }</h1>
-												<h3 className="text-xs">{ comment.role }</h3>
-											</div>
-											<span className="ml-auto text-sm">{ comment.createdAt }</span>
-										</div>
-										<div>
-											<p>{ comment.message }</p>
-										</div>
-									</div>
-								)
-							})
-						)
-					}
+			<div className="flex flex-col flex-1 min-h-0 gap-y-4">
+				{
+					comments.length === 0 ? (
+						<EmptyState message={"No comments yet - be the first to break the silence!"} />
+					) : (
+						<div 
+							ref={chatWindowRef} 
+							className="h-full flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
+							dark:scrollbar-track-neutral-800 overflow-y-auto"
+						>
+							<div className="pr-5 flex flex-col gap-y-4 py-5">						
+								<div className="flex flex-col gap-y-3">
+									{ 										
+										comments.map((comment) => {
+											return (comment.projectMemberId === currentMemberId) ? (																							
+												<div className="flex items-start gap-x-3 max-w-md ml-auto">
+													<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+													dark:border-neutral-700 bg-neutral-200 dark:bg-neutral-900">
+														<p>{comment.message}</p>
+														<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+															<span>{getTimeFromIso(comment.createdAt)}</span>
+															<span>{getDateFromIso(comment.createdAt)}</span>
+														</div>
+													</div>
+													<img src={currentUser.avatarUrl} className="w-8 h-8 rounded-full" />
+												</div>
+											) : (				
+												<div className="flex flex-col max-w-md mr-auto gap-y-2">
+													<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
+													<div className="flex items-start gap-x-3">
+														<img src={chatPartner.avatarUrl} className="w-8 h-8 rounded-full" />
+														<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+														dark:border-neutral-700">
+															<p>{comment.message}</p>
+															<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+																<span>{getTimeFromIso(comment.createdAt)}</span>
+																<span>{getDateFromIso(comment.createdAt)}</span>
+															</div>
+														</div>
+													</div>
+												</div>								
+											)
+										}) 										
+									}
+								</div>													
+							</div>
+						</div>									
+					)
+				}
+				<div className="h-32 pb-4">
+					<div className="flex flex-col border dark:border-neutral-700 rounded-md">
+						<textarea 
+							className="w-full h-full rounded-md resize-none dark:bg-black 
+							focus:outline-none p-3 scrollbar-none"
+							placeholder="Write your commend here..."
+							onKeyDown={handleOnKeyDown}
+							value={commentMessage}
+							onChange={(e) => setCommentMessage(e.target.value)}
+						/>
+						<div 
+							className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-100 
+							dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
+							onClick={sendComment}
+						>
+							<SendHorizontal className="w-5 h-5 text-neutral-500 dark:text-white" />
+						</div>
+					</div>
 				</div>
-			</div>			
-			<div className="h-40 p-6">
-				<textarea 
-					className="w-full h-full rounded-md resize-none dark:bg-black 
-					focus:outline-none p-3 border dark:border-neutral-800"
-					placeholder="Write your commend here..."
-				/>
 			</div>
 		</div>
 	);
+
+}
+
+function getTimeFromIso(isoString) {
+
+	const date = new Date(isoString);
+	const timeString = date.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false
+	});
+
+	return timeString;
+
+}
+
+function getDateFromIso(isoString) {
+
+	const date = new Date(isoString);
+	const dateString = date.toLocaleDateString("en-US");
+
+	return dateString;
 
 }
 

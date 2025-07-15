@@ -19,7 +19,7 @@ import AiEditor from "./AiEditor";
 import projectService from "../services/projectService";
 import { useToast } from "./ui/ToastProvider";
 
-function MyTask({ task, onTaskSubmit }) {
+function MyTask({ task, onTaskSubmit, currentMemberId }) {
 
 	const {
 		id,
@@ -269,7 +269,10 @@ function MyTask({ task, onTaskSubmit }) {
 							variant="secondary" 
 							size="md" 
 							onClick={() => navigate(`${id}/comments`, {
-								state: { taskTitle: title }
+								state: { 
+									task: task,
+									currentMemberId: currentMemberId
+								}
 							})}
 						>
 							<div className="flex items-center gap-x-2 text-sm">

@@ -102,6 +102,7 @@ function AssignedTasksPage() {
                                     key={task.id}
                                     task={task}
                                     projectId={metaData.id}
+									currentMemberId={currentMemberId}
                                     team={team}
                                 />
                             ))
