@@ -43,8 +43,8 @@ function ProjectLayoutHeader({
 	return (
 		<>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6">
-				<div className="flex items-center justify-between md:justify-start gap-x-6">
-					<h1 className="text-xl md:text-2xl font-bold">
+				<div className="flex items-center justify-between md:justify-start gap-x-4">
+					<h1 className="text-xl md:text-xl font-bold">
 						{ metaData.title }
 					</h1>
 					<div className={`${statusColors[metaData.status]} status-badge px-3 py-1 
