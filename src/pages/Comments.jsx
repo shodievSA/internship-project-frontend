@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, SendHorizontal } from "lucide-react";
+import { ArrowLeft, SendHorizontal, Pencil, Check, X, Trash } from "lucide-react";
 import commentService from "../services/commentService";
 import EmptyState from "../components/EmptyState";
+import LoadingState from "../components/LoadingState";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
@@ -37,6 +38,27 @@ function Comments() {
 		}));
 
 		setCommentMessage("");
+
+	}
+
+	function onCommentUpdate(commentId, updatedComment) {
+
+		socketRef.current.send(JSON.stringify({
+			type: "update-comment",
+			commentId: commentId,
+			updatedComment: updatedComment,
+			taskId: taskId
+		}));
+
+	}
+
+	function onCommentDelete(commentId) {
+
+		socketRef.current.send(JSON.stringify({
+			type: "delete-comment",
+			commentId: commentId,
+			taskId: taskId
+		}));
 
 	}
 
@@ -78,6 +100,22 @@ function Comments() {
 
 				setComments((prevComments) => [...prevComments, newComment]);
 
+			} else if (data.type === "updated-comment") {
+
+				const updatedComment = data.updatedComment;
+
+				setComments((prevComments) => prevComments.map((comment) => {
+					return (comment.id === updatedComment.id) ? updatedComment : comment
+				}));
+
+			} else if (data.type === "deleted-comment") {
+
+				const deletedCommentId = data.deletedCommentId;
+
+				setComments((prevComments) => prevComments.filter((comment) => {
+					return comment.id !== deletedCommentId
+				}));
+
 			}
 
 		}
@@ -105,7 +143,9 @@ function Comments() {
 
 			} finally {
 
-				setCommentsFetched(true);
+				setTimeout(() => {
+					setCommentsFetched(true);
+				}, 500);
 
 			}
 
@@ -128,7 +168,7 @@ function Comments() {
 
 	}, [comments, commentsFetched]);
 
-	if (!commentsFetched) return <div>Loading task's comments</div>;
+	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
 	return (
 		<div className="h-full flex flex-col px-8 pt-4">
@@ -168,32 +208,17 @@ function Comments() {
 									{ 										
 										comments.map((comment) => {
 											return (comment.projectMemberId === currentMemberId) ? (																							
-												<div className="flex items-start gap-x-3 max-w-md ml-auto">
-													<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-													dark:border-neutral-700 bg-neutral-200 dark:bg-neutral-900">
-														<p>{comment.message}</p>
-														<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
-															<span>{getTimeFromIso(comment.createdAt)}</span>
-															<span>{getDateFromIso(comment.createdAt)}</span>
-														</div>
-													</div>
-													<img src={currentUser.avatarUrl} className="w-8 h-8 rounded-full" />
-												</div>
+												<CurrentUserComment 
+													comment={comment} 
+													currentUser={currentUser}
+													onCommentUpdate={onCommentUpdate} 
+													onCommentDelete={onCommentDelete}
+												/>
 											) : (				
-												<div className="flex flex-col max-w-md mr-auto gap-y-2">
-													<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
-													<div className="flex items-start gap-x-3">
-														<img src={chatPartner.avatarUrl} className="w-8 h-8 rounded-full" />
-														<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-														dark:border-neutral-700">
-															<p>{comment.message}</p>
-															<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
-																<span>{getTimeFromIso(comment.createdAt)}</span>
-																<span>{getDateFromIso(comment.createdAt)}</span>
-															</div>
-														</div>
-													</div>
-												</div>								
+												<ChatPartnerComment 
+													comment={comment} 
+													chatPartner={chatPartner} 
+												/>				
 											)
 										}) 										
 									}
@@ -224,6 +249,162 @@ function Comments() {
 			</div>
 		</div>
 	);
+
+}
+
+function CurrentUserComment({ 
+	comment, 
+	currentUser, 
+	onCommentUpdate,
+	onCommentDelete 
+}) {
+
+	const [showEditInput, setShowEditInput] = useState(false);
+	const [newMessage, setNewMessage] = useState();
+
+	function handleOnKeyDown(e) {
+
+		if (
+			e.key === "Enter" 
+			&& 
+			!e.shiftKey 
+			&& 
+			isUpdateValid()
+		) {
+
+			onCommentUpdate(comment.id, newMessage);
+			setShowEditInput(false);
+
+		}
+
+	}
+
+	function updateComment(commentId, newMessage) {
+
+		if (isUpdateValid()) {
+
+			onCommentUpdate(commentId, newMessage);
+			setShowEditInput(false);
+
+		}
+
+	}
+
+	function deleteComment(commentId) {
+
+		onCommentDelete(commentId);
+
+	}
+
+	function reverseChanges() {
+
+		setShowEditInput(false);
+
+	}
+
+	function onEditButtonClicked() {
+
+		setNewMessage(comment.message);
+		setShowEditInput(true);
+
+	}
+
+	function isUpdateValid() {
+
+		return (
+			newMessage.trim() !== "" 
+			&& 
+			newMessage.trim() !== comment.message
+		);
+
+	}
+
+	return (
+		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
+			{
+				showEditInput ? (
+					<div className="min-w-[400px] h-28 bg-neutral-100 dark:bg-neutral-900 
+					rounded-md border dark:border-neutral-700">
+						<div className="flex flex-col h-full">
+							<textarea 
+								className="w-full h-full resize-none dark:bg-black focus:outline-none 
+								px-3 pt-3 scrollbar-none rounded-md bg-neutral-100 dark:bg-neutral-900"
+								placeholder="Edit your commend here..."
+								onKeyDown={handleOnKeyDown}
+								value={newMessage}
+								onChange={(e) => setNewMessage(e.target.value)}
+							></textarea>
+							<div className="grow flex items-center gap-x-4 p-2 p-2">
+								<div 
+									className="p-1 rounded-md hover:bg-red-700/10 hover:dark:bg-red-700/30 
+									cursor-pointer"
+									onClick={() => deleteComment(comment.id)}
+								>
+									<Trash className="w-4 h-4 text-red-700 dark:text-red-800" />
+								</div>
+								<div className="flex gap-x-4 ml-auto">
+									<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
+									cursor-pointer">
+										<Check 
+											className="w-4 h-4" 
+											onClick={() => updateComment(comment.id, newMessage)}
+										/>
+									</div>
+									<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
+									cursor-pointer">
+										<X 
+											className="w-4 h-4" 
+											onClick={reverseChanges} 
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				) : (
+					<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+					dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
+						<div className="flex justify-between gap-x-5 group/item">
+							<p>{comment.message}</p>
+							<div 
+								className="opacity-0 group-hover/item:opacity-100 transition-[opacity]
+								duration-300 self-start cursor-pointer"
+								onClick={onEditButtonClicked}
+							>
+								<Pencil className="w-3.5 h-3.5 mt-0.5" />
+							</div>
+						</div>
+						<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+							<span>{ getTimeFromIso(comment.createdAt) }</span>
+							<span>{ getDateFromIso(comment.createdAt) }</span>
+						</div>
+					</div>
+				)
+			}
+			<img src={currentUser.avatarUrl} className="w-8 h-8 rounded-full" />
+		</div>
+	);
+
+}
+
+function ChatPartnerComment({ comment, chatPartner }) {
+
+	return (
+		<div className="flex flex-col max-w-md mr-auto gap-y-2">
+			<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
+			<div className="flex items-start gap-x-3">
+				<img src={chatPartner.avatarUrl} className="w-8 h-8 rounded-full" />
+				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+				dark:border-neutral-700">
+					<p>{comment.message}</p>
+					<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+						<span>{ getTimeFromIso(comment.createdAt) }</span>
+						<span>{ getDateFromIso(comment.createdAt) }</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 
 }
 
