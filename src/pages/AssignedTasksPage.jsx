@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useProject } from "../context/ProjectContext";
+import { useAuthContext } from "../context/AuthContext";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
@@ -11,26 +12,41 @@ import Unauthorized from "../components/Unauthorized";
 
 function AssignedTasksPage() {
 
-    const { 
-		projectLoaded, 
-		tasks, 
-		team, 
-		currentMemberId, 
-		currentMemberRole, 
-		metaData 
-	} = useProject();
+    const {
+        projectLoaded,
+        tasks,
+        team,
+        currentMemberId,
+        currentMemberRole,
+        metaData
+    } = useProject();
+    const { user } = useAuthContext();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
 
     const assignedTasks = useMemo(() => {
-
-        if (!projectLoaded || !tasks) return [];
-
-        return tasks.filter((task) => task.assignedBy.id === currentMemberId);
-
-    }, [projectLoaded, tasks, currentMemberId]);
+        if (!projectLoaded || !tasks || !user || !user.fullName) return [];
+        return tasks.filter((task) => {
+            if (!task.assignedBy) {
+                console.log("[DEBUG] Task missing assignedBy:", task);
+                return false;
+            }
+            if (typeof task.assignedBy === "object" && task.assignedBy.id) {
+                const match = task.assignedBy.id === currentMemberId;
+                if (match) console.log("[DEBUG] Task matched by id:", task);
+                return match;
+            }
+            if (task.assignedBy.name && user && user.fullName) {
+                const match = task.assignedBy.name.trim().toLowerCase() === user.fullName.trim().toLowerCase();
+                if (match) console.log("[DEBUG] Task matched by name:", task);
+                return match;
+            }
+            console.log("[DEBUG] Task did not match:", task);
+            return false;
+        });
+    }, [projectLoaded, tasks, currentMemberId, user]);
 
     const filteredTasks = useMemo(() => {
 

@@ -12,10 +12,30 @@ export function ProjectContextProvider({ children }) {
 	const [error, setError] = useState(null);
 	const [metaData, setMetaData] = useState();
 	const [team, setTeam] = useState([]);
-    const [invites, setInvites] = useState([]);
-    const [tasks, setTasks] = useState([]);
-    const [currentMemberId, setCurrentMemberId] = useState();
-    const [currentMemberRole, setCurrentMemberRole] = useState();
+	const [invites, setInvites] = useState([]);
+	const [tasks, setTasks] = useState([]);
+	const [currentMemberId, setCurrentMemberId] = useState();
+	const [currentMemberRole, setCurrentMemberRole] = useState();
+
+	// Add this function to update a single task in context
+	const updateTaskInContext = (updatedTask) => {
+		setTasks(prev =>
+			prev.map(task =>
+				task.id === updatedTask.id
+					? { ...task, ...updatedTask, assignedTo: updatedTask.assignedTo ?? task.assignedTo }
+					: task
+			)
+		);
+	};
+
+	// Add this function to optimistically update a task's status in context
+	const optimisticUpdateTaskStatus = (taskId, newStatus) => {
+		setTasks(prev =>
+			prev.map(task =>
+				task.id === taskId ? { ...task, status: newStatus } : task
+			)
+		);
+	};
 
 	async function fetchProject(projectId) {
 
@@ -63,12 +83,14 @@ export function ProjectContextProvider({ children }) {
 		error,
 		metaData,
 		setMetaData,
-		team, 
+		team,
 		setTeam,
-		invites, 
+		invites,
 		setInvites,
 		tasks,
 		setTasks,
+		updateTaskInContext,
+		optimisticUpdateTaskStatus,
 		currentMemberId,
 		setCurrentMemberId,
 		currentMemberRole,
@@ -79,7 +101,7 @@ export function ProjectContextProvider({ children }) {
 
 	return (
 		<ProjectContext.Provider value={contextData}>
-			{ children }
+			{children}
 		</ProjectContext.Provider>
 	)
 

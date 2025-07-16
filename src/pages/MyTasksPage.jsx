@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
+import { useAuthContext } from "../context/AuthContext";
 import { taskStatusOptions, dateOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
@@ -12,19 +13,28 @@ import { Calendar, Filter } from "lucide-react";
 function MyTasksPage() {
 
     const { tasks, setTasks, projectLoaded, currentMemberId } = useProject();
-	const location = useLocation();
+    const { user } = useAuthContext();
+    const location = useLocation();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
 
     const myTasks = useMemo(() => {
-
-        if (!projectLoaded || !tasks) return [];
-
-        return tasks.filter((task) => task.assignedTo.id === currentMemberId);
-
-    }, [tasks, projectLoaded, currentMemberId]);
+        if (!projectLoaded || !tasks || !user || !user.fullName) return [];
+        return tasks.filter((task) => {
+            if (!task.assignedTo) {
+                return false;
+            }
+            if (typeof task.assignedTo === "object" && task.assignedTo.id) {
+                return task.assignedTo.id === currentMemberId;
+            }
+            if (task.assignedTo.name && user && user.fullName) {
+                return task.assignedTo.name.trim().toLowerCase() === user.fullName.trim().toLowerCase();
+            }
+            return false;
+        });
+    }, [tasks, projectLoaded, currentMemberId, user]);
 
     const filteredTasks = useMemo(() => {
 
@@ -59,34 +69,34 @@ function MyTasksPage() {
 
     }
 
-	useEffect(() => {
+    useEffect(() => {
 
-		if (projectLoaded && location.hash) {
+        if (projectLoaded && location.hash) {
 
-			const elementId = location.hash.substring(1);
-			const element = document.getElementById(elementId);
+            const elementId = location.hash.substring(1);
+            const element = document.getElementById(elementId);
 
-			if (element) {
+            if (element) {
 
-				element.scrollIntoView({ behavior: "smooth", block: "start" });
+                element.scrollIntoView({ behavior: "smooth", block: "start" });
 
-				setTimeout(() => {
+                setTimeout(() => {
 
-					element.classList.add("animate-task-ping-light", "dark:animate-task-ping-dark");
+                    element.classList.add("animate-task-ping-light", "dark:animate-task-ping-dark");
 
-					setTimeout(() => {
+                    setTimeout(() => {
 
-						element.classList.remove("animate-task-ping-light", "dark:animate-task-ping-dark");
+                        element.classList.remove("animate-task-ping-light", "dark:animate-task-ping-dark");
 
-					}, 500);
+                    }, 500);
 
-				}, 800);
+                }, 800);
 
-			}
+            }
 
-		}
+        }
 
-	}, [location, projectLoaded]);
+    }, [location, projectLoaded]);
 
     if (myTasks.length === 0) return <EmptyState message={"All clear! No tasks for now - enjoy the calm before the storm"} />
 

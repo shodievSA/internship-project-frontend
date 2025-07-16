@@ -19,11 +19,11 @@ function AuthContextProvider({ children }) {
                     credentials: 'include'
                 });
 
-				if (!res.ok) {
+                if (!res.ok) {
 
-					throw new Error('request for fetching user data was unsuccessfull');
+                    throw new Error('request for fetching user data was unsuccessfull');
 
-				}
+                }
 
                 const { user } = await res.json();
                 setUser(user);
