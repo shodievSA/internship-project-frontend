@@ -3,8 +3,17 @@ import React from "react";
 function CardModal({ open, onClose, headerColor, status, children }) {
     if (!open) return null;
     return (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/70">
-            <div className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl w-full max-w-4xl min-h-[500px] mt-12">
+        <div
+            className="fixed inset-0 z-50 flex items-start justify-center bg-black/70"
+            onMouseDown={e => {
+                // Only close if clicking directly on the overlay, not the modal card
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div
+                className="relative bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl w-full max-w-4xl min-h-[500px] mt-12"
+                onMouseDown={e => e.stopPropagation()}
+            >
                 {/* Header color bar with status and close button */}
                 <div
                     className="relative rounded-t-2xl w-full h-16 flex items-center"

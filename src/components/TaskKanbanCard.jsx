@@ -105,7 +105,30 @@ function TaskKanbanCard({ task, colKey, isDragging }) {
             {/* Modal */}
             {showModal && (
                 <CardModal open={showModal} onClose={() => setShowModal(false)} headerColor={headerColor} status={task.status}>
-                    {/* Empty body for now */}
+                    <div className="flex items-center justify-between gap-4 mb-6">
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <h2 className="text-2xl font-bold">{task.title}</h2>
+                                <span className={`inline-block px-4 py-1 rounded-full text-sm font-semibold ${priority.className}`}>{priority.label}</span>
+                            </div>
+                            {/* Subtitle/description below title if needed */}
+                            {task.subtitle && (
+                                <div className="text-gray-400 mt-1 text-base">{task.subtitle}</div>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-6">
+                        {/* Due Time */}
+                        <div>
+                            <h3 className="text-lg font-semibold mb-1">Due Time</h3>
+                            <p className="text-gray-700 dark:text-gray-200">{task.deadline ? new Date(task.deadline).toLocaleDateString() : 'No due date'}</p>
+                        </div>
+                        {/* Task Description */}
+                        <div>
+                            <h3 className="text-lg font-semibold mb-1">Description</h3>
+                            <p className="text-gray-700 dark:text-gray-200 whitespace-pre-line">{task.description || 'No description provided.'}</p>
+                        </div>
+                    </div>
                 </CardModal>
             )}
         </div>

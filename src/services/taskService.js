@@ -1,4 +1,3 @@
-// @ts-ignore (if you use TypeScript elsewhere, otherwise this line is harmless in JS)
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 // Helper fetcher
