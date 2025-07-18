@@ -188,7 +188,10 @@ function ReviewTask({
 					<Button
 						size="md"
 						variant="primary"
-						onClick={() => setShowApproveTaskModal(true)}
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowApproveTaskModal(true)
+						}}
 					>
 						<div className="flex justify-center items-center gap-x-2 text-sm">
 							<Check className="w-4 h-4" />
@@ -198,7 +201,10 @@ function ReviewTask({
 					<Button
 						size="md"
 						variant="secondary"
-						onClick={() => setShowRejectTaskModal(true)}
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowRejectTaskModal(true)
+						}}
 					>
 						<div className="flex justify-center items-center gap-x-2 text-sm">
 							<X className="w-4 h-4" />
