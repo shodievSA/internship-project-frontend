@@ -24,7 +24,7 @@ function RegularTask({ task }) {
 		<>
 			<div 
 				className="flex flex-col gap-y-5 gap-x-5 dark:border-neutral-800 
-				dark:hover:bg-neutral-950 hover:bg-slate-100 border-[1px] p-4 rounded-md 
+				dark:hover:bg-neutral-950 hover:bg-slate-50 border-[1px] p-4 rounded-md 
 				cursor-pointer"
 				onClick={() => setShowTaskDetailsModal(true)}
 			>
