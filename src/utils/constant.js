@@ -11,17 +11,17 @@ export const statusColors = {
 } 
 
 export const taskStatusColors = {
-	"ongoing": "bg-blue-500 dark:bg-blue-800 text-white dark:text-white",
-	"under review": "bg-purple-500 dark:bg-purple-800 text-white dark:text-white",
-	"closed": "bg-green-500 dark:bg-green-800 text-white dark:text-white",
-	"rejected": "bg-red-500 dark:bg-red-800 text-white dark:text-white",
-	"overdue": "bg-orange-500 dark:bg-orange-800 text-white dark:text-white"
+	"ongoing": "bg-blue-200/80 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300",
+	"under review": "bg-purple-200/80 dark:bg-purple-800/50 text-purple-700 dark:text-purple-300",
+	"closed": "bg-green-200/80 dark:bg-green-800/50 text-green-700 dark:text-green-300",
+	"rejected": "bg-red-200/80 dark:bg-red-800/50 text-red-700 dark:text-red-300",
+	"overdue": "bg-orange-200/80 dark:bg-orange-800/50 text-orange-700 dark:text-orange-300"
 }
 
 export const taskPriorityColors = {
-	high: "bg-red-500 dark:bg-red-800 text-white dark:text-white",
-	middle: "bg-amber-500 dark:bg-amber-800 text-white dark:text-white",
-	low: "bg-green-500 dark:bg-emerald-800 text-white dark:text-white"
+	high: "bg-red-200/80 dark:bg-red-800/50 text-red-700 dark:text-red-300",
+	middle: "bg-amber-200/80 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300",
+	low: "bg-green-200/80 dark:bg-green-800/50 text-green-700 dark:text-green-300"
 }
 
 export const statusOptions = [

@@ -70,8 +70,8 @@ function AiEditor({
                             <button 
                                 disabled={disabled || value.trim().split(/\s+/).length < 20 }
                                 className={`dark:bg-neutral-950 dark:border-neutral-800 dark:hover:bg-neutral-900 
-                                hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2.5 rounded-md flex justify-center 
-                                items-center gap-x-2 w-36 md:w-40 ${disabled ? 'cursor-not-allowed' : 
+                                hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2 rounded-md flex justify-center 
+                                items-center gap-x-3 w-36 md:w-28 ${disabled ? 'cursor-not-allowed' : 
                                 'cursor-pointer'} disabled:opacity-50 peer`}
                                 onClick={enhanceText}
                             >
@@ -86,14 +86,14 @@ function AiEditor({
                                     ) : (
                                         <>
                                             <Sparkles className="w-4 h-4 text-purple-500" />
-                                            <span className="text-xs md:text-sm font-medium">Enhance with AI</span>
+                                            <span className="text-xs md:text-sm font-medium">Enhance</span>
                                         </>
                                     )
                                 }
                             </button>
                             <div className="dark:bg-neutral-950 dark:border-neutral-800 bg-white border-[1px] py-1 px-2 
                             rounded-md absolute text-xs group-hover:peer-disabled:opacity-100 opacity-0 transition-[opacity] 
-                            duration-200 pointer-events-none cursor-none mt-2 w-44 text-center left-1/2 -translate-x-1/2">
+                            duration-200 pointer-events-none cursor-none mt-2 w-44 text-center left-1/3 -translate-x-1/2">
                                 Min 20 words are required
                             </div>
                         </div>

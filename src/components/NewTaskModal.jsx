@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import AiEditor from "./AiEditor";
-import InputField from "./InputField";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import projectService from "../services/projectService";
 import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
+import TaskTitleField from "./TaskTitleField";
+import FileAttachments from "./FileAttachments";
 
 function NewTaskModal({ 
 	projectId,
@@ -106,16 +107,14 @@ function NewTaskModal({
 
     return (
         <Modal title="Create New Task" size="lg">
-            <div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
-			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
+            <div className="flex flex-col grow gap-y-8 overflow-y-auto px-6 pb-6 
+			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
                 <div className="flex flex-col gap-y-8">
-                    <InputField
-                        label="Task Title"
-						required={true}
+                    <TaskTitleField
                         disabled={isNewTaskBeingCreated}
-                        placeholder="Enter a clear and concise task title"
                         value={taskTitle}
                         setValue={setTaskTitle}
+						taskDescription={taskDescription}
                     />
                     <AiEditor 
                         label="Description"
@@ -144,7 +143,7 @@ function NewTaskModal({
 						<DatePicker
 							disabled={isNewTaskBeingCreated} 
 							onChange={(e) => setTaskDeadline(e.target.value + "T00:00:00+05:00")}
-						/>
+						/>       
                     </div>
 					<SelectField
 						label="Assign to"
@@ -154,7 +153,9 @@ function NewTaskModal({
 						selected={taskAssignedTo}
 						setValue={setTaskAssignedTo}
 						options={assignToOptions}
-					/>                               
+					/>
+					{/* File Attachments */}
+					<FileAttachments />                
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 

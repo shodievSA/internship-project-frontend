@@ -105,14 +105,17 @@ const projectService = {
 
 	createTask: async (projectId, task) => {
 
-		const response = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, {
-			method: 'POST',
-			credentials: 'include',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ task: task })
-		});
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, 
+			{
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ task })
+			}
+		);
 
 		if (!response.ok) {
 

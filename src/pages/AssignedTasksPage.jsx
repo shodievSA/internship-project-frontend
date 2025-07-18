@@ -94,7 +94,8 @@ function AssignedTasksPage() {
                         </div>
                     </div>
                 </div>
-                <div className="grow flex flex-col gap-y-8 pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 
+				gap-8 grid-auto-rows-[200px] gap-y-8 pb-10">
                     {
                         filteredTasks.length > 0 ? (
                             filteredTasks.map((task) => (

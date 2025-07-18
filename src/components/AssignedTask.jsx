@@ -7,8 +7,6 @@ import {
 	Calendar, 
 	Flame, 
 	CircleDot, 
-	ChevronRight, 
-	History, 
 	Clock, 
 	EllipsisVertical, 
 	MessageSquare, 
@@ -19,6 +17,7 @@ import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
+import TaskDetailsModal from "./TaskDetailsModal";
 
 function AssignedTask({ projectId, currentMemberId, task, team }) {
 
@@ -30,16 +29,15 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 		status,
 		assignedTo,
 		createdAt,
-		deadline,
-		history
+		deadline
 	} = task;
 
 	const navigate = useNavigate();
 
-	const [historyExpanded, setHistoryExpanded] = useState(false);
 	const [editButtonClicked, setEditButtonClicked] = useState(false);
 	const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
 	const [showUpdateTaskModal, setShowUpdateTaskModal] = useState(false);
+	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
 
 	const dropDownMenuRef = useRef();
 
@@ -61,32 +59,26 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 
 	return (
 		<>
-			<div className="flex flex-col gap-y-4 gap-x-5 dark:border-neutral-800 
-			border-[1px] p-5 rounded-md">
+			<div 
+				className="flex flex-col gap-y-5 gap-x-5 dark:border-neutral-800 
+				dark:hover:bg-neutral-950 hover:bg-slate-100 border-[1px] p-4 rounded-md 
+				cursor-pointer"
+				onClick={() => setShowTaskDetailsModal(true)}
+			>
 				<div className="flex flex-col gap-y-2">
-					<div className="flex items-start justify-between">
-						<h1 className="font-semibold md:text-lg">
+					<div className="flex items-start justify-between gap-x-3">
+						<h1 className="font-semibold md:text-lg truncate">
 							{ title }
 						</h1>
-						<div className="flex items-start gap-x-6">
-							<div className="flex gap-x-6">
-								<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
-								py-1.5 rounded-full`}>
-									<Flame className="w-4 h-4" />
-									<span className="text-xs font-medium">
-										{ priority } priority
-									</span>
-								</div>
-								<div className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
-								py-1 rounded-full`}>
-									<CircleDot className="w-4 h-4" />
-									<span className="text-xs font-medium">{ status }</span>
-								</div>
-							</div>
+						<div className="flex items-start">
 							<div className="relative" ref={dropDownMenuRef}>
 								<button 
-									className="px-1 py-1.5 dark:hover:bg-neutral-900 rounded-md"
-									onClick={() => setEditButtonClicked(!editButtonClicked)}
+									className="px-1 py-1.5 hover:bg-slate-200 dark:hover:bg-neutral-900 
+									rounded-md"
+									onClick={(e) => {
+										e.stopPropagation();
+										setEditButtonClicked(!editButtonClicked)
+									}}
 								>
 									{ <EllipsisVertical className="w-4 h-4" /> }
 								</button>
@@ -99,7 +91,8 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 												<div 
 													className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
 													hover:bg-slate-100 w-full"
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation();
 														setShowUpdateTaskModal(true);
 														setEditButtonClicked(false);
 													}}
@@ -112,7 +105,8 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 												<div 
 													className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
 													hover:bg-slate-100 w-full"
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation()
 														setShowDeleteTaskModal(true);
 														setEditButtonClicked(false);
 													}}
@@ -127,144 +121,62 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 							</div>
 						</div>
 					</div>
-					<p className="dark:text-neutral-400">{ description }</p>
-				</div>
-				<div className="flex gap-x-5">
-					<div className="flex items-center gap-x-5 grow">
-						<div className="flex items-center">
-							<div className="flex gap-x-6 items-center text-sm">
-								<div className="flex">
-									<div className="flex items-center gap-x-2">
-										<span className="dark:text-neutral-300">To:</span>
-										<img src={assignedTo.avatarUrl ?? userPlaceholder} className="w-6 h-6 rounded-full" /> 
-										<span className="dark:text-neutral-300 font-medium">{assignedTo.name}</span>
-									</div>
-								</div>
-								<div className="flex gap-x-5">
-									<div className="text-neutral-500 dark:text-neutral-400 flex items-start 
-									items-center gap-x-2">
-										<div className="p-2 rounded-full bg-gray-400/20">
-											<Calendar className="w-4 h-4" />
-										</div>
-										<span>Created:</span>
-										{ formatIsoDate(createdAt) }
-									</div>															
-									<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
-										<div className="p-2 rounded-full bg-red-500/20">
-											<Clock className="w-4 h-4" />
-										</div>
-										<span>Due:</span>
-										{ formatIsoDate(deadline) }
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<p className="dark:text-neutral-400 max-h-11 text-ellipsis overflow-hidden">{ description }</p>
 				</div>
 				<div className="flex flex-col gap-y-5">
-					<div className="flex flex-col gap-y-3">
-						<div className="flex items-center gap-x-2">
-							<button onClick={() => setHistoryExpanded(!historyExpanded)}>
-								<ChevronRight className={`w-5 h-5 ${historyExpanded ? "rotate-90" : "rotate-0"}
-								transform-rotate duration-200`} />
-							</button>
-							<div className="flex gap-x-2 items-center text-sm">
-								<History className="w-5 h-5" />
-								<span className="font-medium">History</span> 
+					<div className="flex flex-col gap-y-5 text-sm">
+						<div className="flex gap-x-4">
+							<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
+							py-1.5 rounded-full`}>
+								<Flame className="w-4 h-4" />
+								<span className="text-xs font-medium">
+									{ priority } priority
+								</span>
+							</div>
+							<div className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
+							py-1 rounded-full`}>
+								<CircleDot className="w-4 h-4" />
+								<span className="text-xs font-medium">{ status }</span>
 							</div>
 						</div>
-						{
-							historyExpanded && (
-								<div className="flex flex-col gap-y-5 pl-6 dark:text-neutral-300
-								dark:text-neutral-300 border-l-[1px] dark:border-neutral-800 ml-2">
-									{
-										history.map((stage, index) => {
-
-											const status = stage.status;
-
-											if (status === "ongoing" || status === "overdue") {
-
-												return (
-													<div className="flex items-center gap-x-3">
-														<span>{ history.length - index }.</span>
-														<div className="flex items-center gap-x-2">
-															<div className="text-sm dark:border-neutral-800 border-[1px] 
-															rounded-full py-1 px-3 font-medium">
-																{stage.status}
-															</div> 
-															-
-															<span>
-																{ formatIsoDate(stage.createdAt) }
-															</span>
-														</div>
-													</div>
-												);
-
-											} else if (status === "rejected" || status === "closed" || status === "under review") {
-
-												return (
-													<div className="flex items-center gap-x-3">
-														<div className="flex flex-col gap-y-3">
-															<div className="flex items-center gap-x-2">
-																<span>{ history.length - index }.</span>
-																<div className="text-sm dark:border-neutral-800 border-[1px] 
-																rounded-full py-1 px-3 font-medium">
-																	{ stage.status }
-																</div> 
-																-
-																<span>
-																	{ formatIsoDate(stage.createdAt) }
-																</span>
-															</div>
-															<div>
-																{
-																	stage.comment ? (
-																		status === "rejected" ? (
-																			<p>
-																				<span className="font-medium">Rejection reason:</span> <span className="dark:text-neutral-400">{stage.comment}</span>
-																			</p>
-																		) : status === "under review" ? (
-																			<p>
-																				<span className="font-medium">Completion note:</span> <span className="dark:text-neutral-400">{stage.comment}</span>
-																			</p>
-																		) : (
-																			<p>
-																				<span className="font-medium">Approval note:</span> <span className="dark:text-neutral-400">{stage.comment}</span>
-																			</p>
-																		)
-																	) : (
-																		status === "rejected" ? (
-																			<p>No rejection reason</p>
-																		) : status === "under review" ? (
-																			<p>No completion note</p>
-																		) : (
-																			<p>No approval note</p>
-																		)
-																	)
-																}
-															</div>
-														</div>
-													</div>
-												)
-
-											}
-
-										})
-									}
+						<div className="flex flex-col gap-y-2">
+							<span className="text-xs">ASSIGNED TO</span>
+							<div className="flex items-center gap-x-2">
+								<img src={assignedTo.avatarUrl ?? userPlaceholder} className="w-6 h-6 rounded-full" /> 
+								<span className="dark:text-neutral-300 font-medium">{assignedTo.name}</span>
+							</div>
+						</div>				
+						<div className="flex flex-col gap-y-2">
+							<div className="text-neutral-500 dark:text-neutral-400 flex items-start 
+							items-center gap-x-2">
+								<div>
+									<Calendar className="w-4 h-4" />
 								</div>
-							)
-						}
+								<span>Created:</span>
+								{ formatIsoDate(createdAt) }
+							</div>															
+							<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
+								<div>
+									<Clock className="w-4 h-4" />
+								</div>
+								<span>Due:</span>
+								{ formatIsoDate(deadline) }
+							</div>
+						</div>
 					</div>
-					<div className="flex gap-x-5">
+					<div>
 						<Button 
 							variant="secondary" 
 							size="md"
-							onClick={() => navigate(`${id}/comments`, {
-								state: {
-									task: task,
-									currentMemberId: currentMemberId
-								}
-							})}
+							onClick={(e) => {
+								e.stopPropagation();
+								navigate(`${id}/comments`, {
+									state: {
+										task: task,
+										currentMemberId: currentMemberId
+									}
+								})
+							}}
 						>
 							<div className="flex items-center gap-x-2 text-sm">
 								<MessageSquare className="w-4 h-4" />
@@ -274,6 +186,14 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 					</div>
 				</div>
 			</div>
+			{
+				showTaskDetailsModal && (
+					<TaskDetailsModal 
+						task={task} 
+						closeModal={() => setShowTaskDetailsModal(false)} 
+					/>
+				)
+			}
 			{
 				showDeleteTaskModal && (
 					<TaskDeleteModal 

@@ -43,6 +43,10 @@
     .feature-card {
         @apply opacity-0 bg-white dark:bg-zinc-950 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-neutral-800 animate-feature-pop-delay-1 hover:shadow-lg transition-all duration-300
     }
+
+	.highlight {
+		@apply bg-neutral-200
+	}
 }
 
 input[type="date"]::-webkit-inner-spin-button,
