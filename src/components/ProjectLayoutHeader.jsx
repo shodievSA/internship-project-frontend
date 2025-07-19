@@ -67,16 +67,16 @@ function ProjectLayoutHeader({
 					</div>
 					<div className="flex gap-x-5">
 						<div 
-							className="flex items-center gap-x-2 hover:bg-slate-100 px-3 py-1 
-							cursor-pointer rounded-md"
+							className="flex items-center gap-x-2 dark:hover:bg-neutral-900 
+							hover:bg-slate-100 px-3 py-1 cursor-pointer rounded-md"
 							onClick={() => navigate("team")}
 						>
 							<Users className="w-4 h-4" />
 							<span>Team</span>
 						</div>
 						<div 
-							className="flex items-center gap-x-2 hover:bg-slate-100 px-3 py-1 
-							cursor-pointer rounded-md"
+							className="flex items-center gap-x-2 dark:hover:bg-neutral-900 
+							hover:bg-slate-100 px-3 py-1 cursor-pointer rounded-md"
 							onClick={() => navigate("invites")}
 						>
 							<UserPlus className="w-4 h-4" />
