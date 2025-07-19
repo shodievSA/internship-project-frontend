@@ -123,7 +123,7 @@ function FileAttachments() {
 											<span>{ file.file.name }</span>
 										</div>
 										<div 
-											className="p-1 hover:bg-red-700 dark:hover:bg-red-900 text-white 
+											className="p-1 hover:bg-red-700 dark:hover:bg-red-900 hover:text-white 
 											rounded-md transition-[all] duration-200 cursor-pointer"
 											onClick={() => deleteFile(file.id)}
 										>

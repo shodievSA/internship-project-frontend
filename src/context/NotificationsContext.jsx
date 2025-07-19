@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { useToast } from "../components/ui/ToastProvider";
 import { useAuthContext } from "./AuthContext";
 import userService from "../services/userService";
 import notificationService from "../services/notificationService";
@@ -9,6 +10,7 @@ const NotificationsContext = createContext();
 export function NotificationsContextProvider({ children }) {
 
 	const { user } = useAuthContext();
+	const { showToast } = useToast();
 
 	const [notifications, setNotifications] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -21,30 +23,58 @@ export function NotificationsContextProvider({ children }) {
 
 	useEffect(() => {
 
-		sockekRef.current = new WebSocket(`ws://${SERVER_HOST}/notifications`);
+		if (user) {
 
-		sockekRef.current.onopen = (event) => {
+			sockekRef.current = new WebSocket(`ws://${SERVER_HOST}/notifications`);
 
-			if (event.type === "open") {
+			sockekRef.current.onopen = (event) => {
 
-				sockekRef.current.send(JSON.stringify({
-					type: "identify-user",
-					userId: user.id
-				}));
+				if (event.type === "open") {
+
+					sockekRef.current.send(JSON.stringify({
+						type: "identify-user",
+						userId: user.id
+					}));
+
+				}
+
+			}
+
+			sockekRef.current.onmessage = (event) => {
+
+				const data = JSON.parse(event.data);
+
+				if (data.type === "new-notification") {
+
+					const newNotification = data.newNotification;
+
+					setNotifications([newNotification, ...notifications]);
+
+					showToast({
+						variant: "success",
+						title: "New notification!",
+						message: newNotification.message
+					});
+
+				} else if (data.type === "new-invite") {
+
+					const newInvite = data.newInvite;
+
+					setInvites([newInvite, ...invites]);
+
+					showToast({
+						variant: "success",
+						title: "New invite!",
+						message: newInvite.message
+					});
+
+				}
 
 			}
 
 		}
 
-		sockekRef.current.onmessage = (event) => {
-
-			const data = JSON.parse(event.data);
-
-			
-
-		}
-
-	}, []);
+	}, [user]);
 
 	useEffect(() => {
 
