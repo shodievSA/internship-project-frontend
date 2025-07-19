@@ -58,7 +58,7 @@ function OrganizerOverview({
 				className="flex flex-col gap-y-1 p-3 border border-neutral-200 dark:border-neutral-800 
 				rounded-md dark:text-neutral-300 group/item hover:shadow-md dark:hover:shadow-none 
 				dark:hover:border-neutral-700 cursor-pointer transition-[box-shadow] duration-300"
-				onClick={() => navigate("/notifications")}
+				onClick={() => navigate(`/notifications#notification-${notification.id}`)}
 			>
 				<p>{notification.message}</p>
 				<div className="flex justify-between">
@@ -80,7 +80,7 @@ function OrganizerOverview({
 				className="flex flex-col gap-y-2 border border-neutral-200 dark:border-neutral-800 
 				p-4 rounded-md group/item hover:shadow-md dark:hover:shadow-none dark:hover:border-neutral-700
 				cursor-pointer transition-[bow-shadow] duration-300"
-				onClick={() => navigate(`/projects/${task.from.projectId}/assigned-tasks`)}
+				onClick={() => navigate(`/projects/${task.from.projectId}/review-tasks#task-${task.id}`)}
 			>
 				<div className="flex justify-between">
 					<span className="font-medium">{ task.title }</span>

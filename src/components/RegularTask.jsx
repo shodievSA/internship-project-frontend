@@ -28,9 +28,9 @@ function RegularTask({ task }) {
 				cursor-pointer"
 				onClick={() => setShowTaskDetailsModal(true)}
 			>
-				<div className="flex flex-col gap-y-2">
+				<div className="flex flex-col gap-y-1">
 					<div className="flex items-start">
-						<h1 className="font-semibold md:text-lg">
+						<h1 className="font-semibold">
 							{ title }
 						</h1>
 					</div>

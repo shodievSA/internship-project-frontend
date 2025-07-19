@@ -70,9 +70,9 @@ function AssignedTask({
 				cursor-pointer"
 				onClick={() => setShowTaskDetailsModal(true)}
 			>
-				<div className="flex flex-col gap-y-2">
-					<div className="flex items-start justify-between gap-x-3">
-						<h1 className="font-semibold md:text-lg truncate">
+				<div className="flex flex-col">
+					<div className="flex items-start justify-between gap-x-3 gap-y-1">
+						<h1 className="font-semibold truncate">
 							{ title }
 						</h1>
 						<div className="flex items-start">

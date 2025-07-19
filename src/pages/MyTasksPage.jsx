@@ -15,7 +15,7 @@ function MyTasksPage() {
 	const location = useLocation();
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("ongoing");
+    const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
 
     const myTasks = useMemo(() => {
