@@ -19,7 +19,12 @@ import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 import TaskDetailsModal from "./TaskDetailsModal";
 
-function AssignedTask({ projectId, currentMemberId, task, team }) {
+function AssignedTask({ 
+	projectId, 
+	currentMemberId, 
+	task, 
+	team 
+}) {
 
 	const {
 		id,
@@ -167,7 +172,7 @@ function AssignedTask({ projectId, currentMemberId, task, team }) {
 					<div>
 						<Button 
 							variant="secondary" 
-							size="md"
+							size="sm"
 							onClick={(e) => {
 								e.stopPropagation();
 								navigate(`${id}/comments`, {

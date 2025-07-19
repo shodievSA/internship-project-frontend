@@ -93,7 +93,7 @@ function MyTasksPage() {
     return (
         <div className="h-full">
             <div className="flex flex-col h-full">
-                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
+                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-4">
                     <div className="flex justify-start w-full lg:w-1/3">
                         <div className="relative w-full">
                             <SearchBar
@@ -124,26 +124,24 @@ function MyTasksPage() {
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 
-				gap-8 grid-auto-rows-[200px] gap-y-8 pb-10">
-                    {
-                        filteredTasks.length > 0 ? (
-                            filteredTasks.map((task) => (
-                                <MyTask
-                                    key={task.id}
-                                    task={task}
-                                    onTaskSubmit={onTaskSubmit}
-									currentMemberId={currentMemberId}
-                                />
-                            ))
-                        ) : (
-                            <EmptySearch
-                                message={"No matching tasks found"}
-                                onClearFilters={clearFilters}
-                            />
-                        )
-                    }
-                </div>
+				{ filteredTasks.length > 0 ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
+					gap-6 grid-auto-rows-[200px] pb-4">
+						{ filteredTasks.map((task) => (
+							<MyTask
+								key={task.id}
+								task={task}
+								onTaskSubmit={onTaskSubmit}
+								currentMemberId={currentMemberId}
+							/>
+						))}
+					</div>
+				) : (
+					<EmptySearch
+						message={"No matching tasks found"}
+						onClearFilters={clearFilters}
+					/>
+				)}
             </div>
         </div>
     );

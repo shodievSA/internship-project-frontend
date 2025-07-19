@@ -94,27 +94,25 @@ function AssignedTasksPage() {
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 
-				gap-8 grid-auto-rows-[200px] gap-y-8 pb-10">
-                    {
-                        filteredTasks.length > 0 ? (
-                            filteredTasks.map((task) => (
-                                <AssignedTask
-                                    key={task.id}
-                                    task={task}
-                                    projectId={metaData.id}
-									currentMemberId={currentMemberId}
-                                    team={team}
-                                />
-                            ))
-                        ) : (
-                            <EmptySearch
-                                message={"No matching assigned tasks found"}
-                                onClearFilters={clearFilters}
-                            />
-                        )
-                    }
-                </div>
+				{ filteredTasks.length > 0 ? (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
+					gap-6 grid-auto-rows-[200px] pb-4">
+						{ filteredTasks.map((task) => (
+							<AssignedTask
+								key={task.id}
+								task={task}
+								projectId={metaData.id}
+								currentMemberId={currentMemberId}
+								team={team}
+							/>
+						))}
+					</div>
+				) : (
+					<EmptySearch
+						message={"No matching assigned tasks found"}
+						onClearFilters={clearFilters}
+					/>
+				)}
             </div>
         </div>
     );

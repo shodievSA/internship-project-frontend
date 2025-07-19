@@ -67,7 +67,7 @@ export function CustomDropdown({
 				</div>
 
 				{/* Desktop Layout */}
-				<div className="hidden sm:flex items-center gap-2 w-full">
+				<div className="hidden sm:flex items-center gap-2 w-full text-sm">
 					<Icon className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
 					<span>{selectedOption?.label || placeholder}</span>
 					<ChevronDown className={`h-4 w-4 text-gray-500 dark:text-neutral-400 transition-transform 

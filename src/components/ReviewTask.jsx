@@ -186,7 +186,7 @@ function ReviewTask({
 				</div>
 				<div className="grid grid-cols-2 gap-x-3">
 					<Button
-						size="md"
+						size="sm"
 						variant="primary"
 						onClick={(e) => {
 							e.stopPropagation();
@@ -199,7 +199,7 @@ function ReviewTask({
 						</div>
 					</Button>
 					<Button
-						size="md"
+						size="sm"
 						variant="secondary"
 						onClick={(e) => {
 							e.stopPropagation();

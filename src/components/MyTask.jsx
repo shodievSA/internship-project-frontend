@@ -139,18 +139,18 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 						</div>
 					</div>
 				</div>
-				<div className="flex gap-x-5">
+				<div className="grid grid-cols-2 gap-x-3">
 					{
 						(status === "ongoing" || status === "rejected" || status === "overdue") && (
 							<Button 
-								size="md"
+								size="sm"
 								onClick={(e) => {
 									e.stopPropagation();
 									setShowSubmitModal(true)
 								}}
 								loading={taskBeingSubmitted}
 							>
-								<div className="flex items-center gap-x-2 text-sm">
+								<div className="flex justify-center items-center gap-x-2 text-sm">
 									<CircleCheckBig className="w-4 h-4" />
 									<span>Complete</span>
 								</div>
@@ -159,7 +159,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 					}
 					<Button 
 						variant="secondary" 
-						size="md" 
+						size="sm" 
 						onClick={(e) => {
 							e.stopPropagation();
 							navigate(`${id}/comments`, {
@@ -170,7 +170,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 							})}
 						}
 					>
-						<div className="flex items-center gap-x-2 text-sm">
+						<div className="flex justify-center items-center gap-x-2 text-sm">
 							<MessageSquare className="w-4 h-4" />
 							<span>Comments</span>
 						</div>
