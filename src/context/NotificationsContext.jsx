@@ -1,10 +1,14 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { useAuthContext } from "./AuthContext";
 import userService from "../services/userService";
 import notificationService from "../services/notificationService";
+const SERVER_HOST = import.meta.env.VITE_HOST;
 
 const NotificationsContext = createContext();
 
 export function NotificationsContextProvider({ children }) {
+
+	const { user } = useAuthContext();
 
 	const [notifications, setNotifications] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -12,6 +16,35 @@ export function NotificationsContextProvider({ children }) {
 
 	const [invites, setInvites] = useState([]);
     const [invitesFetched, setInvitesFetched] = useState(false);
+
+	const sockekRef = useRef(null);
+
+	useEffect(() => {
+
+		sockekRef.current = new WebSocket(`ws://${SERVER_HOST}/notifications`);
+
+		sockekRef.current.onopen = (event) => {
+
+			if (event.type === "open") {
+
+				sockekRef.current.send(JSON.stringify({
+					type: "identify-user",
+					userId: user.id
+				}));
+
+			}
+
+		}
+
+		sockekRef.current.onmessage = (event) => {
+
+			const data = JSON.parse(event.data);
+
+			
+
+		}
+
+	}, []);
 
 	useEffect(() => {
 
@@ -24,8 +57,6 @@ export function NotificationsContextProvider({ children }) {
 
 				const data = await notificationService.getNotifications();
 				setNotifications(data);
-
-				console.log("Fetched notifications:", data);
 
 			} catch (err) {
 

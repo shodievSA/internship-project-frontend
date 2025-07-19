@@ -127,7 +127,11 @@ function UpdateTaskModal({
 	}, [updatedTaskProps]);
 
 	return (
-		<Modal title="Create New Task" size="lg">
+		<Modal 
+			title="Edit Task" 
+			size="lg"
+			closeModal={closeModal}
+		>
 			<div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
 			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex flex-col gap-y-8">

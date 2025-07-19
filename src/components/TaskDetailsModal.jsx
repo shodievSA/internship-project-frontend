@@ -21,7 +21,8 @@ function TaskDetailsModal({ task, closeModal }) {
 
 	return (
 		<Modal size="lg" title={title} closeModal={closeModal}>
-			<div className="flex flex-col gap-y-5 px-5 pb-5">
+			<div className="flex flex-col gap-y-5 px-5 pb-5 overflow-y-auto
+			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex gap-x-3">
 					<div className={`px-4 py-1 rounded-full text-sm ${taskPriorityColors[task.priority]}`}>
 						{priority}

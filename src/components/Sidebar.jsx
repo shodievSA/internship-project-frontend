@@ -183,7 +183,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 </ul>
                             </div>
                             <div className="mt-auto flex flex-col gap-y-5 dark:border-t-neutral-800 border-t-neutral-200 
-                            border-t-[1px] pt-4 px-4 h-28">
+                            border-t-[1px] p-4">
                                 <button className="dark:bg-black dark:hover:bg-neutral-950 dark:border-neutral-800 
                                 dark:text-neutral-300 dark:hover:text-white bg-white hover:bg-neutral-100 border-neutral-200
                                 text-neutral-600 hover:text-black flex items-center justify-left w-full py-2 px-3 rounded-md 

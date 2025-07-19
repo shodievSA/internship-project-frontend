@@ -1,17 +1,29 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NewTaskModal from "../components/NewTaskModal";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import LeaveProjectModal from "../components/LeaveProjectModal";
 import GroupEmailModal from "../components/GroupEmailModal";
 import { statusColors } from "../utils/constant";
-import { Plus, Settings, Mail, SquarePen, UserMinus, Trash2 } from "lucide-react";
+import { 
+	Plus, 
+	Settings, 
+	Mail, 
+	SquarePen, 
+	UserMinus, 
+	Trash2, 
+	Users,
+	UserPlus
+} from "lucide-react";
 
 function ProjectLayoutHeader({
 	metaData,
 	currentMemberId,
 	team
 }) {
+
+	const navigate = useNavigate();
 
 	const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
 	const [showNewTaskModal, setShowNewTaskModal] = useState(false);
@@ -42,17 +54,37 @@ function ProjectLayoutHeader({
 
 	return (
 		<>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-6">
-				<div className="flex items-center justify-between md:justify-start gap-x-4">
-					<h1 className="text-xl md:text-xl font-semibold">
-						{ metaData.title }
-					</h1>
-					<div className={`${statusColors[metaData.status]} status-badge px-3 py-1 
-					text-xs`}>
-						{ metaData.status }
+			<div className="flex justify-between items-center gap-y-6 gap-x-6">
+				<div className="flex items-center gap-x-8">
+					<div className="flex items-center justify-between md:justify-start gap-x-4">
+						<h1 className="text-xl md:text-xl font-semibold">
+							{ metaData.title }
+						</h1>
+						<div className={`${statusColors[metaData.status]} status-badge px-3 py-1 
+						text-xs`}>
+							{ metaData.status }
+						</div>
+					</div>
+					<div className="flex gap-x-5">
+						<div 
+							className="flex items-center gap-x-2 hover:bg-slate-100 px-3 py-1 
+							cursor-pointer rounded-md"
+							onClick={() => navigate("team")}
+						>
+							<Users className="w-4 h-4" />
+							<span>Team</span>
+						</div>
+						<div 
+							className="flex items-center gap-x-2 hover:bg-slate-100 px-3 py-1 
+							cursor-pointer rounded-md"
+							onClick={() => navigate("invites")}
+						>
+							<UserPlus className="w-4 h-4" />
+							<span>Invites</span>
+						</div>
 					</div>
 				</div>
-				<div className="md:justify-end flex items-center gap-x-5">
+				<div className="flex items-center gap-x-5">
 					<div id="settings-modal" className="relative hidden md:block">
 						<button
 							className="dark:hover:bg-neutral-900 hover:bg-slate-50 px-2.5 

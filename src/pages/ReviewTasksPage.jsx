@@ -112,7 +112,7 @@ function ReviewTasksPage() {
     return (
         <div className="h-full">
             <div className="flex flex-col h-full">
-                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
+                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-5">
                     <div className="flex justify-start w-full lg:w-1/3">
                         <div className="relative w-full">
                             <SearchBar

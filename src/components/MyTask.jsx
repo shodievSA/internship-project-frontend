@@ -191,6 +191,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 						titleIcon={<CircleCheckBig />}
 						title="Complete Task"
 						size="lg"
+						closeModal={() => setShowSubmitModal(false)}
 					>
 						<div className="flex flex-col gap-y-8 px-7 pb-7">
 							<AiEditor 

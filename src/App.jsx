@@ -37,13 +37,13 @@ function App() {
 											<ProjectLayout />
 										</ProjectContextProvider>
 									}>
-										<Route path="team" element={<TeamPage />} />
 										<Route path="all-tasks" element={<AllTasksPage />} />
 										<Route path="my-tasks" element={<MyTasksPage />} />
 										<Route path="assigned-tasks" element={<AssignedTasksPage />} />
 										<Route path="review-tasks" element={<ReviewTasksPage />} />
-										<Route path="invites" element={<ProjectInvitesPage />} />
 									</Route>
+									<Route path="/projects/:projectId/team" element={<TeamPage />} />
+									<Route path="/projects/:projectId/invites" element={<ProjectInvitesPage />} />
 									<Route path="/projects/:projectId/my-tasks/:taskId/comments" element={<Comments />} />
 									<Route path="/projects/:projectId/assigned-tasks/:taskId/comments" element={<Comments />} />
 									<Route path="/projects/:projectId/team/:memberId" element={<TeamMemberDetailsPage />} />

@@ -93,7 +93,7 @@ function MyTasksPage() {
     return (
         <div className="h-full">
             <div className="flex flex-col h-full">
-                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-4">
+                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-5">
                     <div className="flex justify-start w-full lg:w-1/3">
                         <div className="relative w-full">
                             <SearchBar
@@ -126,7 +126,7 @@ function MyTasksPage() {
                 </div>
 				{ filteredTasks.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
-					gap-6 grid-auto-rows-[200px] pb-4">
+					gap-6 grid-auto-rows-[200px] pb-5">
 						{ filteredTasks.map((task) => (
 							<MyTask
 								key={task.id}

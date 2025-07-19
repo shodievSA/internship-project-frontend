@@ -6,10 +6,8 @@ import {
 	Calendar, 
 	Flame, 
 	CircleDot, 
-	ChevronRight, 
-	History, 
-	Clock, 
-	List, 
+	OctagonX,
+	Clock,  
 	Check, 
 	X,
 	CircleCheckBig
@@ -227,6 +225,7 @@ function ReviewTask({
 						title="Approve Submission" 
 						titleIcon={<CircleCheckBig />}
 						size="lg"
+						closeModal={() => setShowApproveTaskModal(false)}
 					>
 						<div className="flex flex-col px-7 pb-7 gap-y-5">
 							<AiEditor
@@ -262,8 +261,9 @@ function ReviewTask({
 				showRejectTaskModal && (
 					<Modal 
 						title="Reject Submission" 
-						titleIcon={<X />}
+						titleIcon={<OctagonX />}
 						size="lg"
+						closeModal={() => setShowRejectTaskModal(false)}
 					>
 						<div className="flex flex-col px-7 pb-7 gap-y-5">
 							<AiEditor
