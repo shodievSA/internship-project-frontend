@@ -30,12 +30,12 @@ function NewProjectModal({ setShowNewProjectModal, onProjectCreated }) {
 
 		try {
 
-			const response = await projectService.createProject(newProjectTitle, newProjectUserPosition);
+			const { project } = await projectService.createProject(newProjectTitle, newProjectUserPosition);
 
 			setShowNewProjectModal(false);
 
 			if (onProjectCreated) {
-				onProjectCreated(response.project);
+				onProjectCreated(project);
 			}
 		
 		} catch (err) {

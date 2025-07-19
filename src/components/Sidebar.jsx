@@ -1,15 +1,33 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useState, useMemo } from "react";
 import { useAuthContext } from "../context/AuthContext";
+import { useNotifications } from "../context/NotificationsContext";
+import userService from "../services/userService";
+import { NavLink } from "react-router-dom";
 import { House, Sparkles, Bell, LogOut, MailPlus } from 'lucide-react';
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
     const { user, setUser } = useAuthContext();
+	const { loading, error, notifications, invitesFetched, invites } = useNotifications();
 
     const [signoutButtonClicked, setSignoutButtonClicked] = useState(false);
     const [isUserBeingSignedOut, setIsUserBeingSignedOut] = useState(false);
+
+	const unviewedNotifications = useMemo(() => {
+
+		if (loading || error) return [];
+
+		return notifications.filter((notification) => !notification.isViewed);
+
+	}, [loading, error, notifications]);
+
+	const pendingInvites = useMemo(() => {
+	
+		if (!invitesFetched) return [];
+
+		return invites.filter((invite) => invite.status === "pending");
+
+	}, [invitesFetched, invites]);
 
     async function logOutUser() {
 
@@ -17,14 +35,8 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
         try {
 
-            const res = await fetch(`${SERVER_BASE_URL}/api/v1/auth/logout`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-
-            if (res.ok) {
-                setUser(null);
-            }
+            await userService.logOut();
+            setUser(null);
 
         } catch {
 
@@ -54,7 +66,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 <button
                                     disabled={isUserBeingSignedOut}
                                     className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
-                                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-lg font-medium text-sm lg:text-base 
+                                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-md font-medium text-sm lg:text-base 
                                     ${isUserBeingSignedOut ? 'cursor-not-allowed' : 'cursor-pointer'} disabled:opacity-50`}
                                     onClick={() => setSignoutButtonClicked(false)}
                                 >
@@ -63,7 +75,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 <button
                                     disabled={isUserBeingSignedOut}
                                     className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 
-                                    hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-lg font-medium text-sm 
+                                    hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-md font-medium text-sm 
                                     lg:text-base disabled:opacity-50'
                                     onClick={logOutUser}
                                 >
@@ -77,7 +89,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                                 </div>
                                             </div>
                                         ) : (
-                                            "Signed Out"
+                                            "Sign Out"
                                         )
                                     }
                                 </button>
@@ -129,14 +141,44 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     <NavLink to={'/notifications'} className='dark:hover:bg-zinc-900/60 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md'>
-                                        <Bell className="w-5 h-5" />
-                                        <span>Notifications</span>
+										<div className="flex items-center gap-x-3">
+											<Bell className="w-5 h-5" />
+											<span>Notifications</span>
+										</div>
+										{ unviewedNotifications.length > 0 && (
+											<div className="flex items-center gap-x-4">
+												<span className="flex items-center justify-center text-[10px] bg-red-500 
+												rounded-full text-white w-5 h-5">
+													{ unviewedNotifications.length > 99 ? "99+" : unviewedNotifications.length }
+												</span>
+												<span className="relative flex h-3 w-3">
+													<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
+													bg-sky-400 opacity-75"></span>
+													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+												</span>
+											</div>
+										)}
                                     </NavLink>
 									<NavLink to={'/invites'} className='dark:hover:bg-zinc-900/60 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-neutral-100 text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
-                                        <MailPlus className="w-5 h-5" />
-                                        <span>Invites</span>
+										<div className="flex items-center gap-x-3">
+											<MailPlus className="w-5 h-5" />
+											<span>Invites</span>
+										</div>
+										{ pendingInvites.length > 0 && (
+											<div className="flex items-center gap-x-4">
+												<span className="flex items-center justify-center text-[10px] bg-red-500 
+												rounded-full text-white w-5 h-5">
+													{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
+												</span>
+												<span className="relative flex h-3 w-3">
+													<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
+													bg-sky-400 opacity-75"></span>
+													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+												</span>
+											</div>
+										)}
                                     </NavLink>
                                 </ul>
                             </div>

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { Calendar, Filter } from "lucide-react";
+import { useState } from "react";
+import { useNotifications } from "../context/NotificationsContext";
+import userService from "../services/userService";
 import UserInviteCard from "../components/UserInviteCard";
 import { CustomDropdown } from "../components/CustomDropdown";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
@@ -7,43 +8,25 @@ import { filterInvitations } from "../utils/filterUtils";
 import SearchBar from "../components/SearchBar";
 import { EmptyInvitation } from "../components/EmptyInvitation";
 import LoadingInvites from "../components/LoadingInvites";
-const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
+import { Calendar, Filter } from "lucide-react";
 
 function UserInvites() {
 
-    const [invites, setInvites] = useState([]);
-    const [invitesFetched, setInvitesFetched] = useState(false);
+	const { invitesFetched, invites, setInvites } = useNotifications();
+
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
 
-    async function handleInvite(status, projectId, inviteId) {
+    async function handleInvite(updatedStatus, projectId, inviteId) {
 
         try {
 
-            const res = await fetch(
-                `${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites/${inviteId}`,
-                {
-                    method: "PATCH",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ status: status })
-                }
-            );
-
-            if (!res.ok) {
-
-                throw new Error("Error occurred while accepting invite");
-
-            } else {
-
-                setInvites((prev) =>
-                    prev.map((inv) => (inv.id === inviteId ? { ...inv, status: status } : inv))
-                );
-
-            }
+			await userService.updateInviteStatus({ updatedStatus, projectId, inviteId });
+            
+			setInvites((prev) =>
+				prev.map((inv) => (inv.id === inviteId ? { ...inv, status: updatedStatus } : inv))
+			);
 
         } catch (err) {
 
@@ -58,41 +41,6 @@ function UserInvites() {
         status: statusFilter,
         date: dateFilter,
     });
-
-    useEffect(() => {
-
-        async function getUserInvites() {
-
-            try {
-
-                const res = await fetch(`${SERVER_BASE_URL}/api/v1/me/invites`, {
-                    method: "GET",
-                    credentials: "include"
-                });
-
-                const { invites } = await res.json();
-
-                setInvites(invites);
-
-            } catch (err) {
-
-                console.log(err);
-
-            } finally {
-
-                setTimeout(() => {
-
-                    setInvitesFetched(true);
-
-                }, 600);
-
-            }
-
-        }
-
-        getUserInvites();
-
-    }, []);
 
     return (
         <div className="h-full bg-white dark:bg-black text-gray-900 dark:text-white p-4 md:p-6">

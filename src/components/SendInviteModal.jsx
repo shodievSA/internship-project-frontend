@@ -158,7 +158,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 					<SearchBar 
 						placeholder="Search your gmail contacts..."
 						value={searchQuery}
-						onChange={setSearchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
 					<div className="rounded-md dark:border-neutral-800 border-neutral-200 border-[1px] 
 					p-4 max-h-48 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 

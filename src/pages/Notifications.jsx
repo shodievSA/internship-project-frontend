@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useNotifications } from "../context/NotificationsContext";
 import NotificationItem from "../components/NotificationItem";
 import { Trash2 } from "lucide-react";
 import { filterNotifications } from "../utils/filterUtils";
@@ -13,44 +14,10 @@ import LoadingNotifications from "../components/LoadingNotifications";
 function Notifications() {
 
 	const location = useLocation();
+	const { loading, error, notifications, setNotifications } = useNotifications();
 
-	const [notifications, setNotifications] = useState([]);
 	const [selectedIds, setSelectedIds] = useState([]);
 	const [search, setSearch] = useState("");
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("ss");
-
-	useEffect(() => {
-
-		const fetchNotifications = async () => {
-
-			setLoading(true);
-			setError(null);
-
-			try {
-
-				const data = await notificationService.getNotifications();
-				setNotifications(data);
-
-				console.log("Fetched notifications:", data);
-
-			} catch (err) {
-
-				setError(err.message);
-
-			} finally {
-
-				setTimeout(() => {
-					setLoading(false);
-				}, 600);
-
-			}
-
-		};
-
-		fetchNotifications();
-
-	}, []);
 
 	useEffect(() => {
 
