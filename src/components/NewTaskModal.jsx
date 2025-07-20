@@ -35,7 +35,7 @@ function NewTaskModal({
     const [taskPriority, setTaskPriority] = useState(null);
     const [taskDeadline, setTaskDeadline] = useState(null);
     const [taskAssignedTo, setTaskAssignedTo] = useState(null);
-	const [attachedFiles, setAttachedFiles] = useState([]);
+	const [fileAttachments, setFileAttachments] = useState([]);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
     async function createNewTask() {
@@ -48,7 +48,7 @@ function NewTaskModal({
 		formData.append("deadline", taskDeadline);
 		formData.append("assignedTo", taskAssignedTo.value);
 		formData.append("assignedBy", currentMemberId);
-		formData.append("attachedFiles", attachedFiles);
+		formData.append("fileAttachments", fileAttachments);
 
        setIsNewTaskBeingCreated(true);
 
@@ -161,8 +161,8 @@ function NewTaskModal({
 						options={assignToOptions}
 					/>
 					<FileAttachments 
-						attachedFiles={attachedFiles} 
-						setAttachedFiles={setAttachedFiles} 
+						fileAttachments={fileAttachments} 
+						setFileAttachments={setFileAttachments} 
 					/>                
                 </div>
             </div>
