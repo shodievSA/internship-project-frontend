@@ -35,24 +35,26 @@ function NewTaskModal({
     const [taskPriority, setTaskPriority] = useState(null);
     const [taskDeadline, setTaskDeadline] = useState(null);
     const [taskAssignedTo, setTaskAssignedTo] = useState(null);
+	const [attachedFiles, setAttachedFiles] = useState([]);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
     async function createNewTask() {
+
+		const formData = new FormData();
+
+		formData.append("title", taskTitle);
+		formData.append("description", taskDescription);
+		formData.append("priority", taskPriority.value);
+		formData.append("deadline", taskDeadline);
+		formData.append("assignedTo", taskAssignedTo.value);
+		formData.append("assignedBy", currentMemberId);
+		formData.append("attachedFiles", attachedFiles);
 
        setIsNewTaskBeingCreated(true);
 
        try {
 	   
-			const newTask = await projectService.createTask(projectId, 
-				{
-					title: taskTitle,
-					description: taskDescription,
-					priority: taskPriority.value,
-					deadline: taskDeadline,
-					assignedTo: taskAssignedTo.value,
-					assignedBy: currentMemberId
-				}
-			);
+			const newTask = await projectService.createTask(projectId, formData);
 
 			setTasks([newTask, ...tasks]);
 
@@ -158,8 +160,10 @@ function NewTaskModal({
 						setValue={setTaskAssignedTo}
 						options={assignToOptions}
 					/>
-					{/* File Attachments */}
-					<FileAttachments />                
+					<FileAttachments 
+						attachedFiles={attachedFiles} 
+						setAttachedFiles={setAttachedFiles} 
+					/>                
                 </div>
             </div>
             <div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 

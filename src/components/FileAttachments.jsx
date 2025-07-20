@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Button from "./ui/Button";
 import { Upload, File, X } from "lucide-react";
 
-function FileAttachments() {
+function FileAttachments({
+	attachedFiles,
+	setAttachedFiles
+}) {
 
 	const fileInputRef = useRef(null);
-
-	const [files, setFiles] = useState([]);
 
 	useEffect(() => {
 
@@ -57,7 +58,7 @@ function FileAttachments() {
 			}
 		});
 
-		setFiles((prevFiles) => [...prevFiles, ...filesWithId]);
+		setAttachedFiles((prevFiles) => [...prevFiles, ...filesWithId]);
 
 	}
 
@@ -70,7 +71,7 @@ function FileAttachments() {
 
 	function deleteFile(fileIdToDelete) {
 
-		setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileIdToDelete));
+		setAttachedFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileIdToDelete));
 
 	}
 
@@ -110,11 +111,11 @@ function FileAttachments() {
 				</div>
 			</div>  
 			{
-				files.length > 0 && (
+				attachedFiles.length > 0 && (
 					<div className="flex flex-col gap-y-3">
-						<h1 className="font-medium">Attached Files ({files.length}/5)</h1>
+						<h1 className="font-medium">Attached Files ({attachedFiles.length}/5)</h1>
 						{
-							files.map((file, index) => {
+							attachedFiles.map((file, index) => {
 								return (
 									<div key={index} className="flex justify-between items-center rounded-md 
 									bg-neutral-100 dark:bg-neutral-900 px-4 py-3">
