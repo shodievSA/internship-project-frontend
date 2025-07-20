@@ -119,9 +119,9 @@ function Projects() {
 	if (userProjectCount === 0) return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
 
 	return (
-		<div className="h-full px-6 pt-8 lg:px-8">
-			<div className="flex flex-col gap-y-4 h-full">
-				<div className="h-full flex flex-col gap-y-8">
+		<div className="h-full px-4 lg:px-8 pt-5">
+			<div className="flex flex-col gap-y-5 h-full">
+				<div className="h-full flex flex-col gap-y-6">
 					<ProjectHeader
 						filters={currentFilters}
 						onSearch={handleSearch}

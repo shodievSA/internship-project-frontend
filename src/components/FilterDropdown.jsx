@@ -42,7 +42,7 @@ function FilterDropdown({
 				onClick={() => setIsOpen(!isOpen)}
 				disabled={disabled}
 			>
-				<div className="flex items-center gap-x-3">
+				<div className="flex items-center gap-x-3 text-sm">
 					<Icon className="w-4 h-4 flex-shrink-0" />
 					<span className="flex-1 text-center lg:text-left truncate">{selectedOption.label}</span>
 					<ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />

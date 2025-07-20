@@ -44,7 +44,7 @@ const ProjectHeader = ({
 					<Button
 						onClick={() => setShowNewProjectModal(true)}
 						variant="primary"
-						size="md"
+						size="sm"
 						className="w-full lg:w-auto"
 						disabled={disabled}
 					>
