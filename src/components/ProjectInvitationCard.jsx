@@ -27,7 +27,7 @@ export function ProjectInvitationCard({ invite }) {
 			case "rejected":
 				return (
 					<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 
-					text-red-800 dark:bg-red-900/20 dark:text-red-300">
+					text-red-800 dark:bg-red-800/30 dark:text-red-400">
 						Rejected
 					</span>
 				);

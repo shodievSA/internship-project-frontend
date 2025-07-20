@@ -42,7 +42,14 @@ function App() {
 										<Route path="assigned-tasks" element={<AssignedTasksPage />} />
 										<Route path="review-tasks" element={<ReviewTasksPage />} />
 									</Route>
-									<Route path="/projects/:projectId/team" element={<TeamPage />} />
+									<Route 
+										path="/projects/:projectId/team" 
+										element={ 
+											<ProjectContextProvider>
+												<TeamPage />
+											</ProjectContextProvider>
+										} 
+									/>
 									<Route path="/projects/:projectId/invites" element={<ProjectInvitesPage />} />
 									<Route path="/projects/:projectId/my-tasks/:taskId/comments" element={<Comments />} />
 									<Route path="/projects/:projectId/assigned-tasks/:taskId/comments" element={<Comments />} />

@@ -58,16 +58,12 @@ export function TeamMemberCard({ member }) {
                     </div>
 
                     <div className="flex-grow min-w-0">
-                        <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-lg truncate">{member.name}</h3>
+                        <div className="flex items-center gap-3">
+                            <h3 className="font-semibold text-lg truncate">{member.name}</h3>
                             <StatusBadge status={member.role} />
                         </div>
 
                         <div className="mt-2 space-y-1">
-                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                <User className="h-4 w-4 mr-2 flex-shrink-0" />
-                                <span className="truncate">{member.role}</span>
-                            </div>
 							<div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
 								<Pickaxe className="h-4 w-4 mr-2 flex-shrink-0" />
                                 <span className="truncate">{member.position}</span>

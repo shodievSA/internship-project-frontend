@@ -16,7 +16,7 @@ function ProjectLayoutNavigation() {
                 </NavLink> */}
                 <NavLink
                     to='all-tasks'
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm 
+                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm  
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
                 >

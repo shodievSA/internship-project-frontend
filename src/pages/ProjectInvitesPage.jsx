@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useProject } from "../context/ProjectContext";
+import { useState, useMemo, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, Filter, UserPlus } from "lucide-react";
 import { CustomDropdown } from "../components/CustomDropdown";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
@@ -9,16 +9,23 @@ import Button from "../components/ui/Button";
 import SearchBar from "../components/SearchBar";
 import SendInviteModal from "../components/SendInviteModal";
 import EmptyProjectInvites from "../components/EmptyProjectInvites";
-import Unauthorized from "../components/Unauthorized";
+import projectService from "../services/projectService";
+import { ArrowLeft } from "lucide-react"
+import EmptySearch from "../components/EmptySearch";
+import LoadingState from "../components/LoadingState";
 
 function ProjectInvitesPage() {
 
-    const { invites, setInvites, projectLoaded, currentMemberRole } = useProject();
+    const { projectId } = useParams();
+	const navigate = useNavigate();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
     const [showInviteModal, setShowInviteModal] = useState(false);
+	const [projectInvites, setProjectInvites] = useState([]);
+	const [projectInvitesLoaded, setProjectInvitesLoaded] = useState(false);
+	const [error, setError] = useState();
 
     function openModal() {
         setShowInviteModal(true);
@@ -30,7 +37,7 @@ function ProjectInvitesPage() {
 
     function handleNewInvite(newInvite) {
 
-        setInvites((prevInvites) => {
+        setProjectInvites((prevInvites) => {
             return [newInvite, ...prevInvites]
         })
 
@@ -38,9 +45,9 @@ function ProjectInvitesPage() {
 
     const filteredInvites = useMemo(() => {
 
-        if (!projectLoaded || !invites) return [];
+        if (!projectInvitesLoaded || !projectInvites) return [];
 
-        return invites.filter((invite) => {
+        return projectInvites.filter((invite) => {
 
             const matchesSearch =
                 invite.receiverName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,67 +59,112 @@ function ProjectInvitesPage() {
 
         });
 
-    }, [projectLoaded, invites, statusFilter, searchTerm]);
+    }, [projectInvitesLoaded, projectInvites, statusFilter, searchTerm]);
 
-    if (currentMemberRole !== 'admin') return <Unauthorized message={`Oops! Looks like this page is for special eyes only - ${currentMemberRole}s not allowed.`} />
+	function clearFilters() {
+
+		setSearchTerm("");
+		setStatusFilter("all");
+		setDateFilter("all");
+
+	}
+
+	useEffect(() => {
+
+		async function getProjectInvites() {
+
+			try {
+
+				const { projectInvites } = await projectService.getProjectInvites(projectId);
+				setProjectInvites(projectInvites);
+
+			} catch(err) {
+
+				setError(err.message);
+
+			} finally {
+
+				setTimeout(() => {
+
+					setProjectInvitesLoaded(true);
+
+				}, 500);
+
+			}
+
+		}
+
+		getProjectInvites();
+
+	}, [projectId]);
+
+	if (!projectInvitesLoaded) return <LoadingState message={"Fetching your project invites!"} />
     if (showInviteModal) return <SendInviteModal closeModal={closeModal} onNewInviteCreated={handleNewInvite} />
-    if (invites.length === 0) return <EmptyProjectInvites openModal={openModal} />
+    if (projectInvites.length === 0) return <EmptyProjectInvites openModal={openModal} />
 
     return (
-        <div className="h-full">
-            <div className="bg-white dark:bg-black text-gray-900 dark:text-white">
-                <div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-6">
-                    <div className="flex justify-start w-full lg:w-1/3">
-                        <div className="relative w-full">
-                            <SearchBar
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Search by project, inviter name or email..."
-                            />
-                        </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                        <div className="flex flex-col sm:flex-row gap-3">
-                            <CustomDropdown
-                                value={statusFilter}
-                                onChange={setStatusFilter}
-                                options={statusOptionsInviation}
-                                placeholder="All Status"
-                                icon={Filter}
-                                className="w-full sm:w-auto"
-                            />
-                            <CustomDropdown
-                                value={dateFilter}
-                                onChange={setDateFilter}
-                                options={dateOptions}
-                                placeholder="All Dates"
-                                icon={Calendar}
-                                className="w-full sm:w-auto"
-                            />
-                        </div>
-                        <Button
-                            variant="secondary"
-                            size="md"
-                            className='flex items-center gap-x-2'
-                            onClick={() => setShowInviteModal(true)}
-                        >
-                            <UserPlus className="h-4 w-4" />
-                            <span className="font-medium">Send Invite</span>
-                        </Button>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-y-5 pb-10">
-                    {
-                        filteredInvites.length > 0 ? (
-                            filteredInvites.map((invite) => (
-                                <ProjectInvitationCard key={invite.id} invite={invite} />
-                            ))
-                        ) : (
-                            <EmptyInvitation />
-                        )
-                    }
-                </div>
-            </div>
+        <div className="flex flex-col gap-y-6 h-full px-8 py-6">
+			<div className="flex flex-col gap-y-6 items-stretch gap-4">
+				<div className="flex justify-between">
+					<div className="flex gap-x-6 items-center">
+						<Button 
+							variant="secondary"
+							size="sm"
+							onClick={() => navigate(-1)}
+						>
+							<div className="flex items-center gap-x-3">
+								<ArrowLeft className="w-4 h-4" />
+								<span>Back to project</span>
+							</div>
+						</Button>
+						<div>
+							<h1 className="text-xl font-semibold">Project Invites</h1>
+						</div>
+					</div>
+					<span>{filteredInvites.length} invites</span>
+				</div>
+				<div className="flex flex-col justify-between sm:flex-row gap-3 items-stretch sm:items-center">
+					<div className="flex justify-start w-[400px]">
+						<div className="relative w-full">
+							<SearchBar
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								placeholder="Search by project, inviter name or email..."
+							/>
+						</div>
+					</div>
+					<div className="flex items-center gap-x-5">
+						<div className="flex flex-col sm:flex-row gap-3">
+							<CustomDropdown
+								value={statusFilter}
+								onChange={setStatusFilter}
+								options={statusOptionsInviation}
+								placeholder="All Status"
+								icon={Filter}
+								className="w-full sm:w-auto"
+							/>
+						</div>
+						<Button
+							variant="secondary"
+							size="sm"
+							className='flex items-center gap-x-2'
+							onClick={() => setShowInviteModal(true)}
+						>
+							<UserPlus className="h-4 w-4" />
+							<span>Send Invite</span>
+						</Button>
+					</div>
+				</div>
+			</div>
+			{ filteredInvites.length > 0 ? (
+				<div className="flex flex-col gap-y-5 pb-10">
+					{ filteredInvites.map((invite) => (
+						<ProjectInvitationCard key={invite.id} invite={invite} />
+					))}
+				</div>
+			) : (
+				<EmptySearch onClearFilters={clearFilters} />
+			)}
         </div>
     );
 

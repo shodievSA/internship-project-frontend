@@ -262,6 +262,48 @@ const projectService = {
 
 		} 
 
+	},
+
+	getProjectInvites: async (projectId) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites`,
+			{
+				method: "GET",
+				credentials: "include"
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to load project invites");
+
+		}
+
+		return response.json();
+
+	},
+
+	getProjectTeam: async (projectId) => {
+
+		const response = await fetch(
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members`,
+			{
+				method: "GET",
+				credentials: "include"
+			}
+		);
+
+		if (!response.ok) {
+
+			const error = await response.json();
+			throw new Error(error.message || "Failed to load project members");
+
+		}
+
+		return response.json();
+
 	}
 
 };
