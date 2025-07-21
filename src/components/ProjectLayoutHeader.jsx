@@ -148,7 +148,7 @@ function ProjectLayoutHeader({
 					</div>
 					<button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black text-white 
 					bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-3 px-4 py-2 rounded-md
-					grow md:grow-0 text-sm md:text-base"
+					grow md:grow-0 text-sm"
 						onClick={() => setShowNewTaskModal(true)}>
 						<Plus className="w-4 h-4" />
 						<span className="font-medium">New Task</span>
