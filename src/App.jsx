@@ -19,6 +19,7 @@ import SignIn from "./pages/SignIn";
 import UserInvites from "./pages/UserInvites";
 import PrivateRoute from "./components/PrivateRoute";
 import Comments from "./pages/Comments";
+import ProjectSprints from "./pages/ProjectSprints";
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
 										<Route path="assigned-tasks" element={<AssignedTasksPage />} />
 										<Route path="review-tasks" element={<ReviewTasksPage />} />
 									</Route>
+									<Route path="/projects/:projectId/sprints" element={<ProjectSprints />} />
 									<Route 
 										path="/projects/:projectId/team" 
 										element={ 

@@ -6,21 +6,13 @@ function ProjectLayoutNavigation() {
 		<ul className="dark:bg-neutral-900 bg-neutral-100 p-1 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
 		xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
 		rounded-md">
-                {/* <NavLink
-                    to='team'
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Team
-                </NavLink> */}
                 <NavLink
                     to='all-tasks'
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm  
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }
                 >
-                    All Tasks
+                    Sprints
                 </NavLink>
                 <NavLink
                     to='my-tasks'
@@ -46,16 +38,8 @@ function ProjectLayoutNavigation() {
                 >
                     Reviews
                 </NavLink>
-                {/* <NavLink
-                    to='invites'
-                    className={({ isActive }) => `transition-[background-color] duration-300 text-sm md:text-base 
-                        ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
-                    }
-                >
-                    Invites
-                </NavLink> */}
             </ul>
-	)
+	);
 
 }
 
