@@ -7,13 +7,16 @@ function AppLayout({ children }) {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 1024);
 
     return (
-        <div className='flex h-screen'>
+        <div className='flex h-screen bg-neutral-100 dark:bg-[rgb(12,12,12)]'>
             <Sidebar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-            <div className='flex flex-col grow h-full py-4 pr-3 bg-neutral-100 dark:bg-neutral-900'>    
-				<Topbar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-				<div className='dark:bg-black bg-white dark:text-white grow overflow-auto scrollbar-none
-				rounded-bl-xl rounded-br-xl'>
-					{ children }
+            <div className='flex grow h-full lg:py-4 lg:pr-3'>
+				<div className='flex flex-col h-full w-full border border-neutral-200 
+				dark:border-neutral-800 lg:rounded-xl'>    
+					<Topbar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
+					<div className='dark:bg-black bg-white dark:text-white grow overflow-auto scrollbar-none
+					lg:rounded-bl-xl lg:rounded-br-xl'>
+						{ children }
+					</div>
 				</div>  
             </div>
         </div>

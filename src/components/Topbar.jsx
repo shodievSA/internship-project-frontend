@@ -9,8 +9,8 @@ function Topbar({ sidebarCollapsed, setSidebarCollapsed }) {
 
     return (
         <div className='dark:bg-black bg-white dark:text-white dark:border-neutral-800 flex items-center 
-        justify-between p-5 h-14 flex-shrink-0 border-b-[1px] border-neutral-200 rounded-ss-xl 
-		rounded-tr-xl'>
+        justify-between p-5 h-14 flex-shrink-0 border-b-[1px] border-neutral-200 lg:rounded-ss-xl 
+		lg:rounded-tr-xl'>
             <div className='flex items-center gap-x-1'>
                 <button 
                 className='dark:hover:bg-neutral-900 hover:bg-neutral-100 p-2 rounded-md'
