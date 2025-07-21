@@ -1,12 +1,14 @@
-import Modal from "./ui/Modal";
-import { taskStatusColors } from "../utils/constant";
-import { taskPriorityColors } from "../utils/constant";
-import { Calendar, Clock, RefreshCw } from "lucide-react";
+import { useState, useEffect } from "react";
+import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
+import { taskStatusColors, taskPriorityColors } from "../utils/constant";
+import Modal from "./ui/Modal";
+import { Calendar, Clock, RefreshCw } from "lucide-react";
 
-function TaskDetailsModal({ task, closeModal }) {
+function TaskDetailsModal({ task, projectId, closeModal }) {
 
 	const {
+		id: taskId,
 		title,
 		description,
 		priority,
@@ -18,6 +20,36 @@ function TaskDetailsModal({ task, closeModal }) {
 		assignedBy, 
 		assignedTo
 	} = task;
+
+	const [fileUrls, setFileUrls] = useState([]);
+	const [fileUrlsLoaded, setFileUrlsLoaded] = useState(false);
+
+	useEffect(() => {
+
+		async function getTaskFiles() {
+
+			try {
+
+				const { fileURLs } = await taskService.getTaskFiles(projectId, taskId);
+				setFileUrls(fileURLs);
+
+				console.log(fileURLs);
+
+			} catch(err) {
+
+				console.log(err);
+
+			} finally {
+
+				setFileUrlsLoaded(true);
+
+			}
+
+		}
+
+		getTaskFiles();
+
+	}, []);
 
 	return (
 		<Modal size="lg" title={title} closeModal={closeModal}>

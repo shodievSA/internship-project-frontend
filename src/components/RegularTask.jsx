@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import TaskDetailsModal from "./TaskDetailsModal";
-import { Calendar, Flame, CircleDot, Clock } from "lucide-react";
+import { Flame, CircleDot, Clock } from "lucide-react";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import userPlaceholder from "../assets/user-placeholder.png";
 
@@ -16,6 +17,8 @@ function RegularTask({ task }) {
 		assignedTo,
 		deadline
 	} = task;
+
+	const { projectId } = useParams();
 
 	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState();
 
@@ -78,6 +81,7 @@ function RegularTask({ task }) {
 				showTaskDetailsModal && (
 					<TaskDetailsModal 
 						task={task} 
+						projectId={projectId}
 						closeModal={() => setShowTaskDetailsModal(false)}
 					/>
 				)

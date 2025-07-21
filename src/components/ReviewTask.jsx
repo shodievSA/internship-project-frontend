@@ -2,16 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import { formatIsoDate } from "../utils/formatIsoDate";
-import { 
-	Calendar, 
-	Flame, 
-	CircleDot, 
-	OctagonX,
-	Clock,  
-	Check, 
-	X,
-	CircleCheckBig
-} from "lucide-react";
+import { Flame, CircleDot, OctagonX, Clock, Check, X, CircleCheckBig } from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
@@ -20,11 +11,7 @@ import projectService from "../services/projectService";
 import { useToast } from "./ui/ToastProvider";
 import TaskDetailsModal from "./TaskDetailsModal";
 
-function ReviewTask({ 
-	task, 
-	onTaskApprove, 
-	onTaskReject 
-}) {
+function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 
 	const {
 		id,
@@ -33,7 +20,6 @@ function ReviewTask({
 		priority,
 		status,
 		assignedTo,
-		createdAt,
 		deadline
 	} = task;
 
@@ -202,6 +188,7 @@ function ReviewTask({
 				showTaskDetails && (
 					<TaskDetailsModal 
 						task={task} 
+						projectId={projectId}
 						closeModal={() => setShowTaskDetails(false)} 
 					/>
 				)

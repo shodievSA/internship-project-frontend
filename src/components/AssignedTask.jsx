@@ -1,30 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskStatusColors } from "../utils/constant";
 import { taskPriorityColors } from "../utils/constant";
-import { 
-	Calendar, 
-	Flame, 
-	CircleDot, 
-	Clock, 
-	EllipsisVertical, 
-	MessageSquare, 
-	SquarePen, 
-	Trash2
-} from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
 import TaskDetailsModal from "./TaskDetailsModal";
+import { Flame, CircleDot, Clock, EllipsisVertical, MessageSquare, SquarePen, Trash2 } from "lucide-react";
 
-function AssignedTask({ 
-	projectId, 
-	currentMemberId, 
-	task, 
-	team 
-}) {
+function AssignedTask({ task, team, currentMemberId }) {
 
 	const {
 		id,
@@ -36,6 +22,7 @@ function AssignedTask({
 		deadline
 	} = task;
 
+	const { projectId } = useParams();
 	const navigate = useNavigate();
 
 	const [editButtonClicked, setEditButtonClicked] = useState(false);
@@ -180,7 +167,8 @@ function AssignedTask({
 			{
 				showTaskDetailsModal && (
 					<TaskDetailsModal 
-						task={task} 
+						task={task}
+						projectId={projectId} 
 						closeModal={() => setShowTaskDetailsModal(false)} 
 					/>
 				)

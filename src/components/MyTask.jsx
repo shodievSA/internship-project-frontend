@@ -5,18 +5,11 @@ import projectService from "../services/projectService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import TaskDetailsModal from "./TaskDetailsModal";
-import { 
-	Calendar, 
-	Flame, 
-	CircleDot, 
-	Clock, 
-	CircleCheckBig, 
-	MessageSquare
-} from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
 import AiEditor from "./AiEditor";
+import { Flame, CircleDot, Clock, CircleCheckBig, MessageSquare } from "lucide-react";
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
 
@@ -167,6 +160,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 				showTaskDetailsModal && (
 					<TaskDetailsModal 
 						task={task} 
+						projectId={projectId}
 						closeModal={() => setShowTaskDetailsModal(false)} 
 					/>
 				)
