@@ -50,7 +50,7 @@ function NewTaskModal({
 		formData.append("assignedBy", currentMemberId);
 	
 		fileAttachments.forEach((file) => {
-			formData.append("fileAttachments", file);
+			formData.append("fileAttachments", file.item);
 		});
 
        setIsNewTaskBeingCreated(true);
