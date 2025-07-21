@@ -150,8 +150,11 @@ function NewTaskModal({
 							]}
 						/>
 						<DatePicker
+							label="Deadline"
 							disabled={isNewTaskBeingCreated} 
-							onChange={(e) => setTaskDeadline(e.target.value + "T00:00:00+05:00")}
+							value={taskDeadline}
+							setValue={setTaskDeadline}
+							required={true}
 						/>       
                     </div>
 					<SelectField

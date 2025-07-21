@@ -16,6 +16,7 @@ import {
 	Users,
 	UserPlus
 } from "lucide-react";
+import NewSprintModal from "./NewSprintModal";
 
 function ProjectLayoutHeader({
 	metaData,
@@ -26,7 +27,7 @@ function ProjectLayoutHeader({
 	const navigate = useNavigate();
 
 	const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
-	const [showNewTaskModal, setShowNewTaskModal] = useState(false);
+	const [showNewSprintModal, setShowNewSprintModal] = useState(false);
 	const [showEditProjectModal, setShowEditProjectModal] = useState(false);
 	const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
 	const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
@@ -149,19 +150,18 @@ function ProjectLayoutHeader({
 					<button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black text-white 
 					bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-3 px-4 py-2 rounded-md
 					grow md:grow-0 text-sm"
-						onClick={() => setShowNewTaskModal(true)}>
+						onClick={() => setShowNewSprintModal(true)}>
 						<Plus className="w-4 h-4" />
-						<span className="font-medium">New Task</span>
+						<span className="font-medium">New Sprint</span>
 					</button>
 				</div>
 			</div>
 			{
-				showNewTaskModal && (
-					<NewTaskModal
+				showNewSprintModal && (
+					<NewSprintModal 
 						projectId={metaData.id}
-						teamMembers={team}
 						currentMemberId={currentMemberId}
-						closeModal={() => setShowNewTaskModal(false)}
+						closeModal={() => setShowNewSprintModal(false)}
 					/>
 				)
 			}
