@@ -68,7 +68,7 @@ function ProjectSprints() {
 
 	};
 
-	if (tasks.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />;
+	// if (tasks.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />;
 
     return (
         <div className="grow">			
@@ -104,19 +104,19 @@ function ProjectSprints() {
 						</div>
 					</div>
 				</div>
-				{ filteredTasks.length > 0 ? (
+				{/* { filteredTasks.length > 0 ? ( */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 					gap-6 grid-auto-rows-[200px] pb-5">
 						{ mockSprints.map((sprint) => (
 							<SprintPreview sprint={sprint} />
 						)) }
 					</div>
-				) : (
+				{/* ) : (
 					<EmptySearch 
 						message={"No matching tasks found"} 
 						onClearFilters={clearFilters} 
 					/>	
-				)}
+				)} */}
 			</div>
         </div>
     );
