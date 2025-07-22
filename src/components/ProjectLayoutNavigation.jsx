@@ -7,7 +7,7 @@ function ProjectLayoutNavigation() {
 		xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
 		rounded-md">
                 <NavLink
-                    to='all-tasks'
+                    to='sprints'
                     className={({ isActive }) => `transition-[background-color] duration-300 text-sm  
                         ${isActive ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`
                     }

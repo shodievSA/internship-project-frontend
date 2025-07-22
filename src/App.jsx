@@ -20,6 +20,7 @@ import UserInvites from "./pages/UserInvites";
 import PrivateRoute from "./components/PrivateRoute";
 import Comments from "./pages/Comments";
 import ProjectSprints from "./pages/ProjectSprints";
+import ProjectSprint from "./pages/ProjectSprint";
 
 function App() {
 
@@ -38,12 +39,13 @@ function App() {
 											<ProjectLayout />
 										</ProjectContextProvider>
 									}>
-										<Route path="all-tasks" element={<AllTasksPage />} />
+										<Route path="sprints" element={<AllTasksPage />} />
 										<Route path="my-tasks" element={<MyTasksPage />} />
 										<Route path="assigned-tasks" element={<AssignedTasksPage />} />
 										<Route path="review-tasks" element={<ReviewTasksPage />} />
 									</Route>
 									<Route path="/projects/:projectId/sprints" element={<ProjectSprints />} />
+									<Route path="/projects/:projectId/sprints/:sprintId" element={<ProjectSprint />} />
 									<Route 
 										path="/projects/:projectId/team" 
 										element={ 

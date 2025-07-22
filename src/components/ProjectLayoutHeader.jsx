@@ -148,7 +148,7 @@ function ProjectLayoutHeader({
 						</div>
 					</div>
 					<button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black text-white 
-					bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-3 px-4 py-2 rounded-md
+					bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-2 px-3 py-2 rounded-md
 					grow md:grow-0 text-sm"
 						onClick={() => setShowNewSprintModal(true)}>
 						<Plus className="w-4 h-4" />

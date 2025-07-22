@@ -7,6 +7,32 @@ import EmptySearch from "../components/EmptySearch";
 import RegularTask from "../components/RegularTask";
 import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
+import SprintPreview from "../components/SprintPreview";
+
+const mockSprints = [
+	{
+		id: 0,
+		title: "New Sprint Title",
+		description: "New Sprint Description",
+		startDate: "2024-07-21",
+		endDate: "2024-08-21",
+		createdBy: "Abbos Shodiev",
+		totalTasks: 20,
+		totalTasksCompleted: 15,
+		status: "active"
+	},
+	{
+		id: 1,
+		title: "New Sprint Title",
+		description: "New Sprint Description",
+		startDate: "2024-07-21",
+		endDate: "2024-08-21",
+		createdBy: "Abbos Shodiev",
+		totalTasks: 20,
+		totalTasksCompleted: 15,
+		status: "completed"
+	}
+]
 
 function AllTasksPage() {
 
@@ -80,9 +106,9 @@ function AllTasksPage() {
 					</div>
 				</div>
 				{ filteredTasks.length > 0 ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 
 					gap-6 grid-auto-rows-[200px] pb-5">
-						{ filteredTasks.map((task) => <RegularTask key={task.id} task={task} />) }
+						{ mockSprints.map((sprint) => <SprintPreview sprint={sprint} />) }
 					</div>
 				) : (
 					<EmptySearch 
