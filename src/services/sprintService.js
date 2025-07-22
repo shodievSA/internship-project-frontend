@@ -8,6 +8,9 @@ const sprintService = {
 			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/sprints`,
 			{
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
 				credentials: "include",
 				body: JSON.stringify({ sprint })
 			}

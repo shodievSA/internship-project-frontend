@@ -28,7 +28,7 @@ function Modal({
     return (
         <div 
 			className="flex items-center justify-center fixed h-full w-full bg-black/80 
-			left-0 top-0 z-10 cursor-pointer"
+			left-0 top-0 z-20 cursor-pointer"
 			onClick={handleClick}
 		>
             <div className={`dark:bg-neutral-950 dark:border-neutral-800 bg-white border-neutral-200 

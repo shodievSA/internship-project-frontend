@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import sprintService from "../services/sprintService";
+import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import Modal from "./ui/Modal";
 import InputField from "./InputField";
@@ -10,6 +11,7 @@ import { Timer } from "lucide-react";
 
 function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 
+	const { sprints, setSprints } = useProject();
 	const { showToast } = useToast();
 
 	const [sprintTitle, setSprintTitle] = useState("");
@@ -55,7 +57,7 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 				createdBy: currentMemberId
 			});
 
-			console.log(newSprint);
+			setSprints([newSprint, ...sprints]);
 
 			showToast({
 				variant: "success",

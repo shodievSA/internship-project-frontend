@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useProject } from "../context/ProjectContext";
-import { taskStatusOptions, dateOptions } from "../utils/constant";
+import { dateOptions, sprintStatusOptions } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
@@ -8,57 +8,28 @@ import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 import SprintPreview from "../components/SprintPreview";
 
-const mockSprints = [
-	{
-		id: 0,
-		title: "New Sprint Title",
-		description: "New Sprint Description",
-		startDate: "2024-07-21",
-		endDate: "2024-08-21",
-		createdBy: "Abbos Shodiev",
-		totalTasks: 20,
-		totalTasksCompleted: 15,
-		status: "active"
-	},
-	{
-		id: 1,
-		title: "New Sprint Title",
-		description: "New Sprint Description",
-		startDate: "2024-07-21",
-		endDate: "2024-08-21",
-		createdBy: "Abbos Shodiev",
-		totalTasks: 20,
-		totalTasksCompleted: 15,
-		status: "completed"
-	}
-];
-
 function ProjectSprints() {
 
-	const { tasks, projectLoaded } = useProject();
+	const { sprints, projectLoaded } = useProject();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [dateFilter, setDateFilter] = useState("all");
 
-	const filteredTasks = useMemo(() => {
+	const filteredSprints = useMemo(() => {
 
-		if (!projectLoaded || !tasks) return [];
+		if (!projectLoaded || !sprints) return [];
 
-		return tasks.filter((task) => {
+		return sprints.filter((sprint) => {
 
-			const matchesSearch =
-			task.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-			task.assignedBy.name.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
-			task.assignedTo.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
-
-			const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+			const matchesSearch = sprint.title.toLowerCase().includes(searchTerm.trim().toLowerCase());
+			const matchesStatus = statusFilter === "all" || sprint.status === statusFilter;
 
 			return matchesSearch && matchesStatus;
 
 		});
 
-	}, [projectLoaded, tasks, searchTerm, statusFilter]);
+	}, [projectLoaded, sprints, searchTerm, statusFilter]);
 
 	function clearFilters() {
 
@@ -68,7 +39,7 @@ function ProjectSprints() {
 
 	};
 
-	// if (tasks.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />;
+	if (sprints.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />;
 
     return (
         <div className="grow">			
@@ -79,7 +50,7 @@ function ProjectSprints() {
 							<SearchBar
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
-								placeholder="Search by task title, assignee or assigner name"
+								placeholder="Search by sprint title"
 							/>
 						</div>
 					</div>
@@ -88,7 +59,7 @@ function ProjectSprints() {
 							<CustomDropdown
 								value={statusFilter}
 								onChange={setStatusFilter}
-								options={taskStatusOptions}
+								options={sprintStatusOptions}
 								placeholder="All Status"
 								icon={Filter}
 								className="w-full sm:w-auto"
@@ -104,19 +75,19 @@ function ProjectSprints() {
 						</div>
 					</div>
 				</div>
-				{/* { filteredTasks.length > 0 ? ( */}
+				{ filteredSprints.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
 					gap-6 grid-auto-rows-[200px] pb-5">
-						{ mockSprints.map((sprint) => (
+						{ sprints.map((sprint) => (
 							<SprintPreview sprint={sprint} />
 						)) }
 					</div>
-				{/* ) : (
+				) : (
 					<EmptySearch 
-						message={"No matching tasks found"} 
+						message="No matching sprints found"
 						onClearFilters={clearFilters} 
 					/>	
-				)} */}
+				)}
 			</div>
         </div>
     );

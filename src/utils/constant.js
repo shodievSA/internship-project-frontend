@@ -94,6 +94,14 @@ export const taskStatusOptions = [
 	{ value: "rejected", label: "Rejected" }
 ]
 
+export const sprintStatusOptions = [
+	{ value: "all", label: "All Status" },
+	{ value: "active", label: "Active" },
+	{ value: "planned", label: "Planned" },
+	{ value: "completed", label: "Completed" },
+	{ value: "overdue", label: "Overdue" }
+]
+
 export const dateOptions = [
     { value: "all", label: "All Dates" },
     { value: "today", label: "Today" },

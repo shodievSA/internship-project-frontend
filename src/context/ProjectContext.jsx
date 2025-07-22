@@ -14,6 +14,7 @@ export function ProjectContextProvider({ children }) {
 	const [team, setTeam] = useState([]);
     const [invites, setInvites] = useState([]);
     const [tasks, setTasks] = useState([]);
+	const [sprints, setSprints] = useState([]);
     const [currentMemberId, setCurrentMemberId] = useState();
     const [currentMemberRole, setCurrentMemberRole] = useState();
 
@@ -24,7 +25,7 @@ export function ProjectContextProvider({ children }) {
 			const { projectDetails } = await projectService.getProject(projectId);
 
 			setMetaData(projectDetails.metaData);
-			setTasks(projectDetails.tasks);
+			setSprints(projectDetails.sprints);
 			setTeam(projectDetails.team);
 			setInvites(projectDetails.invites);
 			setCurrentMemberId(projectDetails.currentMemberId);
@@ -40,6 +41,7 @@ export function ProjectContextProvider({ children }) {
 			setInvites(null);
 			setCurrentMemberId(null);
 			setCurrentMemberRole(null);
+			setSprints(null);
 
 		} finally {
 
@@ -69,6 +71,8 @@ export function ProjectContextProvider({ children }) {
 		setInvites,
 		tasks,
 		setTasks,
+		sprints,
+		setSprints,
 		currentMemberId,
 		setCurrentMemberId,
 		currentMemberRole,

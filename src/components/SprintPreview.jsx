@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { statusColors } from "../utils/constant";
+import { formatIsoDate } from "../utils/formatIsoDate";
 import { Calendar, TicketCheck } from "lucide-react";
 import ProgressBar from "./ProgressBar";
 
@@ -47,14 +48,14 @@ function SprintPreview({ sprint }) {
 						<Calendar className="w-4 h-4" />
 						<div className="flex flex-col">
 							<span className="font-medium">Start</span>
-							<span className="text-xs">{startDate}</span>
+							<span className="text-xs">{formatIsoDate(startDate)}</span>
 						</div>
 					</div>
 					<div className="flex items-center gap-x-2 text-sm">
 						<Calendar className="w-4 h-4" />
 						<div className="flex flex-col">
 							<span className="font-medium">Deadline</span>
-							<span className="text-xs">{endDate}</span>
+							<span className="text-xs">{formatIsoDate(endDate)}</span>
 						</div>
 					</div>
 					<div className="flex items-center gap-x-2 text-sm">
