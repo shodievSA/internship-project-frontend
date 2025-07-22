@@ -17,7 +17,7 @@ function NewTaskModal({
 	closeModal
 }) {
 
-	const { tasks, setTasks } = useProject();
+	// const { tasks, setTasks } = useProject();
 	const { showToast } = useToast();
 
 	const assignToOptions = teamMembers.map((member) => {
@@ -59,7 +59,7 @@ function NewTaskModal({
 	   
 			const newTask = await projectService.createTask(projectId, formData);
 
-			setTasks([newTask, ...tasks]);
+			// setTasks([newTask, ...tasks]);
 
 			showToast({
 				variant: "success",
@@ -175,6 +175,7 @@ function NewTaskModal({
             <div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
             border-neutral-200 p-4">
 				<Button
+					size="md"
 					variant="secondary"
 					disabled={isNewTaskBeingCreated}
 					onClick={closeModal}
@@ -182,6 +183,7 @@ function NewTaskModal({
 					Cancel
 				</Button>
 				<Button
+					size="md"
 					disabled={submitButtonDisabled}
 					loading={isNewTaskBeingCreated}
 					onClick={createNewTask}

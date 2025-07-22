@@ -8,7 +8,7 @@ import Projects from "./pages/Projects";
 import ProjectLayout from "./layouts/ProjectLayout";
 import TeamPage from "./pages/TeamPage";
 import TeamMemberDetailsPage from "./pages/TeamMemberDetailsPage";
-import AllTasksPage from "./pages/AllTasksPage";
+import ProjectSprints from "./pages/ProjectSprints";
 import MyTasksPage from "./pages/MyTasksPage";
 import AssignedTasksPage from "./pages/AssignedTasksPage";
 import ReviewTasksPage from "./pages/ReviewTasksPage";
@@ -19,7 +19,6 @@ import SignIn from "./pages/SignIn";
 import UserInvites from "./pages/UserInvites";
 import PrivateRoute from "./components/PrivateRoute";
 import Comments from "./pages/Comments";
-import ProjectSprints from "./pages/ProjectSprints";
 import ProjectSprint from "./pages/ProjectSprint";
 
 function App() {
@@ -39,13 +38,20 @@ function App() {
 											<ProjectLayout />
 										</ProjectContextProvider>
 									}>
-										<Route path="sprints" element={<AllTasksPage />} />
+										<Route path="sprints" element={<ProjectSprints />} />
 										<Route path="my-tasks" element={<MyTasksPage />} />
 										<Route path="assigned-tasks" element={<AssignedTasksPage />} />
 										<Route path="review-tasks" element={<ReviewTasksPage />} />
 									</Route>
 									<Route path="/projects/:projectId/sprints" element={<ProjectSprints />} />
-									<Route path="/projects/:projectId/sprints/:sprintId" element={<ProjectSprint />} />
+									<Route 
+										path="/projects/:projectId/sprints/:sprintId" 
+										element={
+											<ProjectContextProvider>
+												<ProjectSprint />
+											</ProjectContextProvider>
+										} 
+									/>
 									<Route 
 										path="/projects/:projectId/team" 
 										element={ 

@@ -3,8 +3,8 @@ import { NavLink } from "react-router-dom";
 function ProjectLayoutNavigation() {
 
 	return (
-		<ul className="dark:bg-neutral-900 bg-neutral-100 p-1 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
-		xl:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
+		<ul className="dark:bg-neutral-900 bg-neutral-100 p-1 grid gap-y-2 grid-cols-[repeat(2,minmax(100px,1fr))] 
+		lg:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>a]:text-center [&>a]:p-2 [&>a]:font-medium [&>a]:rounded-md 
 		rounded-md">
                 <NavLink
                     to='sprints'

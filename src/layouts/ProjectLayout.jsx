@@ -19,7 +19,7 @@ function ProjectLayout() {
 	if (error) return <ErrorState message={"Enexpected error occured while loading the project"} />
 
     return (
-        <div className="flex flex-col h-full gap-y-5 px-4 lg:px-8 pt-5">
+        <div className="flex flex-col h-full gap-y-4 px-4 lg:px-6 pt-4">
             <ProjectLayoutHeader 
 				metaData={metaData}
 				currentMemberId={currentMemberId}

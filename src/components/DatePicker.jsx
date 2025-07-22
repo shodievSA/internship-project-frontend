@@ -26,7 +26,7 @@ function DatePicker({
 					text-sm border-[1px] py-2 px-4 outline-none pl-10 w-full
 					disabled:opacity-50 disabled:cursor-none cursor-text"
 					onChange={(e) => setValue(e.target.value + "T00:00:00+05:00")}
-					value={value.split("T")[0]}
+					value={value ? value.split("T")[0] : null}
 				/>
 				<Calendar 
 					onClick={() => dateInput.current.showPicker()} 

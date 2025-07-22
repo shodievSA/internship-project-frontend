@@ -17,6 +17,7 @@ import {
 	UserPlus
 } from "lucide-react";
 import NewSprintModal from "./NewSprintModal";
+import Button from "./ui/Button";
 
 function ProjectLayoutHeader({
 	metaData,
@@ -147,13 +148,15 @@ function ProjectLayoutHeader({
 							</div>
 						</div>
 					</div>
-					<button className="dark:bg-white dark:hover:bg-slate-200 dark:text-black text-white 
-					bg-neutral-900 hover:bg-neutral-900/90 flex justify-center items-center gap-x-2 px-3 py-2 rounded-md
-					grow md:grow-0 text-sm"
-						onClick={() => setShowNewSprintModal(true)}>
-						<Plus className="w-4 h-4" />
-						<span className="font-medium">New Sprint</span>
-					</button>
+					<Button
+						size="sm"
+						onClick={() => setShowNewSprintModal(true)}
+					>
+						<div className="flex items-center gap-x-2">
+							<Plus className="w-4 h-4" />
+							<span>New Sprint</span>
+						</div>
+					</Button>
 				</div>
 			</div>
 			{
