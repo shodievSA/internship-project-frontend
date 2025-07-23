@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
 import SearchBar from "../components/SearchBar";
 import RegularTask from "../components/RegularTask";
@@ -15,6 +15,7 @@ import { dateOptions, taskStatusOptions } from "../utils/constant";
 
 function ProjectSprint() {
 
+	const { state: { sprintTitle } } = useLocation();
 	const { projectId, sprintId } = useParams();
 	const { team, currentMemberId, tasks, setTasks } = useProject();
 	
@@ -112,7 +113,7 @@ function ProjectSprint() {
 									<span>Back to project</span>
 								</div>
 							</Button>
-							<h1 className="text-xl font-semibold">Spint</h1>
+							<h1 className="text-lg font-semibold">{ sprintTitle }</h1>
 						</div>
 						<Button
 							size="sm"

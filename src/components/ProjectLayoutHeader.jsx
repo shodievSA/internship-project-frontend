@@ -97,7 +97,7 @@ function ProjectLayoutHeader({
 						</button>
 						<div className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md border-neutrals-200 border-[1px] 
 						rounded-md flex flex-col absolute w-[200px] mt-3 left-0 ${settingsButtonClicked ? 'opacity-100' :
-								'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-10`}>
+								'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-20`}>
 							<div className="flex flex-col border-b-[1px] dark:border-neutral-800 border-neutral-200 p-1.5">
 								<button
 									className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 

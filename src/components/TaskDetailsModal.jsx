@@ -3,7 +3,7 @@ import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskStatusColors, taskPriorityColors } from "../utils/constant";
 import Modal from "./ui/Modal";
-import { Calendar, Clock, RefreshCw } from "lucide-react";
+import { Calendar, Clock, Download, File, RefreshCw } from "lucide-react";
 
 function TaskDetailsModal({ task, projectId, closeModal }) {
 
@@ -41,7 +41,9 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 			} finally {
 
-				setFileUrlsLoaded(true);
+				setTimeout(() => {
+					setFileUrlsLoaded(true);
+				}, 400);
 
 			}
 
@@ -50,6 +52,21 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 		getTaskFiles();
 
 	}, []);
+
+	function downloadFile(file) {
+
+		const link = document.createElement('a');
+
+		link.href = file.url;
+		link.target = "_blank";
+		link.download = file.fileName;
+
+		document.body.appendChild(link);
+
+		link.click();
+		link.remove();
+
+	}
 
 	return (
 		<Modal size="lg" title={title} closeModal={closeModal}>
@@ -123,6 +140,45 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div className="flex flex-col gap-y-2">
+					<h1 className="font-medium text-lg">Attachments</h1>
+					{
+						fileUrlsLoaded && (
+							fileUrls.length > 0 ? (
+								<div className="flex flex-col gap-y-2">
+									{
+										fileUrls.map((file) => {
+											return (
+												<div className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200">
+													 <div className="flex items-center">
+														<File className="w-5 h-5" />
+													 </div>
+													 <div className="flex flex-col">
+														<span className="text-sm">{file.fileName}</span>
+														<div className="flex gap-x-2 text-xs">
+															<span>{file.size} MB</span>
+														</div>
+													 </div>
+													 <div 
+													 	onClick={() => downloadFile(file)} 
+														className="flex items-center ml-auto px-2 py-1 rounded-lg 
+													 	hover:bg-neutral-100 cursor-pointer"
+													>
+														<Download className="w-5 h-5" />
+													 </div>
+												</div>
+											)
+										})
+									}
+								</div>
+							) : (
+								<div>
+									<h1>No file attachments</h1>
+								</div>
+							)
+						)
+					}
 				</div>
 				<div className="flex flex-col gap-y-2">
 					<h1 className="font-medium text-lg">Activity History</h1>
