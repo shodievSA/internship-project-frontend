@@ -30,6 +30,7 @@ export function ProjectContextProvider({ children }) {
 			setInvites(projectDetails.invites);
 			setCurrentMemberId(projectDetails.currentMemberId);
 			setCurrentMemberRole(projectDetails.currentMemberRole);
+			setTasks(projectDetails.tasks);
 
 		} catch (err) {
 

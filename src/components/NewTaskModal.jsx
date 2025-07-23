@@ -11,22 +11,20 @@ import TaskTitleField from "./TaskTitleField";
 import FileAttachments from "./FileAttachments";
 
 function NewTaskModal({ 
+	closeModal,
+	onNewTaskCreated,
 	projectId,
+	sprintId,
 	teamMembers, 
 	currentMemberId,
-	closeModal
 }) {
-
-	// const { tasks, setTasks } = useProject();
+	
 	const { showToast } = useToast();
-
 	const assignToOptions = teamMembers.map((member) => {
-
 		return {
 			label: `${member.name} - ${member.position}`,
 			value: member.id
 		}
-
 	});
 
     const [isNewTaskBeingCreated, setIsNewTaskBeingCreated] = useState(false);
@@ -48,6 +46,8 @@ function NewTaskModal({
 		formData.append("deadline", taskDeadline);
 		formData.append("assignedTo", taskAssignedTo.value);
 		formData.append("assignedBy", currentMemberId);
+		formData.append("projectId", projectId);
+		formData.append("sprintId", sprintId);
 	
 		fileAttachments.forEach((file) => {
 			formData.append("fileAttachments", file.file);
@@ -57,9 +57,9 @@ function NewTaskModal({
 
        try {
 	   
-			const newTask = await projectService.createTask(projectId, formData);
+			const { newTask } = await projectService.createTask(projectId, sprintId, formData);
 
-			// setTasks([newTask, ...tasks]);
+			onNewTaskCreated(newTask);
 
 			showToast({
 				variant: "success",

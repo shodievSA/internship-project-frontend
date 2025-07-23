@@ -103,10 +103,10 @@ const projectService = {
 
 	},
 
-	createTask: async (projectId, formData) => {
+	createTask: async (projectId, sprintId, formData) => {
 
 		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks`, 
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/sprints/${sprintId}/tasks`, 
 			{
 				method: 'POST',
 				credentials: 'include',
