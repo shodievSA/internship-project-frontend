@@ -324,6 +324,8 @@ function prepareDataForSubmission(updatedTaskProps, fileUpdates) {
 
 	}
 
+	return formData;
+
 }
 
 export default UpdateTaskModal;
