@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNotifications } from "../context/NotificationsContext";
 import userService from "../services/userService";
+import { incrementProjectCount } from "../utils/localStorageUtils";
 import UserInviteCard from "../components/UserInviteCard";
 import { CustomDropdown } from "../components/CustomDropdown";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
@@ -28,6 +29,8 @@ function UserInvites() {
 				prev.map((inv) => (inv.id === inviteId ? { ...inv, status: updatedStatus } : inv))
 			);
 
+			if (updatedStatus === "accepted") incrementProjectCount();
+ 
         } catch (err) {
 
             console.log(err);
