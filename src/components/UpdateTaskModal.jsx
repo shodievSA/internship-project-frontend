@@ -124,17 +124,13 @@ function UpdateTaskModal({
 
 	async function updateTask() {
 
-		const dataToSubmit = prepareDataForSubmission(updatedTaskProps, fileUpdates);
+		const formData = prepareDataForSubmission(updatedTaskProps, fileUpdates);
 
 		setTaskBeingUpdated(true);
 
 		try {
 
-			const { updatedTask } = await projectService.updateTask({
-				projectId: projectId, 
-				taskId: taskId, 
-				dataToSubmit
-			});
+			const { updatedTask } = await projectService.updateTask({ projectId, taskId, formData });
 
 			setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId) ? updatedTask : task));
 
