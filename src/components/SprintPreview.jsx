@@ -29,7 +29,7 @@ function SprintPreview({ sprint }) {
 			rounded-lg p-5 w-full text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-neutral-700 
 			transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.01] 
 			transition-transform"
-			onClick={() => navigate(`${sprintId}`, { state: { sprintTitle: sprint.title }})}
+			onClick={() => navigate(`${sprintId}`, { state: { sprint }})}
 		>
 			<div className="flex flex-col gap-y-2">
 				<div className="flex items-start justify-between">

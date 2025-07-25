@@ -74,7 +74,7 @@ function DeleteProjectModal({
 			subtitle={`Are you sure you want to delete "${projectTitle}"?`}
 			size="md"
 		>
-			<div className="flex flex-col px-7 pb-7 gap-y-8">
+			<div className="flex flex-col px-5 pb-5 gap-y-8">
 				<div className="dark:bg-red-950 dark:border-red-800 bg-red-100 border-red-300 
 				text-red-500 flex flex-col gap-y-2 p-4 rounded-md border-[1px]">
 					<span>This action will permanently:</span>
