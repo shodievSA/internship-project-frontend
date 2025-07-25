@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Select from "./ui/Select";
 import { Asterisk } from "lucide-react";
 
@@ -6,10 +7,18 @@ function SelectField({
     disabled, 
     placeholder,
     required,
-    selected,
+    value,
     setValue, 
     options
 }) {
+
+	const selected = useMemo(() => {
+
+		if (!value) return null;
+
+		return options.find((option) => option.value === value);
+
+	}, [value, options]);
 
     return (
         <div className="flex flex-col gap-y-2">
@@ -19,7 +28,7 @@ function SelectField({
             </label>
             <Select 
                 selected={selected}
-                onChange={(option) => setValue(option)} 
+                onChange={(option) => setValue(option.value)} 
                 options={options} 
                 disabled={disabled}
                 placeholder={placeholder}

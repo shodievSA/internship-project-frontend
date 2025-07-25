@@ -9,6 +9,7 @@ import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
 import TaskTitleField from "./TaskTitleField";
 import FileAttachments from "./FileAttachments";
+import { taskPriorityOptions } from "../utils/constant";
 
 function NewTaskModal({ 
 	closeModal,
@@ -20,12 +21,6 @@ function NewTaskModal({
 }) {
 	
 	const { showToast } = useToast();
-	const assignToOptions = teamMembers.map((member) => {
-		return {
-			label: `${member.name} - ${member.position}`,
-			value: member.id
-		}
-	});
 
     const [isNewTaskBeingCreated, setIsNewTaskBeingCreated] = useState(false);
     const [taskTitle, setTaskTitle] = useState('');
@@ -42,9 +37,9 @@ function NewTaskModal({
 
 		formData.append("title", taskTitle);
 		formData.append("description", taskDescription);
-		formData.append("priority", taskPriority.value);
+		formData.append("priority", taskPriority);
 		formData.append("deadline", taskDeadline);
-		formData.append("assignedTo", taskAssignedTo.value);
+		formData.append("assignedTo", taskAssignedTo);
 		formData.append("assignedBy", currentMemberId);
 		formData.append("projectId", projectId);
 		formData.append("sprintId", sprintId);
@@ -141,20 +136,16 @@ function NewTaskModal({
 							disabled={isNewTaskBeingCreated}
 							placeholder="Specify task priority"
 							required={true}
-							selected={taskPriority}
+							value={taskPriority}
 							setValue={setTaskPriority}
-							options={[
-								{ label: 'Low', value: 'low' },
-								{ label: 'Middle', value: 'middle' }, 
-								{ label: 'High', value: 'high' }
-							]}
+							options={taskPriorityOptions}
 						/>
 						<DatePicker
 							label="Deadline"
+							required={true}
 							disabled={isNewTaskBeingCreated} 
 							value={taskDeadline}
 							setValue={setTaskDeadline}
-							required={true}
 						/>       
                     </div>
 					<SelectField
@@ -162,9 +153,9 @@ function NewTaskModal({
 						disabled={isNewTaskBeingCreated}
 						placeholder="Select a team member"
 						required={true}
-						selected={taskAssignedTo}
+						value={taskAssignedTo}
 						setValue={setTaskAssignedTo}
-						options={assignToOptions}
+						options={getAssignToOptions(teamMembers)}
 					/>
 					<FileAttachments 
 						fileAttachments={fileAttachments} 
@@ -193,6 +184,19 @@ function NewTaskModal({
             </div>
         </Modal>
     )
+
+};
+
+function getAssignToOptions(teamMembers) {
+
+	const assignToOptions = teamMembers.map((member) => {
+		return {
+			label: `${member.name} - ${member.position}`,
+			value: member.id
+		}
+	});
+
+	return assignToOptions;
 
 };
 

@@ -1,12 +1,11 @@
 import { useEffect, useRef } from "react";
+import { useToast } from "./ui/ToastProvider";
 import Button from "./ui/Button";
 import { Upload, File, X } from "lucide-react";
 
-function FileAttachments({
-	fileAttachments,
-	setFileAttachments
-}) {
+function FileAttachments({ fileAttachments, setFileAttachments }) {
 
+	const { showToast } = useToast();
 	const fileInputRef = useRef(null);
 
 	useEffect(() => {
@@ -51,11 +50,23 @@ function FileAttachments({
 
 	function addFiles(files) {
 
+		if (files.length > 5) {
+
+			return showToast({
+				variant: "failure",
+				title: "File limit exceeded!",
+				message: "You can upload up to 5 files per task"
+			});
+
+		}
+
 		const filesWithId = Array.from(files).map((file) => {
+
 			return {
 				id: Date.now() + Math.random(),
 				file: file
 			}
+
 		});
 
 		setFileAttachments((prevFiles) => [...prevFiles, ...filesWithId]);
@@ -105,7 +116,7 @@ function FileAttachments({
 							Select Files
 						</Button>
 						<h3 className="text-sm text-neutral-500">
-							Supports all file types, max 10MB per file, 5 files maximum
+							Supports all file types, max 5MB per file, 5 files maximum
 						</h3>
 					</div>
 				</div>
@@ -119,9 +130,12 @@ function FileAttachments({
 								return (
 									<div key={index} className="flex justify-between items-center rounded-md 
 									bg-neutral-100 dark:bg-neutral-900 px-4 py-3">
-										<div className="flex gap-x-3">
-											<File className="w-5 h-5" />
-											<span>{ file.file.name }</span>
+										<div className="flex items-center gap-x-5">
+											<div className="flex gap-x-3">
+												<File className="w-5 h-5" />
+												<span>{ file.file.name }</span>
+											</div>
+											<span className="text-sm">{ getMegaBytes(file.file.size) } MB</span>
 										</div>
 										<div 
 											className="p-1 hover:bg-red-700 dark:hover:bg-red-900 hover:text-white 
@@ -139,6 +153,12 @@ function FileAttachments({
 			}
 		</div>     
 	);
+
+}
+
+function getMegaBytes(bytes) {
+
+	return (bytes / (1024 * 1024 )).toFixed(2);
 
 }
 

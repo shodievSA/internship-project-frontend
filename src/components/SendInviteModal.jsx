@@ -97,6 +97,12 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 		setInviteBeingSent(true);
 
+		console.log({
+			receiverEmail: email,
+					positionOffered: position,
+					roleOffered: role
+		})
+
 		try {
 
 			const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites`, {
@@ -108,7 +114,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 				body: JSON.stringify({
 					receiverEmail: email,
 					positionOffered: position,
-					roleOffered: role.value
+					roleOffered: role
 				})
 			});
 
@@ -226,7 +232,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 						label="Role"
 						placeholder="Specify role"
 						disabled={inviteBeingSent}
-						selected={role}
+						value={role}
 						setValue={setRole}
 						options={[
 							{ label: "Member", value: "member" },

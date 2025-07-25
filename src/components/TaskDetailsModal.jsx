@@ -30,10 +30,8 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 			try {
 
-				const { fileURLs } = await taskService.getTaskFiles(projectId, taskId);
-				setFileUrls(fileURLs);
-
-				console.log(fileURLs);
+				const { fileUrls } = await taskService.getTaskFiles(projectId, taskId);
+				setFileUrls(fileUrls);
 
 			} catch(err) {
 

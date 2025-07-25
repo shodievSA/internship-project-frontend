@@ -76,8 +76,9 @@ function AssignedTask({ task, team, currentMemberId }) {
 								{
 									editButtonClicked && (
 										<ul className="absolute flex flex-col bg-white dark:bg-neutral-950 w-max 
-										rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2 shadow-md">
-											<li className="flex items-center p-1.5 border-b-[1px] dark:border-neutral-800
+										rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2 shadow-md
+										text-sm">
+											<li className="flex items-center p-1 border-b-[1px] dark:border-neutral-800
 											cursor-pointer">
 												<div 
 													className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
@@ -88,7 +89,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 														setEditButtonClicked(false);
 													}}
 												>
-													<SquarePen className="w-4 h-4" />
+													<SquarePen className="w-3.5 h-3.5" />
 													<span>Edit Task</span>
 												</div>
 											</li>
@@ -102,7 +103,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 														setEditButtonClicked(false);
 													}}
 												>
-													<Trash2 className="w-4 h-4" />
+													<Trash2 className="w-3.5 h-3.5" />
 													<span>Delete Task</span>
 												</div>
 											</li>

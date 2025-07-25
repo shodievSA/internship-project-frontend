@@ -37,6 +37,12 @@ export const ownerOptions = [
     { label: "Member", value: "member" }
 ];
 
+export const taskPriorityOptions = [
+	{ label: "High", value: "high" },
+	{ label: "Middle", value: "middle" },
+	{ label: "Low", value: "low" }
+];
+
 export const features = [
     {
         icon: Calendar,

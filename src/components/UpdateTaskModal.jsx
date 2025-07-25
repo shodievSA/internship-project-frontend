@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
+import { taskPriorityOptions } from "../utils/constant";
 import AiEditor from "./AiEditor";
 import InputField from "./InputField";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import SelectField from "./SelectField";
 import DatePicker from "./DatePicker";
-
-const taskPriorityOptions = [
-	{ label: "High", value: "high" },
-	{ label: "Middle", value: "middle" },
-	{ label: "Low", value: "low" }
-];
+import FileAttachments from "./FileAttachments";
+import taskService from "../services/taskService";
+import TaskTitleField from "./TaskTitleField";
 
 function UpdateTaskModal({ 
 	projectId,
@@ -23,40 +21,110 @@ function UpdateTaskModal({
 }) {
 
 	const {
-		id,
+		id: taskId,
 		title,
 		description,
 		priority,
-		assignedTo,
-		deadline
+		assignedTo: { id: assignedToId },
+		deadline,
+		filesMetaData
 	} = task;
 
 	const { setTasks } = useProject();
 	const { showToast } = useToast();
 
-	const assignToOptions = team.map((member) => {
-		return {
-			label: `${member.name} - ${member.position}`,
-			value: member.id
-		}
-	});
-
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
-	const [updatedTaskProps, setUpdatedTaskProps] = useState({});
-	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
 	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
+	const [newTaskFiles, setNewTaskFiles] = useState([]);
+	const [newTaskAssignedToId, setNewTaskAssignedToId] = useState(assignedToId);
+	const [newTaskPriority, setNewTaskPriority] = useState(priority);
+	const [filesFetched, setFilesFetched] = useState(false);
 
-	const [newTaskAssignedTo, setNewTaskAssignedTo] = useState(() => 
-		assignToOptions.find((assignToOption) => assignToOption.value === assignedTo.id)
-	);
-	const [newTaskPriority, setNewTaskPriority] = useState(() => 
-		taskPriorityOptions.find((priorityOption) => priorityOption.value === priority)
-	);
+	const fileUpdates = useMemo(() => {
+
+		if (!filesFetched) return { filesToAdd: [], filesToDelete: [] };
+
+		const oldFileIds = filesMetaData.map((file) => file.id);
+		const newFileIds = newTaskFiles.map((file) => file.id);
+
+		const filesToAdd = newTaskFiles.filter((newFile) => !oldFileIds.includes(newFile.id));
+		const filesToDelete = oldFileIds.filter((id) => !newFileIds.includes(id));
+
+		return { filesToAdd, filesToDelete };
+
+	}, [newTaskFiles, filesMetaData, filesFetched]);
+
+	/* eslint-disable react-hooks/exhaustive-deps */
+	const updatedTaskProps = useMemo(() => {
+
+		const updatedProps = getUpdatedTaskProps({
+			newTaskTitle: newTaskTitle,
+			oldTaskTitle: title,
+			newTaskDescription: newTaskDescription,
+			oldTaskDescription: description,
+			newTaskPriority: newTaskPriority,
+			oldTaskPriority: priority,
+			newTaskDeadline: newTaskDeadline,
+			oldTaskDeadline: deadline,
+			newTaskAssignedToId: newTaskAssignedToId,
+			oldTaskAssignedToId: assignedToId,
+		});
+
+		return updatedProps;
+
+	}, [
+		newTaskTitle,
+		newTaskDescription,
+		newTaskPriority,
+		newTaskDeadline,
+		newTaskAssignedToId
+	]);
+	/* eslint-enable react-hooks/exhaustive-deps */
+
+	const submitButtonDisabled = useMemo(() => {
+
+		const allowToSubmit = shouldEnableSubmitButton(updatedTaskProps, fileUpdates);
+		return allowToSubmit ? false : true;
+
+	}, [updatedTaskProps, fileUpdates]);
+
+	useEffect(() => {
+
+		async function fetchPresignedUrls() {
+
+			const { fileUrls } = await taskService.getTaskFiles(projectId, taskId);
+			await fetchFilesFromPresignedUrls(fileUrls);
+
+		}
+
+		async function fetchFilesFromPresignedUrls(fileUrls) {
+
+			const responses = await Promise.all(fileUrls.map((file) => fetch(file.url)));
+			const blobs = await Promise.all(responses.map((response) => response.blob()));
+			const files = blobs.map((blob, index) => new File([blob], fileUrls[index].fileName));
+
+			setNewTaskFiles(files.map((file, index) => {
+
+				return {
+					id: fileUrls[index].id, 
+					file: file 
+				}
+
+			}));
+
+			setFilesFetched(true);
+
+		};
+
+		fetchPresignedUrls();
+
+	}, []);
 
 	async function updateTask() {
+
+		const dataToSubmit = prepareDataForSubmission(updatedTaskProps, fileUpdates);
 
 		setTaskBeingUpdated(true);
 
@@ -64,11 +132,11 @@ function UpdateTaskModal({
 
 			const { updatedTask } = await projectService.updateTask({
 				projectId: projectId, 
-				taskId: id, 
-				updatedTaskProps: updatedTaskProps
+				taskId: taskId, 
+				dataToSubmit
 			});
 
-			setTasks((prevTasks) => prevTasks.map((task) => (task.id === id) ? updatedTask : task));
+			setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId) ? updatedTask : task));
 
 			closeModal();
 
@@ -93,39 +161,6 @@ function UpdateTaskModal({
 
 	}
 
-	useEffect(() => {
-
-		const updatedProps = getUpdatedTaskProps(updatedTaskProps, {
-			newTaskTitle: newTaskTitle,
-			oldTaskTitle: title,
-			newTaskDescription: newTaskDescription,
-			oldTaskDescription: description,
-			newTaskPriority: newTaskPriority,
-			oldTaskPriority: priority,
-			newTaskDeadline: newTaskDeadline,
-			oldTaskDeadline: deadline,
-			newTaskAssignedTo: newTaskAssignedTo,
-			oldTaskAssignedTo: assignedTo,
-		});
-
-		setUpdatedTaskProps(updatedProps);
-
-	}, [
-		newTaskTitle,
-		newTaskDescription,
-		newTaskPriority,
-		newTaskDeadline,
-		newTaskAssignedTo
-	]);
-
-	useEffect(() => {
-
-		setSubmitButtonDisabled(
-			Object.keys(updatedTaskProps).length === 0
-		);
-
-	}, [updatedTaskProps]);
-
 	return (
 		<Modal 
 			title="Edit Task" 
@@ -135,13 +170,11 @@ function UpdateTaskModal({
 			<div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
 			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex flex-col gap-y-8">
-					<InputField
-						label="Task Title"
-						required={true}
-						disabled={taskBeingUpdated}
-						placeholder="Enter a clear and concise task title"
+					<TaskTitleField 
+						taskDescription={newTaskDescription}
 						value={newTaskTitle}
 						setValue={setNewTaskTitle}
+						disabled={taskBeingUpdated}
 					/>
 					<AiEditor 
 						label="Description"
@@ -159,18 +192,16 @@ function UpdateTaskModal({
 							disabled={taskBeingUpdated}
 							placeholder="Specify task priority"
 							required={true}
-							selected={newTaskPriority}
+							value={newTaskPriority}
 							setValue={setNewTaskPriority}
-							options={[
-								{ label: 'Low', value: 'low' },
-								{ label: 'Middle', value: 'middle' }, 
-								{ label: 'High', value: 'high' }
-							]}
+							options={taskPriorityOptions}
 						/>
 						<DatePicker
+							label="Deadline"
+							required={true}
 							disabled={taskBeingUpdated} 
-							onChange={(e) => setNewTaskDeadline(e.target.value)}
-							value={newTaskDeadline.split("T")[0]}
+							value={newTaskDeadline}
+							setValue={setNewTaskDeadline}
 						/>
 					</div>
 					<SelectField
@@ -178,15 +209,20 @@ function UpdateTaskModal({
 						disabled={taskBeingUpdated}
 						placeholder="Select a team member"
 						required={true}
-						selected={newTaskAssignedTo}
-						setValue={setNewTaskAssignedTo}
-						options={assignToOptions}
-					/>                                     
+						value={newTaskAssignedToId}
+						setValue={setNewTaskAssignedToId}
+						options={getAssignToOptions(team)}
+					/> 
+					<FileAttachments 
+						fileAttachments={newTaskFiles} 
+						setFileAttachments={setNewTaskFiles}
+					/>
 				</div>
 			</div>
 			<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
 			border-neutral-200 p-4">
 				<Button
+					size="md"
 					variant="secondary"
 					disabled={taskBeingUpdated}
 					onClick={closeModal}
@@ -194,6 +230,7 @@ function UpdateTaskModal({
 					Cancel
 				</Button>
 				<Button
+					size="md"
 					disabled={submitButtonDisabled}
 					loading={taskBeingUpdated}
 					onClick={updateTask}
@@ -202,13 +239,13 @@ function UpdateTaskModal({
 				</Button>
 			</div>
 		</Modal>
-	)
+	);
 
 };
 
-function getUpdatedTaskProps(prevUpdates, task) {
+function getUpdatedTaskProps(task) {
 
-	const updated = { ...prevUpdates };
+	const updated = {};
 
 	if (task.newTaskTitle.trim() !== task.oldTaskTitle) {
 		updated.title = task.newTaskTitle;
@@ -222,8 +259,8 @@ function getUpdatedTaskProps(prevUpdates, task) {
 		delete updated.description;
 	}
 
-	if (task.newTaskPriority.value !== task.oldTaskPriority) {
-		updated.priority = task.newTaskPriority.value;
+	if (task.newTaskPriority !== task.oldTaskPriority) {
+		updated.priority = task.newTaskPriority;
 	} else {
 		delete updated.priority;
 	}
@@ -234,13 +271,58 @@ function getUpdatedTaskProps(prevUpdates, task) {
 		delete updated.deadline;
 	}
 
-	if (task.newTaskAssignedTo.value !== task.oldTaskAssignedTo.id) {
-		updated.assignedTo = task.newTaskAssignedTo.value;
+	if (task.newTaskAssignedToId !== task.oldTaskAssignedToId) {
+		updated.assignedTo = task.newTaskAssignedToId;
 	} else {
 		delete updated.assignedTo;
 	}
 
 	return updated;
+
+}
+
+function getAssignToOptions(team) {
+
+	return team.map((member) => {
+
+		return {
+			label: `${member.name} - ${member.position}`,
+			value: member.id
+		}
+
+	});
+
+}
+
+function shouldEnableSubmitButton(updatedTaskProps, fileUpdates) {
+
+	return (
+		Object.keys(updatedTaskProps).length > 0 || 
+		fileUpdates.filesToAdd.length > 0  || 
+		fileUpdates.filesToDelete.length > 0
+	);
+
+}
+
+function prepareDataForSubmission(updatedTaskProps, fileUpdates) {
+
+	const formData = new FormData();
+
+	formData.append("updatedTaskProps", JSON.stringify(updatedTaskProps));
+	
+	if (fileUpdates.filesToAdd.length > 0) {
+
+		fileUpdates.filesToAdd.forEach((file) => {
+			formData.append("filesToAdd", file.file);
+		});
+
+	}
+
+	if (fileUpdates.filesToDelete.length > 0) {
+		
+		formData.append("filesToDelete", JSON.stringify(fileUpdates.filesToDelete));
+
+	}
 
 }
 

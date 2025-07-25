@@ -37,7 +37,6 @@ function ProjectSprint() {
 			try {
 
 				const { sprintTasks } = await sprintService.getTasks(projectId, sprintId);
-				console.log(sprintTasks)
 				setSprintTasks(sprintTasks);
 
 			} catch(err) {
@@ -162,7 +161,7 @@ function ProjectSprint() {
 					gap-6 grid-auto-rows-[200px] pb-5">
 						{
 							filteredSprintTasks.map((sprintTask) => {
-								return <RegularTask task={sprintTask} />
+								return <RegularTask key={sprintTask.id} task={sprintTask} />
 							})
 						}
 					</div>
