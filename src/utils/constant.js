@@ -5,10 +5,16 @@ export const getProgressColor = (progress) => {
 }
 
 export const statusColors = {
-    active: "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400 dark:border dark:border-green-500/20",
-    paused: "bg-orange-100 text-orange-800 dark:bg-orange-500/10 dark:text-orange-400 dark:border dark:border-orange-500/20",
-    completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/10 dark:text-slate-400 dark:border dark:border-slate-500/20"
+    active: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400 dark:border dark:border-green-500/30",
+    paused: "bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-400 dark:border dark:border-orange-500/30",
+    completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/20 dark:text-slate-400 dark:border dark:border-slate-500/30"
 } 
+
+export const sprintStatusColors = {
+	active: "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400 dark:border dark:border-green-500/20",
+	completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/10 dark:text-slate-400 dark:border dark:border-slate-500/20",
+	planned: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-400 dark:border dark:border-fuchsia-500/30"
+}
 
 export const taskStatusColors = {
 	"ongoing": "bg-blue-200/80 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300",
@@ -100,21 +106,26 @@ export const taskStatusOptions = [
 	{ value: "rejected", label: "Rejected" }
 ]
 
-export const sprintStatusOptions = [
+export const sprintStatusFilters = [
 	{ value: "all", label: "All Status" },
 	{ value: "active", label: "Active" },
 	{ value: "planned", label: "Planned" },
 	{ value: "completed", label: "Completed" },
 	{ value: "overdue", label: "Overdue" }
-]
+];
 
 export const dateOptions = [
     { value: "all", label: "All Dates" },
     { value: "today", label: "Today" },
     { value: "week", label: "This Week" },
     { value: "month", label: "This Month" },
-]
+];
 
+export const sprintStatusOptions = [
+	{ value: "active", label: "Active" },
+	{ value: "planned", label: "Planned" },
+	{ value: "completed", label: "Completed" }
+];
 
 export const getAvatarUrl = (name) => {
     const encodedName = encodeURIComponent(name)

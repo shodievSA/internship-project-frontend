@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { statusColors } from "../utils/constant";
+import { sprintStatusColors } from "../utils/constant";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { Calendar, TicketCheck } from "lucide-react";
 import ProgressBar from "./ProgressBar";
@@ -36,7 +36,7 @@ function SprintPreview({ sprint }) {
 					<h2 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
 						{ title || '' }
 					</h2>
-					<span className={`${statusColors[status]} status-badge`}>
+					<span className={`${sprintStatusColors[status]} status-badge`}>
 						{status}
 					</span>
 				</div>

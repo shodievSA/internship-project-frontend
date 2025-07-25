@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useProject } from "../context/ProjectContext";
-import { dateOptions, sprintStatusOptions } from "../utils/constant";
+import { dateOptions, sprintStatusFilters } from "../utils/constant";
 import SearchBar from "../components/SearchBar";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptySearch from "../components/EmptySearch";
@@ -59,7 +59,7 @@ function ProjectSprints() {
 							<CustomDropdown
 								value={statusFilter}
 								onChange={setStatusFilter}
-								options={sprintStatusOptions}
+								options={sprintStatusFilters}
 								placeholder="All Status"
 								icon={Filter}
 								className="w-full sm:w-auto"

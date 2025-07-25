@@ -1,16 +1,19 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { sprintStatusOptions } from "../utils/constant";
 import InputField from "./InputField";
 import TextareaField from "./TextareaField";
 import DatePicker from "./DatePicker";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { SquarePen } from "lucide-react";
+import SelectField from "./SelectField";
 
 function EditSprintModal({ sprint, closeModal }) {
 
 	const {
 		title,
 		description,
+		status,
 		startDate,
 		endDate
 	} = sprint;
@@ -19,15 +22,13 @@ function EditSprintModal({ sprint, closeModal }) {
 	const [newSprintDescription, setNewSprintDescription] = useState(description);
 	const [newSprintStartDate, setNewSprintStartDate] = useState(startDate);
 	const [newSprintEndDate, setNewSprintEndDate] = useState(endDate);
+	const [newSprintStatus, setNewSprintStatus] = useState(status);
 
 	const [sprintBeingUpdated, setSprintBeingUpdated] = useState(false);
 
-	console.log("old date: " + startDate);
-	console.log("new date: " + newSprintStartDate);
-
 	function updateSprint() {
 
-		//
+		// request to update sprint 
 
 	}
 
@@ -37,10 +38,12 @@ function EditSprintModal({ sprint, closeModal }) {
 		const updatedProps = getSprintUpdatedProps({
 			newTitle: newSprintTitle,
 			newDescription: newSprintDescription,
+			newStatus: newSprintStatus,
 			newStartDate: newSprintStartDate,
 			newEndDate: newSprintEndDate,
 			oldTitle: title,
 			oldDescription: description,
+			oldStatus: status,
 			oldStartDate: startDate,
 			oldEndDate: endDate
 		});
@@ -51,7 +54,8 @@ function EditSprintModal({ sprint, closeModal }) {
 		newSprintTitle,
 		newSprintDescription,
 		newSprintStartDate,
-		newSprintEndDate
+		newSprintEndDate,
+		newSprintStatus
 	]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
@@ -88,6 +92,13 @@ function EditSprintModal({ sprint, closeModal }) {
 						setValue={setNewSprintDescription}
 						rows={5}
 						disabled={sprintBeingUpdated}
+					/>
+					<SelectField
+						label="Sprint status" 
+						disabled={sprintBeingUpdated}
+						value={newSprintStatus}
+						setValue={setNewSprintStatus}
+						options={sprintStatusOptions}
 					/>
 					<div className="grid grid-cols-2 gap-5">
 						<DatePicker 
@@ -145,6 +156,12 @@ function getSprintUpdatedProps(sprint) {
 		updated.description = sprint.newDescription;
 	} else {
 		delete updated.description;
+	}
+
+	if (sprint.newStatus !== sprint.oldStatus) {
+		updated.status = sprint.newStatus;
+	} else {
+		delete updated.status;
 	}
 
 	if (sprint.newStartDate !== sprint.oldStartDate) {
