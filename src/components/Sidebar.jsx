@@ -57,8 +57,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                 fixed h-full w-full transition-bg-color duration-200 z-10 lg:hidden`}
 				></div> {/* dark, semi-transparent background color only for mobile and tablet screen sizes */}
                 <div className={`${sidebarCollapsed ? 'w-0 lg:w-0 lg:pl-3 -translate-x-full lg:-translate-x-64' 
-				: 'lg:pl-0'} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500 
-				w-full lg:w-64`}>
+				: 'lg:pl-0 lg:w-64'} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500`}>
                     <div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 lg:grow`}>
                         <div className={`flex flex-col h-full pt-4 gap-y-8`}>
                             <div className="flex gap-x-3 items-center justify-start px-2">
