@@ -68,7 +68,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 	return (
 		<Modal size="lg" title={title} closeModal={closeModal}>
-			<div className="flex flex-col gap-y-5 px-5 pb-5 overflow-y-auto
+			<div className="flex flex-col gap-y-8 px-5 pb-5 overflow-y-auto
 			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex gap-x-3">
 					<div className={`px-4 py-1 rounded-full text-sm ${taskPriorityColors[task.priority]}`}>
@@ -148,7 +148,8 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 									{
 										fileUrls.map((file) => {
 											return (
-												<div className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200">
+												<div className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200
+												dark:border-neutral-800">
 													 <div className="flex items-center">
 														<File className="w-5 h-5" />
 													 </div>
@@ -161,9 +162,9 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													 <div 
 													 	onClick={() => downloadFile(file)} 
 														className="flex items-center ml-auto px-2 py-1 rounded-lg 
-													 	hover:bg-neutral-100 cursor-pointer"
+													 	hover:bg-neutral-100 hover:dark:bg-neutral-900 cursor-pointer"
 													>
-														<Download className="w-5 h-5" />
+														<Download className="w-4 h-4" />
 													 </div>
 												</div>
 											)
