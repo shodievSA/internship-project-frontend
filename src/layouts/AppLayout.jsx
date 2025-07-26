@@ -9,7 +9,7 @@ function AppLayout({ children }) {
     return (
         <div className='flex h-screen bg-neutral-100 dark:bg-[rgb(12,12,12)]'>
             <Sidebar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-            <div className='flex grow h-full lg:py-4 lg:pr-3'>
+            <div className='flex flex-1 h-full lg:py-4 lg:pr-3'>
 				<div className='flex flex-col h-full w-full border border-neutral-200 
 				dark:border-neutral-800 lg:rounded-xl'>    
 					<Topbar sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />

@@ -52,63 +52,15 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
     return (
         <>
-            {
-                signoutButtonClicked && (
-                    <div className="flex items-center justify-center fixed w-full h-full bg-black/80 z-30">
-                        <div className="dark:bg-neutral-950 dark:border-neutral-800 bg-white  
-                        border-[1px] p-6 rounded-lg flex flex-col gap-y-3 w-[350px] lg:w-[500px]">
-                            <h1 className="dark:text-white text-black text-lg lg:text-xl font-semibold">Sign Out</h1>
-                            <p className="dark:text-neutral-400 text-neutral-500 text-sm lg:text-base">
-                                Are you sure you want to sign out? You will need to log in again
-                                to access your workspace.
-                            </p>
-                            <div className="flex justify-end gap-x-4 mt-2">
-                                <button
-                                    disabled={isUserBeingSignedOut}
-                                    className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
-                                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-md font-medium text-sm lg:text-base 
-                                    ${isUserBeingSignedOut ? 'cursor-not-allowed' : 'cursor-pointer'} disabled:opacity-50`}
-                                    onClick={() => setSignoutButtonClicked(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    disabled={isUserBeingSignedOut}
-                                    className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 
-                                    hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-md font-medium text-sm 
-                                    lg:text-base disabled:opacity-50'
-                                    onClick={logOutUser}
-                                >
-                                    {
-                                        isUserBeingSignedOut ? (
-                                            <div className="flex justify-center">
-                                                <div className="relative w-5 h-5">
-                                                    <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
-                                                    <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
-                                                    dark:border-t-black rounded-full animate-spin"></div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            "Sign Out"
-                                        )
-                                    }
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
             <div>
-                {/* dark, semi-transparent background color only for mobile and tablet screen sizes */}
                 <div className={`${sidebarCollapsed ? 'bg-transparent pointer-events-none' : "bg-black/30"} 
-                fixed h-full w-full transition-bg-color duration-200 z-10 lg:hidden`}></div>
-
-                <div className={`${sidebarCollapsed ? 'w-0 lg:pl-3' : 'w-full lg:w-64 lg:pl-0'} dark:text-white flex fixed 
-                lg:static h-full z-20 transition-all duration-500`}>
-                    <div className={`${sidebarCollapsed ? 'w-0 border-r-0 dark:border-neutral-800 border-neutral-200'
-                    : 'w-64'} dark:bg-[rgb(12,12,12)] bg-neutral-100 transition-[width] duration-500`}>
-                        <div className={`${sidebarCollapsed ? 'invisible' : 'visible'} flex flex-col h-full pt-4
-                        gap-y-8`}>
+                fixed h-full w-full transition-bg-color duration-200 z-10 lg:hidden`}
+				></div> {/* dark, semi-transparent background color only for mobile and tablet screen sizes */}
+                <div className={`${sidebarCollapsed ? 'w-0 lg:w-0 lg:pl-3 -translate-x-full lg:-translate-x-64' 
+				: 'lg:pl-0'} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500 
+				w-full lg:w-64`}>
+                    <div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 lg:grow`}>
+                        <div className={`flex flex-col h-full pt-4 gap-y-8`}>
                             <div className="flex gap-x-3 items-center justify-start px-2">
                                 <div className="bg-neutral-200 w-10 h-10 rounded-full flex-shrink-0">
                                     <img src={user.avatarUrl} className='w-full h-full rounded-full' />
@@ -124,7 +76,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                 <span className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
                                     MAIN MENU
                                 </span>
-                                <ul className="flex flex-col gap-y-1 font-medium text-sm px-1">
+                                <ul className="flex flex-col gap-y-1 font-medium text-sm px-1.5">
                                     <NavLink to={'/projects'} className='dark:hover:bg-neutral-900 dark:text-neutral-300
                                     dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
                                     items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
@@ -199,6 +151,52 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                     <div className='grow lg:hidden' onClick={() => setSidebarCollapsed(true)}></div>
                 </div>
             </div>
+			{
+                signoutButtonClicked && (
+                    <div className="flex items-center justify-center fixed w-full h-full bg-black/80 z-30">
+                        <div className="dark:bg-neutral-950 dark:border-neutral-800 bg-white  
+                        border-[1px] p-6 rounded-lg flex flex-col gap-y-3 w-[350px] lg:w-[500px]">
+                            <h1 className="dark:text-white text-black text-lg lg:text-xl font-semibold">Sign Out</h1>
+                            <p className="dark:text-neutral-400 text-neutral-500 text-sm lg:text-base">
+                                Are you sure you want to sign out? You will need to log in again
+                                to access your workspace.
+                            </p>
+                            <div className="flex justify-end gap-x-4 mt-2">
+                                <button
+                                    disabled={isUserBeingSignedOut}
+                                    className={`dark:bg-neutral-950 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800 
+                                    bg-white hover:bg-slate-100 py-2.5 px-4 border-[1px] rounded-md font-medium text-sm lg:text-base 
+                                    ${isUserBeingSignedOut ? 'cursor-not-allowed' : 'cursor-pointer'} disabled:opacity-50`}
+                                    onClick={() => setSignoutButtonClicked(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    disabled={isUserBeingSignedOut}
+                                    className='dark:bg-white dark:hover:bg-slate-200 dark:text-black bg-neutral-900 
+                                    hover:bg-neutral-900/90 text-white py-2.5 px-4 rounded-md font-medium text-sm 
+                                    lg:text-base disabled:opacity-50'
+                                    onClick={logOutUser}
+                                >
+                                    {
+                                        isUserBeingSignedOut ? (
+                                            <div className="flex justify-center">
+                                                <div className="relative w-5 h-5">
+                                                    <div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
+                                                    <div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
+                                                    dark:border-t-black rounded-full animate-spin"></div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            "Sign Out"
+                                        )
+                                    }
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </>
     )
 
