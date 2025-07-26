@@ -48,7 +48,7 @@ export function NotificationsContextProvider({ children }) {
 
 					const newNotification = data.newNotification;
 
-					setNotifications([newNotification, ...notifications]);
+					setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
 
 					showToast({
 						variant: "success",
@@ -60,7 +60,7 @@ export function NotificationsContextProvider({ children }) {
 
 					const newInvite = data.newInvite;
 
-					setInvites([newInvite, ...invites]);
+					setInvites((prevInvites) => [newInvite, ...prevInvites]);
 
 					showToast({
 						variant: "success",
