@@ -12,6 +12,17 @@ import TimeTrackingSkeleton from "./TimeTrackingSkeleton";
 
 function TaskDetailsModal({ task, projectId, closeModal }) {
 
+	// Add safety check for task object
+	if (!task) {
+		return (
+			<Modal size="lg" title="Error" closeModal={closeModal}>
+				<div className="p-5">
+					<p>Task data is not available.</p>
+				</div>
+			</Modal>
+		);
+	}
+
 	const {
 		id: taskId,
 		title,
@@ -21,9 +32,9 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 		createdAt,
 		updatedAt,
 		deadline,
-		history,
-		assignedBy,
-		assignedTo
+		history = [],
+		assignedBy = {},
+		assignedTo = {}
 	} = task;
 
 	const [fileUrls, setFileUrls] = useState([]);
@@ -36,16 +47,20 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 		async function getTaskFiles() {
 
+			if (!taskId || !projectId) {
+				setFileUrlsLoaded(true);
+				setIsLoading(false);
+				return;
+			}
+
 			try {
 
 				const { fileURLs } = await taskService.getTaskFiles(projectId, taskId);
-				setFileUrls(fileURLs);
-
-				console.log(fileURLs);
+				setFileUrls(fileURLs || []);
 
 			} catch (err) {
 
-				console.log(err);
+				setFileUrls([]);
 
 			} finally {
 
@@ -60,7 +75,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 		getTaskFiles();
 
-	}, []);
+	}, [projectId, taskId]);
 
 	// Handle tab switching for Time Log tab
 	const handleTabChange = (tab) => {
@@ -89,7 +104,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 	}
 
 	return (
-		<Modal size="lg" title={title} closeModal={closeModal}>
+		<Modal size="lg" title={title || 'Task Details'} closeModal={closeModal}>
 			<div className="flex flex-col gap-y-5 px-5 pb-5">
 				{/* Tab Switcher */}
 				<div className="flex gap-x-2 mb-4">
@@ -114,12 +129,12 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 						) : (
 							<div className="flex flex-col gap-y-5">
 								<div className="flex gap-x-3">
-									<div className={`px-4 py-1 rounded-full text-sm ${taskPriorityColors[task.priority]}`}>{priority}</div>
-									<div className={`px-4 py-1 rounded-full text-sm ${taskStatusColors[task.status]}`}>{status}</div>
+									<div className={`px-4 py-1 rounded-full text-sm ${taskPriorityColors[priority] || ''}`}>{priority || 'Unknown'}</div>
+									<div className={`px-4 py-1 rounded-full text-sm ${taskStatusColors[status] || ''}`}>{status || 'Unknown'}</div>
 								</div>
 								<div className="flex flex-col gap-y-2">
 									<h1 className="font-medium text-lg">Description:</h1>
-									<p className="text-slate-500 dark:text-neutral-400">{description}</p>
+									<p className="text-slate-500 dark:text-neutral-400">{description || 'No description available'}</p>
 								</div>
 								<div className="flex gap-x-20">
 									<div className="flex flex-col gap-y-4">
@@ -128,20 +143,20 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 											<div className="flex flex-col gap-y-2">
 												<h1 className="dark:text-neutral-300">Assigned To</h1>
 												<div className="flex gap-x-2 items-center">
-													<img src={assignedTo.avatarUrl} className="w-7 h-7 rounded-full" />
+													<img src={assignedTo?.avatarUrl} className="w-7 h-7 rounded-full" />
 													<div className="flex flex-col">
-														<h1 className="font-medium">{assignedTo.name}</h1>
-														<h2>{assignedTo.email}</h2>
+														<h1 className="font-medium">{assignedTo?.name || 'Unknown'}</h1>
+														<h2>{assignedTo?.email || 'No email'}</h2>
 													</div>
 												</div>
 											</div>
 											<div className="flex flex-col gap-y-2">
 												<h1 className="dark:text-neutral-300">Assigned By</h1>
 												<div className="flex gap-x-2 items-center">
-													<img src={assignedBy.avatarUrl} className="w-7 h-7 rounded-full" />
+													<img src={assignedBy?.avatarUrl} className="w-7 h-7 rounded-full" />
 													<div className="flex flex-col">
-														<h1 className="font-medium">{assignedBy.name}</h1>
-														<h2>{assignedBy.email}</h2>
+														<h1 className="font-medium">{assignedBy?.name || 'Unknown'}</h1>
+														<h2>{assignedBy?.email || 'No email'}</h2>
 													</div>
 												</div>
 											</div>
@@ -154,7 +169,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 												<h1 className="dark:text-neutral-300">Created:</h1>
 												<div className="flex items-center gap-x-2">
 													<Calendar className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
-													<span className="mt-0.5">{formatIsoDate(createdAt)}</span>
+													<span className="mt-0.5">{createdAt ? formatIsoDate(createdAt) : 'Unknown'}</span>
 												</div>
 											</div>
 											<div className="flex flex-col gap-y-1">
@@ -163,7 +178,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													<div>
 														<Clock className="dark:text-red-500 text-red-600 w-4 h-4" />
 													</div>
-													<span className="mt-0.5">{formatIsoDate(deadline)}</span>
+													<span className="mt-0.5">{deadline ? formatIsoDate(deadline) : 'No deadline'}</span>
 												</div>
 											</div>
 											<div className="flex flex-col gap-y-1">
@@ -172,7 +187,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													<div>
 														<RefreshCw className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
 													</div>
-													<span className="mt-0.5">{formatIsoDate(updatedAt)}</span>
+													<span className="mt-0.5">{updatedAt ? formatIsoDate(updatedAt) : 'Unknown'}</span>
 												</div>
 											</div>
 										</div>
@@ -182,10 +197,10 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 									<h1 className="font-medium text-lg">Attachments</h1>
 									{
 										fileUrlsLoaded && (
-											fileUrls.length > 0 ? (
+											(fileUrls || []).length > 0 ? (
 												<div className="flex flex-col gap-y-2">
 													{
-														fileUrls.map((file) => {
+														(fileUrls || []).map((file) => {
 															return (
 																<div key={file.fileName} className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200">
 																	<div className="flex items-center">
@@ -220,16 +235,18 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 									<h1 className="font-medium text-lg">Activity History</h1>
 									<div className="flex flex-col gap-y-5 pl-6 dark:text-neutral-300 dark:text-neutral-300 border-l-[1px] dark:border-neutral-800 ml-2">
 										{
-											history.map((stage, index) => {
-												const status = stage.status;
+											(history || []).map((stage, index) => {
+												const status = stage?.status;
+												if (!stage || !status) return null;
+
 												if (status === "ongoing" || status === "overdue") {
 													return (
 														<div key={index} className="flex items-center gap-x-3">
-															<span>{history.length - index}.</span>
+															<span>{(history || []).length - index}.</span>
 															<div className="flex items-center gap-x-2">
-																<div className={`text-sm dark:border-neutral-800 border-[1px] rounded-full py-1 px-3 font-medium ${taskStatusColors[stage.status]}`}>{stage.status}</div>
+																<div className={`text-sm dark:border-neutral-800 border-[1px] rounded-full py-1 px-3 font-medium ${taskStatusColors[stage.status] || ''}`}>{stage.status}</div>
 																-
-																<span>{formatIsoDate(stage.createdAt)}</span>
+																<span>{stage.createdAt ? formatIsoDate(stage.createdAt) : 'Unknown date'}</span>
 															</div>
 														</div>
 													);
@@ -238,14 +255,14 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 														<div key={index} className="flex items-center gap-x-3">
 															<div className="flex flex-col gap-y-3">
 																<div className="flex items-center gap-x-2">
-																	<span>{history.length - index}.</span>
-																	<div className={`text-sm dark:border-neutral-800 border-[1px] rounded-full py-1 px-3 font-medium ${taskStatusColors[stage.status]}`}>{stage.status}</div>
+																	<span>{(history || []).length - index}.</span>
+																	<div className={`text-sm dark:border-neutral-800 border-[1px] rounded-full py-1 px-3 font-medium ${taskStatusColors[stage.status] || ''}`}>{stage.status}</div>
 																	-
-																	<span>{formatIsoDate(stage.createdAt)}</span>
+																	<span>{stage.createdAt ? formatIsoDate(stage.createdAt) : 'Unknown date'}</span>
 																</div>
 																<div>
 																	{
-																		stage.comment ? (
+																		stage?.comment ? (
 																			status === "rejected" ? (
 																				<p><span className="font-medium">Rejection reason:</span> <span className="dark:text-neutral-400">{stage.comment}</span></p>
 																			) : status === "under review" ? (

@@ -37,16 +37,9 @@ export default function TimeTracking({ taskTitle, taskStatus, taskPriority, task
         async function checkServerStatus() {
             setIsInitializing(true);
             try {
-                console.log('Checking server timer status for taskId:', taskId);
                 const status = await fetchTimerStatus();
-                console.log('Server status response:', status);
-                console.log('Status isRunning:', status.isRunning);
-                console.log('Status taskId:', status.taskId);
-                console.log('Current taskId:', taskId);
-                console.log('Status currentEntry:', status.currentEntry);
 
                 if (status.isRunning && status.currentEntry && status.currentEntry.taskId === taskId) {
-                    console.log('Timer is running on server, restoring state...');
                     // Restore timer state from server
                     setIsRunning(true);
                     setCurrentEntry(status.currentEntry);
@@ -55,10 +48,7 @@ export default function TimeTracking({ taskTitle, taskStatus, taskPriority, task
                     // Calculate elapsed time from server start time
                     const elapsed = Math.floor((Date.now() - serverStartTime) / 1000);
                     setLiveElapsed(elapsed);
-                    console.log('Timer state restored - elapsed:', elapsed, 'startTime:', serverStartTime);
                 } else {
-                    console.log('No timer running on server for this task');
-                    console.log('Reason: isRunning =', status.isRunning, 'currentEntry =', !!status.currentEntry, 'taskId match =', status.currentEntry?.taskId === taskId);
                     // Ensure local state is reset
                     setIsRunning(false);
                     setCurrentEntry(null);

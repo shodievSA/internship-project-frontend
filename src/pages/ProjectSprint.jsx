@@ -18,7 +18,7 @@ function ProjectSprint() {
 	const { state: { sprintTitle } } = useLocation();
 	const { projectId, sprintId } = useParams();
 	const { team, currentMemberId, tasks, setTasks } = useProject();
-	
+
 	const navigate = useNavigate();
 
 	const [sprintTasks, setSprintTasks] = useState([]);
@@ -37,12 +37,12 @@ function ProjectSprint() {
 			try {
 
 				const { sprintTasks } = await sprintService.getTasks(projectId, sprintId);
-				console.log(sprintTasks)
+
 				setSprintTasks(sprintTasks);
 
-			} catch(err) {
+			} catch (err) {
 
-				console.log(err.message);
+				// Handle error silently
 
 			} finally {
 
@@ -56,7 +56,7 @@ function ProjectSprint() {
 
 		getSprintTasks();
 
-	}, []);
+	}, [projectId, sprintId]);
 
 	const filteredSprintTasks = useMemo(() => {
 
@@ -86,12 +86,12 @@ function ProjectSprint() {
 
 	if (sprintTasksBeingLoaded) return <LoadingState message="Loading sprint's tasks" />;
 	if (showNewTaskModal) return (
-		<NewTaskModal 
-			closeModal={() => setShowNewTaskModal(false)} 
+		<NewTaskModal
+			closeModal={() => setShowNewTaskModal(false)}
 			onNewTaskCreated={onNewTaskCreated}
 			teamMembers={team}
 			currentMemberId={currentMemberId}
-			projectId={projectId} 
+			projectId={projectId}
 			sprintId={sprintId}
 		/>
 	);
@@ -103,7 +103,7 @@ function ProjectSprint() {
 				<header className="flex flex-col gap-y-4">
 					<div className="flex items-center justify-between gap-x-6">
 						<div className="flex gap-x-6 items-center">
-							<Button 
+							<Button
 								size="sm"
 								variant="secondary"
 								onClick={() => navigate(-1)}
@@ -113,7 +113,7 @@ function ProjectSprint() {
 									<span>Back to project</span>
 								</div>
 							</Button>
-							<h1 className="text-lg font-semibold">{ sprintTitle }</h1>
+							<h1 className="text-lg font-semibold">{sprintTitle}</h1>
 						</div>
 						<Button
 							size="sm"
@@ -154,15 +154,15 @@ function ProjectSprint() {
 									className="w-full sm:w-auto"
 								/>
 							</div>
-                    	</div>
-                	</div>
+						</div>
+					</div>
 				</header>
-				{ filteredSprintTasks.length > 0 ? (
+				{filteredSprintTasks.length > 0 ? (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
 					gap-6 grid-auto-rows-[200px] pb-5">
 						{
 							filteredSprintTasks.map((sprintTask) => {
-								return <RegularTask task={sprintTask} />
+								return <RegularTask key={sprintTask.id} task={sprintTask} />
 							})
 						}
 					</div>

@@ -44,12 +44,7 @@ export default function RecentActivity({ stats, statsLoading }) {
                             const hasNote = entry.note && entry.note.trim() !== '';
                             const isManualEntry = hasNote;
 
-                            // Debug: log note information
-                            if (index === 0) {
-                                console.log('Entry note:', entry.note);
-                                console.log('hasNote:', hasNote);
-                                console.log('isManualEntry:', isManualEntry);
-                            }
+                            // Note: Manual entry detection based on note presence
 
                             return (
                                 <div key={entry.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
