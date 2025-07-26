@@ -3,21 +3,22 @@ import aiService from "../services/aiService";
 import { Asterisk, Sparkles, CircleAlert, Undo2 } from "lucide-react";
 import Button from "./ui/Button";
 
-function AiEditor({ 
-    label, 
-    placeholder, 
+function AiEditor({
+    label,
+    placeholder,
     required = false,
     error = '',
     rows,
-    value, 
-    setValue, 
-    disabled
+    value,
+    setValue,
+    disabled,
+    showEnhance = true
 }) {
 
-	const [loading, setLoading] = useState(false);
-	const [initialText, setInitialText] = useState(value);
+    const [loading, setLoading] = useState(false);
+    const [initialText, setInitialText] = useState(value);
     const [enhancedText, setEnhancedText] = useState(null);
-	const [showError, setShowError] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     async function enhanceText() {
 
@@ -28,7 +29,7 @@ function AiEditor({
             const { enhancedVersion } = await aiService.enhanceText(value);
             setEnhancedText(enhancedVersion);
 
-        } catch(err) {
+        } catch (err) {
 
             console.log("The following error occured while enhancing your task description: " + err.message);
 
@@ -40,39 +41,39 @@ function AiEditor({
 
     }
 
-	function undoAiChanges() {
+    function undoAiChanges() {
 
-		setValue(initialText);
-		setEnhancedText(null);
+        setValue(initialText);
+        setEnhancedText(null);
 
-	}
+    }
 
     return (
         <div className="flex flex-col gap-y-3">
             <div className="flex justify-between items-center">
                 <label className="flex gap-x-0.5">
-                    <span className="text-sm md:text-base font-semibold">{ label }</span>
-                    { required && <Asterisk className="w-3 h-3 mt-0.5 text-red-500" /> }
+                    <span className="text-sm md:text-base font-semibold">{label}</span>
+                    {required && <Asterisk className="w-3 h-3 mt-0.5 text-red-500" />}
                 </label>
-                {
+                {showEnhance && (
                     enhancedText ? (
-						<Button 
-							size="sm"
-							onClick={undoAiChanges}
-						>
-							<div className="flex items-center gap-x-2">
-								<Undo2 className="w-4 h-4" />
-								<span>Undo</span>
-							</div>
-						</Button>
+                        <Button
+                            size="sm"
+                            onClick={undoAiChanges}
+                        >
+                            <div className="flex items-center gap-x-2">
+                                <Undo2 className="w-4 h-4" />
+                                <span>Undo</span>
+                            </div>
+                        </Button>
                     ) : (
                         <div className="relative group inline-block">
-                            <button 
-                                disabled={disabled || value.trim().split(/\s+/).length < 20 }
+                            <button
+                                disabled={disabled || value.trim().split(/\s+/).length < 20}
                                 className={`dark:bg-neutral-950 dark:border-neutral-800 dark:hover:bg-neutral-900 
                                 hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2 rounded-md flex justify-center 
-                                items-center gap-x-3 w-36 md:w-28 ${disabled ? 'cursor-not-allowed' : 
-                                'cursor-pointer'} disabled:opacity-50 peer`}
+                                items-center gap-x-3 w-36 md:w-28 ${disabled ? 'cursor-not-allowed' :
+                                        'cursor-pointer'} disabled:opacity-50 peer`}
                                 onClick={enhanceText}
                             >
                                 {
@@ -98,49 +99,49 @@ function AiEditor({
                             </div>
                         </div>
                     )
-                }
+                )}
             </div>
             <div className="flex flex-col gap-y-2">
                 {
-					required ? (
-						<textarea 
-							disabled={disabled}
-							value={ enhancedText ? enhancedText : value } 
-							placeholder={placeholder}
-							rows={rows} 
-							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+                    required ? (
+                        <textarea
+                            disabled={disabled}
+                            value={enhancedText ? enhancedText : value}
+                            placeholder={placeholder}
+                            rows={rows}
+                            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
 							focus:border-black/30 bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
 							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
 							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-							onChange={(e) => {								
-								setShowError(!e.target.value > 0);								
-								setValue(e.target.value);
-								setInitialText(e.target.value);
-							}}
-						/>
-					) : (
-						<textarea 
-							disabled={disabled}
-							value={ enhancedText ? enhancedText : value } 
-							placeholder={placeholder}
-							rows={rows} 
-							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+                            onChange={(e) => {
+                                setShowError(!e.target.value > 0);
+                                setValue(e.target.value);
+                                setInitialText(e.target.value);
+                            }}
+                        />
+                    ) : (
+                        <textarea
+                            disabled={disabled}
+                            value={enhancedText ? enhancedText : value}
+                            placeholder={placeholder}
+                            rows={rows}
+                            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
 							focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
 							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
 							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-							onChange={(e) => {
-								setValue(e.target.value)
-								setInitialText(e.target.value)
-							}}
-						/>
-					)
-				}
+                            onChange={(e) => {
+                                setValue(e.target.value)
+                                setInitialText(e.target.value)
+                            }}
+                        />
+                    )
+                }
                 {
                     required && (
                         showError && (
                             <div className="flex gap-x-1.5 text-red-500">
                                 <CircleAlert className="w-4 h-4" />
-                                <p className="text-sm">{ error }</p>
+                                <p className="text-sm">{error}</p>
                             </div>
                         )
                     )
