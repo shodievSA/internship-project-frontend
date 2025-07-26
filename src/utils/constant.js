@@ -49,6 +49,12 @@ export const taskPriorityOptions = [
 	{ label: "Low", value: "low" }
 ];
 
+export const projectStatusOptions = [
+    { label: 'Active', value: 'active' },
+    { label: 'Paused', value: 'paused' },
+    { label: 'Completed', value: 'completed' }
+];
+
 export const features = [
     {
         icon: Calendar,

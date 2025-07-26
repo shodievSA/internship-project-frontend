@@ -1,17 +1,13 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
+import { projectStatusOptions } from "../utils/constant";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import InputField from "./InputField";
 import SelectField from "./SelectField";
-
-const projectStatusOptions = [
-    { label: 'Active', value: 'active' },
-    { label: 'Paused', value: 'paused' },
-    { label: 'Completed', value: 'completed' }
-];
+import { SquarePen } from "lucide-react";
 
 function EditProjectModal({
     projectId,
@@ -24,47 +20,40 @@ function EditProjectModal({
 	const { showToast } = useToast();
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
-    const [newProjectStatus, setNewProjectStatus] = useState(() => projectStatusOptions.find(
-        (option) => option.value === currentProjectStatus
-    ));
+    const [newProjectStatus, setNewProjectStatus] = useState(currentProjectStatus);
     const [changesBeingSaved, setChangesBeingSaved] = useState(false);
-    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-    const [updatedProjectProps, setUpdatedProjectProps] = useState({});
 
-    useEffect(() => {
+	/* eslint-disable react-hooks/exhaustive-deps */
+	const updatedProjectProps = useMemo(() => {
 
-        setUpdatedProjectProps((prev) => {
+		const updated = {};
 
-            const updated = { ...prev };
+		if (newProjectStatus !== currentProjectStatus) {
+			updated.status = newProjectStatus;
+		} else {
+			delete updated.status;
+		}
 
-            if (newProjectStatus.value.trim() !== currentProjectStatus) {
-                updated.status = newProjectStatus.value;
-            } else {
-                delete updated.status;
-            }
+		if (newProjectTitle.trim() !== currentProjectTitle) {
+			updated.title = newProjectTitle;
+		} else {
+			delete updated.title;
+		}
 
-            if (newProjectTitle.trim() !== currentProjectTitle) {
-                updated.title = newProjectTitle;
-            } else {
-                delete updated.title;
-            }
+		return updated;
 
-            return updated;
-
-        });
-
-    }, [
-        newProjectTitle,
+	}, [
+		newProjectTitle,
         newProjectStatus,
-        currentProjectStatus,
-        currentProjectTitle
-    ]);
+	]);
+	/* eslint-enable react-hooks/exhaustive-deps */
 
-    useEffect(() => {
+	const submitButtonDisabled = useMemo(() => {
 
-        setSubmitButtonDisabled(!areProjectChangesValid(updatedProjectProps));
+		const valid = areProjectChangesValid(updatedProjectProps);
+		return (valid ? false : true);
 
-    }, [updatedProjectProps]);
+	}, [updatedProjectProps]);
 
     async function updateProject() {
 
@@ -101,8 +90,13 @@ function EditProjectModal({
     }
 
     return (
-        <Modal title="Edit Project" size="md">
-            <div className="flex flex-col px-6 pb-6 gap-y-8">
+        <Modal 
+			title="Edit Project"
+			titleIcon={<SquarePen className="w-5 h-5" />} 
+			size="md"
+			closeModal={closeModal}
+		>
+            <div className="flex flex-col px-5 pb-5 gap-y-4">
                 <InputField
                     label="Project Title"
                     disabled={changesBeingSaved}
@@ -116,17 +110,14 @@ function EditProjectModal({
                     label="Project Status"
                     disabled={changesBeingSaved}
                     required={true}
-                    selected={newProjectStatus}
+                    value={newProjectStatus}
                     setValue={setNewProjectStatus}
-                    options={[
-                        { label: 'Active', value: 'active' },
-                        { label: 'Paused', value: 'paused' },
-                        { label: 'Completed', value: 'completed' }
-                    ]}
+                    options={projectStatusOptions}
                     error="select valid project status"
                 />
                 <div className="grid grid-cols-2 gap-4">
                     <Button
+						size="md"
                         variant="secondary"
                         disabled={changesBeingSaved}
                         onClick={closeModal}
@@ -134,6 +125,7 @@ function EditProjectModal({
                         Cancel
                     </Button>
                     <Button
+						size="md"
                         variant="primary"
                         disabled={submitButtonDisabled}
                         onClick={updateProject}
@@ -161,23 +153,15 @@ function areProjectChangesValid(updatedProject) {
     } else {
 
         if ('title' in updatedProject) {
-
             if (!updatedProject.title.length > 0) {
-
                 isValid = false;
-
             }
-
         }
 
         if ('status' in updatedProject) {
-
             if (!projectStatuses.includes(updatedProject.status)) {
-
                 isValid = false;
-
             }
-
         }
 
     }
