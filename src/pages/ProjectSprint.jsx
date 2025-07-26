@@ -19,7 +19,7 @@ function ProjectSprint() {
 
 	const { state: { sprint } } = useLocation();
 	const { projectId, sprintId } = useParams();
-	const { team, currentMemberId, tasks, setTasks } = useProject();
+	const { team, currentMemberId, tasks, setTasks, setSprints } = useProject();
 	
 	const navigate = useNavigate();
 
@@ -113,6 +113,22 @@ function ProjectSprint() {
 
 		setSprintTasks([newTask, ...sprintTasks]);
 		setTasks([newTask, ...tasks]);
+
+	}
+
+	function onSprintUpdate(newSprint) {
+
+		setSprints((prevSprints) => prevSprints.map((sprint) => {
+			return (sprint.id === newSprint.id) ? newSprint : sprint;
+		}));
+
+	}
+
+	function onSprintDelete(deletedSprintId) {
+
+		setSprints((prevSprints) => prevSprints.filter((sprint) => {
+			return sprint.id !== deletedSprintId
+		}));
 
 	}
 
@@ -246,6 +262,7 @@ function ProjectSprint() {
 				showEditSprintModal && (
 					<EditSprintModal 
 						sprint={sprint} 
+						onSprintUpdate={onSprintUpdate}
 						closeModal={() => setShowEditSprintModal(false)}
 					/>
 				)
@@ -254,6 +271,7 @@ function ProjectSprint() {
 				showDeleteSprintModal && (
 					<DeleteSprintModal 
 						sprint={sprint}
+						onSprintDelete={onSprintDelete}
 						closeModal={() => setShowDeleteSprintModal(false)}
 					/>
 				)

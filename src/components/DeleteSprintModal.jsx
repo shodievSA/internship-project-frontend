@@ -1,28 +1,64 @@
 import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
 import Modal from "./ui/Modal";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
 import { TriangleAlert } from "lucide-react";
+import sprintService from "../services/sprintService";
 
 const deleteWarnings = [
 	"Delete the sprint and its corresponding tickets",
 	"This action can't be undone"
-]
+];
 
-function DeleteSprintModal({ sprint, closeModal }) {
+function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 
 	const [confirmMessage, setConfirmMessage] = useState("");
 	const [sprintBeingDeleted, setSprintBeingDeleted] = useState(false);
 
+	const { showToast } = useToast();
+	const { projectId } = useParams();
+
+	const navigate = useNavigate();
+
+	/* eslint-disable react-hooks/exhaustive-deps */
 	const submitButtonDisabled = useMemo(() => {
 
 		return (confirmMessage.trim() === sprint.title) ? false : true;
 
 	}, [confirmMessage]);
+	/* eslint-enable react-hooks/exhaustive-deps */
 
 	async function deleteSprint() {
 
-		//
+		setSprintBeingDeleted(true);
+
+		try {
+
+			await sprintService.deleteSprint(projectId, sprint.id);
+
+			showToast({
+				variant: "success",
+				title: "Deleted sprint successfully!"
+			});
+
+			onSprintDelete(sprint.id);
+
+			navigate(-1);
+
+		} catch(err) {
+
+			showToast({
+				variant: "failure",
+				title: "Failed to delete the sprint!"
+			});
+
+		} finally {
+
+			setSprintBeingDeleted(false);
+
+		}
 
 	}
 

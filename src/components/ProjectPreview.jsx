@@ -14,13 +14,13 @@ function ProjectPreview({ projectPreview }) {
 		createdAt, 
 		members, 
 		status, 
-		totalTasks, 
-		totalTasksCompleted, 
+		totalSprints, 
+		totalSprintsCompleted, 
 		isAdmin 
 	} = projectPreview;
 
-	const total = totalTasks;
-	const completed = totalTasksCompleted;
+	const total = totalSprints;
+	const completed = totalSprintsCompleted;
 	const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
 
@@ -74,7 +74,7 @@ function ProjectPreview({ projectPreview }) {
 				</div>
 				<div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
 					<CheckCircle className="w-4 h-4" />
-					<span className="text-sm">{completed}/{total} tasks</span>
+					<span className="text-sm">{completed}/{total} sprints</span>
 				</div>
 			</div>
 

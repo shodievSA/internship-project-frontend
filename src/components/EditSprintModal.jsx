@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
 import { sprintStatusOptions } from "../utils/constant";
 import InputField from "./InputField";
 import TextareaField from "./TextareaField";
@@ -7,8 +9,9 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { SquarePen } from "lucide-react";
 import SelectField from "./SelectField";
+import sprintService from "../services/sprintService";
 
-function EditSprintModal({ sprint, closeModal }) {
+function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 
 	const {
 		title,
@@ -18,6 +21,9 @@ function EditSprintModal({ sprint, closeModal }) {
 		endDate
 	} = sprint;
 
+	const { projectId, sprintId } = useParams();
+	const { showToast } = useToast();
+
 	const [newSprintTitle, setNewSprintTitle] = useState(title);
 	const [newSprintDescription, setNewSprintDescription] = useState(description);
 	const [newSprintStartDate, setNewSprintStartDate] = useState(startDate);
@@ -25,12 +31,6 @@ function EditSprintModal({ sprint, closeModal }) {
 	const [newSprintStatus, setNewSprintStatus] = useState(status);
 
 	const [sprintBeingUpdated, setSprintBeingUpdated] = useState(false);
-
-	function updateSprint() {
-
-		// request to update sprint 
-
-	}
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedSprintProps = useMemo(() => {
@@ -66,6 +66,38 @@ function EditSprintModal({ sprint, closeModal }) {
 		return allowToSubmit ? false : true;
 
 	}, [updatedSprintProps]);
+
+	async function updateSprint() {
+
+		setSprintBeingUpdated(true);
+
+		try {
+
+			const { updatedSprint } = await sprintService.updateSprint(projectId, sprintId, updatedSprintProps);
+	
+			onSprintUpdate(updatedSprint);
+
+			showToast({
+				variant: "success",
+				title: "Sprint updated successfully!"
+			});
+
+			closeModal();
+
+		} catch(err) {
+
+			showToast({
+				variant: "failure",
+				title: "Failed to update sprint!"
+			});
+
+		} finally {
+
+			setSprintBeingUpdated(false);
+
+		}
+
+	}
 
 	return (
 		<Modal
