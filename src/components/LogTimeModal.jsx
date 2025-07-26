@@ -43,15 +43,15 @@ function LogTimeModal({ taskId, closeModal }) {
 
     // Validate form
     useEffect(() => {
-        const isValid = startDate && startTime && endDate && endTime;
+        const isValid = startDate && startTime && endDate && endTime && note && note.trim() !== '';
         setSubmitButtonDisabled(!isValid);
-    }, [startDate, startTime, endDate, endTime]);
+    }, [startDate, startTime, endDate, endTime, note]);
 
     const handleSubmit = async () => {
-        if (!startDate || !startTime || !endDate || !endTime) {
+        if (!startDate || !startTime || !endDate || !endTime || !note || note.trim() === '') {
             showToast({
                 variant: "failure",
-                message: "Please fill in all required fields"
+                message: "Please fill in all required fields including the note"
             });
             return;
         }
@@ -224,11 +224,11 @@ function LogTimeModal({ taskId, closeModal }) {
 
                 {/* Note Section */}
                 <div className="flex flex-col gap-y-3">
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Note</h3>
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-white">Note *</h3>
                     <div className="flex-1">
                         <AiEditor
                             label=""
-                            placeholder="Add a note about your work..."
+                            placeholder="What are you working on?"
                             value={note}
                             setValue={setNote}
                             rows={3}

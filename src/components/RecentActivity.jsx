@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, RefreshCw, FileText, SquarePen } from 'lucide-react';
 
 export default function RecentActivity({ stats, statsLoading }) {
     function formatDuration(seconds) {
@@ -41,6 +41,15 @@ export default function RecentActivity({ stats, statsLoading }) {
                             const endDate = entry.endTime ? new Date(entry.endTime) : null;
                             const duration = entry.duration || 0;
                             const isToday = startDate.toDateString() === new Date().toDateString();
+                            const hasNote = entry.note && entry.note.trim() !== '';
+                            const isManualEntry = hasNote;
+
+                            // Debug: log note information
+                            if (index === 0) {
+                                console.log('Entry note:', entry.note);
+                                console.log('hasNote:', hasNote);
+                                console.log('isManualEntry:', isManualEntry);
+                            }
 
                             return (
                                 <div key={entry.id} className="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
@@ -49,9 +58,15 @@ export default function RecentActivity({ stats, statsLoading }) {
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-x-3 mb-2">
                                                     <div className="flex-shrink-0">
-                                                        <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center shadow-sm">
-                                                            <Calendar className="w-4 h-4 text-white" />
-                                                        </div>
+                                                        {isManualEntry ? (
+                                                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+                                                                <SquarePen className="w-4 h-4 text-white" />
+                                                            </div>
+                                                        ) : (
+                                                            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-green-700 rounded-lg flex items-center justify-center shadow-sm">
+                                                                <Calendar className="w-4 h-4 text-white" />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-x-2 text-sm">
@@ -82,11 +97,27 @@ export default function RecentActivity({ stats, statsLoading }) {
                                                                     </span>
                                                                 </>
                                                             )}
+                                                            {isManualEntry && (
+                                                                <>
+                                                                    <span className="text-gray-400">•</span>
+                                                                    <span className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full text-xs font-medium">
+                                                                        Manual
+                                                                    </span>
+                                                                </>
+                                                            )}
                                                         </div>
+
+                                                        {/* Note display for manual entries */}
+                                                        {hasNote && (
+                                                            <div className="flex items-start gap-x-2 mt-2 text-sm">
+                                                                <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                                                <span className="text-gray-600 dark:text-gray-400 line-clamp-2">
+                                                                    {entry.note}
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
-
-
                                             </div>
 
                                             <div className="flex-shrink-0 ml-4">

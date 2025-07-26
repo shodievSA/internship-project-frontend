@@ -136,7 +136,7 @@ export default function TimeTracking({ taskTitle, taskStatus, taskPriority, task
     async function handleStop() {
         setIsLoading(true);
         try {
-            await stopTimer();
+            await stopTimer(null, taskId); // Pass taskId as second parameter
             // Update local state immediately after successful stop
             setIsRunning(false);
             setCurrentEntry(null);
