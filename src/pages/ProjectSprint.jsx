@@ -68,8 +68,6 @@ function ProjectSprint() {
 
 		function handleClickOutside(event) {
 
-			console.log(settingsButtonClicked);
-
 			if (
 				settingsButtonClicked 
 				&& 
