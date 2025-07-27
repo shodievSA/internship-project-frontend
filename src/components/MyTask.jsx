@@ -168,22 +168,22 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			{
 				showSubmitModal && (
 					<Modal
-						titleIcon={<CircleCheckBig />}
+						titleIcon={<CircleCheckBig className="w-5 h-5" />}
 						title="Complete Task"
 						size="lg"
 						closeModal={() => setShowSubmitModal(false)}
 					>
-						<div className="flex flex-col gap-y-8 px-7 pb-7">
+						<div className="flex flex-col gap-y-4 px-5 pb-5">
 							<AiEditor 
 								label="Completion note (optional)"
 								placeholder="Describe how you completed this task..."
-								rows={7}
 								value={completionNote}
 								setValue={setCompletionNote}
 								disabled={taskBeingSubmitted}
 							/>
 							<div className="grid grid-cols-2 gap-4">
 								<Button
+									size="md"
 									variant="secondary"
 									onClick={() => setShowSubmitModal(false)}
 									disabled={taskBeingSubmitted}
@@ -191,6 +191,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 									Cancel
 								</Button>
 								<Button
+									size="md"
 									variant="primary"
 									onClick={submitTask}
 									loading={taskBeingSubmitted}
