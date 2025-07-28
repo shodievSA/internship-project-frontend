@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useProject } from "../context/ProjectContext";
+import { useProjectsContext } from "../context/ProjectsContext";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { projectStatusOptions } from "../utils/constant";
@@ -17,6 +18,7 @@ function EditProjectModal({
 }) {
 
 	const { metaData, setMetaData } = useProject();
+	const { setProjects } = useProjectsContext();
 	const { showToast } = useToast();
 
     const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
@@ -64,6 +66,9 @@ function EditProjectModal({
 			const { updatedProject } = await projectService.updateProject(projectId, updatedProjectProps);
 
 			setMetaData(() => ({ ...metaData, ...updatedProject }));
+			setProjects((prevProjects) => prevProjects.map((project) => {
+				return (project.id === projectId) ? { ...project, ...updatedProject } : project
+			}));
 
 			closeModal();
 
