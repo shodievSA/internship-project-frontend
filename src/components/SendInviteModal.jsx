@@ -97,12 +97,6 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 		setInviteBeingSent(true);
 
-		console.log({
-			receiverEmail: email,
-					positionOffered: position,
-					roleOffered: role
-		})
-
 		try {
 
 			const res = await fetch(`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites`, {
@@ -157,6 +151,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 			title="Send Invitation"
 			size="lg"
 			titleIcon={<Mail />}
+			closeModal={closeModal}
 		>
 			<div className="flex flex-col px-7 pb-7 gap-y-8 grow overflow-y-auto scrollbar-thin 
 			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800 grow">
@@ -245,7 +240,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 			border-t-[1px] gap-x-4">
 				<Button
 					variant="secondary"
-					size="lg"
+					size="md"
 					onClick={closeModal}
 					disabled={inviteBeingSent}
 				>
@@ -253,7 +248,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 				</Button>
 				<Button
 					variant="primary"
-					size="lg"
+					size="md"
 					disabled={submitButtonDisabled}
 					loading={inviteBeingSent}
 					onClick={sendInvite}
