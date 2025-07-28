@@ -15,7 +15,7 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 
 	const submitButtonDisabled = useMemo(() => {
 
-		return (!projectTitle || !userPosition);
+		return (!projectTitle.trim() || !userPosition.trim());
 
 	}, [projectTitle, userPosition]);
 

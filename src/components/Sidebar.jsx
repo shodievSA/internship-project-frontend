@@ -167,7 +167,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 											rounded-lg mr-5 disabled:opacity-50 disabled:pointer-events-none"
 											onClick={() => setShowNewProjectModal(true)}
 										>
-											<SquarePlus className="w-5 h-5 text-neutral-400" />
+											<SquarePlus className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
 										</button>
 									</div>
 									{ projectsLoaded ? (

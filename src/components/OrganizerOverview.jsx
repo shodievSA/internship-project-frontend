@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import Button from "./ui/Button";
 import { taskPriorityColors } from "../utils/constant";
 import { formatIsoDate } from "../utils/formatIsoDate";
-import { Calendar, Bell, Clock, ChevronRight, Eye, CircleAlert } from "lucide-react";
+import { Calendar, Bell, Clock, ChevronRight, Eye, CircleAlert, Sparkles } from "lucide-react";
 
 function OrganizerOverview({ 
 	tasksDueToday, 
@@ -10,7 +11,7 @@ function OrganizerOverview({
 	tasksDueThisWeek,
 	newNotifications,
 	tasksForReview,
-	changeSection
+	handleTab
 }) {
 
 	const navigate = useNavigate();
@@ -111,14 +112,26 @@ function OrganizerOverview({
 	}
 
 	return (
-		<div className="flex flex-col gap-y-8">
+		<div className="flex flex-col gap-y-5">
+			<div className="flex flex-col gap-y-5 border border-neutral-200 dark:border-neutral-800 
+			p-5 rounded-md">
+				<div className="flex items-center gap-x-2">
+					<div className="p-2 bg-fuchsia-500/10 dark:bg-fuchsia-500/30 rounded-full">
+						<Sparkles className="w-5 h-5 text-fuchsia-700 dark:text-fuchsia-600" />
+					</div>
+					<h1 className="text-lg font-medium">AI summary</h1>
+				</div>
+				<div>
+					<ReactMarkdown>{}</ReactMarkdown>
+				</div>
+			</div>
 			<div className="flex flex-col gap-y-5 border border-neutral-200 dark:border-neutral-800 
 			p-5 rounded-md">
 				<div className="flex items-center gap-x-2">
 					<div className="p-2 bg-red-700/10 dark:bg-red-800/30 rounded-full">
-						<CircleAlert className="w-5 h-5 text-red-700 dark:text-red-800" />
+						<CircleAlert className="w-5 h-5 text-red-700 dark:text-red-600" />
 					</div>
-					<h1 className="text-lg font-semibold">Today</h1>
+					<h1 className="text-lg font-medium">Today</h1>
 					<div className="text-sm px-3 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800">
 						{tasksDueToday.length}	
 					</div>
@@ -133,7 +146,7 @@ function OrganizerOverview({
 								<Button 
 									size="md" 
 									variant="secondary"
-									onClick={() => changeSection("tasks-due-today")}
+									onClick={() => handleTab("tasks-due-today", 1)}
 								>
 									<div className="flex items-center justify-center gap-x-3">
 										<span>View All</span>
@@ -151,15 +164,15 @@ function OrganizerOverview({
 					)
 				}
 			</div>
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 auto-rows-auto items-start pb-8">
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-5 auto-rows-auto items-start pb-8">
 
 				<div className="flex flex-col gap-y-5 border border-neutral-200 
 				dark:border-neutral-800 p-5 rounded-md">
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-orange-600/10 dark:bg-orange-600/20 rounded-full">
-							<Calendar className="w-5 h-5 text-orange-600 dark:text-orange-800" />
+							<Calendar className="w-5 h-5 text-orange-600 dark:text-orange-600" />
 						</div>
-						<h1 className="text-lg font-semibold">Tomorrow</h1>
+						<h1 className="text-lg font-medium">Tomorrow</h1>
 						<div className="text-sm px-3 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800">
 							{ tasksDueTomorrow.length }
 						</div>
@@ -174,7 +187,7 @@ function OrganizerOverview({
 									<Button 
 										size="md"
 										variant="secondary"
-										onClick={() => changeSection("tasks-due-tomorrow")}
+										onClick={() => handleTab("tasks-due-tomorrow", 2)}
 									>
 										<div className="flex items-center justify-center gap-x-3">
 											<span>View All</span>
@@ -197,9 +210,9 @@ function OrganizerOverview({
 				dark:border-neutral-800 p-5 rounded-md">
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-green-700/10 dark:bg-green-800/30 rounded-full">
-							<Calendar className="w-5 h-5 text-green-700 dark:text-green-800" />
+							<Calendar className="w-5 h-5 text-green-700 dark:text-green-600" />
 						</div>
-						<h1 className="text-lg font-semibold">This week</h1>
+						<h1 className="text-lg font-medium">This week</h1>
 						<div className="text-sm px-3 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800">
 							{ tasksDueThisWeek.length }
 						</div>
@@ -214,7 +227,7 @@ function OrganizerOverview({
 									<Button 
 										size="md"
 										variant="secondary" 
-										onClick={() => changeSection("tasks-due-this-week")}
+										onClick={() => handleTab("tasks-due-this-week", 3)}
 									>
 										<div className="flex items-center justify-center gap-x-3">
 											<span>View All</span>
@@ -237,9 +250,9 @@ function OrganizerOverview({
 				dark:border-neutral-800 p-5 rounded-md">
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-blue-700/10 dark:bg-blue-800/30 rounded-full">
-							<Eye className="w-5 h-5 text-blue-700 dark:text-blue-800" />
+							<Eye className="w-5 h-5 text-blue-700 dark:text-blue-600" />
 						</div>
-						<h1 className="text-lg font-semibold">Reviews</h1>
+						<h1 className="text-lg font-medium">Reviews</h1>
 						<div className="text-sm px-3 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800">
 							{ tasksForReview.length }
 						</div>
@@ -258,7 +271,7 @@ function OrganizerOverview({
 									<Button 
 										size="md" 
 										variant="secondary"
-										onClick={() => changeSection("reviews")}
+										onClick={() => handleTab("reviews", 4)}
 									>
 										<div className="flex items-center justify-center gap-x-3">
 											<span>View All</span>
@@ -281,9 +294,9 @@ function OrganizerOverview({
 				dark:border-neutral-800 p-5 rounded-md">
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-purple-700/10 dark:bg-purple-800/30 rounded-full">
-							<Bell className="w-5 h-5 text-purple-700 text-purple-800" />	
+							<Bell className="w-5 h-5 text-purple-700 text-purple-600" />	
 						</div>
-						<h1 className="text-lg font-semibold">Recent Updates</h1>
+						<h1 className="text-lg font-medium">Recent Updates</h1>
 						<div className="text-sm px-3 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-800">
 							{ newNotifications.length }
 						</div>
@@ -302,7 +315,7 @@ function OrganizerOverview({
 									<Button 
 										size="md" 
 										variant="secondary"
-										onClick={() => changeSection("notifications")}
+										onClick={() => handleTab("notifications", 5)}
 									>
 										<div className="flex items-center justify-center gap-x-3">
 											<span>View All</span>
