@@ -1,17 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTeamWorkload } from "../hooks/useSummary";
-import LoadingState from "./LoadingState";
+import TeamWorkloadChartSkeleton from "./TeamWorkloadChartSkeleton";
 import ErrorState from "./ErrorState";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
 import { User } from "lucide-react";
 
 function TeamWorkloadChart() {
@@ -21,13 +12,19 @@ function TeamWorkloadChart() {
   const [progressBarHovered, setProgressBarHovered] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  // Function to determine progress bar color based on work distribution percentage
+  const getProgressBarColor = (percentage) => {
+    if (percentage >= 30) {
+      return "#10B981"; // Green - High workload (can handle more)
+    } else if (percentage >= 15) {
+      return "#F59E0B"; // Amber - Medium workload (balanced)
+    } else {
+      return "#EF4444"; // Red - Low workload (underutilized)
+    }
+  };
+
   if (isLoading) {
-    return (
-      <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
-        <h2 className="text-lg font-semibold mb-2 p-4">Team workload</h2>
-        <LoadingState message="Loading team workload data..." />
-      </div>
-    );
+    return <TeamWorkloadChartSkeleton />;
   }
 
   if (error) {
@@ -111,31 +108,14 @@ function TeamWorkloadChart() {
   // Sort by work distribution (descending)
   chartData.sort((a, b) => b.value - a.value);
 
-  console.log("Chart data:", chartData);
-  console.log("Hovered item:", hoveredIndex);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 shadow-lg">
-          <p className="font-medium text-gray-900 dark:text-white">
-            {data.name}
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {data.value}% of work ({data.taskCount} tasks)
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
-      <h2 className="text-lg font-semibold mb-0 p-4 pb-0">Team workload</h2>
+      <div className="flex items-center justify-between p-4 pb-0">
+        <h2 className="text-lg font-semibold mb-0">Team workload</h2>
+      </div>
+
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-4">
-        Monitor the capacity of your team.{" "}
+        Monitor the capacity of your team.
       </p>
 
       {/* Headers */}
@@ -145,7 +125,7 @@ function TeamWorkloadChart() {
       </div>
 
       {/* Workload Items */}
-      <div className="space-y-3 px-4 pb-4">
+      <div className="space-y-3 px-4 pb-4 max-h-80 overflow-y-auto workload-scroll">
         {chartData.map((item, index) => (
           <div
             key={item.name}
@@ -155,11 +135,9 @@ function TeamWorkloadChart() {
                 : "py-2"
             }`}
             onMouseEnter={() => {
-              console.log("Hovering over:", item.name, "index:", index);
               setHoveredIndex(index);
             }}
             onMouseLeave={() => {
-              console.log("Leaving:", item.name, "index:", index);
               setHoveredIndex(null);
             }}
           >
@@ -199,7 +177,7 @@ function TeamWorkloadChart() {
               {/* Work Distribution Column */}
               <div className="col-span-2 flex items-center">
                 <div
-                  className="flex-1 h-8 bg-gray-200 dark:bg-gray-700 overflow-hidden relative min-w-[200px]"
+                  className="flex-1 h-7 bg-gray-200 dark:bg-gray-700 overflow-hidden relative min-w-[200px]"
                   onMouseEnter={() => setProgressBarHovered(index)}
                   onMouseLeave={() => setProgressBarHovered(null)}
                   onMouseMove={(e) => {
@@ -214,7 +192,7 @@ function TeamWorkloadChart() {
                     className="h-full transition-all duration-300 relative"
                     style={{
                       width: `${item.value}%`,
-                      backgroundColor: "#8F9092",
+                      backgroundColor: getProgressBarColor(item.value),
                     }}
                   >
                     <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
@@ -228,10 +206,10 @@ function TeamWorkloadChart() {
             {/* Tooltip */}
             {progressBarHovered === index && (
               <div
-                className="fixed bg-gray-800 text-white px-3 py-0.5 rounded-md text-xs z-50 shadow-lg pointer-events-none"
+                className="fixed bg-gray-800 text-white px-3 py-1.5 rounded-md text-xs z-50 shadow-lg pointer-events-none border border-gray-700"
                 style={{
                   left: `${mousePosition.x}px`,
-                  top: `${mousePosition.y - 5}px`,
+                  top: `${mousePosition.y - 8}px`,
                 }}
               >
                 {item.value}% ({item.taskCount}/
