@@ -94,6 +94,8 @@ function Comments() {
 
 			const data = JSON.parse(event.data);
 
+			console.log(data);
+
 			if (data.type === "new-comment") {
 
 				const newComment = data.comment;
