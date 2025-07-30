@@ -75,58 +75,52 @@ function Comments() {
 
 	useEffect(() => {
 
-		async function a() {
+		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
-			socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
-	
-			socketRef.current.onopen = (event) => {
-	
-				if (event.type === "open") {
-	
-					socketRef.current.send(JSON.stringify({
-						type: "join-comment-section",
-						taskId: taskId
-					}));
-	
-				}
-	
-			}
-	
-			socketRef.current.onmessage = (event) => {
-	
-				const data = JSON.parse(event.data);
-	
-				console.log(data);
-	
-				if (data.type === "new-comment") {
-	
-					const newComment = data.comment;
-	
-					setComments((prevComments) => [...prevComments, newComment]);
-	
-				} else if (data.type === "updated-comment") {
-	
-					const updatedComment = data.updatedComment;
-	
-					setComments((prevComments) => prevComments.map((comment) => {
-						return (comment.id === updatedComment.id) ? updatedComment : comment
-					}));
-	
-				} else if (data.type === "deleted-comment") {
-	
-					const deletedCommentId = data.deletedCommentId;
-	
-					setComments((prevComments) => prevComments.filter((comment) => {
-						return comment.id !== deletedCommentId
-					}));
-	
-				}
-	
+		socketRef.current.onopen = (event) => {
+
+			if (event.type === "open") {
+
+				socketRef.current.send(JSON.stringify({
+					type: "join-comment-section",
+					taskId: taskId
+				}));
+
 			}
 
 		}
 
-		a();
+		socketRef.current.onmessage = (event) => {
+
+			const data = JSON.parse(event.data);
+
+			console.log(data);
+
+			if (data.type === "new-comment") {
+
+				const newComment = data.comment;
+
+				setComments((prevComments) => [...prevComments, newComment]);
+
+			} else if (data.type === "updated-comment") {
+
+				const updatedComment = data.updatedComment;
+
+				setComments((prevComments) => prevComments.map((comment) => {
+					return (comment.id === updatedComment.id) ? updatedComment : comment
+				}));
+
+			} else if (data.type === "deleted-comment") {
+
+				const deletedCommentId = data.deletedCommentId;
+
+				setComments((prevComments) => prevComments.filter((comment) => {
+					return comment.id !== deletedCommentId
+				}));
+
+			}
+
+		}
 
 		return () => {
 
@@ -134,7 +128,7 @@ function Comments() {
 
 		}
 
-	}, []);
+	}, [taskId]);
 
 	useEffect(() => {
 
