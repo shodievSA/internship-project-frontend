@@ -28,17 +28,33 @@ function Comments() {
 		return (currentMemberId === task.assignedBy.id ? task.assignedBy : task.assignedTo);
 	}, [task, currentMemberId]);
 
+	// function sendComment() {
+
+	// 	socketRef.current.send(JSON.stringify({
+	// 		type: "new-comment",
+	// 		message: commentMessage,
+	// 		taskId: taskId,
+	// 		memberId: currentMemberId
+	// 	}));
+
+	// 	setCommentMessage("");
+
+	// }
+
 	function sendComment() {
 
-		socketRef.current.send(JSON.stringify({
-			type: "new-comment",
-			message: commentMessage,
-			taskId: taskId,
-			memberId: currentMemberId
-		}));
-
-		setCommentMessage("");
-
+		if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+			socketRef.current.send(JSON.stringify({
+				type: "new-comment",
+				message: commentMessage,
+				taskId: taskId,
+				memberId: currentMemberId
+			}));
+			setCommentMessage("");
+		} else {
+			console.warn("WebSocket is not open");
+		}
+		
 	}
 
 	function onCommentUpdate(commentId, updatedComment) {
