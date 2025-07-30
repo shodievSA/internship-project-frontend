@@ -28,33 +28,17 @@ function Comments() {
 		return (currentMemberId === task.assignedBy.id ? task.assignedBy : task.assignedTo);
 	}, [task, currentMemberId]);
 
-	// function sendComment() {
-
-	// 	socketRef.current.send(JSON.stringify({
-	// 		type: "new-comment",
-	// 		message: commentMessage,
-	// 		taskId: taskId,
-	// 		memberId: currentMemberId
-	// 	}));
-
-	// 	setCommentMessage("");
-
-	// }
-
 	function sendComment() {
 
-		if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-			socketRef.current.send(JSON.stringify({
-				type: "new-comment",
-				message: commentMessage,
-				taskId: taskId,
-				memberId: currentMemberId
-			}));
-			setCommentMessage("");
-		} else {
-			console.warn("WebSocket is not open");
-		}
-		
+		socketRef.current.send(JSON.stringify({
+			type: "new-comment",
+			message: commentMessage,
+			taskId: taskId,
+			memberId: currentMemberId
+		}));
+
+		setCommentMessage("");
+
 	}
 
 	function onCommentUpdate(commentId, updatedComment) {
@@ -97,11 +81,9 @@ function Comments() {
 
 			if (event.type === "open") {
 
-				console.log("connection open");
-
 				socketRef.current.send(JSON.stringify({
 					type: "join-comment-section",
-					taskId: parseInt(taskId)
+					taskId: taskId
 				}));
 
 			}
