@@ -75,6 +75,8 @@ function Comments() {
 
 	useEffect(() => {
 
+		console.log(taskId);
+
 		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
 		socketRef.current.onopen = (event) => {
@@ -83,7 +85,7 @@ function Comments() {
 
 				socketRef.current.send(JSON.stringify({
 					type: "join-comment-section",
-					taskId: taskId
+					taskId: parseInt(taskId)
 				}));
 
 			}
