@@ -75,7 +75,7 @@ function Comments() {
 
 	useEffect(() => {
 
-		socketRef.current = new WebSocket(`ws://${SERVER_HOST}/comments`);
+		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
 		socketRef.current.onopen = (event) => {
 
