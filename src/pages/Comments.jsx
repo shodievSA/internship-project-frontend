@@ -75,13 +75,13 @@ function Comments() {
 
 	useEffect(() => {
 
-		console.log(taskId);
-
 		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
 		socketRef.current.onopen = (event) => {
 
 			if (event.type === "open") {
+
+				console.log("connection open");
 
 				socketRef.current.send(JSON.stringify({
 					type: "join-comment-section",
