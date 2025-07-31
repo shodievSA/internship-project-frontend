@@ -19,11 +19,27 @@ export function useMyProductivity(projectId, filters = {}, options = {}) {
     ? ["my-productivity", projectId, JSON.stringify(filters)]
     : null;
 
-  return useSWR(key, () => getMyProductivity(projectId, filters), {
-    refreshInterval: options.refreshInterval || 0,
-    errorRetryCount: 0, // Disable retry to prevent infinite loop
-    ...options,
-  });
+  const { data, error, isLoading, isValidating, mutate } = useSWR(
+    key,
+    () => getMyProductivity(projectId, filters),
+    {
+      refreshInterval: options.refreshInterval || 0,
+      errorRetryCount: 0, // Disable retry to prevent infinite loop
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      ...options,
+    }
+  );
+
+  // Show loading state when data is being fetched or when key changes
+  const loading = isLoading || isValidating;
+
+  return {
+    data,
+    error,
+    loading,
+    mutate,
+  };
 }
 
 /**
