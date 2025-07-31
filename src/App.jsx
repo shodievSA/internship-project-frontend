@@ -1,9 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import AuthContextProvider from "./context/AuthContext";
 import ThemeContextProvider from "./context/ThemeContext";
 import { ProjectContextProvider } from "./context/ProjectContext";
 import { ToastProvider } from "./components/ui/ToastProvider";
 import { NotificationsContextProvider } from "./context/NotificationsContext";
+import ProjectsContextProvider from "./context/ProjectsContext";
 import Projects from "./pages/Projects";
 import ProjectLayout from "./layouts/ProjectLayout";
 import TeamPage from "./pages/TeamPage";
@@ -20,10 +26,9 @@ import UserInvites from "./pages/UserInvites";
 import PrivateRoute from "./components/PrivateRoute";
 import Comments from "./pages/Comments";
 import ProjectSprint from "./pages/ProjectSprint";
-import ProjectsContextProvider from "./context/ProjectsContext";
+import Summary from "./pages/Summary";
 
 function App() {
-
 	return (
 		<AuthContextProvider>
 			<ToastProvider>
@@ -33,44 +38,72 @@ function App() {
 							<Router>
 								<Routes>
 									<Route element={<PrivateRoute />}>
-										<Route path="/" element={<Navigate replace={true} to={"/projects"} />} />
+										<Route
+											path="/"
+											element={<Navigate replace={true} to={"/projects"} />}
+										/>
 										<Route path="/projects" element={<Projects />} />
-										<Route path="/projects/:projectId" element={
-											<ProjectContextProvider>
-												<ProjectLayout />
-											</ProjectContextProvider>
-										}>
+										<Route
+											path="/projects/:projectId"
+											element={
+												<ProjectContextProvider>
+													<ProjectLayout />
+												</ProjectContextProvider>
+											}
+										>
 											<Route path="sprints" element={<ProjectSprints />} />
 											<Route path="my-tasks" element={<MyTasksPage />} />
-											<Route path="assigned-tasks" element={<AssignedTasksPage />} />
+											<Route
+												path="assigned-tasks"
+												element={<AssignedTasksPage />}
+											/>
 											<Route path="review-tasks" element={<ReviewTasksPage />} />
 										</Route>
-										<Route path="/projects/:projectId/sprints" element={<ProjectSprints />} />
-										<Route 
-											path="/projects/:projectId/sprints/:sprintId" 
+										<Route
+											path="/projects/:projectId/sprints"
+											element={<ProjectSprints />}
+										/>
+										<Route
+											path="/projects/:projectId/sprints/:sprintId"
 											element={
 												<ProjectContextProvider>
 													<ProjectSprint />
 												</ProjectContextProvider>
-											} 
+											}
 										/>
-										<Route 
-											path="/projects/:projectId/team" 
-											element={ 
+										<Route
+											path="/projects/:projectId/team"
+											element={
 												<ProjectContextProvider>
 													<TeamPage />
 												</ProjectContextProvider>
-											} 
+											}
 										/>
-										<Route path="/projects/:projectId/invites" element={<ProjectInvitesPage />} />
-										<Route path="/projects/:projectId/my-tasks/:taskId/comments" element={<Comments />} />
-										<Route path="/projects/:projectId/assigned-tasks/:taskId/comments" element={<Comments />} />
-										<Route path="/projects/:projectId/team/:memberId" element={<TeamMemberDetailsPage />} />
+										<Route
+											path="/projects/:projectId/summary"
+											element={<Summary />}
+										/>
+										<Route
+											path="/projects/:projectId/invites"
+											element={<ProjectInvitesPage />}
+										/>
+										<Route
+											path="/projects/:projectId/my-tasks/:taskId/comments"
+											element={<Comments />}
+										/>
+										<Route
+											path="/projects/:projectId/assigned-tasks/:taskId/comments"
+											element={<Comments />}
+										/>
+										<Route
+											path="/projects/:projectId/team/:memberId"
+											element={<TeamMemberDetailsPage />}
+										/>
 										<Route path="/notifications" element={<Notifications />} />
 										<Route path="/organizer" element={<Organizer />} />
 										<Route path="/invites" element={<UserInvites />} />
 									</Route>
-									<Route path="/sign-in" element={<SignIn />} /> 
+									<Route path="/sign-in" element={<SignIn />} />
 								</Routes>
 							</Router>
 						</NotificationsContextProvider>
@@ -79,7 +112,6 @@ function App() {
 			</ToastProvider>
 		</AuthContextProvider>
 	);
-
 }
 
 export default App;
