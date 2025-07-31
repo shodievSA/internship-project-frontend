@@ -124,6 +124,7 @@ function Organizer() {
 				{
 					currentTab === "overview" ? (
 						<OrganizerOverview
+							summary={dailyReport.report.summary}
 							tasksDueToday={dailyReport.report.tasksDueToday}
 							tasksDueTomorrow={dailyReport.report.tasksDueTomorrow}
 							tasksDueThisWeek={dailyReport.report.tasksDueThisWeek}

@@ -6,6 +6,7 @@ import { formatIsoDate } from "../utils/formatIsoDate";
 import { Calendar, Bell, Clock, ChevronRight, Eye, CircleAlert, Sparkles } from "lucide-react";
 
 function OrganizerOverview({ 
+	summary,
 	tasksDueToday, 
 	tasksDueTomorrow, 
 	tasksDueThisWeek,
@@ -122,7 +123,7 @@ function OrganizerOverview({
 					<h1 className="text-lg font-medium">AI summary</h1>
 				</div>
 				<div>
-					<ReactMarkdown>{}</ReactMarkdown>
+					<ReactMarkdown>{summary}</ReactMarkdown>
 				</div>
 			</div>
 			<div className="flex flex-col gap-y-5 border border-neutral-200 dark:border-neutral-800 
