@@ -29,14 +29,25 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Check if the current user is viewing their own productivity
-  const isOwnProductivity = user?.id === member.id;
+  const isAuthenticated = !!user;
+  const isOwnProductivity = isAuthenticated && user?.id === member?.id;
 
-  const { data, loading, error } = useMyProductivity(projectId, { timeRange });
+  const { data, loading, error } = useMyProductivity(
+    projectId,
+    { timeRange },
+    {
+      shouldFetch: isAuthenticated && isOwnProductivity,
+    }
+  );
 
   const productivityData = data?.data;
 
   // Handle time range change with loading state
   const handleTimeRangeChange = (newTimeRange) => {
+    // Only allow time range changes if user is authenticated and viewing their own productivity
+    if (!isAuthenticated || !isOwnProductivity) {
+      return;
+    }
     setIsChangingFilter(true);
     setTimeRange(newTimeRange);
   };
@@ -139,8 +150,21 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
       }
     >
       <div className="px-8 pb-8 max-h-[80vh] overflow-y-auto">
-        {/* Check if user can view this productivity data */}
-        {!isOwnProductivity ? (
+        {/* Authentication and Authorization Checks */}
+        {!isAuthenticated ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+              <User className="w-6 h-6 text-red-600 dark:text-red-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Authentication Required
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-sm text-sm leading-relaxed">
+              You must be signed in to view productivity data. Please sign in to
+              access your metrics.
+            </p>
+          </div>
+        ) : !isOwnProductivity ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
               <Info className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -180,10 +204,15 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                   <button
                     key={option.value}
                     onClick={() => handleTimeRangeChange(option.value)}
+                    disabled={!isAuthenticated || !isOwnProductivity}
                     className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
                       timeRange === option.value
                         ? "bg-blue-600 text-white shadow-sm"
                         : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                    } ${
+                      !isAuthenticated || !isOwnProductivity
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
                     }`}
                   >
                     {option.label}
@@ -401,46 +430,46 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                 </div>
 
                 {/* Daily Activity - Clean & Professional */}
-                {productivityData.timeTracking.dailyTimeDistribution.length >
-                  0 && (
-                  <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                    {/* Clean Header */}
-                    <div className="px-8 py-6 border-b border-gray-100 dark:border-gray-800">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center">
-                            <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                              Daily Activity
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {timeRange === "day"
-                                ? "Today's activity"
-                                : timeRange === "week"
-                                ? "Last 7 days overview"
-                                : timeRange === "month"
-                                ? "Last 30 days overview"
-                                : "All time overview"}
-                            </p>
-                          </div>
+                <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                  {/* Clean Header */}
+                  <div className="px-8 py-6 border-b border-gray-100 dark:border-gray-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center">
+                          <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                            {productivityData.timeTracking.dailyTimeDistribution.reduce(
-                              (sum, day) => sum + day.sessions,
-                              0
-                            )}
-                          </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            Total Sessions
-                          </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            Daily Activity
+                          </h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {timeRange === "day"
+                              ? "Today's activity"
+                              : timeRange === "week"
+                              ? "Last 7 days overview"
+                              : timeRange === "month"
+                              ? "Last 30 days overview"
+                              : "All time overview"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {productivityData?.timeTracking?.dailyTimeDistribution?.reduce(
+                            (sum, day) => sum + day.sessions,
+                            0
+                          ) || 0}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          Total Sessions
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Activity List */}
+                  {/* Activity List */}
+                  {productivityData?.timeTracking?.dailyTimeDistribution
+                    ?.length > 0 ? (
                     <div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-[400px] overflow-y-auto">
                       {productivityData.timeTracking.dailyTimeDistribution
                         .slice(
@@ -591,8 +620,25 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                           );
                         })}
                     </div>
+                  ) : (
+                    /* Empty State for Daily Activity */
+                    <div className="px-8 py-16 text-center">
+                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Calendar className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        No Activity Data Yet
+                      </h4>
+                      <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
+                        Start tracking your time and completing tasks to see
+                        your daily activity patterns here.
+                      </p>
+                    </div>
+                  )}
 
-                    {/* Clean Footer */}
+                  {/* Clean Footer */}
+                  {productivityData?.timeTracking?.dailyTimeDistribution
+                    ?.length > 0 && (
                     <div className="px-8 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="text-center">
@@ -658,8 +704,8 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             )}
           </>

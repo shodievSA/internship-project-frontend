@@ -15,9 +15,13 @@ import { getMyProductivity } from "../services/memberProductivityService";
  * @returns {Object} Member productivity data and loading states
  */
 export function useMyProductivity(projectId, filters = {}, options = {}) {
-  const key = projectId
-    ? ["my-productivity", projectId, JSON.stringify(filters)]
-    : null;
+  // Check if we should fetch data (for conditional fetching)
+  const shouldFetch = options.shouldFetch !== false;
+
+  const key =
+    projectId && shouldFetch
+      ? ["my-productivity", projectId, JSON.stringify(filters)]
+      : null;
 
   const { data, error, isLoading, isValidating, mutate } = useSWR(
     key,
