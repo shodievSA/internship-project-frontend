@@ -2,10 +2,10 @@ function ProjectSkeleton() {
 
 	return (
 		<div className="bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-neutral-800 
-		rounded-md p-6 w-full text-gray-900 dark:text-white shadow-sm">
+		rounded-md p-4 w-full text-gray-900 dark:text-white shadow-sm">
 			<div className="flex items-start justify-between mb-4">
 				<div className="px-2 rounded-full bg-slate-300 dark:bg-neutral-800 animate-pulse">
-					<p className="invisible text-lg">Project Title</p>
+					<p className="invisible">Project Title</p>
 				</div>
 				<div className="flex gap-2">
 					<span className="bg-slate-300 dark:bg-neutral-800 animate-pulse px-2 py-0.5 

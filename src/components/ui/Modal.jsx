@@ -48,7 +48,7 @@ function Modal({
 			border-[1px] flex flex-col ${widthClass} rounded-lg cursor-default shadow-lg`}>
 				<div className="p-5 flex flex-col gap-y-2">
 					<div className="flex justify-between items-center gap-x-2">
-						<div className="flex items-center gap-x-2">
+						<div className="flex items-center gap-x-2 text-black dark:text-white">
 							{titleIcon && titleIcon}
 							<h1 className="text-base md:text-xl font-semibold">{title}</h1>
 						</div>

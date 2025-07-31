@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { organizerService } from "../services/organizerService";
+import { formatIsoDate } from "../utils/formatIsoDate";
 import EmptyAiPlanner from "../components/EmptyAiPlanner";
 import OrganizerOverview from "../components/OrganizerOverview";
 import OrganizerTasksDueToday from "../components/OrganizerTasksDueToday";
@@ -13,11 +14,11 @@ import ErrorState from "../components/ErrorState";
 function Organizer() {
 
 	const [dailyReport, setDailyReport] = useState();
-	const [currentSection, setCurrentSection] = useState("overview");
+	const [currentTab, setCurrentTab] = useState("overview");
 	const [reportFetched, setReportFetched] = useState(false);
 	const [error, setError] = useState();
 
-	console.log(dailyReport);
+	const tabRef = useRef();
 
 	useEffect(() => {
 
@@ -26,7 +27,7 @@ function Organizer() {
 			try {
 	
 				const { report } = await organizerService.getDailyReport();
-				setDailyReport(report ? report.report : null);
+				setDailyReport(report ? report : null);
 	
 			} catch(err) {
 	
@@ -48,94 +49,107 @@ function Organizer() {
 
 	}, []);
 
-	function changeSection(newSection) {
+	function handleTab(newTab, index) {
 
-		setCurrentSection(newSection);
+		const moveBy = index * 100;
+		tabRef.current.style.transform = `translateX(${moveBy}%)`;
+
+		setCurrentTab(newTab);
 
 	}
 
 	if (!reportFetched) return <LoadingReport />;
 	if (error) return <ErrorState message={"Oops! Your daily report tripped on a glitch. We’re working on it!"} />;
-	if (!dailyReport) return <EmptyAiPlanner />
+	if (!dailyReport) return <EmptyAiPlanner />;
 
     return (
-        <div className="h-full px-5 pt-8 lg:px-8">
-			<div className="h-full flex flex-col gap-y-5 pb-8">
-				<ul className="dark:bg-neutral-900 bg-neutral-100 p-1 grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
-				md:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>li]:text-center [&>li]:p-2 [&>li]:font-medium [&>li]:rounded-md 
-				rounded-md mb-2">
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "overview" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("overview")}
-					>
-						Overview
-					</li>
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "tasks-due-today" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("tasks-due-today")}
-					>
-						Today
-					</li>
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "tasks-due-tomorrow" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("tasks-due-tomorrow")}
-					>
-						Tomorrow
-					</li>
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "tasks-due-this-week" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("tasks-due-this-week")}
-					>
-						This Week
-					</li>
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "reviews" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("reviews")}
-					>
-						Reviews
-					</li>
-					<li 
-						className={`transition-[background-color] duration-300 text-sm md:text-base cursor-pointer
-						${currentSection === "notifications" ? "dark:bg-black dark:text-white bg-white" : "bg-transparent dark:text-neutral-500 text-neutral-500"}`}
-						onClick={() => setCurrentSection("notifications")}
-					>
-						Updates
-					</li>
-				</ul>
+        <div className="h-full px-5 pt-5 lg:px-8">
+			<div className="h-full flex flex-col gap-y-5 pb-5">
+				<div>
+					<p className="text-sm text-neutral-500 dark:text-neutral-400">
+						The provided report has been generated 
+						based on the data available on {formatIsoDate(dailyReport.createdAt)}, UTC+05:00
+					</p>
+				</div>
+				<div className="dark:bg-neutral-900 bg-neutral-100 p-1 rounded-md">
+					<ul className="grid gap-y-2 grid-cols-[repeat(3,minmax(100px,1fr))] 
+					md:grid-cols-[repeat(auto-fit,minmax(100px,1fr))] [&>li]:text-center [&>li]:p-2 [&>li]:font-medium [&>li]:rounded-md 
+					rounded-md relative text-sm">
+						<div ref={tabRef} className="absolute h-full bg-white dark:bg-black w-1/6 translate-x-0
+						transition-[transform] duration-200 rounded-md"></div>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "overview" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("overview", 0)}
+						>
+							Overview
+						</li>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "tasks-due-today" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("tasks-due-today", 1)}
+						>
+							Today
+						</li>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "tasks-due-tomorrow" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("tasks-due-tomorrow", 2)}
+						>
+							Tomorrow
+						</li>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "tasks-due-this-week" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("tasks-due-this-week", 3)}
+						>
+							This Week
+						</li>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "reviews" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("reviews", 4)}
+						>
+							Reviews
+						</li>
+						<li 
+							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
+							${currentTab === "notifications" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							onClick={() => handleTab("notifications", 5)}
+						>
+							Updates
+						</li>
+					</ul>
+				</div>
 				{
-					currentSection === "overview" ? (
+					currentTab === "overview" ? (
 						<OrganizerOverview
-							tasksDueToday={dailyReport.tasksDueToday}
-							tasksDueTomorrow={dailyReport.tasksDueTomorrow}
-							tasksDueThisWeek={dailyReport.tasksDueThisWeek}
-							tasksForReview={dailyReport.tasksForReview}
-							newNotifications={dailyReport.newNotifications}
-							changeSection={changeSection}
+							tasksDueToday={dailyReport.report.tasksDueToday}
+							tasksDueTomorrow={dailyReport.report.tasksDueTomorrow}
+							tasksDueThisWeek={dailyReport.report.tasksDueThisWeek}
+							tasksForReview={dailyReport.report.tasksForReview}
+							newNotifications={dailyReport.report.newNotifications}
+							changeSection={handleTab}
 						/>
-					) : currentSection === "tasks-due-today" ? (
+					) : currentTab === "tasks-due-today" ? (
 						<OrganizerTasksDueToday 
-							tasksDueToday={dailyReport.tasksDueToday}
+							tasksDueToday={dailyReport.report.tasksDueToday}
 						/>
-					) : currentSection === "tasks-due-tomorrow" ? (
+					) : currentTab === "tasks-due-tomorrow" ? (
 						<OrganizerTasksDueTomorrow 
-							tasksDueTomorrow={dailyReport.tasksDueTomorrow}
+							tasksDueTomorrow={dailyReport.report.tasksDueTomorrow}
 						/>
-					) : currentSection === "tasks-due-this-week" ? (
+					) : currentTab === "tasks-due-this-week" ? (
 						<OrganizerTasksDueThisWeek
-							tasksDueThisWeek={dailyReport.tasksDueThisWeek} 
+							tasksDueThisWeek={dailyReport.report.tasksDueThisWeek} 
 						/>
-					) : currentSection === "reviews" ? (
+					) : currentTab === "reviews" ? (
 						<OrganizerTasksForReview 
-							tasksForReviews={dailyReport.tasksForReview}
+							tasksForReviews={dailyReport.report.tasksForReview}
 						/>
-					) : currentSection === "notifications" && (
+					) : currentTab === "notifications" && (
 						<OrganizerNotifications 
-							newNotifications={dailyReport.newNotifications}
+							newNotifications={dailyReport.report.newNotifications}
 						/>
 					)
 				}

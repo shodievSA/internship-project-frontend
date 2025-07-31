@@ -15,8 +15,8 @@ export function ProjectContextProvider({ children }) {
     const [invites, setInvites] = useState([]);
     const [tasks, setTasks] = useState([]);
 	const [sprints, setSprints] = useState([]);
-    const [currentMemberId, setCurrentMemberId] = useState();
-    const [currentMemberRole, setCurrentMemberRole] = useState();
+    const [currentMemberId, setCurrentMemberId] = useState(null);
+    const [currentMemberRole, setCurrentMemberRole] = useState(null);
 
 	async function fetchProject(projectId) {
 
@@ -57,6 +57,16 @@ export function ProjectContextProvider({ children }) {
 	}
 
 	useEffect(() => {
+
+		setMetaData(null);
+		setSprints([]);
+		setTeam([]);
+		setInvites([]);
+		setCurrentMemberId(null);
+		setCurrentMemberRole(null);
+		setTasks([]);
+		setProjectLoaded(false);
+		setError(null);
 
 		fetchProject(projectId);
 

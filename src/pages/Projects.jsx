@@ -1,52 +1,27 @@
 import { useSearchParams } from "react-router-dom";
 import { filterProjects } from "../utils/filterUtils";
+import { useProjectsContext } from "../context/ProjectsContext";
 import ProjectPreview from "../components/ProjectPreview";
 import ProjectHeader from "../components/ProjectHeader";
 import EmptySearch from "../components/EmptySearch";
 import NewProjectModal from "../components/NewProjectModal";
 import { useMemo, useState, useEffect } from "react";
-import projectService from "../services/projectService";
 import EmptyDashboard from "../components/EmptyDashboard";
 import ProjectSkeleton from "../components/ProjectSkeleton";
 import ErrorState from "../components/ErrorState";
 
 function Projects() {
 
-	const [userProjectCount, setUserProjectCount] = useState(() => getProjectCount());
+	const { 
+		projectsLoaded, 
+		projects, 
+		error, 
+		setShowNewProjectModal,
+		userProjectCount,
+		setUserProjectCount 
+	} = useProjectsContext();
+
 	const [searchParams, setSearchParams] = useSearchParams();
-	const [showNewProjectModal, setShowNewProjectModal] = useState(false);
-	const [projects, setProjects] = useState([]);
-	const [projectsLoaded, setProjectsLoaded] = useState(false);
-	const [error, setError] = useState("");
-
-	useEffect(() => {
-
-		async function fetchProjects() {
-
-			try {
-
-				const projectPreviews = await projectService.getProjects();
-				setProjects(projectPreviews);
-
-			} catch (err) {
-
-				setError(err.message || "Failed to load projects");
-
-			} finally {
-
-				setTimeout(() => {
-
-					setProjectsLoaded(true);
-
-				}, 800);
-
-			}
-
-		}
-
-		fetchProjects();
-
-	}, []);
 
 	useEffect(() => {
 
@@ -108,14 +83,7 @@ function Projects() {
 
 	};
 
-	function handleProjectCreated(newProject) {
-
-		setProjects((prevProjectPreviews) => [newProject, ...prevProjectPreviews]);
-
-	};
-
 	if (error) return <ErrorState message={"Looks like your projects are playing hide and seek. Can’t find them!"} />;
-	if (showNewProjectModal) return <NewProjectModal setShowNewProjectModal={setShowNewProjectModal} onProjectCreated={handleProjectCreated} />
 	if (userProjectCount === 0) return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
 
 	return (
@@ -166,22 +134,5 @@ function Projects() {
 	);
 
 };
-
-function getProjectCount() {
-
-	try {
-
-		const raw = localStorage.getItem("projectCount");
-		const count = raw ? JSON.parse(raw) : null;
-
-		return (Number.isInteger(count) && Number.isFinite(count)) ? count : 0;
-
-	} catch {
-
-		return 0;
-
-	}
-
-}
 
 export default Projects;

@@ -25,7 +25,7 @@ export function NotificationsContextProvider({ children }) {
 
 		if (user) {
 
-			sockekRef.current = new WebSocket(`ws://${SERVER_HOST}/notifications`);
+			sockekRef.current = new WebSocket(`wss://${SERVER_HOST}/notifications`);
 
 			sockekRef.current.onopen = (event) => {
 

@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useThemeContext } from "../context/ThemeContext";
 import aiService from "../services/aiService";
-import { Asterisk, Sparkles, CircleAlert, Undo2 } from "lucide-react";
+import { Asterisk, Sparkles, CircleAlert, Undo2, PencilLine, Eye } from "lucide-react";
 import Button from "./ui/Button";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 
 function AiEditor({
     label,
@@ -15,10 +18,15 @@ function AiEditor({
     showEnhance = true
 }) {
 
+	const { themeMode } = useThemeContext();
+
     const [loading, setLoading] = useState(false);
     const [initialText, setInitialText] = useState(value);
     const [enhancedText, setEnhancedText] = useState(null);
     const [showError, setShowError] = useState(false);
+	const [currentTab, setCurrentTab] = useState("write");
+
+	const tabRef = useRef(null);
 
     async function enhanceText() {
 
@@ -48,6 +56,15 @@ function AiEditor({
 
     }
 
+	function handleTab(newTab, tabIndex) {
+
+		const moveBy = tabIndex * 100;
+		tabRef.current.style.transform = `translateX(${moveBy}%)`;
+
+		setCurrentTab(newTab);
+
+	}
+
     return (
         <div className="flex flex-col gap-y-3">
             <div className="flex justify-between items-center">
@@ -73,7 +90,7 @@ function AiEditor({
                                 className={`dark:bg-neutral-950 dark:border-neutral-800 dark:hover:bg-neutral-900 
                                 hover:bg-slate-100 border-[1px] py-2 md:px-3 md:py-2 rounded-md flex justify-center 
                                 items-center gap-x-3 w-36 md:w-28 ${disabled ? 'cursor-not-allowed' :
-                                        'cursor-pointer'} disabled:opacity-50 peer`}
+                                'cursor-pointer'} disabled:opacity-50 peer`}
                                 onClick={enhanceText}
                             >
                                 {
@@ -92,7 +109,7 @@ function AiEditor({
                                     )
                                 }
                             </button>
-                            <div className="dark:bg-neutral-950 dark:border-neutral-800 bg-white border-[1px] py-1 px-2 
+                            <div className="dark:bg-neutral-950 dark:border-neutral-800 bg-white border-[1px] py-1 px-2 z-20 
                             rounded-md absolute text-xs group-hover:peer-disabled:opacity-100 opacity-0 transition-[opacity] 
                             duration-200 pointer-events-none cursor-none mt-2 w-44 text-center left-1/3 -translate-x-1/2">
                                 Min 20 words are required
@@ -101,40 +118,79 @@ function AiEditor({
                     )
                 )}
             </div>
+			<div className="p-1 bg-neutral-100 dark:bg-neutral-900 text-sm rounded-md">
+				<ul className="grid grid-cols-2 relative">
+					<div 
+						ref={tabRef} 
+						className="absolute bg-white dark:bg-black h-full rounded-md w-1/2
+						translate-x-0 transition-all duration-200"
+					></div>
+					<li 
+						className={`flex justify-center items-center gap-x-3 p-1.5 cursor-pointer
+						z-10 ${currentTab === "write" ? "text-black dark:text-white" : "text-neutral-500"}
+						transition-[all] duration-200`}
+						onClick={() => handleTab("write", 0)}
+					>
+						<PencilLine className="w-4 h-4" />
+						<span>Write</span>
+					</li>
+					<li 
+						className={`flex justify-center items-center gap-x-3 p-1.5 cursor-pointer
+						z-10 ${currentTab === "preview" ? "text-black dark:text-white" : "text-neutral-500"}
+						transition-[all] duration-200`}
+						onClick={() => handleTab("preview", 1)}
+					>
+						<Eye className="w-4 h-4" />
+						<span>Preview</span>
+					</li>
+				</ul>
+			</div>
             <div className="flex flex-col gap-y-2">
                 {
-                    required ? (
-                        <textarea
-                            disabled={disabled}
-                            value={enhancedText ? enhancedText : value}
-                            placeholder={placeholder}
-                            rows={rows}
-                            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
-							focus:border-black/30 bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
-							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-                            onChange={(e) => {
-                                setShowError(!e.target.value > 0);
-                                setValue(e.target.value);
-                                setInitialText(e.target.value);
-                            }}
-                        />
-                    ) : (
-                        <textarea
-                            disabled={disabled}
-                            value={enhancedText ? enhancedText : value}
-                            placeholder={placeholder}
-                            rows={rows}
-                            className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
-							focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-							py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text 
-							scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
-                            onChange={(e) => {
-                                setValue(e.target.value)
-                                setInitialText(e.target.value)
-                            }}
-                        />
-                    )
+					currentTab === "write" ? (
+						required ? (
+							<textarea
+								disabled={disabled}
+								value={enhancedText ? enhancedText : value}
+								placeholder={placeholder}
+								className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+								focus:border-black/30 bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text h-44
+								scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
+								onChange={(e) => {
+									setShowError(!e.target.value > 0);
+									setValue(`${e.target.value}`);
+									setInitialText(e.target.value);
+								}}
+							/>
+						) : (
+							<textarea
+								disabled={disabled}
+								value={enhancedText ? enhancedText : value}
+								placeholder={placeholder}
+								className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+								focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text h-44
+								scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
+								onChange={(e) => {
+									setValue(e.target.value)
+									setInitialText(e.target.value)
+								}}
+							/>
+						)
+					) : (
+						<div className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
+						focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+						outline-none disabled:opacity-50 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
+						dark:scrollbar-track-neutral-800 h-44 px-4 py-2.5`}>
+							<ReactMarkdown 
+								className={themeMode} 
+								rehypePlugins={[rehypeHighlight]}
+							>
+								{value}
+							</ReactMarkdown>
+						</div>
+					)
                 }
                 {
                     required && (

@@ -1,14 +1,16 @@
 import { useState, useMemo } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { useNotifications } from "../context/NotificationsContext";
+import { useProjectsContext } from "../context/ProjectsContext";
 import userService from "../services/userService";
 import { NavLink } from "react-router-dom";
-import { House, Sparkles, Bell, LogOut, MailPlus } from 'lucide-react';
+import { House, Sparkles, Bell, LogOut, MailPlus, SquarePlus } from 'lucide-react';
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
     const { user, setUser } = useAuthContext();
 	const { loading, error, notifications, invitesFetched, invites } = useNotifications();
+	const { projectsLoaded, projects, setShowNewProjectModal, userProjectCount } = useProjectsContext();
 
     const [signoutButtonClicked, setSignoutButtonClicked] = useState(false);
     const [isUserBeingSignedOut, setIsUserBeingSignedOut] = useState(false);
@@ -71,67 +73,134 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-y-2">
-                                <span className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
-                                    MAIN MENU
-                                </span>
-                                <ul className="flex flex-col gap-y-1 font-medium text-sm px-1.5">
-                                    <NavLink to={'/projects'} className='dark:hover:bg-neutral-900 dark:text-neutral-300
-                                    dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
-                                    items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
-                                        <House className="w-5 h-5" />
-                                        <span>Dashboard</span>
-                                    </NavLink>
-                                    <NavLink to={'/organizer'} className='dark:hover:bg-neutral-900 dark:text-neutral-300
-                                    dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
-                                    items-center gap-x-3 py-2 px-3 rounded-md'>
-                                        <Sparkles className="w-5 h-5" />
-                                        <span>Organizer</span>
-                                    </NavLink>
-                                    <NavLink to={'/notifications'} className='dark:hover:bg-neutral-900 dark:text-neutral-300
-                                    dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
-                                    items-center gap-x-3 py-2 px-3 rounded-md'>
-										<div className="flex items-center gap-x-3">
-											<Bell className="w-5 h-5" />
-											<span>Notifications</span>
-										</div>
-										{ unviewedNotifications.length > 0 && (
-											<div className="flex items-center gap-x-4">
-												<span className="flex items-center justify-center text-[10px] bg-red-500 
-												rounded-full text-white w-5 h-5">
-													{ unviewedNotifications.length > 99 ? "99+" : unviewedNotifications.length }
-												</span>
-												<span className="relative flex h-3 w-3">
-													<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
-													bg-sky-400 opacity-75"></span>
-													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-												</span>
+							<div className="flex flex-col">
+								<div className="flex flex-col gap-y-2 border-b dark:border-b-neutral-800 pb-3">
+									<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 
+									font-semibold px-1">
+										MAIN MENU
+									</h4>
+									<ul className="flex flex-col gap-y-1 font-medium text-sm px-2">
+										<NavLink 
+											to={'/projects'} 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[border] duration-300 border ${isActive 
+											? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white" 
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"}`}
+										>
+											<House className="w-5 h-5" />
+											<span>Dashboard</span>
+										</NavLink>
+										<NavLink 
+											to={'/organizer'} 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive 
+											? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white" 
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"}`}
+										>
+											<Sparkles className="w-5 h-5" />
+											<span>Organizer</span>
+										</NavLink>
+										<NavLink 
+											to={'/notifications'} 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive 
+											? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white" 
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"}`}
+										>
+											<div className="flex items-center gap-x-3">
+												<Bell className="w-5 h-5" />
+												<span>Notifications</span>
 											</div>
-										)}
-                                    </NavLink>
-									<NavLink to={'/invites'} className='dark:hover:bg-neutral-900 dark:text-neutral-300
-                                    dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
-                                    items-center gap-x-3 py-2 px-3 rounded-md transition-[background-color] duration-200'>
-										<div className="flex items-center gap-x-3">
-											<MailPlus className="w-5 h-5" />
-											<span>Invites</span>
-										</div>
-										{ pendingInvites.length > 0 && (
-											<div className="flex items-center gap-x-4">
-												<span className="flex items-center justify-center text-[10px] bg-red-500 
-												rounded-full text-white w-5 h-5">
-													{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
-												</span>
-												<span className="relative flex h-3 w-3">
-													<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
-													bg-sky-400 opacity-75"></span>
-													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-												</span>
+											{ unviewedNotifications.length > 0 && (
+												<div className="flex items-center gap-x-4">
+													<span className="flex items-center justify-center text-[10px] bg-red-500 
+													rounded-full text-white w-5 h-5">
+														{ unviewedNotifications.length > 99 ? "99+" : unviewedNotifications.length }
+													</span>
+													<span className="relative flex h-3 w-3">
+														<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
+														bg-sky-400 opacity-75"></span>
+														<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+													</span>
+												</div>
+											)}
+										</NavLink>
+										<NavLink 
+											to={'/invites'} 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive 
+											? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white" 
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"}`}
+										>
+											<div className="flex items-center gap-x-3">
+												<MailPlus className="w-5 h-5" />
+												<span>Invites</span>
 											</div>
-										)}
-                                    </NavLink>
-                                </ul>
-                            </div>
+											{ pendingInvites.length > 0 && (
+												<div className="flex items-center gap-x-4">
+													<span className="flex items-center justify-center text-[10px] bg-red-500 
+													rounded-full text-white w-5 h-5">
+														{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
+													</span>
+													<span className="relative flex h-3 w-3">
+														<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
+														bg-sky-400 opacity-75"></span>
+														<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+													</span>
+												</div>
+											)}
+										</NavLink>
+									</ul>
+								</div>
+								<div className="grow flex flex-col gap-y-2 pt-3">
+									<div className="flex items-center justify-between gap-x-5">
+										<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
+											MY PROJECTS
+										</h4>
+										<button 
+											disabled={!projectsLoaded}
+											className="p-1.5 cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900
+											rounded-lg mr-5 disabled:opacity-50 disabled:pointer-events-none"
+											onClick={() => setShowNewProjectModal(true)}
+										>
+											<SquarePlus className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
+										</button>
+									</div>
+									{ projectsLoaded ? (
+										<ul className="grow overflow-y-auto flex flex-col gap-y-1 font-medium text-sm px-3">
+											{ projects.map((project) => (
+												<NavLink 
+													to={`projects/${project.id}/my-tasks`} 
+													className="px-3 py-2 dark:hover:bg-neutral-900 dark:text-neutral-300 truncate
+													dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
+													items-center gap-x-3 rounded-md transition-[background-color] duration-200"
+												>
+													{ project.title }
+												</NavLink>
+											)) }
+										</ul>
+									) : (
+										<div className="grow overflow-y-auto flex flex-col gap-y-1 font-medium 
+										text-sm px-3">
+											{ Array.from({ length: userProjectCount }, (_, i) => {
+												return (
+													<div 
+														key={i} 
+														className="px-3 py-2 flex items-center gap-x-3 rounded-md
+														bg-slate-300 dark:bg-neutral-800 animate-pulse"
+													>
+														<span className="invisible">Project Title</span>
+													</div>
+												)
+											})}
+										</div>
+									)}
+								</div>
+							</div>
                             <div className="mt-auto flex flex-col gap-y-5 p-4">
                                 <button 
 									className="dark:bg-black dark:hover:bg-neutral-950 dark:border-neutral-800 

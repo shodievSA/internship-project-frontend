@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useThemeContext } from "../context/ThemeContext";
 import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskStatusColors, taskPriorityColors } from "../utils/constant";
@@ -9,6 +10,8 @@ import { Calendar, Clock, Download, File, RefreshCw } from "lucide-react";
 import TimeTracking from "./TimeTracking";
 import TaskDetailsSkeleton from "./TaskDetailsSkeleton";
 import TimeTrackingSkeleton from "./TimeTrackingSkeleton";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 
 function TaskDetailsModal({ task, projectId, closeModal }) {
   const {
@@ -24,6 +27,8 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
     assignedBy,
     assignedTo,
   } = task;
+
+  const { themeMode } = useThemeContext();
 
   const [fileUrls, setFileUrls] = useState([]);
   const [fileUrlsLoaded, setFileUrlsLoaded] = useState(false);
