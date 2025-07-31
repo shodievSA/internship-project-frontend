@@ -48,8 +48,6 @@ export function NotificationsContextProvider({ children }) {
 
 					const newNotification = data.newNotification;
 
-					console.log(newNotification);
-
 					setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
 
 					showToast({
@@ -61,6 +59,8 @@ export function NotificationsContextProvider({ children }) {
 				} else if (data.type === "new-invite") {
 
 					const newInvite = data.newInvite;
+
+					console.log(newInvite);
 
 					setInvites((prevInvites) => [newInvite, ...prevInvites]);
 
