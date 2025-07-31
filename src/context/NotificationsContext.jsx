@@ -48,6 +48,8 @@ export function NotificationsContextProvider({ children }) {
 
 					const newNotification = data.newNotification;
 
+					console.log(newNotification);
+
 					setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
 
 					showToast({
