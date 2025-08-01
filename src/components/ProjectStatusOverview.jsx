@@ -5,9 +5,9 @@ import ProjectStatusOverviewSkeleton from "./ProjectStatusOverviewSkeleton";
 import ErrorState from "./ErrorState";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-function ProjectStatusOverview() {
+function ProjectStatusOverview({ sprintId = null }) {
   const { projectId } = useParams();
-  const { data, error, isLoading } = useStatusOverview(projectId);
+  const { data, error, isLoading } = useStatusOverview(projectId, sprintId);
   const [hoveredLegend, setHoveredLegend] = useState(null);
 
   // Color scheme for different statuses with premium gradients
@@ -37,23 +37,24 @@ function ProjectStatusOverview() {
     );
   }
 
-  if (
-    !data ||
-    !data.statusDistribution ||
-    Object.keys(data.statusDistribution).length === 0
-  ) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            Status Overview
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Distribution of tasks by their current status across the project
-          </p>
-        </div>
+  // Check if we have valid data with status distribution
+  const hasValidData =
+    data &&
+    data.statusDistribution &&
+    Object.keys(data.statusDistribution).length > 0 &&
+    Object.values(data.statusDistribution).some((count) => count > 0);
 
-        <div className="flex items-center justify-center h-64">
+  if (!hasValidData) {
+    return (
+      <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
+        <h2 className="text-lg font-semibold mb-0 pb-0 pt-4 px-6">
+          Status Overview
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-6">
+          Distribution of tasks by their current status for the sprint
+        </p>
+
+        <div className="flex items-center justify-center h-64 px-6 pb-6">
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
               <svg
@@ -74,7 +75,7 @@ function ProjectStatusOverview() {
               No Status Data Available
             </h4>
             <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm">
-              There are no tasks with status information for this project yet.
+              There are no tasks with status information for the sprint yet.
               Status data will appear here once tasks are created and assigned.
             </p>
           </div>
@@ -185,7 +186,7 @@ function ProjectStatusOverview() {
         Status Overview
       </h2>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-6">
-        Distribution of tasks by their current status across all active sprints
+        Distribution of tasks by their current status for the sprint
       </p>
 
       <div className="flex items-center justify-center px-6 pb-6">

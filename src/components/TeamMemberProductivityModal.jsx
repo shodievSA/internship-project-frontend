@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import Modal from "./ui/Modal";
 import { useMyProductivity } from "../hooks/useMemberProductivity";
+import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
+import SprintSelectionDropdown from "./SprintSelectionDropdown";
 import {
   Clock,
   CheckCircle,
@@ -17,6 +19,8 @@ import {
   Zap,
   Timer,
   Award,
+  Hash,
+  Sparkles,
 } from "lucide-react";
 import LoadingState from "./LoadingState";
 import { ProductivitySkeleton } from "./ProductivitySkeleton";
@@ -24,7 +28,7 @@ import { ProductivitySkeleton } from "./ProductivitySkeleton";
 export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const { projectId } = useParams();
   const { user } = useAuthContext();
-  const [timeRange, setTimeRange] = useState("week");
+  const [selectedSprintId, setSelectedSprintId] = useState(null);
   const [isChangingFilter, setIsChangingFilter] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -32,9 +36,22 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const isAuthenticated = !!user;
   const isOwnProductivity = isAuthenticated && user?.id === member?.id;
 
+  // Fetch sprints data
+  const { data: sprintsData } = useAllSprints(projectId);
+  const { data: defaultSprintData } = useDefaultSprint(projectId);
+
+  // Set default sprint when data is loaded
+  useEffect(() => {
+    if (defaultSprintData?.defaultSprint && selectedSprintId === null) {
+      setSelectedSprintId(defaultSprintData.defaultSprint.id);
+    }
+  }, [defaultSprintData, selectedSprintId]);
+
+  const sprints = sprintsData?.sprints || [];
+
   const { data, loading, error } = useMyProductivity(
     projectId,
-    { timeRange },
+    selectedSprintId,
     {
       shouldFetch: isAuthenticated && isOwnProductivity,
     }
@@ -42,14 +59,19 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 
   const productivityData = data?.data;
 
-  // Handle time range change with loading state
-  const handleTimeRangeChange = (newTimeRange) => {
-    // Only allow time range changes if user is authenticated and viewing their own productivity
+  // Handle sprint change with loading state
+  const handleSprintChange = (sprintId) => {
+    // Only allow sprint changes if user is authenticated and viewing their own productivity
     if (!isAuthenticated || !isOwnProductivity) {
       return;
     }
     setIsChangingFilter(true);
-    setTimeRange(newTimeRange);
+    setSelectedSprintId(sprintId);
+
+    // Add a small delay to show the skeleton loading state
+    setTimeout(() => {
+      setIsChangingFilter(false);
+    }, 500);
   };
 
   // Reset changing filter state when data loads
@@ -72,12 +94,10 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
     }
   }, [isOpen, isInitialLoad]);
 
-  const timeRangeOptions = [
-    { value: "day", label: "Today" },
-    { value: "week", label: "Week" },
-    { value: "month", label: "Month" },
-    { value: "all", label: "All Time" },
-  ];
+  // Get selected sprint info for display
+  const selectedSprint = selectedSprintId
+    ? sprints.find((sprint) => sprint.id === selectedSprintId)
+    : null;
 
   const getBusyLevelColor = (level) => {
     switch (level) {
@@ -179,46 +199,15 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
           </div>
         ) : (
           <>
-            {/* Time Period Selector */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Time Period
-                </span>
-                {productivityData && (
-                  <div className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full">
-                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-                      {timeRange === "day"
-                        ? "Today"
-                        : timeRange === "week"
-                        ? "This Week"
-                        : timeRange === "month"
-                        ? "This Month"
-                        : "All Time"}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                {timeRangeOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleTimeRangeChange(option.value)}
-                    disabled={!isAuthenticated || !isOwnProductivity}
-                    className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-                      timeRange === option.value
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-                    } ${
-                      !isAuthenticated || !isOwnProductivity
-                        ? "opacity-50 cursor-not-allowed"
-                        : "cursor-pointer"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
+            {/* Sprint Selection */}
+            <div className="flex mb-4">
+              <SprintSelectionDropdown
+                sprints={sprints}
+                selectedSprintId={selectedSprintId}
+                onSprintChange={handleSprintChange}
+                className="w-64"
+                showAllSprints={false}
+              />
             </div>
 
             {(loading || isChangingFilter || isInitialLoad) && (
@@ -419,10 +408,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                           </span>
                         </div>
                         <span className="text-lg font-bold text-gray-900 dark:text-white">
-                          {productivityData.timeTracking.dailyTimeDistribution.reduce(
-                            (sum, day) => sum + day.sessions,
-                            0
-                          )}
+                          {productivityData.sessionCount || 0}
                         </span>
                       </div>
                     </div>
@@ -440,25 +426,18 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Daily Activity
+                            Task Time Distribution
                           </h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {timeRange === "day"
-                              ? "Today's activity"
-                              : timeRange === "week"
-                              ? "Last 7 days overview"
-                              : timeRange === "month"
-                              ? "Last 30 days overview"
-                              : "All time overview"}
+                            {selectedSprint
+                              ? `${selectedSprint.title} tasks`
+                              : "All sprints tasks"}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                          {productivityData?.timeTracking?.dailyTimeDistribution?.reduce(
-                            (sum, day) => sum + day.sessions,
-                            0
-                          ) || 0}
+                          {productivityData?.sessionCount || 0}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           Total Sessions
@@ -467,151 +446,72 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                     </div>
                   </div>
 
-                  {/* Activity List */}
-                  {productivityData?.timeTracking?.dailyTimeDistribution
-                    ?.length > 0 ? (
+                  {/* Task Time List */}
+                  {productivityData?.timeTracking?.timePerTask?.length > 0 ? (
                     <div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-[400px] overflow-y-auto">
-                      {productivityData.timeTracking.dailyTimeDistribution
-                        .slice(
-                          0,
-                          timeRange === "day"
-                            ? 1
-                            : timeRange === "week"
-                            ? 7
-                            : timeRange === "month"
-                            ? 30
-                            : productivityData.timeTracking
-                                .dailyTimeDistribution.length
-                        )
-                        .map((day, index) => {
-                          const date = new Date(day.date);
-                          const isToday =
-                            new Date().toDateString() === date.toDateString();
-                          const isYesterday =
-                            new Date(Date.now() - 86400000).toDateString() ===
-                            date.toDateString();
-
+                      {productivityData.timeTracking.timePerTask
+                        .slice(0, 10) // Show last 10 tasks
+                        .map((task, index) => {
                           return (
                             <div
                               key={index}
-                              className={`px-8 py-6 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
-                                isToday
-                                  ? "bg-blue-50/50 dark:bg-blue-900/10"
-                                  : ""
-                              }`}
+                              className="px-8 py-6 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                             >
                               <div className="flex items-center justify-between">
-                                {/* Date Section */}
+                                {/* Task Section */}
                                 <div className="flex items-center gap-4">
-                                  <div
-                                    className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                                      isToday
-                                        ? "bg-blue-100 dark:bg-blue-900/30"
-                                        : "bg-gray-100 dark:bg-gray-800"
-                                    }`}
-                                  >
+                                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
                                     <div className="text-center">
-                                      <div
-                                        className={`text-sm font-bold ${
-                                          isToday
-                                            ? "text-blue-700 dark:text-blue-300"
-                                            : "text-gray-600 dark:text-gray-400"
-                                        }`}
-                                      >
-                                        {date.toLocaleDateString("en-US", {
-                                          day: "numeric",
-                                        })}
-                                      </div>
-                                      <div
-                                        className={`text-xs ${
-                                          isToday
-                                            ? "text-blue-600 dark:text-blue-400"
-                                            : "text-gray-500 dark:text-gray-500"
-                                        }`}
-                                      >
-                                        {date.toLocaleDateString("en-US", {
-                                          month: "short",
-                                        })}
+                                      <div className="flex items-center justify-center">
+                                        <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-1" />
+                                        <span className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                                          {task.taskId}
+                                        </span>
                                       </div>
                                     </div>
                                   </div>
 
                                   <div>
                                     <div className="flex items-center gap-2">
-                                      <h4
-                                        className={`font-medium ${
-                                          isToday
-                                            ? "text-blue-900 dark:text-blue-100"
-                                            : "text-gray-900 dark:text-white"
-                                        }`}
-                                      >
-                                        {date.toLocaleDateString("en-US", {
-                                          weekday: "long",
-                                        })}
+                                      <h4 className="font-medium text-gray-900 dark:text-white">
+                                        {task.taskTitle}
                                       </h4>
-                                      {(isToday || isYesterday) && (
-                                        <span
-                                          className={`px-2 py-1 text-xs font-medium rounded-full ${
-                                            isToday
-                                              ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-                                              : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-                                          }`}
-                                        >
-                                          {isToday ? "Today" : "Yesterday"}
-                                        </span>
-                                      )}
                                     </div>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                      {date.toLocaleDateString("en-US", {
-                                        month: "long",
-                                        day: "numeric",
-                                        year: "numeric",
-                                      })}
+                                      Task ID: {task.taskId}
                                     </p>
                                   </div>
                                 </div>
 
                                 {/* Metrics Section */}
                                 <div className="flex items-center gap-8">
-                                  {/* Time Spent */}
-                                  <div className="text-right">
+                                  {/* Total Time */}
+                                  <div className="text-right min-w-[120px]">
                                     <div className="flex items-center justify-end gap-2 mb-1">
-                                      <span
-                                        className={`text-lg font-semibold ${
-                                          isToday
-                                            ? "text-blue-900 dark:text-blue-100"
-                                            : "text-gray-900 dark:text-white"
-                                        }`}
-                                      >
-                                        {formatTime(day.totalTime)}
+                                      <span className="text-lg font-semibold text-gray-900 dark:text-white min-w-[60px] text-right">
+                                        {formatTime(task.totalTime)}
                                       </span>
-                                      <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                      <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
                                         <Clock className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                                      Time Spent
+                                      Total Time
                                     </div>
                                   </div>
 
-                                  {/* Sessions */}
-                                  <div className="text-right">
+                                  {/* Average Time Per Session */}
+                                  <div className="text-right min-w-[120px]">
                                     <div className="flex items-center justify-end gap-2 mb-1">
-                                      <span
-                                        className={`text-lg font-semibold ${
-                                          isToday
-                                            ? "text-blue-900 dark:text-blue-100"
-                                            : "text-gray-900 dark:text-white"
-                                        }`}
-                                      >
-                                        {day.sessions}
+                                      <span className="text-lg font-semibold text-gray-900 dark:text-white min-w-[60px] text-right">
+                                        {formatTime(task.averageTimePerSession)}
                                       </span>
-                                      <div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-                                        <Activity className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                      <div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <Timer className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                                      Sessions
+                                      Avg Session
                                     </div>
                                   </div>
                                 </div>
@@ -621,24 +521,23 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                         })}
                     </div>
                   ) : (
-                    /* Empty State for Daily Activity */
+                    /* Empty State for Task Time */
                     <div className="px-8 py-16 text-center">
                       <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Calendar className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                        <Timer className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                       </div>
                       <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        No Activity Data Yet
+                        No Task Time Data Yet
                       </h4>
                       <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
-                        Start tracking your time and completing tasks to see
-                        your daily activity patterns here.
+                        Start tracking your time on tasks to see your time
+                        distribution patterns here.
                       </p>
                     </div>
                   )}
 
                   {/* Clean Footer */}
-                  {productivityData?.timeTracking?.dailyTimeDistribution
-                    ?.length > 0 && (
+                  {productivityData?.timeTracking?.timePerTask?.length > 0 && (
                     <div className="px-8 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="text-center">
@@ -648,12 +547,12 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                             </div>
                             <div className="text-lg font-semibold text-gray-900 dark:text-white">
                               {formatTime(
-                                productivityData.timeTracking.dailyTimeDistribution.reduce(
-                                  (sum, day) => sum + day.totalTime,
+                                productivityData.timeTracking.timePerTask.reduce(
+                                  (sum, task) => sum + task.totalTime,
                                   0
                                 ) /
-                                  productivityData.timeTracking
-                                    .dailyTimeDistribution.length
+                                  productivityData.timeTracking.timePerTask
+                                    .length
                               )}
                             </div>
                           </div>
@@ -669,21 +568,22 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                             </div>
                             <div className="text-lg font-semibold text-gray-900 dark:text-white">
                               {(() => {
-                                const mostActive =
-                                  productivityData.timeTracking.dailyTimeDistribution.reduce(
-                                    (max, day) =>
-                                      day.totalTime > max.totalTime ? day : max
+                                const mostTimeSpent =
+                                  productivityData.timeTracking.timePerTask.reduce(
+                                    (max, task) =>
+                                      task.totalTime > max.totalTime
+                                        ? task
+                                        : max
                                   );
-                                return new Date(
-                                  mostActive.date
-                                ).toLocaleDateString("en-US", {
-                                  weekday: "short",
-                                });
+                                return mostTimeSpent.taskTitle.length > 15
+                                  ? mostTimeSpent.taskTitle.substring(0, 15) +
+                                      "..."
+                                  : mostTimeSpent.taskTitle;
                               })()}
                             </div>
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            Most Active Day
+                            Most Time Spent Task
                           </div>
                         </div>
 
