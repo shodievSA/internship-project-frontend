@@ -20,7 +20,7 @@ function OrganizerOverview({
 	tasksDueThisWeek,
 	newNotifications,
 	tasksForReview,
-	handleTab,
+	changeTab,
 }) {
 	const navigate = useNavigate();
 
@@ -195,7 +195,7 @@ function OrganizerOverview({
 							<Button
 								size="md"
 								variant="secondary"
-								onClick={() => handleTab("tasks-due-today", 1)}
+								onClick={() => changeTab("tasks-due-today", 1)}
 							>
 								<div className="flex items-center justify-center gap-x-3">
 									<span>View All</span>
@@ -238,7 +238,7 @@ function OrganizerOverview({
 									size="md"
 									variant="secondary"
 									onClick={() =>
-										handleTab("tasks-due-tomorrow", 2)
+										changeTab("tasks-due-tomorrow", 2)
 									}
 								>
 									<div className="flex items-center justify-center gap-x-3">
@@ -284,7 +284,7 @@ function OrganizerOverview({
 									size="md"
 									variant="secondary"
 									onClick={() =>
-										handleTab("tasks-due-this-week", 3)
+										changeTab("tasks-due-this-week", 3)
 									}
 								>
 									<div className="flex items-center justify-center gap-x-3">
@@ -331,7 +331,7 @@ function OrganizerOverview({
 								<Button
 									size="md"
 									variant="secondary"
-									onClick={() => handleTab("reviews", 4)}
+									onClick={() => changeTab("reviews", 4)}
 								>
 									<div className="flex items-center justify-center gap-x-3">
 										<span>View All</span>
@@ -378,7 +378,7 @@ function OrganizerOverview({
 									size="md"
 									variant="secondary"
 									onClick={() =>
-										handleTab("notifications", 5)
+										changeTab("notifications", 5)
 									}
 								>
 									<div className="flex items-center justify-center gap-x-3">

@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useThemeContext } from "../context/ThemeContext";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import TaskDetailsModal from "./TaskDetailsModal";
 import { Flame, CircleDot, Clock } from "lucide-react";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import userPlaceholder from "../assets/user-placeholder.png";
 
-function RegularTask({ task }) {
+function SprintTask({ task }) {
+
 	const {
 		title,
 		description,
@@ -17,6 +21,7 @@ function RegularTask({ task }) {
 		deadline,
 	} = task;
 
+	const { themeMode } = useThemeContext();
 	const { projectId } = useParams();
 
 	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState();
@@ -33,9 +38,9 @@ function RegularTask({ task }) {
 					<div className="flex items-start">
 						<h1 className="font-semibold">{title}</h1>
 					</div>
-					<p className="dark:text-neutral-400 max-h-12 text-ellipsis overflow-hidden">
+					<ReactMarkdown className={themeMode} rehypePlugins={[rehypeHighlight]}>
 						{description}
-					</p>
+					</ReactMarkdown>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
@@ -109,4 +114,4 @@ function RegularTask({ task }) {
 	);
 }
 
-export default RegularTask;
+export default SprintTask;

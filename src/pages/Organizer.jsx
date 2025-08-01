@@ -127,7 +127,7 @@ function Organizer() {
 						tasksDueThisWeek={dailyReport.report.tasksDueThisWeek}
 						tasksForReview={dailyReport.report.tasksForReview}
 						newNotifications={dailyReport.report.newNotifications}
-						changeSection={handleTab}
+						changeTab={handleTab}
 					/>
 				) : currentTab === "tasks-due-today" ? (
 					<OrganizerTasksDueToday

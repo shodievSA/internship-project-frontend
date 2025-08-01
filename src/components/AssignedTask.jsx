@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useThemeContext } from "../context/ThemeContext";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskStatusColors } from "../utils/constant";
 import { taskPriorityColors } from "../utils/constant";
@@ -19,9 +22,10 @@ import {
 } from "lucide-react";
 
 function AssignedTask({ task, team, currentMemberId }) {
-	const { id, title, description, priority, status, assignedTo, deadline } =
-		task;
 
+	const { id, title, description, priority, status, assignedTo, deadline } = task;
+
+	const { themeMode } = useThemeContext();
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
@@ -118,9 +122,9 @@ function AssignedTask({ task, team, currentMemberId }) {
 							</div>
 						</div>
 					</div>
-					<p className="dark:text-neutral-400 max-h-12 text-ellipsis overflow-hidden">
+					<ReactMarkdown className={themeMode} rehypePlugins={[rehypeHighlight]}>
 						{description}
-					</p>
+					</ReactMarkdown>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">

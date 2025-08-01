@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
 import SearchBar from "../components/SearchBar";
-import RegularTask from "../components/RegularTask";
+import SprintTask from "../components/SprintTask";
 import NewTaskModal from "../components/NewTaskModal";
 import Button from "../components/ui/Button";
 import sprintService from "../services/sprintService";
@@ -258,7 +258,7 @@ function ProjectSprint() {
 					>
 						{filteredSprintTasks.map((sprintTask) => {
 							return (
-								<RegularTask
+								<SprintTask
 									key={sprintTask.id}
 									task={sprintTask}
 								/>

@@ -57,11 +57,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 pre code.hljs {
 	display: block;
 	overflow-x: auto;
-	padding: 1em;
-}
-
-code.hljs {
-	padding: 3px 5px;
 }
 
 .hljs {
@@ -167,10 +162,6 @@ code.hljs {
 pre code.hljs {
 	display: block;
 	overflow-x: auto;
-	padding: 1em;
-}
-code.hljs {
-	padding: 3px 5px;
 }
 /*!
   Theme: GitHub Dark

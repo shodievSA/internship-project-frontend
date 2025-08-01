@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useThemeContext } from "../context/ThemeContext";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { formatIsoDate } from "../utils/formatIsoDate";
@@ -18,8 +21,10 @@ import {
 } from "lucide-react";
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
-	const { id, title, description, priority, status, assignedBy, deadline } =
-		task;
+
+	const { id, title, description, priority, status, assignedBy, deadline } = task;
+
+	const { themeMode } = useThemeContext();
 
 	const { projectId } = useParams();
 	const { showToast } = useToast();
@@ -32,9 +37,11 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
 
 	async function submitTask() {
+
 		setTaskBeingSubmitted(true);
 
 		try {
+
 			const { updatedTask } = await projectService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
@@ -51,14 +58,20 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			});
 
 			setShowSubmitModal(false);
+
 		} catch (err) {
+
 			console.log(
 				"The following error occured while submitting task: " +
 					err.message,
 			);
+
 		} finally {
+
 			setTaskBeingSubmitted(false);
+
 		}
+
 	}
 
 	return (
@@ -74,9 +87,9 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 					<div className="flex items-start">
 						<h1 className="font-semibold">{title}</h1>
 					</div>
-					<p className="dark:text-neutral-400 max-h-12 text-ellipsis overflow-hidden">
+					<ReactMarkdown className={themeMode} rehypePlugins={[rehypeHighlight]}>
 						{description}
-					</p>
+					</ReactMarkdown>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
@@ -204,6 +217,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			)}
 		</>
 	);
+	
 }
 
 export default MyTask;
