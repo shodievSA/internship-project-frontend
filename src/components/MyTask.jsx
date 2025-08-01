@@ -9,19 +9,17 @@ import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
 import AiEditor from "./AiEditor";
-import { Flame, CircleDot, Clock, CircleCheckBig, MessageSquare } from "lucide-react";
+import {
+	Flame,
+	CircleDot,
+	Clock,
+	CircleCheckBig,
+	MessageSquare,
+} from "lucide-react";
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
-
-	const {
-		id,
-		title,
-		description,
-		priority,
-		status,
-		assignedBy,
-		deadline
-	} = task;
+	const { id, title, description, priority, status, assignedBy, deadline } =
+		task;
 
 	const { projectId } = useParams();
 	const { showToast } = useToast();
@@ -30,50 +28,43 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 
 	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
 	const [showSubmitModal, setShowSubmitModal] = useState(false);
-	const [completionNote, setCompletionNote] = useState('');
+	const [completionNote, setCompletionNote] = useState("");
 	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
 
 	async function submitTask() {
-
 		setTaskBeingSubmitted(true);
 
 		try {
-
-			const { updatedTask } = await projectService.changeTaskStatus(
-				{
-					projectId: projectId,
-					taskId: id,
-					updateComment: completionNote,
-					updatedTaskStatus: "under review"
-				}
-			);
+			const { updatedTask } = await projectService.changeTaskStatus({
+				projectId: projectId,
+				taskId: id,
+				updateComment: completionNote,
+				updatedTaskStatus: "under review",
+			});
 
 			onTaskSubmit(id, updatedTask);
 
 			showToast({
 				variant: "success",
 				title: "Task submitted for review!",
-				message: "Your task has been successfully submitted for review"
+				message: "Your task has been successfully submitted for review",
 			});
 
 			setShowSubmitModal(false);
-
-		} catch(err) {
-
-			console.log("The following error occured while submitting task: " + err.message);
-
+		} catch (err) {
+			console.log(
+				"The following error occured while submitting task: " +
+					err.message,
+			);
 		} finally {
-
 			setTaskBeingSubmitted(false);
-
 		}
-
 	}
 
 	return (
 		<>
-			<div 
-				id={"task-" + task.id} 
+			<div
+				id={"task-" + task.id}
 				className="flex flex-col gap-y-5 gap-x-5 dark:border-neutral-800 
 				dark:hover:bg-neutral-950 hover:bg-slate-50 border-[1px] p-4 rounded-lg 
 				cursor-pointer"
@@ -81,73 +72,84 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			>
 				<div className="flex flex-col gap-y-1">
 					<div className="flex items-start">
-						<h1 className="font-semibold">
-							{ title }
-						</h1>
+						<h1 className="font-semibold">{title}</h1>
 					</div>
 					<p className="dark:text-neutral-400 max-h-12 text-ellipsis overflow-hidden">
-						{ description }
+						{description}
 					</p>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
 						<div className="flex gap-x-4">
-							<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
-							py-1.5 rounded-full`}>
+							<div
+								className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
+							py-1.5 rounded-full`}
+							>
 								<Flame className="w-4 h-4" />
 								<span className="text-xs font-medium">
-									{ priority } priority
+									{priority} priority
 								</span>
 							</div>
-							<div className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
-							py-1 rounded-full`}>
+							<div
+								className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
+							py-1 rounded-full`}
+							>
 								<CircleDot className="w-4 h-4" />
-								<span className="text-xs font-medium">{ status }</span>
+								<span className="text-xs font-medium">
+									{status}
+								</span>
 							</div>
 						</div>
 						<div className="flex flex-col gap-y-2">
 							<span className="text-xs">ASSIGNED BY</span>
 							<div className="flex items-center gap-x-2">
-								<img src={assignedBy.avatarUrl ?? userPlaceholder} className="w-6 h-6 rounded-full" /> 
-								<span className="dark:text-neutral-300 font-medium">{assignedBy.name}</span>
+								<img
+									src={
+										assignedBy.avatarUrl ?? userPlaceholder
+									}
+									className="w-6 h-6 rounded-full"
+								/>
+								<span className="dark:text-neutral-300 font-medium">
+									{assignedBy.name}
+								</span>
 							</div>
-						</div>		
+						</div>
 						<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
 							<Clock className="w-4 h-4" />
-							<span>{ formatIsoDate(deadline) }</span>
+							<span>{formatIsoDate(deadline)}</span>
 						</div>
 					</div>
 				</div>
 				<div className="grid grid-cols-2 gap-x-3">
-					{
-						(status === "ongoing" || status === "rejected" || status === "overdue") && (
-							<Button 
-								size="sm"
-								onClick={(e) => {
-									e.stopPropagation();
-									setShowSubmitModal(true)
-								}}
-								loading={taskBeingSubmitted}
-							>
-								<div className="flex justify-center items-center gap-x-2 text-sm">
-									<CircleCheckBig className="w-4 h-4" />
-									<span>Complete</span>
-								</div>
-							</Button>
-						)
-					}
-					<Button 
-						variant="secondary" 
-						size="sm" 
+					{(status === "ongoing" ||
+						status === "rejected" ||
+						status === "overdue") && (
+						<Button
+							size="sm"
+							onClick={(e) => {
+								e.stopPropagation();
+								setShowSubmitModal(true);
+							}}
+							loading={taskBeingSubmitted}
+						>
+							<div className="flex justify-center items-center gap-x-2 text-sm">
+								<CircleCheckBig className="w-4 h-4" />
+								<span>Complete</span>
+							</div>
+						</Button>
+					)}
+					<Button
+						variant="secondary"
+						size="sm"
 						onClick={(e) => {
 							e.stopPropagation();
 							navigate(`${id}/comments`, {
-								state: { 
+								state: {
 									task: task,
-									currentMemberId: currentMemberId
-								}
-							})}
-						}
+									currentMemberId: currentMemberId,
+								},
+							});
+						}}
 					>
 						<div className="flex justify-center items-center gap-x-2 text-sm">
 							<MessageSquare className="w-4 h-4" />
@@ -156,57 +158,52 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 					</Button>
 				</div>
 			</div>
-			{
-				showTaskDetailsModal && (
-					<TaskDetailsModal 
-						task={task} 
-						projectId={projectId}
-						closeModal={() => setShowTaskDetailsModal(false)} 
-					/>
-				)
-			}
-			{
-				showSubmitModal && (
-					<Modal
-						titleIcon={<CircleCheckBig className="w-5 h-5" />}
-						title="Complete Task"
-						size="lg"
-						closeModal={() => setShowSubmitModal(false)}
-					>
-						<div className="flex flex-col gap-y-4 px-5 pb-5">
-							<AiEditor 
-								label="Completion note (optional)"
-								placeholder="Describe how you completed this task..."
-								value={completionNote}
-								setValue={setCompletionNote}
+			{showTaskDetailsModal && (
+				<TaskDetailsModal
+					task={task}
+					projectId={projectId}
+					closeModal={() => setShowTaskDetailsModal(false)}
+				/>
+			)}
+			{showSubmitModal && (
+				<Modal
+					titleIcon={<CircleCheckBig className="w-5 h-5" />}
+					title="Complete Task"
+					size="lg"
+					closeModal={() => setShowSubmitModal(false)}
+				>
+					<div className="flex flex-col gap-y-4 px-5 pb-5">
+						<AiEditor
+							label="Completion note (optional)"
+							placeholder="Describe how you completed this task..."
+							value={completionNote}
+							setValue={setCompletionNote}
+							disabled={taskBeingSubmitted}
+						/>
+						<div className="grid grid-cols-2 gap-4">
+							<Button
+								size="md"
+								variant="secondary"
+								onClick={() => setShowSubmitModal(false)}
 								disabled={taskBeingSubmitted}
-							/>
-							<div className="grid grid-cols-2 gap-4">
-								<Button
-									size="md"
-									variant="secondary"
-									onClick={() => setShowSubmitModal(false)}
-									disabled={taskBeingSubmitted}
-								>
-									Cancel
-								</Button>
-								<Button
-									size="md"
-									variant="primary"
-									onClick={submitTask}
-									loading={taskBeingSubmitted}
-									disabled={taskBeingSubmitted}
-								>
-									Complete Task
-								</Button>
-							</div>
+							>
+								Cancel
+							</Button>
+							<Button
+								size="md"
+								variant="primary"
+								onClick={submitTask}
+								loading={taskBeingSubmitted}
+								disabled={taskBeingSubmitted}
+							>
+								Complete Task
+							</Button>
 						</div>
-					</Modal>
-				)
-			}
+					</div>
+				</Modal>
+			)}
 		</>
 	);
-
 }
 
 export default MyTask;

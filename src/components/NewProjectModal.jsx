@@ -6,7 +6,6 @@ import Modal from "./ui/Modal";
 import InputField from "./InputField";
 
 function NewProjectModal({ closeModal, onProjectCreated }) {
-
 	const { showToast } = useToast();
 
 	const [projectTitle, setProjectTitle] = useState("");
@@ -14,18 +13,17 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 	const [projectBeingSaved, setProjectBeingSaved] = useState(false);
 
 	const submitButtonDisabled = useMemo(() => {
-
-		return (!projectTitle.trim() || !userPosition.trim());
-
+		return !projectTitle.trim() || !userPosition.trim();
 	}, [projectTitle, userPosition]);
 
 	async function createNewProject() {
-
 		setProjectBeingSaved(true);
 
 		try {
-
-			const { project } = await projectService.createProject(projectTitle, userPosition);
+			const { project } = await projectService.createProject(
+				projectTitle,
+				userPosition,
+			);
 
 			closeModal();
 
@@ -33,30 +31,20 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 
 			showToast({
 				variant: "success",
-				title: "Project created successfully!"
+				title: "Project created successfully!",
 			});
-		
 		} catch (err) {
-
 			showToast({
 				variant: "failure",
-				title: err.message
+				title: err.message,
 			});
-
 		} finally {
-
 			setProjectBeingSaved(false);
-
 		}
-
 	}
 
 	return (
-		<Modal
-			size="md"
-			title="New Project"
-			closeModal={closeModal}
-		>
+		<Modal size="md" title="New Project" closeModal={closeModal}>
 			<div className="flex flex-col gap-y-4 px-5 pb-5">
 				<InputField
 					label="Project Title"
@@ -66,7 +54,7 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 					setValue={setProjectTitle}
 					error="You must include project title"
 				/>
-				<InputField 
+				<InputField
 					label="Your position in this project (e.g team lead)"
 					disabled={projectBeingSaved}
 					required={true}
@@ -95,7 +83,6 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 			</div>
 		</Modal>
 	);
-
 }
 
 export default NewProjectModal;

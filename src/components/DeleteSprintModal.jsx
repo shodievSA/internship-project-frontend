@@ -9,11 +9,10 @@ import sprintService from "../services/sprintService";
 
 const deleteWarnings = [
 	"Delete the sprint and its corresponding tickets",
-	"This action can't be undone"
+	"This action can't be undone",
 ];
 
 function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
-
 	const [confirmMessage, setConfirmMessage] = useState("");
 	const [sprintBeingDeleted, setSprintBeingDeleted] = useState(false);
 
@@ -24,42 +23,32 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const submitButtonDisabled = useMemo(() => {
-
-		return (confirmMessage.trim() === sprint.title) ? false : true;
-
+		return confirmMessage.trim() === sprint.title ? false : true;
 	}, [confirmMessage]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	async function deleteSprint() {
-
 		setSprintBeingDeleted(true);
 
 		try {
-
 			await sprintService.deleteSprint(projectId, sprint.id);
 
 			showToast({
 				variant: "success",
-				title: "Deleted sprint successfully!"
+				title: "Deleted sprint successfully!",
 			});
 
 			onSprintDelete(sprint.id);
 
 			navigate(-1);
-
-		} catch(err) {
-
+		} catch (err) {
 			showToast({
 				variant: "failure",
-				title: "Failed to delete the sprint!"
+				title: "Failed to delete the sprint!",
 			});
-
 		} finally {
-
 			setSprintBeingDeleted(false);
-
 		}
-
 	}
 
 	return (
@@ -71,22 +60,21 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 			closeModal={closeModal}
 		>
 			<div className="flex flex-col px-5 pb-5 gap-y-8">
-				<div className="dark:bg-red-950 dark:border-red-800 bg-red-100 border-red-300 
-				text-red-500 flex flex-col gap-y-2 p-4 rounded-md border-[1px]">
+				<div
+					className="dark:bg-red-950 dark:border-red-800 bg-red-100 border-red-300 
+				text-red-500 flex flex-col gap-y-2 p-4 rounded-md border-[1px]"
+				>
 					<span>This action will permanently:</span>
 					<ul className="list-disc pl-5">
-						{
-							deleteWarnings.map((warning) => {
-								return (
-									<li className="mt-1">{ warning }</li>
-								)
-							})
-						}
+						{deleteWarnings.map((warning) => {
+							return <li className="mt-1">{warning}</li>;
+						})}
 					</ul>
 				</div>
 				<div className="flex flex-col gap-y-3">
 					<label className="dark:text-neutral-400 text-slate-500">
-						Type <span className="font-bold">{ sprint.title }</span> to confirm:
+						Type <span className="font-bold">{sprint.title}</span>{" "}
+						to confirm:
 					</label>
 					<Input
 						disabled={sprintBeingDeleted}
@@ -96,7 +84,7 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 					/>
 				</div>
 				<div className="grid grid-cols-2 gap-4">
-					<Button 
+					<Button
 						size="md"
 						disabled={sprintBeingDeleted}
 						variant="secondary"
@@ -104,7 +92,7 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 					>
 						Cancel
 					</Button>
-					<Button 
+					<Button
 						size="md"
 						variant="destructive"
 						disabled={submitButtonDisabled}
@@ -117,7 +105,6 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 			</div>
 		</Modal>
 	);
-
 }
 
 export default DeleteSprintModal;

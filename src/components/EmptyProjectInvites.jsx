@@ -3,13 +3,12 @@ import Button from "./ui/Button";
 import { UserPlus, Inbox, ArrowLeft } from "lucide-react";
 
 function EmptyProjectInvites({ openModal }) {
-
 	const navigate = useNavigate();
 
 	return (
 		<div className="h-full flex flex-col gap-y-5 px-4 lg:px-6 pt-4">
 			<div>
-				<Button 
+				<Button
 					variant="secondary"
 					size="sm"
 					onClick={() => navigate(-1)}
@@ -38,7 +37,6 @@ function EmptyProjectInvites({ openModal }) {
 			</div>
 		</div>
 	);
-
 }
 
 export default EmptyProjectInvites;

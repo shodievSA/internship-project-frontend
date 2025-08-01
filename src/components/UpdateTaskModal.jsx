@@ -13,13 +13,7 @@ import FileAttachments from "./FileAttachments";
 import taskService from "../services/taskService";
 import TaskTitleField from "./TaskTitleField";
 
-function UpdateTaskModal({ 
-	projectId,
-	task, 
-	team, 
-	closeModal 
-}) {
-
+function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	const {
 		id: taskId,
 		title,
@@ -27,7 +21,7 @@ function UpdateTaskModal({
 		priority,
 		assignedTo: { id: assignedToId },
 		deadline,
-		filesMetaData
+		filesMetaData,
 	} = task;
 
 	const { setTasks } = useProject();
@@ -38,27 +32,29 @@ function UpdateTaskModal({
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
 	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
 	const [newTaskFiles, setNewTaskFiles] = useState([]);
-	const [newTaskAssignedToId, setNewTaskAssignedToId] = useState(assignedToId);
+	const [newTaskAssignedToId, setNewTaskAssignedToId] =
+		useState(assignedToId);
 	const [newTaskPriority, setNewTaskPriority] = useState(priority);
 	const [filesFetched, setFilesFetched] = useState(false);
 
 	const fileUpdates = useMemo(() => {
-
 		if (!filesFetched) return { filesToAdd: [], filesToDelete: [] };
 
 		const oldFileIds = filesMetaData.map((file) => file.id);
 		const newFileIds = newTaskFiles.map((file) => file.id);
 
-		const filesToAdd = newTaskFiles.filter((newFile) => !oldFileIds.includes(newFile.id));
-		const filesToDelete = oldFileIds.filter((id) => !newFileIds.includes(id));
+		const filesToAdd = newTaskFiles.filter(
+			(newFile) => !oldFileIds.includes(newFile.id),
+		);
+		const filesToDelete = oldFileIds.filter(
+			(id) => !newFileIds.includes(id),
+		);
 
 		return { filesToAdd, filesToDelete };
-
 	}, [newTaskFiles, filesMetaData, filesFetched]);
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedTaskProps = useMemo(() => {
-
 		const updatedProps = getUpdatedTaskProps({
 			newTaskTitle: newTaskTitle,
 			oldTaskTitle: title,
@@ -73,106 +69,110 @@ function UpdateTaskModal({
 		});
 
 		return updatedProps;
-
 	}, [
 		newTaskTitle,
 		newTaskDescription,
 		newTaskPriority,
 		newTaskDeadline,
-		newTaskAssignedToId
+		newTaskAssignedToId,
 	]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
-
-		const allowToSubmit = shouldEnableSubmitButton(updatedTaskProps, fileUpdates);
+		const allowToSubmit = shouldEnableSubmitButton(
+			updatedTaskProps,
+			fileUpdates,
+		);
 		return allowToSubmit ? false : true;
-
 	}, [updatedTaskProps, fileUpdates]);
 
 	useEffect(() => {
-
 		async function fetchPresignedUrls() {
-
-			const { fileUrls } = await taskService.getTaskFiles(projectId, taskId);
+			const { fileUrls } = await taskService.getTaskFiles(
+				projectId,
+				taskId,
+			);
 			await fetchFilesFromPresignedUrls(fileUrls);
-
 		}
 
 		async function fetchFilesFromPresignedUrls(fileUrls) {
+			const responses = await Promise.all(
+				fileUrls.map((file) => fetch(file.url)),
+			);
+			const blobs = await Promise.all(
+				responses.map((response) => response.blob()),
+			);
+			const files = blobs.map(
+				(blob, index) => new File([blob], fileUrls[index].fileName),
+			);
 
-			const responses = await Promise.all(fileUrls.map((file) => fetch(file.url)));
-			const blobs = await Promise.all(responses.map((response) => response.blob()));
-			const files = blobs.map((blob, index) => new File([blob], fileUrls[index].fileName));
-
-			setNewTaskFiles(files.map((file, index) => {
-
-				return {
-					id: fileUrls[index].id, 
-					file: file 
-				}
-
-			}));
+			setNewTaskFiles(
+				files.map((file, index) => {
+					return {
+						id: fileUrls[index].id,
+						file: file,
+					};
+				}),
+			);
 
 			setFilesFetched(true);
-
-		};
+		}
 
 		fetchPresignedUrls();
-
 	}, []);
 
 	async function updateTask() {
-
-		const formData = prepareDataForSubmission(updatedTaskProps, fileUpdates);
+		const formData = prepareDataForSubmission(
+			updatedTaskProps,
+			fileUpdates,
+		);
 
 		setTaskBeingUpdated(true);
 
 		try {
+			const { updatedTask } = await projectService.updateTask({
+				projectId,
+				taskId,
+				formData,
+			});
 
-			const { updatedTask } = await projectService.updateTask({ projectId, taskId, formData });
-
-			setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId) ? updatedTask : task));
+			setTasks((prevTasks) =>
+				prevTasks.map((task) =>
+					task.id === taskId ? updatedTask : task,
+				),
+			);
 
 			closeModal();
 
 			showToast({
 				variant: "success",
 				title: "Task updated successfully!",
-				message: "The task has been updated successfully"
+				message: "The task has been updated successfully",
 			});
-
-		} catch(err) {
-
+		} catch (err) {
 			showToast({
 				variant: "failure",
-				title: err.message
+				title: err.message,
 			});
-
 		} finally {
-
 			setTaskBeingUpdated(false);
-
 		}
-
 	}
 
 	return (
-		<Modal 
-			title="Edit Task" 
-			size="lg"
-			closeModal={closeModal}
-		>
-			<div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
-			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
+		<Modal title="Edit Task" size="lg" closeModal={closeModal}>
+			<div
+				className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
+			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800"
+			>
 				<div className="flex flex-col gap-y-8">
-					<TaskTitleField 
+					<TaskTitleField
 						taskDescription={newTaskDescription}
 						value={newTaskTitle}
 						setValue={setNewTaskTitle}
 						disabled={taskBeingUpdated}
 					/>
-					<AiEditor 
+					<AiEditor
 						label="Description"
 						placeholder="Describe the task requirements, goals, and any important details..."
 						required={true}
@@ -195,7 +195,7 @@ function UpdateTaskModal({
 						<DatePicker
 							label="Deadline"
 							required={true}
-							disabled={taskBeingUpdated} 
+							disabled={taskBeingUpdated}
 							value={newTaskDeadline}
 							setValue={setNewTaskDeadline}
 						/>
@@ -208,15 +208,17 @@ function UpdateTaskModal({
 						value={newTaskAssignedToId}
 						setValue={setNewTaskAssignedToId}
 						options={getAssignToOptions(team)}
-					/> 
-					<FileAttachments 
-						fileAttachments={newTaskFiles} 
+					/>
+					<FileAttachments
+						fileAttachments={newTaskFiles}
 						setFileAttachments={setNewTaskFiles}
 					/>
 				</div>
 			</div>
-			<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
-			border-neutral-200 p-4">
+			<div
+				className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
+			border-neutral-200 p-4"
+			>
 				<Button
 					size="md"
 					variant="secondary"
@@ -236,11 +238,9 @@ function UpdateTaskModal({
 			</div>
 		</Modal>
 	);
-
-};
+}
 
 function getUpdatedTaskProps(task) {
-
 	const updated = {};
 
 	if (task.newTaskTitle.trim() !== task.oldTaskTitle) {
@@ -274,54 +274,44 @@ function getUpdatedTaskProps(task) {
 	}
 
 	return updated;
-
 }
 
 function getAssignToOptions(team) {
-
 	return team.map((member) => {
-
 		return {
 			label: `${member.name} - ${member.position}`,
-			value: member.id
-		}
-
+			value: member.id,
+		};
 	});
-
 }
 
 function shouldEnableSubmitButton(updatedTaskProps, fileUpdates) {
-
 	return (
-		Object.keys(updatedTaskProps).length > 0 || 
-		fileUpdates.filesToAdd.length > 0  || 
+		Object.keys(updatedTaskProps).length > 0 ||
+		fileUpdates.filesToAdd.length > 0 ||
 		fileUpdates.filesToDelete.length > 0
 	);
-
 }
 
 function prepareDataForSubmission(updatedTaskProps, fileUpdates) {
-
 	const formData = new FormData();
 
 	formData.append("updatedTaskProps", JSON.stringify(updatedTaskProps));
-	
-	if (fileUpdates.filesToAdd.length > 0) {
 
+	if (fileUpdates.filesToAdd.length > 0) {
 		fileUpdates.filesToAdd.forEach((file) => {
 			formData.append("filesToAdd", file.file);
 		});
-
 	}
 
 	if (fileUpdates.filesToDelete.length > 0) {
-		
-		formData.append("filesToDelete", JSON.stringify(fileUpdates.filesToDelete));
-
+		formData.append(
+			"filesToDelete",
+			JSON.stringify(fileUpdates.filesToDelete),
+		);
 	}
 
 	return formData;
-
 }
 
 export default UpdateTaskModal;

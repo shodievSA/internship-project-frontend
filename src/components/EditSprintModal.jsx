@@ -12,20 +12,14 @@ import SelectField from "./SelectField";
 import sprintService from "../services/sprintService";
 
 function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
-
-	const {
-		title,
-		description,
-		status,
-		startDate,
-		endDate
-	} = sprint;
+	const { title, description, status, startDate, endDate } = sprint;
 
 	const { projectId, sprintId } = useParams();
 	const { showToast } = useToast();
 
 	const [newSprintTitle, setNewSprintTitle] = useState(title);
-	const [newSprintDescription, setNewSprintDescription] = useState(description);
+	const [newSprintDescription, setNewSprintDescription] =
+		useState(description);
 	const [newSprintStartDate, setNewSprintStartDate] = useState(startDate);
 	const [newSprintEndDate, setNewSprintEndDate] = useState(endDate);
 	const [newSprintStatus, setNewSprintStatus] = useState(status);
@@ -34,7 +28,6 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedSprintProps = useMemo(() => {
-
 		const updatedProps = getSprintUpdatedProps({
 			newTitle: newSprintTitle,
 			newDescription: newSprintDescription,
@@ -45,58 +38,51 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 			oldDescription: description,
 			oldStatus: status,
 			oldStartDate: startDate,
-			oldEndDate: endDate
+			oldEndDate: endDate,
 		});
 
 		return updatedProps;
-
 	}, [
 		newSprintTitle,
 		newSprintDescription,
 		newSprintStartDate,
 		newSprintEndDate,
-		newSprintStatus
+		newSprintStatus,
 	]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
-
 		const allowToSubmit = shouldEnableSubmitButton(updatedSprintProps);
 
 		return allowToSubmit ? false : true;
-
 	}, [updatedSprintProps]);
 
 	async function updateSprint() {
-
 		setSprintBeingUpdated(true);
 
 		try {
+			const { updatedSprint } = await sprintService.updateSprint(
+				projectId,
+				sprintId,
+				updatedSprintProps,
+			);
 
-			const { updatedSprint } = await sprintService.updateSprint(projectId, sprintId, updatedSprintProps);
-	
 			onSprintUpdate(updatedSprint);
 
 			showToast({
 				variant: "success",
-				title: "Sprint updated successfully!"
+				title: "Sprint updated successfully!",
 			});
 
 			closeModal();
-
-		} catch(err) {
-
+		} catch (err) {
 			showToast({
 				variant: "failure",
-				title: "Failed to update sprint!"
+				title: "Failed to update sprint!",
 			});
-
 		} finally {
-
 			setSprintBeingUpdated(false);
-
 		}
-
 	}
 
 	return (
@@ -108,7 +94,7 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 		>
 			<div className="flex flex-col">
 				<div className="flex flex-col gap-y-4 px-5 pb-5">
-					<InputField 
+					<InputField
 						label="Sprint title"
 						placeholder="Enter sprint title here"
 						value={newSprintTitle}
@@ -117,7 +103,7 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 						error="Sprint title can't be empty"
 						disabled={sprintBeingUpdated}
 					/>
-					<TextareaField 
+					<TextareaField
 						label="Sprint description"
 						placeholder="Enter sprint description here"
 						value={newSprintDescription}
@@ -126,31 +112,33 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 						disabled={sprintBeingUpdated}
 					/>
 					<SelectField
-						label="Sprint status" 
+						label="Sprint status"
 						disabled={sprintBeingUpdated}
 						value={newSprintStatus}
 						setValue={setNewSprintStatus}
 						options={sprintStatusOptions}
 					/>
 					<div className="grid grid-cols-2 gap-5">
-						<DatePicker 
-							label="Start date" 
-							required={true} 
+						<DatePicker
+							label="Start date"
+							required={true}
 							value={newSprintStartDate}
 							setValue={setNewSprintStartDate}
 							disabled={sprintBeingUpdated}
 						/>
-						<DatePicker 
-							label="End date" 
-							required={true} 
+						<DatePicker
+							label="End date"
+							required={true}
 							value={newSprintEndDate}
 							setValue={setNewSprintEndDate}
 							disabled={sprintBeingUpdated}
 						/>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
-            	border-neutral-200 p-4">
+				<div
+					className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
+            	border-neutral-200 p-4"
+				>
 					<Button
 						size="md"
 						variant="secondary"
@@ -171,11 +159,9 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 			</div>
 		</Modal>
 	);
-
 }
 
 function getSprintUpdatedProps(sprint) {
-
 	const updated = {};
 
 	if (sprint.newTitle.trim() !== sprint.oldTitle) {
@@ -209,15 +195,10 @@ function getSprintUpdatedProps(sprint) {
 	}
 
 	return updated;
-
 }
 
 function shouldEnableSubmitButton(updatedSprintProps) {
-
-	return (
-		Object.keys(updatedSprintProps).length > 0
-	);
-
+	return Object.keys(updatedSprintProps).length > 0;
 }
 
 export default EditSprintModal;

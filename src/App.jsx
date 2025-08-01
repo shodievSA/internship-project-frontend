@@ -1,8 +1,8 @@
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
 } from "react-router-dom";
 import AuthContextProvider from "./context/AuthContext";
 import ThemeContextProvider from "./context/ThemeContext";
@@ -40,9 +40,17 @@ function App() {
 									<Route element={<PrivateRoute />}>
 										<Route
 											path="/"
-											element={<Navigate replace={true} to={"/projects"} />}
+											element={
+												<Navigate
+													replace={true}
+													to={"/projects"}
+												/>
+											}
 										/>
-										<Route path="/projects" element={<Projects />} />
+										<Route
+											path="/projects"
+											element={<Projects />}
+										/>
 										<Route
 											path="/projects/:projectId"
 											element={
@@ -51,13 +59,22 @@ function App() {
 												</ProjectContextProvider>
 											}
 										>
-											<Route path="sprints" element={<ProjectSprints />} />
-											<Route path="my-tasks" element={<MyTasksPage />} />
+											<Route
+												path="sprints"
+												element={<ProjectSprints />}
+											/>
+											<Route
+												path="my-tasks"
+												element={<MyTasksPage />}
+											/>
 											<Route
 												path="assigned-tasks"
 												element={<AssignedTasksPage />}
 											/>
-											<Route path="review-tasks" element={<ReviewTasksPage />} />
+											<Route
+												path="review-tasks"
+												element={<ReviewTasksPage />}
+											/>
 										</Route>
 										<Route
 											path="/projects/:projectId/sprints"
@@ -99,11 +116,23 @@ function App() {
 											path="/projects/:projectId/team/:memberId"
 											element={<TeamMemberDetailsPage />}
 										/>
-										<Route path="/notifications" element={<Notifications />} />
-										<Route path="/organizer" element={<Organizer />} />
-										<Route path="/invites" element={<UserInvites />} />
+										<Route
+											path="/notifications"
+											element={<Notifications />}
+										/>
+										<Route
+											path="/organizer"
+											element={<Organizer />}
+										/>
+										<Route
+											path="/invites"
+											element={<UserInvites />}
+										/>
 									</Route>
-									<Route path="/sign-in" element={<SignIn />} />
+									<Route
+										path="/sign-in"
+										element={<SignIn />}
+									/>
 								</Routes>
 							</Router>
 						</NotificationsContextProvider>

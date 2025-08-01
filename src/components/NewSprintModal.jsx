@@ -10,7 +10,6 @@ import Button from "./ui/Button";
 import { Timer } from "lucide-react";
 
 function NewSprintModal({ projectId, currentMemberId, closeModal }) {
-
 	const { sprints, setSprints } = useProject();
 	const { showToast } = useToast();
 
@@ -22,75 +21,53 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 	const [sprintBeingCreated, setSprintBeingCreated] = useState(false);
 
 	useEffect(() => {
-
-		if (
-			sprintTitle &&
-			sprintStartDate &&
-			sprintEndDate
-		) {
-
+		if (sprintTitle && sprintStartDate && sprintEndDate) {
 			setSubmitButtonDisabled(false);
-
 		} else {
-
 			setSubmitButtonDisabled(true);
-
 		}
-
-	}, [
-		sprintTitle, 
-		sprintStartDate, 
-		sprintEndDate
-	]);
+	}, [sprintTitle, sprintStartDate, sprintEndDate]);
 
 	async function createNewSprint() {
-
 		setSprintBeingCreated(true);
 
 		try {
-
 			const { newSprint } = await sprintService.createSprint(projectId, {
 				title: sprintTitle,
 				description: sprintDescription,
 				startDate: sprintStartDate,
 				endDate: sprintEndDate,
-				createdBy: currentMemberId
+				createdBy: currentMemberId,
 			});
 
 			setSprints([newSprint, ...sprints]);
 
 			showToast({
 				variant: "success",
-				title: "New sprint created successfully!"
+				title: "New sprint created successfully!",
 			});
 
 			closeModal();
-
-		} catch(err) {
-
+		} catch (err) {
 			showToast({
 				variant: "failure",
-				title: err.message
+				title: err.message,
 			});
-
 		} finally {
-
 			setSprintBeingCreated(false);
-
 		}
-
 	}
 
 	return (
-		<Modal 
-			size="lg" 
-			title="New Sprint" 
+		<Modal
+			size="lg"
+			title="New Sprint"
 			titleIcon={<Timer />}
 			closeModal={closeModal}
 		>
 			<div className="flex flex-col">
 				<div className="flex flex-col gap-y-4 px-5 pb-5">
-					<InputField 
+					<InputField
 						label="Sprint title"
 						placeholder="Enter sprint title here"
 						value={sprintTitle}
@@ -99,7 +76,7 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 						error="Sprint title can't be empty"
 						disabled={sprintBeingCreated}
 					/>
-					<TextareaField 
+					<TextareaField
 						label="Sprint description"
 						placeholder="Enter sprint description here"
 						value={sprintDescription}
@@ -108,24 +85,26 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 						disabled={sprintBeingCreated}
 					/>
 					<div className="grid grid-cols-2 gap-5">
-						<DatePicker 
-							label="Start date" 
-							required={true} 
+						<DatePicker
+							label="Start date"
+							required={true}
 							value={sprintStartDate}
 							setValue={setSprintStartDate}
 							disabled={sprintBeingCreated}
 						/>
-						<DatePicker 
-							label="End date" 
-							required={true} 
+						<DatePicker
+							label="End date"
+							required={true}
 							value={sprintEndDate}
 							setValue={setSprintEndDate}
 							disabled={sprintBeingCreated}
 						/>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
-            	border-neutral-200 p-4">
+				<div
+					className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
+            	border-neutral-200 p-4"
+				>
 					<Button
 						size="md"
 						variant="secondary"
@@ -145,8 +124,7 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 				</div>
 			</div>
 		</Modal>
-	)
-
+	);
 }
 
 export default NewSprintModal;

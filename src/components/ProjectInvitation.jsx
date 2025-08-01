@@ -11,7 +11,6 @@ import SearchBar from "./SearchBar";
 import { filterInvitations } from "../utils/filterUtils";
 
 export function ProjectInvitations() {
-
 	const [invitations, setInvitations] = useState(mockInvitations);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
@@ -20,7 +19,7 @@ export function ProjectInvitations() {
 	const filteredInvitations = filterInvitations(invitations, {
 		search: searchTerm,
 		status: statusFilter,
-		date: dateFilter
+		date: dateFilter,
 	});
 
 	return (
@@ -61,7 +60,7 @@ export function ProjectInvitations() {
 						<Button
 							variant="secondary"
 							size="md"
-							className='flex items-center gap-x-2'
+							className="flex items-center gap-x-2"
 						>
 							<UserPlus className="h-4 w-4" />
 							<span className="font-medium">Send Invite</span>
@@ -71,23 +70,18 @@ export function ProjectInvitations() {
 
 				{/* Invitations List */}
 				<div className="flex flex-col gap-y-5">
-					{
-						filteredInvitations.map((invitation) => (
-							<ProjectInvitationCard
-								key={invitation.id}
-								invitation={invitation}
-								getAvatarUrl={getAvatarUrl}
-							/>
-						))
-					}
+					{filteredInvitations.map((invitation) => (
+						<ProjectInvitationCard
+							key={invitation.id}
+							invitation={invitation}
+							getAvatarUrl={getAvatarUrl}
+						/>
+					))}
 				</div>
 
 				{/* Empty State */}
-				{filteredInvitations.length === 0 && (
-					<EmptyInvitation />
-				)}
+				{filteredInvitations.length === 0 && <EmptyInvitation />}
 			</div>
 		</div>
 	);
-
 }

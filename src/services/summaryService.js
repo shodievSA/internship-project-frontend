@@ -9,14 +9,14 @@ const BASE = `${SERVER_BASE_URL}/api/v1/projects`;
  * @returns {Promise<Object>} Status overview data
  */
 export async function getStatusOverview(projectId) {
-  const res = await fetch(`${BASE}/${projectId}/summary/status-overview`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to get status overview");
-  }
-  return await res.json();
+	const res = await fetch(`${BASE}/${projectId}/summary/status-overview`, {
+		credentials: "include",
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({}));
+		throw new Error(error.message || "Failed to get status overview");
+	}
+	return await res.json();
 }
 
 /**
@@ -25,14 +25,14 @@ export async function getStatusOverview(projectId) {
  * @returns {Promise<Object>} Team workload data
  */
 export async function getTeamWorkload(projectId) {
-  const res = await fetch(`${BASE}/${projectId}/summary/team-workload`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to get team workload");
-  }
-  return await res.json();
+	const res = await fetch(`${BASE}/${projectId}/summary/team-workload`, {
+		credentials: "include",
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({}));
+		throw new Error(error.message || "Failed to get team workload");
+	}
+	return await res.json();
 }
 
 /**
@@ -41,31 +41,31 @@ export async function getTeamWorkload(projectId) {
  * @returns {Promise<Object>} Combined summary data
  */
 export async function getProjectSummary(projectId) {
-  try {
-    const [
-      statusOverview,
-      teamWorkload,
-      sprintProgress,
-      priorityBreakdown,
-      recentActivity,
-    ] = await Promise.all([
-      getStatusOverview(projectId),
-      getTeamWorkload(projectId),
-      getSprintProgress(projectId),
-      getPriorityBreakdown(projectId),
-      getRecentActivity(projectId),
-    ]);
+	try {
+		const [
+			statusOverview,
+			teamWorkload,
+			sprintProgress,
+			priorityBreakdown,
+			recentActivity,
+		] = await Promise.all([
+			getStatusOverview(projectId),
+			getTeamWorkload(projectId),
+			getSprintProgress(projectId),
+			getPriorityBreakdown(projectId),
+			getRecentActivity(projectId),
+		]);
 
-    return {
-      statusOverview,
-      teamWorkload,
-      sprintProgress,
-      priorityBreakdown,
-      recentActivity,
-    };
-  } catch (error) {
-    throw new Error(error.message || "Failed to get project summary");
-  }
+		return {
+			statusOverview,
+			teamWorkload,
+			sprintProgress,
+			priorityBreakdown,
+			recentActivity,
+		};
+	} catch (error) {
+		throw new Error(error.message || "Failed to get project summary");
+	}
 }
 
 /**
@@ -74,14 +74,14 @@ export async function getProjectSummary(projectId) {
  * @returns {Promise<Object>} Sprint progress data
  */
 export async function getSprintProgress(projectId) {
-  const res = await fetch(`${BASE}/${projectId}/summary/sprint-progress`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to get sprint progress");
-  }
-  return await res.json();
+	const res = await fetch(`${BASE}/${projectId}/summary/sprint-progress`, {
+		credentials: "include",
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({}));
+		throw new Error(error.message || "Failed to get sprint progress");
+	}
+	return await res.json();
 }
 
 /**
@@ -90,14 +90,14 @@ export async function getSprintProgress(projectId) {
  * @returns {Promise<Object>} Priority breakdown data
  */
 export async function getPriorityBreakdown(projectId) {
-  const res = await fetch(`${BASE}/${projectId}/summary/priority-breakdown`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to get priority breakdown");
-  }
-  return await res.json();
+	const res = await fetch(`${BASE}/${projectId}/summary/priority-breakdown`, {
+		credentials: "include",
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({}));
+		throw new Error(error.message || "Failed to get priority breakdown");
+	}
+	return await res.json();
 }
 
 /**
@@ -106,12 +106,12 @@ export async function getPriorityBreakdown(projectId) {
  * @returns {Promise<Object>} Recent activity data
  */
 export async function getRecentActivity(projectId) {
-  const res = await fetch(`${BASE}/${projectId}/summary/recent-activity`, {
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || "Failed to get recent activity");
-  }
-  return await res.json();
+	const res = await fetch(`${BASE}/${projectId}/summary/recent-activity`, {
+		credentials: "include",
+	});
+	if (!res.ok) {
+		const error = await res.json().catch(() => ({}));
+		throw new Error(error.message || "Failed to get recent activity");
+	}
+	return await res.json();
 }

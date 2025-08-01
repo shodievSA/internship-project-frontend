@@ -6,47 +6,35 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { AlertTriangle } from "lucide-react";
 
-function TaskDeleteModal({
-	projectId, 
-	taskId,
-	taskTitle, 
-	closeModal
-}) {
-
+function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 	const { setTasks, tasks } = useProject();
 	const { showToast } = useToast();
 
-
 	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 
-
 	async function deleteTask() {
-
 		setTaskBeingDeleted(true);
 
 		try {
-
 			await projectService.deleteTask(projectId, taskId);
 
-			setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
-			
+			setTasks((prevTasks) =>
+				prevTasks.filter((task) => task.id !== taskId),
+			);
+
 			showToast({
 				variant: "success",
-				title: "Task has been deleted successfully!"
+				title: "Task has been deleted successfully!",
 			});
 
 			closeModal(false);
-			
 		} catch (err) {
-
-			console.log("The following error occured while deleting task: " + err);
-
+			console.log(
+				"The following error occured while deleting task: " + err,
+			);
 		} finally {
-
 			setTaskBeingDeleted(false);
-
 		}
-
 	}
 
 	return (
@@ -59,7 +47,7 @@ function TaskDeleteModal({
 			<div className="flex flex-col px-7 pb-7 gap-y-7">
 				<div>
 					<p>
-						This will permanently remove the task and all its 
+						This will permanently remove the task and all its
 						associated data. This action cannot be undone.
 					</p>
 				</div>
@@ -72,8 +60,8 @@ function TaskDeleteModal({
 					>
 						Cancel
 					</Button>
-					<Button 
-						size="md" 
+					<Button
+						size="md"
 						variant="destructive"
 						onClick={deleteTask}
 						loading={taskBeingDeleted}
@@ -84,7 +72,6 @@ function TaskDeleteModal({
 			</div>
 		</Modal>
 	);
-
 }
 
 export default TaskDeleteModal;

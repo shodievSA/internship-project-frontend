@@ -1,5 +1,4 @@
 function LoadingNotifications() {
-
 	return (
 		<div className="h-full flex items-center justify-center">
 			<div className="flex items-center gap-y-8 flex-col">
@@ -15,8 +14,7 @@ function LoadingNotifications() {
 				</div>
 			</div>
 		</div>
-	)
-
+	);
 }
 
 export default LoadingNotifications;

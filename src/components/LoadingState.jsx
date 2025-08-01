@@ -1,5 +1,4 @@
 function LoadingState({ message }) {
-
 	return (
 		<div className="h-full flex items-center justify-center">
 			<div className="flex items-center gap-y-8 flex-col">
@@ -10,13 +9,12 @@ function LoadingState({ message }) {
 				</div>
 				<div>
 					<h1 className="text-xl font-medium text-slate-500 dark:text-neutral-300">
-						{ message }
+						{message}
 					</h1>
 				</div>
 			</div>
 		</div>
-	)
-
+	);
 }
 
 export default LoadingState;

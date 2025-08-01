@@ -9,9 +9,8 @@ const ProjectHeader = ({
 	onSearch,
 	onFilterChange,
 	setShowNewProjectModal,
-	disabled = false
+	disabled = false,
 }) => {
-
 	return (
 		<div className="rounded-lg">
 			<div className="flex flex-col lg:flex-row md:items-center justify-between">
@@ -57,7 +56,6 @@ const ProjectHeader = ({
 			</div>
 		</div>
 	);
-
 };
 
 export default ProjectHeader;

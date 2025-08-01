@@ -1,11 +1,11 @@
 import useSWR, { mutate } from "swr";
 import {
-  getStatusOverview,
-  getTeamWorkload,
-  getProjectSummary,
-  getSprintProgress,
-  getPriorityBreakdown,
-  getRecentActivity,
+	getStatusOverview,
+	getTeamWorkload,
+	getProjectSummary,
+	getSprintProgress,
+	getPriorityBreakdown,
+	getRecentActivity,
 } from "../services/summaryService";
 
 // --- SWR Hooks ---
@@ -17,15 +17,17 @@ import {
  * @returns {Object} Status overview data and loading states
  */
 export function useStatusOverview(projectId, options) {
-  return useSWR(
-    projectId ? ["status-overview", projectId] : null,
-    () => getStatusOverview(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["status-overview", projectId] : null,
+		() => getStatusOverview(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -35,15 +37,17 @@ export function useStatusOverview(projectId, options) {
  * @returns {Object} Team workload data and loading states
  */
 export function useTeamWorkload(projectId, options) {
-  return useSWR(
-    projectId ? ["team-workload", projectId] : null,
-    () => getTeamWorkload(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["team-workload", projectId] : null,
+		() => getTeamWorkload(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -53,15 +57,17 @@ export function useTeamWorkload(projectId, options) {
  * @returns {Object} Sprint progress data and loading states
  */
 export function useSprintProgress(projectId, options) {
-  return useSWR(
-    projectId ? ["sprint-progress", projectId] : null,
-    () => getSprintProgress(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["sprint-progress", projectId] : null,
+		() => getSprintProgress(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -71,15 +77,17 @@ export function useSprintProgress(projectId, options) {
  * @returns {Object} Priority breakdown data and loading states
  */
 export function usePriorityBreakdown(projectId, options) {
-  return useSWR(
-    projectId ? ["priority-breakdown", projectId] : null,
-    () => getPriorityBreakdown(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["priority-breakdown", projectId] : null,
+		() => getPriorityBreakdown(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -89,15 +97,17 @@ export function usePriorityBreakdown(projectId, options) {
  * @returns {Object} Recent activity data and loading states
  */
 export function useRecentActivity(projectId, options) {
-  return useSWR(
-    projectId ? ["recent-activity", projectId] : null,
-    () => getRecentActivity(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["recent-activity", projectId] : null,
+		() => getRecentActivity(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -107,15 +117,17 @@ export function useRecentActivity(projectId, options) {
  * @returns {Object} All summary data and loading states
  */
 export function useProjectSummary(projectId, options) {
-  return useSWR(
-    projectId ? ["project-summary", projectId] : null,
-    () => getProjectSummary(projectId),
-    {
-      refreshInterval:
-        options && options.refreshInterval ? options.refreshInterval : 0,
-      ...options,
-    }
-  );
+	return useSWR(
+		projectId ? ["project-summary", projectId] : null,
+		() => getProjectSummary(projectId),
+		{
+			refreshInterval:
+				options && options.refreshInterval
+					? options.refreshInterval
+					: 0,
+			...options,
+		},
+	);
 }
 
 /**
@@ -125,46 +137,46 @@ export function useProjectSummary(projectId, options) {
  * @returns {Object} Combined summary data and loading states
  */
 export function useSummary(projectId, options) {
-  const statusOverview = useStatusOverview(projectId, options);
-  const teamWorkload = useTeamWorkload(projectId, options);
-  const sprintProgress = useSprintProgress(projectId, options);
-  const priorityBreakdown = usePriorityBreakdown(projectId, options);
-  const recentActivity = useRecentActivity(projectId, options);
+	const statusOverview = useStatusOverview(projectId, options);
+	const teamWorkload = useTeamWorkload(projectId, options);
+	const sprintProgress = useSprintProgress(projectId, options);
+	const priorityBreakdown = usePriorityBreakdown(projectId, options);
+	const recentActivity = useRecentActivity(projectId, options);
 
-  return {
-    data: {
-      statusOverview: statusOverview.data,
-      teamWorkload: teamWorkload.data,
-      sprintProgress: sprintProgress.data,
-      priorityBreakdown: priorityBreakdown.data,
-      recentActivity: recentActivity.data,
-    },
-    loading:
-      statusOverview.isLoading ||
-      teamWorkload.isLoading ||
-      sprintProgress.isLoading ||
-      priorityBreakdown.isLoading ||
-      recentActivity.isLoading,
-    error:
-      statusOverview.error ||
-      teamWorkload.error ||
-      sprintProgress.error ||
-      priorityBreakdown.error ||
-      recentActivity.error,
-    mutate: () => {
-      statusOverview.mutate();
-      teamWorkload.mutate();
-      sprintProgress.mutate();
-      priorityBreakdown.mutate();
-      recentActivity.mutate();
-    },
-    isValidating:
-      statusOverview.isValidating ||
-      teamWorkload.isValidating ||
-      sprintProgress.isValidating ||
-      priorityBreakdown.isValidating ||
-      recentActivity.isValidating,
-  };
+	return {
+		data: {
+			statusOverview: statusOverview.data,
+			teamWorkload: teamWorkload.data,
+			sprintProgress: sprintProgress.data,
+			priorityBreakdown: priorityBreakdown.data,
+			recentActivity: recentActivity.data,
+		},
+		loading:
+			statusOverview.isLoading ||
+			teamWorkload.isLoading ||
+			sprintProgress.isLoading ||
+			priorityBreakdown.isLoading ||
+			recentActivity.isLoading,
+		error:
+			statusOverview.error ||
+			teamWorkload.error ||
+			sprintProgress.error ||
+			priorityBreakdown.error ||
+			recentActivity.error,
+		mutate: () => {
+			statusOverview.mutate();
+			teamWorkload.mutate();
+			sprintProgress.mutate();
+			priorityBreakdown.mutate();
+			recentActivity.mutate();
+		},
+		isValidating:
+			statusOverview.isValidating ||
+			teamWorkload.isValidating ||
+			sprintProgress.isValidating ||
+			priorityBreakdown.isValidating ||
+			recentActivity.isValidating,
+	};
 }
 
 /**
@@ -172,14 +184,14 @@ export function useSummary(projectId, options) {
  * @returns {Function} Function to refresh summary data
  */
 export function useRefreshSummary() {
-  return (projectId) => {
-    if (projectId) {
-      mutate(["status-overview", projectId]);
-      mutate(["team-workload", projectId]);
-      mutate(["project-summary", projectId]);
-      mutate(["sprint-progress", projectId]);
-      mutate(["priority-breakdown", projectId]);
-      mutate(["recent-activity", projectId]);
-    }
-  };
+	return (projectId) => {
+		if (projectId) {
+			mutate(["status-overview", projectId]);
+			mutate(["team-workload", projectId]);
+			mutate(["project-summary", projectId]);
+			mutate(["sprint-progress", projectId]);
+			mutate(["priority-breakdown", projectId]);
+			mutate(["recent-activity", projectId]);
+		}
+	};
 }

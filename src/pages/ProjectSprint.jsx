@@ -6,7 +6,15 @@ import RegularTask from "../components/RegularTask";
 import NewTaskModal from "../components/NewTaskModal";
 import Button from "../components/ui/Button";
 import sprintService from "../services/sprintService";
-import { ArrowLeft, Calendar, Filter, Plus, Settings, Trash2, SquarePen } from "lucide-react";
+import {
+	ArrowLeft,
+	Calendar,
+	Filter,
+	Plus,
+	Settings,
+	Trash2,
+	SquarePen,
+} from "lucide-react";
 import EmptySearch from "../components/EmptySearch";
 import EmptySprint from "../components/EmptySprintState";
 import LoadingState from "../components/LoadingState";
@@ -16,11 +24,12 @@ import DeleteSprintModal from "../components/DeleteSprintModal";
 import { dateOptions, taskStatusOptions } from "../utils/constant";
 
 function ProjectSprint() {
-
-	const { state: { sprint } } = useLocation();
+	const {
+		state: { sprint },
+	} = useLocation();
 	const { projectId, sprintId } = useParams();
 	const { team, currentMemberId, tasks, setTasks, setSprints } = useProject();
-	
+
 	const navigate = useNavigate();
 
 	const [sprintTasks, setSprintTasks] = useState([]);
@@ -36,71 +45,56 @@ function ProjectSprint() {
 	const settingsMenuRef = useRef(null);
 
 	useEffect(() => {
-
 		async function getSprintTasks() {
-
 			setSprintTasksBeingLoaded(true);
 
 			try {
-
-				const { sprintTasks } = await sprintService.getTasks(projectId, sprintId);
+				const { sprintTasks } = await sprintService.getTasks(
+					projectId,
+					sprintId,
+				);
 				setSprintTasks(sprintTasks);
-
-			} catch(err) {
-
+			} catch (err) {
 				console.log(err.message);
-
 			} finally {
-
 				setTimeout(() => {
 					setSprintTasksBeingLoaded(false);
 				}, 400);
-
 			}
-
 		}
 
 		getSprintTasks();
-
 	}, []);
 
 	useEffect(() => {
-
 		function handleClickOutside(event) {
-
 			if (
-				settingsButtonClicked 
-				&& 
+				settingsButtonClicked &&
 				!settingsMenuRef.current.contains(event.target)
 			) {
-
 				setSettingsButtonClicked(false);
-
 			}
-
 		}
 
 		document.addEventListener("click", handleClickOutside);
 
 		return () => {
 			document.removeEventListener("click", handleClickOutside);
-		}
-
+		};
 	}, [settingsButtonClicked]);
 
 	const filteredSprintTasks = useMemo(() => {
-
 		if (sprintTasksBeingLoaded) return [];
 
 		return sprintTasks.filter((task) => {
-
-			const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
-			const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+			const matchesSearch = task.title
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase());
+			const matchesStatus =
+				statusFilter === "all" || task.status === statusFilter;
 
 			return matchesSearch && matchesStatus;
-
 		});
-
 	}, [sprintTasksBeingLoaded, sprintTasks, searchTerm, statusFilter]);
 
 	function clearFilters() {
@@ -108,40 +102,41 @@ function ProjectSprint() {
 	}
 
 	function onNewTaskCreated(newTask) {
-
 		setSprintTasks([newTask, ...sprintTasks]);
 		setTasks([newTask, ...tasks]);
-
 	}
 
 	function onSprintUpdate(newSprint) {
-
-		setSprints((prevSprints) => prevSprints.map((sprint) => {
-			return (sprint.id === newSprint.id) ? newSprint : sprint;
-		}));
-
+		setSprints((prevSprints) =>
+			prevSprints.map((sprint) => {
+				return sprint.id === newSprint.id ? newSprint : sprint;
+			}),
+		);
 	}
 
 	function onSprintDelete(deletedSprintId) {
-
-		setSprints((prevSprints) => prevSprints.filter((sprint) => {
-			return sprint.id !== deletedSprintId
-		}));
-
+		setSprints((prevSprints) =>
+			prevSprints.filter((sprint) => {
+				return sprint.id !== deletedSprintId;
+			}),
+		);
 	}
 
-	if (sprintTasksBeingLoaded) return <LoadingState message="Loading sprint's tasks" />;
-	if (showNewTaskModal) return (
-		<NewTaskModal 
-			closeModal={() => setShowNewTaskModal(false)} 
-			onNewTaskCreated={onNewTaskCreated}
-			teamMembers={team}
-			currentMemberId={currentMemberId}
-			projectId={projectId} 
-			sprintId={sprintId}
-		/>
-	);
-	if (sprintTasks.length === 0) return <EmptySprint setShowNewTaskModal={setShowNewTaskModal} />;
+	if (sprintTasksBeingLoaded)
+		return <LoadingState message="Loading sprint's tasks" />;
+	if (showNewTaskModal)
+		return (
+			<NewTaskModal
+				closeModal={() => setShowNewTaskModal(false)}
+				onNewTaskCreated={onNewTaskCreated}
+				teamMembers={team}
+				currentMemberId={currentMemberId}
+				projectId={projectId}
+				sprintId={sprintId}
+			/>
+		);
+	if (sprintTasks.length === 0)
+		return <EmptySprint setShowNewTaskModal={setShowNewTaskModal} />;
 
 	return (
 		<>
@@ -149,7 +144,7 @@ function ProjectSprint() {
 				<header className="flex flex-col gap-y-6">
 					<div className="flex items-center justify-between">
 						<div className="flex gap-x-6 items-center">
-							<Button 
+							<Button
 								size="sm"
 								variant="secondary"
 								onClick={() => navigate(-1)}
@@ -159,19 +154,28 @@ function ProjectSprint() {
 									<span>Back to project</span>
 								</div>
 							</Button>
-							<h1 className="text-lg font-semibold">{ sprint.title }</h1>
+							<h1 className="text-lg font-semibold">
+								{sprint.title}
+							</h1>
 						</div>
 						<div className="flex gap-x-6">
 							<div ref={settingsMenuRef} className="relative">
 								<button
 									className="p-2 hover:bg-slate-50 dark:hover:bg-neutral-900 rounded-lg"
-									onClick={() => setSettingsButtonClicked(true)}
+									onClick={() =>
+										setSettingsButtonClicked(true)
+									}
 								>
 									<Settings className="w-5 h-5" />
 								</button>
-								<div className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md border-neutrals-200 border-[1px] 
-								rounded-md flex flex-col absolute w-[150px] mt-3 left-0 ${settingsButtonClicked ? 'opacity-100' :
-								'opacity-0 pointer-events-none'} transition-[opacity] duration-200 z-20 text-sm`}>
+								<div
+									className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md border-neutrals-200 border-[1px] 
+								rounded-md flex flex-col absolute w-[150px] mt-3 left-0 ${
+									settingsButtonClicked
+										? "opacity-100"
+										: "opacity-0 pointer-events-none"
+								} transition-[opacity] duration-200 z-20 text-sm`}
+								>
 									<div className="flex flex-col border-b-[1px] dark:border-neutral-800 border-neutral-200 p-1">
 										<button
 											className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex 
@@ -195,7 +199,9 @@ function ProjectSprint() {
 											}}
 										>
 											<Trash2 className="w-3.5 h-3.5 text-red-500" />
-											<span className="text-red-500">Delete Sprint</span>
+											<span className="text-red-500">
+												Delete Sprint
+											</span>
 										</button>
 									</div>
 								</div>
@@ -216,7 +222,9 @@ function ProjectSprint() {
 							<div className="relative w-full">
 								<SearchBar
 									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
+									onChange={(e) =>
+										setSearchTerm(e.target.value)
+									}
 									placeholder="Search by task title, assignee or assigner name"
 								/>
 							</div>
@@ -240,43 +248,43 @@ function ProjectSprint() {
 									className="w-full sm:w-auto"
 								/>
 							</div>
-                    	</div>
-                	</div>
+						</div>
+					</div>
 				</header>
-				{ filteredSprintTasks.length > 0 ? (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
-					gap-6 grid-auto-rows-[200px] pb-5">
-						{
-							filteredSprintTasks.map((sprintTask) => {
-								return <RegularTask key={sprintTask.id} task={sprintTask} />
-							})
-						}
+				{filteredSprintTasks.length > 0 ? (
+					<div
+						className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
+					gap-6 grid-auto-rows-[200px] pb-5"
+					>
+						{filteredSprintTasks.map((sprintTask) => {
+							return (
+								<RegularTask
+									key={sprintTask.id}
+									task={sprintTask}
+								/>
+							);
+						})}
 					</div>
 				) : (
 					<EmptySearch onClearFilters={clearFilters} />
 				)}
 			</div>
-			{
-				showEditSprintModal && (
-					<EditSprintModal 
-						sprint={sprint} 
-						onSprintUpdate={onSprintUpdate}
-						closeModal={() => setShowEditSprintModal(false)}
-					/>
-				)
-			}
-			{
-				showDeleteSprintModal && (
-					<DeleteSprintModal 
-						sprint={sprint}
-						onSprintDelete={onSprintDelete}
-						closeModal={() => setShowDeleteSprintModal(false)}
-					/>
-				)
-			}
+			{showEditSprintModal && (
+				<EditSprintModal
+					sprint={sprint}
+					onSprintUpdate={onSprintUpdate}
+					closeModal={() => setShowEditSprintModal(false)}
+				/>
+			)}
+			{showDeleteSprintModal && (
+				<DeleteSprintModal
+					sprint={sprint}
+					onSprintDelete={onSprintDelete}
+					closeModal={() => setShowDeleteSprintModal(false)}
+				/>
+			)}
 		</>
 	);
-
 }
 
 export default ProjectSprint;

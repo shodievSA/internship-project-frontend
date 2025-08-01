@@ -5,24 +5,22 @@ import projectService from "../services/projectService";
 const ProjectContext = createContext();
 
 export function ProjectContextProvider({ children }) {
-
 	const { projectId } = useParams();
 
 	const [projectLoaded, setProjectLoaded] = useState(false);
 	const [error, setError] = useState(null);
 	const [metaData, setMetaData] = useState();
 	const [team, setTeam] = useState([]);
-    const [invites, setInvites] = useState([]);
-    const [tasks, setTasks] = useState([]);
+	const [invites, setInvites] = useState([]);
+	const [tasks, setTasks] = useState([]);
 	const [sprints, setSprints] = useState([]);
-    const [currentMemberId, setCurrentMemberId] = useState(null);
-    const [currentMemberRole, setCurrentMemberRole] = useState(null);
+	const [currentMemberId, setCurrentMemberId] = useState(null);
+	const [currentMemberRole, setCurrentMemberRole] = useState(null);
 
 	async function fetchProject(projectId) {
-
 		try {
-
-			const { projectDetails } = await projectService.getProject(projectId);
+			const { projectDetails } =
+				await projectService.getProject(projectId);
 
 			setMetaData(projectDetails.metaData);
 			setSprints(projectDetails.sprints);
@@ -31,9 +29,7 @@ export function ProjectContextProvider({ children }) {
 			setCurrentMemberId(projectDetails.currentMemberId);
 			setCurrentMemberRole(projectDetails.currentMemberRole);
 			setTasks(projectDetails.tasks);
-
 		} catch (err) {
-
 			setError(err.message);
 
 			setMetaData(null);
@@ -43,21 +39,14 @@ export function ProjectContextProvider({ children }) {
 			setCurrentMemberId(null);
 			setCurrentMemberRole(null);
 			setSprints(null);
-
 		} finally {
-
 			setTimeout(() => {
-
 				setProjectLoaded(true);
-
 			}, 400);
-
 		}
-
 	}
 
 	useEffect(() => {
-
 		setMetaData(null);
 		setSprints([]);
 		setTeam([]);
@@ -69,16 +58,15 @@ export function ProjectContextProvider({ children }) {
 		setError(null);
 
 		fetchProject(projectId);
-
 	}, [projectId]);
 
 	const contextData = {
 		error,
 		metaData,
 		setMetaData,
-		team, 
+		team,
 		setTeam,
-		invites, 
+		invites,
 		setInvites,
 		tasks,
 		setTasks,
@@ -89,15 +77,14 @@ export function ProjectContextProvider({ children }) {
 		currentMemberRole,
 		setCurrentMemberRole,
 		fetchProject,
-		projectLoaded
+		projectLoaded,
 	};
 
 	return (
 		<ProjectContext.Provider value={contextData}>
-			{ children }
+			{children}
 		</ProjectContext.Provider>
-	)
-
+	);
 }
 
 export const useProject = () => useContext(ProjectContext);
