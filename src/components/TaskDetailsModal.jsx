@@ -345,6 +345,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
                 taskStatus={status}
                 taskPriority={priority}
                 taskId={taskId}
+                projectId={projectId}
               />
             )}
           </div>
