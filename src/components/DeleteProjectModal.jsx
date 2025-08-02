@@ -15,7 +15,13 @@ const deleteWarnings = [
 	"This action cannot be undone",
 ];
 
-function DeleteProjectModal({ projectId, projectTitle, closeModal }) {
+function DeleteProjectModal({ 
+	projectId, 
+	projectTitle, 
+	onProjectDelete,
+	closeModal 
+}) {
+
 	const { showToast } = useToast();
 
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
@@ -25,14 +31,20 @@ function DeleteProjectModal({ projectId, projectTitle, closeModal }) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+
 		setSubmitButtonDisabled(projectName !== projectTitle);
+		
 	}, [projectName, projectTitle]);
 
 	async function deleteProject() {
+
 		setProjectBeingDeleted(true);
 
 		try {
+
 			await projectService.deleteProject(projectId);
+
+			onProjectDelete(projectId);
 
 			navigate("/projects", { replace: true });
 
@@ -40,19 +52,24 @@ function DeleteProjectModal({ projectId, projectTitle, closeModal }) {
 				variant: "success",
 				message: "The project has been deleted successfully!",
 			});
+
 		} catch (err) {
+
 			console.log(
-				"The following error occured while deleting the project: " +
-					err.message,
+				"The following error occured while deleting the project: " + err.message,
 			);
 
 			showToast({
 				variant: "failure",
 				message: "Unexpected error occured while deleting the project!",
 			});
+
 		} finally {
+
 			setProjectBeingDeleted(false);
+
 		}
+
 	}
 
 	return (

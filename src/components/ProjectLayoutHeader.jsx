@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProjectsContext } from "../context/ProjectsContext";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import LeaveProjectModal from "../components/LeaveProjectModal";
@@ -20,6 +21,9 @@ import NewSprintModal from "./NewSprintModal";
 import Button from "./ui/Button";
 
 function ProjectLayoutHeader({ metaData, currentMemberId, team }) {
+
+	const { setProjects } = useProjectsContext();
+
 	const navigate = useNavigate();
 
 	const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
@@ -30,18 +34,30 @@ function ProjectLayoutHeader({ metaData, currentMemberId, team }) {
 	const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
 
 	useEffect(() => {
+
 		document.addEventListener("mousedown", closeSettingsModal);
 
 		function closeSettingsModal(e) {
+
 			if (settingsButtonClicked && !e.target.closest("#settings-modal")) {
 				setSettingsButtonClicked(false);
 			}
+			
 		}
 
 		return () => {
 			document.removeEventListener("mousedown", closeSettingsModal);
 		};
+
 	}, [settingsButtonClicked]);
+
+	function onProjectDelete(projectIdToDelete) {
+
+		setProjects((prevProjects) => prevProjects.filter((project) => 
+			project.id !== projectIdToDelete
+		));
+
+	}
 
 	return (
 		<>
@@ -191,6 +207,7 @@ function ProjectLayoutHeader({ metaData, currentMemberId, team }) {
 				<DeleteProjectModal
 					projectId={metaData.id}
 					projectTitle={metaData.title}
+					onProjectDelete={onProjectDelete}
 					closeModal={() => setShowDeleteProjectModal(false)}
 				/>
 			)}

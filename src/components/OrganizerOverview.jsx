@@ -168,7 +168,7 @@ function OrganizerOverview({
 					<h1 className="text-lg font-medium">AI summary</h1>
 				</div>
 				<div>
-					<ReactMarkdown>{summary}</ReactMarkdown>
+					<p className="text-neutral-700 dark:text-neutral-400">{summary}</p>
 				</div>
 			</div>
 			<div

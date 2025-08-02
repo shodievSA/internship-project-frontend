@@ -5,6 +5,7 @@ import projectService from "../services/projectService";
 const ProjectContext = createContext();
 
 export function ProjectContextProvider({ children }) {
+
 	const { projectId } = useParams();
 
 	const [projectLoaded, setProjectLoaded] = useState(false);
@@ -18,9 +19,10 @@ export function ProjectContextProvider({ children }) {
 	const [currentMemberRole, setCurrentMemberRole] = useState(null);
 
 	async function fetchProject(projectId) {
+
 		try {
-			const { projectDetails } =
-				await projectService.getProject(projectId);
+
+			const { projectDetails } = await projectService.getProject(projectId);
 
 			setMetaData(projectDetails.metaData);
 			setSprints(projectDetails.sprints);
@@ -29,9 +31,10 @@ export function ProjectContextProvider({ children }) {
 			setCurrentMemberId(projectDetails.currentMemberId);
 			setCurrentMemberRole(projectDetails.currentMemberRole);
 			setTasks(projectDetails.tasks);
-		} catch (err) {
-			setError(err.message);
 
+		} catch (err) {
+
+			setError(err.message);
 			setMetaData(null);
 			setTasks(null);
 			setTeam(null);
@@ -39,14 +42,19 @@ export function ProjectContextProvider({ children }) {
 			setCurrentMemberId(null);
 			setCurrentMemberRole(null);
 			setSprints(null);
+
 		} finally {
+
 			setTimeout(() => {
 				setProjectLoaded(true);
 			}, 400);
+
 		}
+
 	}
 
 	useEffect(() => {
+
 		setMetaData(null);
 		setSprints([]);
 		setTeam([]);
@@ -56,8 +64,8 @@ export function ProjectContextProvider({ children }) {
 		setTasks([]);
 		setProjectLoaded(false);
 		setError(null);
-
 		fetchProject(projectId);
+
 	}, [projectId]);
 
 	const contextData = {
@@ -85,6 +93,7 @@ export function ProjectContextProvider({ children }) {
 			{children}
 		</ProjectContext.Provider>
 	);
+
 }
 
 export const useProject = () => useContext(ProjectContext);

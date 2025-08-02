@@ -24,7 +24,9 @@ function MyTasksPage() {
 	}, [tasks, projectLoaded, currentMemberId]);
 
 	const filteredTasks = useMemo(() => {
+
 		return myTasks.filter((task) => {
+
 			const matchesSearch =
 				task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				task.assignedBy.name
@@ -38,7 +40,9 @@ function MyTasksPage() {
 				statusFilter === "all" || task.status === statusFilter;
 
 			return matchesSearch && matchesStatus;
+			
 		});
+
 	}, [myTasks, searchTerm, statusFilter]);
 
 	function clearFilters() {

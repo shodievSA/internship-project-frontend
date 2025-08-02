@@ -6,8 +6,8 @@ import ProjectLoadingState from "../components/ProjectLoadingState";
 import ErrorState from "../components/ErrorState";
 
 function ProjectLayout() {
-	const { projectLoaded, error, metaData, currentMemberId, team } =
-		useProject();
+
+	const { projectLoaded, error, metaData, currentMemberId, team } = useProject();
 
 	if (!projectLoaded)
 		return (
@@ -33,6 +33,7 @@ function ProjectLayout() {
 			<Outlet />
 		</div>
 	);
+	
 }
 
 export default ProjectLayout;
