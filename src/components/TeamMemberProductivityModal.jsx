@@ -29,6 +29,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const { projectId } = useParams();
   const { user } = useAuthContext();
   const [selectedSprintId, setSelectedSprintId] = useState(null);
+  const [hasUserSelectedSprint, setHasUserSelectedSprint] = useState(false);
   const [isChangingFilter, setIsChangingFilter] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -42,10 +43,14 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 
   // Set default sprint when data is loaded
   useEffect(() => {
-    if (defaultSprintData?.defaultSprint && selectedSprintId === null) {
+    if (
+      defaultSprintData?.defaultSprint &&
+      selectedSprintId === null &&
+      !hasUserSelectedSprint
+    ) {
       setSelectedSprintId(defaultSprintData.defaultSprint.id);
     }
-  }, [defaultSprintData, selectedSprintId]);
+  }, [defaultSprintData, selectedSprintId, hasUserSelectedSprint]);
 
   const sprints = sprintsData?.sprints || [];
 
@@ -67,6 +72,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
     }
     setIsChangingFilter(true);
     setSelectedSprintId(sprintId);
+    setHasUserSelectedSprint(true);
 
     // Add a small delay to show the skeleton loading state
     setTimeout(() => {
@@ -98,21 +104,6 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const selectedSprint = selectedSprintId
     ? sprints.find((sprint) => sprint.id === selectedSprintId)
     : null;
-
-  const getBusyLevelColor = (level) => {
-    switch (level) {
-      case "free":
-        return "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20";
-      case "low":
-        return "text-blue-600 bg-blue-50 dark:bg-blue-900/20";
-      case "medium":
-        return "text-amber-600 bg-amber-50 dark:bg-amber-900/20";
-      case "high":
-        return "text-red-600 bg-red-50 dark:bg-red-900/20";
-      default:
-        return "text-gray-600 bg-gray-50 dark:bg-gray-900/20";
-    }
-  };
 
   const formatTime = (seconds) => {
     if (!seconds || seconds === 0) return "0h 0m";
@@ -206,7 +197,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                 selectedSprintId={selectedSprintId}
                 onSprintChange={handleSprintChange}
                 className="w-64"
-                showAllSprints={false}
+                showAllSprints={true}
               />
             </div>
 
@@ -477,9 +468,6 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
                                         {task.taskTitle}
                                       </h4>
                                     </div>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                      Task ID: {task.taskId}
-                                    </p>
                                   </div>
                                 </div>
 
