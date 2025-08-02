@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import { useToast } from "./ui/ToastProvider";
 import { sprintStatusOptions } from "../utils/constant";
 import InputField from "./InputField";
@@ -11,23 +10,34 @@ import { SquarePen } from "lucide-react";
 import SelectField from "./SelectField";
 import sprintService from "../services/sprintService";
 
-function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
-	const { title, description, status, startDate, endDate } = sprint;
+function EditSprintModal({ 
+	projectId, 
+	sprintId,
+	sprint, 
+	onSprintUpdate, 
+	closeModal 
+}) {
 
-	const { projectId, sprintId } = useParams();
+	const { 
+		title, 
+		description, 
+		status, 
+		startDate, 
+		endDate 
+	} = sprint;
+
 	const { showToast } = useToast();
 
 	const [newSprintTitle, setNewSprintTitle] = useState(title);
-	const [newSprintDescription, setNewSprintDescription] =
-		useState(description);
+	const [newSprintDescription, setNewSprintDescription] = useState(description);
 	const [newSprintStartDate, setNewSprintStartDate] = useState(startDate);
 	const [newSprintEndDate, setNewSprintEndDate] = useState(endDate);
 	const [newSprintStatus, setNewSprintStatus] = useState(status);
-
 	const [sprintBeingUpdated, setSprintBeingUpdated] = useState(false);
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedSprintProps = useMemo(() => {
+
 		const updatedProps = getSprintUpdatedProps({
 			newTitle: newSprintTitle,
 			newDescription: newSprintDescription,
@@ -42,6 +52,7 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 		});
 
 		return updatedProps;
+
 	}, [
 		newSprintTitle,
 		newSprintDescription,
@@ -52,15 +63,18 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
-		const allowToSubmit = shouldEnableSubmitButton(updatedSprintProps);
 
+		const allowToSubmit = shouldEnableSubmitButton(updatedSprintProps);
 		return allowToSubmit ? false : true;
+
 	}, [updatedSprintProps]);
 
 	async function updateSprint() {
+
 		setSprintBeingUpdated(true);
 
 		try {
+
 			const { updatedSprint } = await sprintService.updateSprint(
 				projectId,
 				sprintId,
@@ -75,14 +89,22 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 			});
 
 			closeModal();
+
 		} catch (err) {
+
+			console.log("The following error occured while updating the sprint " + err.message);
+
 			showToast({
 				variant: "failure",
 				title: "Failed to update sprint!",
 			});
+
 		} finally {
+
 			setSprintBeingUpdated(false);
+
 		}
+
 	}
 
 	return (
@@ -135,10 +157,8 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 						/>
 					</div>
 				</div>
-				<div
-					className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
-            	border-neutral-200 p-4"
-				>
+				<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
+            	border-neutral-200 p-4">
 					<Button
 						size="md"
 						variant="secondary"
@@ -159,9 +179,11 @@ function EditSprintModal({ sprint, onSprintUpdate, closeModal }) {
 			</div>
 		</Modal>
 	);
+
 }
 
 function getSprintUpdatedProps(sprint) {
+
 	const updated = {};
 
 	if (sprint.newTitle.trim() !== sprint.oldTitle) {
@@ -195,10 +217,13 @@ function getSprintUpdatedProps(sprint) {
 	}
 
 	return updated;
+
 }
 
 function shouldEnableSubmitButton(updatedSprintProps) {
+
 	return Object.keys(updatedSprintProps).length > 0;
+
 }
 
 export default EditSprintModal;

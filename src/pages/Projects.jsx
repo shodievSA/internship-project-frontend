@@ -11,6 +11,7 @@ import ProjectSkeleton from "../components/ProjectSkeleton";
 import ErrorState from "../components/ErrorState";
 
 function Projects() {
+
 	const {
 		projectsLoaded,
 		projects,
@@ -23,26 +24,30 @@ function Projects() {
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
+
 		if (projectsLoaded && !error) {
+
 			localStorage.setItem("projectCount", projects.length);
 			setUserProjectCount(projects.length);
+			
 		}
+
 	}, [projects, projectsLoaded, error]);
 
-	const currentFilters = useMemo(
-		() => ({
-			search: searchParams.get("search") || "",
-			status: searchParams.get("status") || "all",
-			owner: searchParams.get("owner") || "all",
-		}),
-		[searchParams],
-	);
+	const currentFilters = useMemo(() => ({
+		search: searchParams.get("search") || "",
+		status: searchParams.get("status") || "all",
+		owner: searchParams.get("owner") || "all",
+	}), [searchParams]);
 
 	const filteredProjects = useMemo(() => {
+
 		return filterProjects(projects, currentFilters);
+
 	}, [projects, currentFilters]);
 
 	function handleSearch(searchTerm) {
+
 		const newParams = new URLSearchParams(searchParams);
 
 		if (searchTerm) {
@@ -52,9 +57,11 @@ function Projects() {
 		}
 
 		setSearchParams(newParams);
+
 	}
 
 	function handleFilterChange(filterType, value) {
+
 		const newParams = new URLSearchParams(searchParams);
 		const defaultValues = { status: "all", owner: "all" };
 
@@ -65,22 +72,17 @@ function Projects() {
 		}
 
 		setSearchParams(newParams);
+
 	}
 
 	function clearFilters() {
+
 		setSearchParams({});
+
 	}
 
-	if (error)
-		return (
-			<ErrorState
-				message={
-					"Looks like your projects are playing hide and seek. Can’t find them!"
-				}
-			/>
-		);
-	if (userProjectCount === 0)
-		return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
+	if (error) return <ErrorState message={"Looks like your projects are playing hide and seek. Can’t find them!"} />
+	if (userProjectCount === 0) return <EmptyDashboard showNewProjectModal={setShowNewProjectModal} />;
 
 	return (
 		<div className="h-full px-4 lg:px-8 pt-5">

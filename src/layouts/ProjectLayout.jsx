@@ -7,28 +7,14 @@ import ErrorState from "../components/ErrorState";
 
 function ProjectLayout() {
 
-	const { projectLoaded, error, metaData, currentMemberId, team } = useProject();
+	const { projectLoaded, error } = useProject();
 
-	if (!projectLoaded)
-		return (
-			<ProjectLoadingState
-				message={"One moment… making sense of your chaos"}
-			/>
-		);
-	if (error)
-		return (
-			<ErrorState
-				message={"Enexpected error occured while loading the project"}
-			/>
-		);
+	if (!projectLoaded) return <ProjectLoadingState message={"One moment… making sense of your chaos"} />
+	if (error) return <ErrorState message={"Enexpected error occured while loading the project"} />
 
 	return (
 		<div className="flex flex-col h-full gap-y-4 px-4 lg:px-6 pt-4">
-			<ProjectLayoutHeader
-				metaData={metaData}
-				currentMemberId={currentMemberId}
-				team={team}
-			/>
+			<ProjectLayoutHeader />
 			<ProjectLayoutNavigation />
 			<Outlet />
 		</div>

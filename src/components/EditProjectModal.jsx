@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import { useProject } from "../context/ProjectContext";
-import { useProjectsContext } from "../context/ProjectsContext";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { projectStatusOptions } from "../utils/constant";
@@ -14,19 +12,19 @@ function EditProjectModal({
 	projectId,
 	currentProjectTitle,
 	currentProjectStatus,
+	onProjectUpdate,
 	closeModal,
 }) {
-	const { metaData, setMetaData } = useProject();
-	const { setProjects } = useProjectsContext();
+	
 	const { showToast } = useToast();
 
 	const [newProjectTitle, setNewProjectTitle] = useState(currentProjectTitle);
-	const [newProjectStatus, setNewProjectStatus] =
-		useState(currentProjectStatus);
+	const [newProjectStatus, setNewProjectStatus] = useState(currentProjectStatus);
 	const [changesBeingSaved, setChangesBeingSaved] = useState(false);
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedProjectProps = useMemo(() => {
+
 		const updated = {};
 
 		if (newProjectStatus !== currentProjectStatus) {
@@ -42,31 +40,26 @@ function EditProjectModal({
 		}
 
 		return updated;
+
 	}, [newProjectTitle, newProjectStatus]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
+
 		const valid = areProjectChangesValid(updatedProjectProps);
 		return valid ? false : true;
+
 	}, [updatedProjectProps]);
 
 	async function updateProject() {
+
 		setChangesBeingSaved(true);
 
 		try {
-			const { updatedProject } = await projectService.updateProject(
-				projectId,
-				updatedProjectProps,
-			);
 
-			setMetaData(() => ({ ...metaData, ...updatedProject }));
-			setProjects((prevProjects) =>
-				prevProjects.map((project) => {
-					return project.id === projectId
-						? { ...project, ...updatedProject }
-						: project;
-				}),
-			);
+			const { updatedProject } = await projectService.updateProject(projectId, updatedProjectProps);
+
+			onProjectUpdate(updatedProject);
 
 			closeModal();
 
@@ -74,19 +67,22 @@ function EditProjectModal({
 				variant: "success",
 				title: "Project updated successfully!",
 			});
+
 		} catch (err) {
-			console.log(
-				"The following error occured while updating the project: " +
-					err.message,
-			);
+
+			console.log("The following error occured while updating the project: " + err.message);
 
 			showToast({
 				variant: "failure",
 				title: "Unexpected error occured while updating the project!",
 			});
+
 		} finally {
+
 			setChangesBeingSaved(false);
+
 		}
+
 	}
 
 	return (
@@ -140,13 +136,17 @@ function EditProjectModal({
 }
 
 function areProjectChangesValid(updatedProject) {
+
 	const projectStatuses = ["active", "paused", "completed"];
 
 	let isValid = true;
 
 	if (Object.keys(updatedProject).length === 0) {
+
 		isValid = false;
+
 	} else {
+
 		if ("title" in updatedProject) {
 			if (!updatedProject.title.length > 0) {
 				isValid = false;
@@ -158,9 +158,11 @@ function areProjectChangesValid(updatedProject) {
 				isValid = false;
 			}
 		}
+
 	}
 
 	return isValid;
+
 }
 
 export default EditProjectModal;

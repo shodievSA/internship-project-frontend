@@ -64,6 +64,7 @@ export function ProjectContextProvider({ children }) {
 		setTasks([]);
 		setProjectLoaded(false);
 		setError(null);
+		
 		fetchProject(projectId);
 
 	}, [projectId]);

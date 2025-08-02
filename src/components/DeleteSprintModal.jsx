@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "./ui/ToastProvider";
 import Modal from "./ui/Modal";
 import Input from "./ui/Input";
@@ -12,43 +12,59 @@ const deleteWarnings = [
 	"This action can't be undone",
 ];
 
-function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
+function DeleteSprintModal({ 
+	projectId, 
+	sprintId,
+	sprint, 
+	onSprintDelete, 
+	closeModal 
+}) {
+
 	const [confirmMessage, setConfirmMessage] = useState("");
 	const [sprintBeingDeleted, setSprintBeingDeleted] = useState(false);
 
 	const { showToast } = useToast();
-	const { projectId } = useParams();
-
 	const navigate = useNavigate();
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const submitButtonDisabled = useMemo(() => {
+
 		return confirmMessage.trim() === sprint.title ? false : true;
+
 	}, [confirmMessage]);
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	async function deleteSprint() {
+
 		setSprintBeingDeleted(true);
 
 		try {
-			await sprintService.deleteSprint(projectId, sprint.id);
+
+			await sprintService.deleteSprint(projectId, sprintId);
 
 			showToast({
 				variant: "success",
 				title: "Deleted sprint successfully!",
 			});
 
-			onSprintDelete(sprint.id);
+			onSprintDelete(sprintId);
 
-			navigate(-1);
+			navigate(-1, { replace: true });
+
 		} catch (err) {
+
+			console.log("The following error occured while deleting the project: " + err.message);
+
 			showToast({
 				variant: "failure",
 				title: "Failed to delete the sprint!",
 			});
+
 		} finally {
+
 			setSprintBeingDeleted(false);
 		}
+
 	}
 
 	return (
@@ -66,8 +82,8 @@ function DeleteSprintModal({ sprint, onSprintDelete, closeModal }) {
 				>
 					<span>This action will permanently:</span>
 					<ul className="list-disc pl-5">
-						{deleteWarnings.map((warning) => {
-							return <li className="mt-1">{warning}</li>;
+						{deleteWarnings.map((warning, index) => {
+							return <li key={index} className="mt-1">{warning}</li>;
 						})}
 					</ul>
 				</div>

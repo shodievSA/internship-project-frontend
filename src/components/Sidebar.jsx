@@ -14,9 +14,9 @@ import {
 } from "lucide-react";
 
 function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
+
 	const { user, setUser } = useAuthContext();
-	const { loading, error, notifications, invitesFetched, invites } =
-		useNotifications();
+	const { loading, error, notifications, invitesFetched, invites } = useNotifications();
 	const {
 		projectsLoaded,
 		projects,
@@ -28,28 +28,40 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 	const [isUserBeingSignedOut, setIsUserBeingSignedOut] = useState(false);
 
 	const unviewedNotifications = useMemo(() => {
+
 		if (loading || error) return [];
 
 		return notifications.filter((notification) => !notification.isViewed);
+
 	}, [loading, error, notifications]);
 
 	const pendingInvites = useMemo(() => {
+
 		if (!invitesFetched) return [];
 
 		return invites.filter((invite) => invite.status === "pending");
+
 	}, [invitesFetched, invites]);
 
 	async function logOutUser() {
+
 		setIsUserBeingSignedOut(true);
 
 		try {
+
 			await userService.logOut();
 			setUser(null);
+
 		} catch {
+
 			console.log("Error occured while logging out the user.");
+
 		} finally {
+
 			setIsUserBeingSignedOut(false);
+			
 		}
+
 	}
 
 	return (
@@ -60,16 +72,11 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
                 fixed h-full w-full transition-bg-color duration-200 z-10 lg:hidden`}
 				></div>{" "}
 				{/* dark, semi-transparent background color only for mobile and tablet screen sizes */}
-				<div
-					className={`${
-						sidebarCollapsed
-							? "w-0 lg:w-0 lg:pl-3 -translate-x-full lg:-translate-x-64"
-							: "lg:pl-0 lg:w-64"
-					} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500`}
-				>
-					<div
-						className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 lg:grow`}
-					>
+				<div className={`${sidebarCollapsed
+					? "w-0 lg:w-0 lg:pl-3 -translate-x-full lg:-translate-x-64"
+					: "lg:pl-0 lg:w-64"
+				} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500`}>
+					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 lg:grow`}>
 						<div className={`flex flex-col h-full pt-4 gap-y-8`}>
 							<div className="flex gap-x-3 items-center justify-start px-2">
 								<div className="bg-neutral-200 w-10 h-10 rounded-full flex-shrink-0">
@@ -87,12 +94,10 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 									</p>
 								</div>
 							</div>
-							<div className="flex flex-col">
+							<div className="flex flex-col grow">
 								<div className="flex flex-col gap-y-2 border-b dark:border-b-neutral-800 pb-3">
-									<h4
-										className="dark:text-neutral-400 text-neutral-500 text-xs px-3 
-									font-semibold px-1"
-									>
+									<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 
+									font-semibold px-1">
 										MAIN MENU
 									</h4>
 									<ul className="flex flex-col gap-y-1 font-medium text-sm px-2">
@@ -113,14 +118,11 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/organizer"}
-											className={({
-												isActive,
-											}) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
 											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${
-												isActive
-													? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
-													: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
+												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
 											<Sparkles className="w-5 h-5" />
@@ -128,22 +130,18 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/notifications"}
-											className={({
-												isActive,
-											}) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
 											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${
-												isActive
-													? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
-													: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
+												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
 											<div className="flex items-center gap-x-3">
 												<Bell className="w-5 h-5" />
 												<span>Notifications</span>
 											</div>
-											{unviewedNotifications.length >
-												0 && (
+											{unviewedNotifications.length > 0 && (
 												<div className="flex items-center gap-x-4">
 													<span
 														className="flex items-center justify-center text-[10px] bg-red-500 
@@ -166,14 +164,11 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/invites"}
-											className={({
-												isActive,
-											}) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
+											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
 											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${
-												isActive
-													? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
-													: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
+												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
 											<div className="flex items-center gap-x-3">
@@ -182,18 +177,12 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 											</div>
 											{pendingInvites.length > 0 && (
 												<div className="flex items-center gap-x-4">
-													<span
-														className="flex items-center justify-center text-[10px] bg-red-500 
-													rounded-full text-white w-5 h-5"
-													>
-														{pendingInvites.length >
-														99
-															? "99+"
-															: pendingInvites.length}
+													<span className="flex items-center justify-center text-[10px] bg-red-500 
+													rounded-full text-white w-5 h-5">
+														{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
 													</span>
 													<span className="relative flex h-3 w-3">
-														<span
-															className="animate-ping absolute inline-flex h-full w-full rounded-full 
+														<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
 														bg-sky-400 opacity-75"
 														></span>
 														<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
@@ -203,7 +192,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 									</ul>
 								</div>
-								<div className="grow flex flex-col gap-y-2 pt-3">
+								<div className="grow flex flex-col gap-y-2 pt-3 overflow-y-auto">
 									<div className="flex items-center justify-between gap-x-5">
 										<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
 											MY PROJECTS
@@ -212,9 +201,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 											disabled={!projectsLoaded}
 											className="p-1.5 cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900
 											rounded-lg mr-5 disabled:opacity-50 disabled:pointer-events-none"
-											onClick={() =>
-												setShowNewProjectModal(true)
-											}
+											onClick={() => setShowNewProjectModal(true)}
 										>
 											<SquarePlus className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
 										</button>
@@ -223,6 +210,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										<ul className="grow overflow-y-auto flex flex-col gap-y-1 font-medium text-sm px-3">
 											{projects.map((project) => (
 												<NavLink
+													key={project.id}
 													to={`projects/${project.id}/my-tasks`}
 													className="px-3 py-2 dark:hover:bg-neutral-900 dark:text-neutral-300 truncate
 													dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
@@ -233,10 +221,8 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 											))}
 										</ul>
 									) : (
-										<div
-											className="grow overflow-y-auto flex flex-col gap-y-1 font-medium 
-										text-sm px-3"
-										>
+										<div className="grow overflow-y-auto flex flex-col gap-y-1 font-medium 
+										text-sm px-3">
 											{Array.from(
 												{ length: userProjectCount },
 												(_, i) => {
@@ -257,7 +243,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 									)}
 								</div>
 							</div>
-							<div className="mt-auto flex flex-col gap-y-5 p-4">
+							<div className="flex flex-col gap-y-5 p-4">
 								<button
 									className="dark:bg-black dark:hover:bg-neutral-950 dark:border-neutral-800 
 									dark:text-neutral-300 dark:hover:text-white bg-white hover:bg-neutral-100 border-neutral-200

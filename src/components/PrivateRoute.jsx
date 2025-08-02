@@ -4,10 +4,11 @@ import AuthSpinner from "./AuthSpinner";
 import AppLayout from "../layouts/AppLayout";
 
 function PrivateRoute() {
+
 	const { user, isUserFetched } = useAuthContext();
 
 	return isUserFetched ? (
-		user && !user.isInvited ? (
+		(user && !user.isInvited) ? (
 			<AppLayout>
 				<Outlet />
 			</AppLayout>
@@ -17,6 +18,7 @@ function PrivateRoute() {
 	) : (
 		<AuthSpinner />
 	);
+	
 }
 
 export default PrivateRoute;

@@ -87,8 +87,8 @@ function DeleteProjectModal({
 				>
 					<span>This action will permanently:</span>
 					<ul className="list-disc pl-5">
-						{deleteWarnings.map((warning) => {
-							return <li className="mt-1">{warning}</li>;
+						{deleteWarnings.map((warning, index) => {
+							return <li key={index} className="mt-1">{warning}</li>;
 						})}
 					</ul>
 				</div>
