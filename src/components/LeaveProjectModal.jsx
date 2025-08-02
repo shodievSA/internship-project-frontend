@@ -7,7 +7,21 @@ import Button from "./ui/Button";
 import Input from "./ui/Input";
 import { UserMinus } from "lucide-react";
 
-function LeaveProjectModal({ projectId, projectTitle, closeModal }) {
+const leaveWarnings = [
+	"Remove your access to this project",
+	"Unassign you from all tasks",
+	"Remove you from project communications",
+	"Remove team member access",
+	"You'll need to be re-invited to rejoin"
+];
+
+function LeaveProjectModal({ 
+	projectId, 
+	projectTitle, 
+	onProjectLeave,
+	closeModal 
+}) {
+
 	const { showToast } = useToast();
 
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
@@ -16,23 +30,21 @@ function LeaveProjectModal({ projectId, projectTitle, closeModal }) {
 
 	const navigate = useNavigate();
 
-	const leaveWarnings = [
-		"Remove your access to this project",
-		"Unassign you from all tasks",
-		"Remove you from project communications",
-		"Remove team member access",
-		"You'll need to be re-invited to rejoin",
-	];
-
 	useEffect(() => {
+
 		setSubmitButtonDisabled(projectName !== projectTitle);
+
 	}, [projectName, projectTitle]);
 
 	async function leaveProject() {
+
 		setLeavingProject(true);
 
 		try {
+			
 			await projectService.leaveProject(projectId);
+
+			onProjectLeave(projectId);
 
 			navigate("/projects", { replace: true });
 
@@ -40,14 +52,20 @@ function LeaveProjectModal({ projectId, projectTitle, closeModal }) {
 				variant: "success",
 				title: "You've left the project successfully!",
 			});
+
 		} catch (err) {
+
 			showToast({
 				variant: "failure",
 				title: err.message,
 			});
+
 		} finally {
+
 			setLeavingProject(false);
+
 		}
+
 	}
 
 	return (

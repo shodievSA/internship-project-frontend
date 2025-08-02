@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
 import { useProjectsContext } from "../context/ProjectsContext";
+import { statusColors } from "../utils/constant";
+import NewSprintModal from "./NewSprintModal";
+import Button from "./ui/Button";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import LeaveProjectModal from "../components/LeaveProjectModal";
 import GroupEmailModal from "../components/GroupEmailModal";
-import { statusColors } from "../utils/constant";
 import {
 	Plus,
 	Settings,
@@ -18,8 +20,6 @@ import {
 	UserPlus,
 	TrendingUp,
 } from "lucide-react";
-import NewSprintModal from "./NewSprintModal";
-import Button from "./ui/Button";
 
 function ProjectLayoutHeader() {
 
@@ -215,6 +215,7 @@ function ProjectLayoutHeader() {
 				<LeaveProjectModal
 					projectId={metaData.id}
 					projectTitle={metaData.title}
+					onProjectLeave={deleteProject}
 					closeModal={() => setShowLeaveProjectModal(false)}
 				/>
 			)}
