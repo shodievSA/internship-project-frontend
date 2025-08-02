@@ -30,6 +30,7 @@ const userService = {
 	},
 
 	updateInviteStatus: async ({ updatedStatus, projectId, inviteId }) => {
+
 		const response = await fetch(
 			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites/${inviteId}`,
 			{
@@ -39,7 +40,7 @@ const userService = {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ status: updatedStatus }),
-			},
+			}
 		);
 
 		if (!response.ok) {
@@ -48,7 +49,9 @@ const userService = {
 		}
 
 		return response.json();
-	},
+
+	}
+
 };
 
 export default userService;

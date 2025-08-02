@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNotifications } from "../context/NotificationsContext";
+import { useProjectsContext } from "../context/ProjectsContext";
 import userService from "../services/userService";
 import { incrementProjectCount } from "../utils/localStorageUtils";
 import UserInviteCard from "../components/UserInviteCard";
@@ -12,6 +13,8 @@ import LoadingInvites from "../components/LoadingInvites";
 import { Calendar, Filter } from "lucide-react";
 
 function UserInvites() {
+
+	const { addNewProject } = useProjectsContext();
 	const { invitesFetched, invites, setInvites } = useNotifications();
 
 	const [searchTerm, setSearchTerm] = useState("");
@@ -19,25 +22,28 @@ function UserInvites() {
 	const [dateFilter, setDateFilter] = useState("all");
 
 	async function handleInvite(updatedStatus, projectId, inviteId) {
+
 		try {
-			await userService.updateInviteStatus({
-				updatedStatus,
-				projectId,
-				inviteId,
-			});
 
-			setInvites((prev) =>
-				prev.map((inv) =>
-					inv.id === inviteId
-						? { ...inv, status: updatedStatus }
-						: inv,
-				),
-			);
+			const { inviteInfo } = await userService.updateInviteStatus({ updatedStatus, projectId, inviteId });
 
-			if (updatedStatus === "accepted") incrementProjectCount();
+			setInvites((prev) => prev.map((invite) => {
+				return (invite.id === inviteId) ? { ...invite, status: updatedStatus } : invite
+			}));
+
+			if (updatedStatus === "accepted") {
+
+				addNewProject(inviteInfo.projectMetaData);
+				incrementProjectCount();
+
+			}
+
 		} catch (err) {
+
 			console.log(err);
+
 		}
+
 	}
 
 	const filteredInvites = filterInvitations(invites, {

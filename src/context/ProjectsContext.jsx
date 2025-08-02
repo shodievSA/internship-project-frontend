@@ -39,16 +39,14 @@ function ProjectsContextProvider({ children }) {
 
 	}, []);
 
-	function handleProjectCreated(newProject) {
+	function addNewProject(newProject) {
 
-		setProjects((prevProjectPreviews) => [
-			newProject,
-			...prevProjectPreviews,
-		]);
+		setProjects((prevProjectPreviews) => [newProject, ...prevProjectPreviews]);
 
-	}
+	};
 
 	const context = {
+		addNewProject,
 		projects,
 		setProjects,
 		error,
@@ -68,7 +66,7 @@ function ProjectsContextProvider({ children }) {
 				{showNewProjectModal && (
 					<NewProjectModal
 						closeModal={() => setShowNewProjectModal(false)}
-						onProjectCreated={handleProjectCreated}
+						onProjectCreated={addNewProject}
 					/>
 				)}
 			</>
