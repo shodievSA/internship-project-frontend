@@ -14,9 +14,9 @@ import {
   Cell,
 } from "recharts";
 
-function PriorityTaskChart() {
+function PriorityTaskChart({ sprintId = null }) {
   const { projectId } = useParams();
-  const { data, error, isLoading } = usePriorityBreakdown(projectId);
+  const { data, error, isLoading } = usePriorityBreakdown(projectId, sprintId);
 
   if (isLoading) {
     return <PriorityTaskChartSkeleton />;
@@ -24,7 +24,7 @@ function PriorityTaskChart() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+      <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Priority breakdown
         </h3>
@@ -36,19 +36,25 @@ function PriorityTaskChart() {
     );
   }
 
-  if (!data || !data.priorities || data.priorities.length === 0) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            Priority breakdown
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Get a holistic view of how work is being prioritized.
-          </p>
-        </div>
+  // Check if we have valid data with priorities
+  const hasValidData =
+    data &&
+    data.priorities &&
+    data.priorities.length > 0 &&
+    data.priorities.some((priority) => priority.count > 0);
 
-        <div className="flex items-center justify-center h-64">
+  if (!hasValidData) {
+    return (
+      <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
+        <h2 className="text-lg font-semibold mb-0 pb-0 pt-4 px-6">
+          Priority breakdown
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-6">
+          Get a holistic view of how work is being prioritized for the selected
+          sprint.
+        </p>
+
+        <div className="flex items-center justify-center h-64 px-6 pb-6">
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
               <svg
@@ -69,9 +75,9 @@ function PriorityTaskChart() {
               No Priority Data Available
             </h4>
             <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm">
-              There are no tasks with priority levels for this project yet.
-              Priority data will appear here once tasks are created and assigned
-              priority levels.
+              There are no tasks with priority levels for the selected sprint
+              yet. Priority data will appear here once tasks are created and
+              assigned priority levels.
             </p>
           </div>
         </div>
@@ -134,7 +140,7 @@ function PriorityTaskChart() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+    <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           Priority breakdown
