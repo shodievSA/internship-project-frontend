@@ -3,7 +3,7 @@ import Modal from "./ui/Modal";
 import { useMyProductivity } from "../hooks/useMemberProductivity";
 import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
 import { useParams } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import { useProject } from "../context/ProjectContext";
 import SprintSelectionDropdown from "./SprintSelectionDropdown";
 import {
   Clock,
@@ -27,15 +27,15 @@ import { ProductivitySkeleton } from "./ProductivitySkeleton";
 
 export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
   const { projectId } = useParams();
-  const { user } = useAuthContext();
+  const { currentMemberId } = useProject();
   const [selectedSprintId, setSelectedSprintId] = useState(null);
   const [hasUserSelectedSprint, setHasUserSelectedSprint] = useState(false);
   const [isChangingFilter, setIsChangingFilter] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Check if the current user is viewing their own productivity
-  const isAuthenticated = !!user;
-  const isOwnProductivity = isAuthenticated && user?.id === member?.id;
+  const isAuthenticated = !!currentMemberId;
+  const isOwnProductivity = isAuthenticated && currentMemberId === member?.id;
 
   // Fetch sprints data
   const { data: sprintsData } = useAllSprints(projectId);
