@@ -1,56 +1,84 @@
 import { useState, useEffect } from "react";
 import Modal from "./ui/Modal";
 import { useMyProductivity } from "../hooks/useMemberProductivity";
+import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
 import { useParams } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
+import { useProject } from "../context/ProjectContext";
+import SprintSelectionDropdown from "./SprintSelectionDropdown";
 import {
-	Clock,
-	CheckCircle,
-	AlertCircle,
-	TrendingUp,
-	Calendar,
-	BarChart3,
-	Target,
-	Activity,
-	User,
-	Info,
-	Zap,
-	Timer,
-	Award,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+  Calendar,
+  BarChart3,
+  Target,
+  Activity,
+  User,
+  Info,
+  Zap,
+  Timer,
+  Award,
+  Hash,
+  Sparkles,
 } from "lucide-react";
 import LoadingState from "./LoadingState";
 import { ProductivitySkeleton } from "./ProductivitySkeleton";
 
 export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
-	const { projectId } = useParams();
-	const { user } = useAuthContext();
-	const [timeRange, setTimeRange] = useState("week");
-	const [isChangingFilter, setIsChangingFilter] = useState(false);
-	const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const { projectId } = useParams();
+  const { currentMemberId } = useProject();
+  const [selectedSprintId, setSelectedSprintId] = useState(null);
+  const [hasUserSelectedSprint, setHasUserSelectedSprint] = useState(false);
+  const [isChangingFilter, setIsChangingFilter] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-	// Check if the current user is viewing their own productivity
-	const isAuthenticated = !!user;
-	const isOwnProductivity = isAuthenticated && user?.id === member?.id;
+  // Check if the current user is viewing their own productivity
+  const isAuthenticated = !!currentMemberId;
+  const isOwnProductivity = isAuthenticated && currentMemberId === member?.id;
 
-	const { data, loading, error } = useMyProductivity(
-		projectId,
-		{ timeRange },
-		{
-			shouldFetch: isAuthenticated && isOwnProductivity,
-		},
-	);
+  // Fetch sprints data
+  const { data: sprintsData } = useAllSprints(projectId);
+  const { data: defaultSprintData } = useDefaultSprint(projectId);
+
+  // Set default sprint when data is loaded
+  useEffect(() => {
+    if (
+      defaultSprintData?.defaultSprint &&
+      selectedSprintId === null &&
+      !hasUserSelectedSprint
+    ) {
+      setSelectedSprintId(defaultSprintData.defaultSprint.id);
+    }
+  }, [defaultSprintData, selectedSprintId, hasUserSelectedSprint]);
+
+  const sprints = sprintsData?.sprints || [];
+
+  const { data, loading, error } = useMyProductivity(
+    projectId,
+    selectedSprintId,
+    {
+      shouldFetch: isAuthenticated && isOwnProductivity,
+    }
+  );
 
 	const productivityData = data?.data;
 
-	// Handle time range change with loading state
-	const handleTimeRangeChange = (newTimeRange) => {
-		// Only allow time range changes if user is authenticated and viewing their own productivity
-		if (!isAuthenticated || !isOwnProductivity) {
-			return;
-		}
-		setIsChangingFilter(true);
-		setTimeRange(newTimeRange);
-	};
+  // Handle sprint change with loading state
+  const handleSprintChange = (sprintId) => {
+    // Only allow sprint changes if user is authenticated and viewing their own productivity
+    if (!isAuthenticated || !isOwnProductivity) {
+      return;
+    }
+    setIsChangingFilter(true);
+    setSelectedSprintId(sprintId);
+    setHasUserSelectedSprint(true);
+
+    // Add a small delay to show the skeleton loading state
+    setTimeout(() => {
+      setIsChangingFilter(false);
+    }, 500);
+  };
 
 	// Reset changing filter state when data loads
 	useEffect(() => {
@@ -72,27 +100,10 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 		}
 	}, [isOpen, isInitialLoad]);
 
-	const timeRangeOptions = [
-		{ value: "day", label: "Today" },
-		{ value: "week", label: "Week" },
-		{ value: "month", label: "Month" },
-		{ value: "all", label: "All Time" },
-	];
-
-	const getBusyLevelColor = (level) => {
-		switch (level) {
-			case "free":
-				return "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20";
-			case "low":
-				return "text-blue-600 bg-blue-50 dark:bg-blue-900/20";
-			case "medium":
-				return "text-amber-600 bg-amber-50 dark:bg-amber-900/20";
-			case "high":
-				return "text-red-600 bg-red-50 dark:bg-red-900/20";
-			default:
-				return "text-gray-600 bg-gray-50 dark:bg-gray-900/20";
-		}
-	};
+  // Get selected sprint info for display
+  const selectedSprint = selectedSprintId
+    ? sprints.find((sprint) => sprint.id === selectedSprintId)
+    : null;
 
 	const formatTime = (seconds) => {
 		if (!seconds || seconds === 0) return "0h 0m";
@@ -137,96 +148,58 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 						</h2>
 					</div>
 
-					{/* Subtitle with Role Highlight */}
-					<div className="ml-13">
-						<span className="text-sm text-gray-600 dark:text-gray-400">
-							{member.name} •{" "}
-							<span className="text-blue-600 dark:text-blue-400 font-medium">
-								{member.position}
-							</span>
-						</span>
-					</div>
-				</div>
-			}
-		>
-			<div className="px-8 pb-8 max-h-[80vh] overflow-y-auto">
-				{/* Authentication and Authorization Checks */}
-				{!isAuthenticated ? (
-					<div className="flex flex-col items-center justify-center py-16 text-center">
-						<div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-							<User className="w-6 h-6 text-red-600 dark:text-red-400" />
-						</div>
-						<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-							Authentication Required
-						</h3>
-						<p className="text-gray-600 dark:text-gray-400 max-w-sm text-sm leading-relaxed">
-							You must be signed in to view productivity data.
-							Please sign in to access your metrics.
-						</p>
-					</div>
-				) : !isOwnProductivity ? (
-					<div className="flex flex-col items-center justify-center py-16 text-center">
-						<div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
-							<Info className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-						</div>
-						<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-							Personal Productivity Only
-						</h3>
-						<p className="text-gray-600 dark:text-gray-400 max-w-sm text-sm leading-relaxed">
-							Productivity data is only available for your own
-							account. Click on your profile card to view your
-							metrics.
-						</p>
-					</div>
-				) : (
-					<>
-						{/* Time Period Selector */}
-						<div className="flex items-center justify-between mb-8">
-							<div className="flex items-center gap-3">
-								<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-									Time Period
-								</span>
-								{productivityData && (
-									<div className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full">
-										<span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-											{timeRange === "day"
-												? "Today"
-												: timeRange === "week"
-													? "This Week"
-													: timeRange === "month"
-														? "This Month"
-														: "All Time"}
-										</span>
-									</div>
-								)}
-							</div>
-							<div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-								{timeRangeOptions.map((option) => (
-									<button
-										key={option.value}
-										onClick={() =>
-											handleTimeRangeChange(option.value)
-										}
-										disabled={
-											!isAuthenticated ||
-											!isOwnProductivity
-										}
-										className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-											timeRange === option.value
-												? "bg-blue-600 text-white shadow-sm"
-												: "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-										} ${
-											!isAuthenticated ||
-											!isOwnProductivity
-												? "opacity-50 cursor-not-allowed"
-												: "cursor-pointer"
-										}`}
-									>
-										{option.label}
-									</button>
-								))}
-							</div>
-						</div>
+          {/* Subtitle with Role Highlight */}
+          <div className="ml-13">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {member.name} •{" "}
+              <span className="text-blue-600 dark:text-blue-400 font-medium">
+                {member.position}
+              </span>
+            </span>
+          </div>
+        </div>
+      }
+    >
+      <div className="px-8 pb-8 max-h-[80vh] overflow-y-auto">
+        {/* Authentication and Authorization Checks */}
+        {!isAuthenticated ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+              <User className="w-6 h-6 text-red-600 dark:text-red-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Authentication Required
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-sm text-sm leading-relaxed">
+              You must be signed in to view productivity data. Please sign in to
+              access your metrics.
+            </p>
+          </div>
+        ) : !isOwnProductivity ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
+              <Info className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Personal Productivity Only
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-sm text-sm leading-relaxed">
+              Productivity data is only available for your own account. Click on
+              your profile card to view your metrics.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Sprint Selection */}
+            <div className="flex mb-4">
+              <SprintSelectionDropdown
+                sprints={sprints}
+                selectedSprintId={selectedSprintId}
+                onSprintChange={handleSprintChange}
+                className="w-64"
+                showAllSprints={true}
+              />
+            </div>
 
 						{(loading || isChangingFilter || isInitialLoad) && (
 							<ProductivitySkeleton />
@@ -450,335 +423,191 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 												</span>
 											</div>
 
-											<div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-gray-200/50 dark:border-gray-600/30 h-[60px] hover:shadow-md transition-all duration-200">
-												<div className="flex items-center gap-3">
-													<div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-														<Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-													</div>
-													<span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-														Sessions
-													</span>
-												</div>
-												<span className="text-lg font-bold text-gray-900 dark:text-white">
-													{productivityData.timeTracking.dailyTimeDistribution.reduce(
-														(sum, day) =>
-															sum + day.sessions,
-														0,
-													)}
-												</span>
-											</div>
-										</div>
-									</div>
-								</div>
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl border border-gray-200/50 dark:border-gray-600/30 h-[60px] hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                            <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Sessions
+                          </span>
+                        </div>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">
+                          {productivityData.sessionCount || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-								{/* Daily Activity - Clean & Professional */}
-								<div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
-									{/* Clean Header */}
-									<div className="px-8 py-6 border-b border-gray-100 dark:border-gray-800">
-										<div className="flex items-center justify-between">
-											<div className="flex items-center gap-3">
-												<div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center">
-													<Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-												</div>
-												<div>
-													<h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-														Daily Activity
-													</h3>
-													<p className="text-sm text-gray-500 dark:text-gray-400">
-														{timeRange === "day"
-															? "Today's activity"
-															: timeRange ===
-																  "week"
-																? "Last 7 days overview"
-																: timeRange ===
-																	  "month"
-																	? "Last 30 days overview"
-																	: "All time overview"}
-													</p>
-												</div>
-											</div>
-											<div className="text-right">
-												<div className="text-2xl font-bold text-gray-900 dark:text-white">
-													{productivityData?.timeTracking?.dailyTimeDistribution?.reduce(
-														(sum, day) =>
-															sum + day.sessions,
-														0,
-													) || 0}
-												</div>
-												<div className="text-sm text-gray-500 dark:text-gray-400">
-													Total Sessions
-												</div>
-											</div>
-										</div>
-									</div>
+                {/* Daily Activity - Clean & Professional */}
+                <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                  {/* Clean Header */}
+                  <div className="px-8 py-6 border-b border-gray-100 dark:border-gray-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center">
+                          <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            Task Time Distribution
+                          </h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {selectedSprint
+                              ? `${selectedSprint.title} tasks`
+                              : "All sprints tasks"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                          {productivityData?.sessionCount || 0}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          Total Sessions
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-									{/* Activity List */}
-									{productivityData?.timeTracking
-										?.dailyTimeDistribution?.length > 0 ? (
-										<div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-[400px] overflow-y-auto">
-											{productivityData.timeTracking.dailyTimeDistribution
-												.slice(
-													0,
-													timeRange === "day"
-														? 1
-														: timeRange === "week"
-															? 7
-															: timeRange ===
-																  "month"
-																? 30
-																: productivityData
-																		.timeTracking
-																		.dailyTimeDistribution
-																		.length,
-												)
-												.map((day, index) => {
-													const date = new Date(
-														day.date,
-													);
-													const isToday =
-														new Date().toDateString() ===
-														date.toDateString();
-													const isYesterday =
-														new Date(
-															Date.now() -
-																86400000,
-														).toDateString() ===
-														date.toDateString();
+                  {/* Task Time List */}
+                  {productivityData?.timeTracking?.timePerTask?.length > 0 ? (
+                    <div className="divide-y divide-gray-100 dark:divide-gray-800 max-h-[400px] overflow-y-auto">
+                      {productivityData.timeTracking.timePerTask
+                        .slice(0, 10) // Show last 10 tasks
+                        .map((task, index) => {
+                          return (
+                            <div
+                              key={index}
+                              className="px-8 py-6 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                            >
+                              <div className="flex items-center justify-between">
+                                {/* Task Section */}
+                                <div className="flex items-center gap-4">
+                                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                                    <div className="text-center">
+                                      <div className="flex items-center justify-center">
+                                        <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-1" />
+                                        <span className="text-sm font-bold text-blue-700 dark:text-blue-300">
+                                          {task.taskId}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
 
-													return (
-														<div
-															key={index}
-															className={`px-8 py-6 transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
-																isToday
-																	? "bg-blue-50/50 dark:bg-blue-900/10"
-																	: ""
-															}`}
-														>
-															<div className="flex items-center justify-between">
-																{/* Date Section */}
-																<div className="flex items-center gap-4">
-																	<div
-																		className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-																			isToday
-																				? "bg-blue-100 dark:bg-blue-900/30"
-																				: "bg-gray-100 dark:bg-gray-800"
-																		}`}
-																	>
-																		<div className="text-center">
-																			<div
-																				className={`text-sm font-bold ${
-																					isToday
-																						? "text-blue-700 dark:text-blue-300"
-																						: "text-gray-600 dark:text-gray-400"
-																				}`}
-																			>
-																				{date.toLocaleDateString(
-																					"en-US",
-																					{
-																						day: "numeric",
-																					},
-																				)}
-																			</div>
-																			<div
-																				className={`text-xs ${
-																					isToday
-																						? "text-blue-600 dark:text-blue-400"
-																						: "text-gray-500 dark:text-gray-500"
-																				}`}
-																			>
-																				{date.toLocaleDateString(
-																					"en-US",
-																					{
-																						month: "short",
-																					},
-																				)}
-																			</div>
-																		</div>
-																	</div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="font-medium text-gray-900 dark:text-white">
+                                        {task.taskTitle}
+                                      </h4>
+                                    </div>
+                                  </div>
+                                </div>
 
-																	<div>
-																		<div className="flex items-center gap-2">
-																			<h4
-																				className={`font-medium ${
-																					isToday
-																						? "text-blue-900 dark:text-blue-100"
-																						: "text-gray-900 dark:text-white"
-																				}`}
-																			>
-																				{date.toLocaleDateString(
-																					"en-US",
-																					{
-																						weekday:
-																							"long",
-																					},
-																				)}
-																			</h4>
-																			{(isToday ||
-																				isYesterday) && (
-																				<span
-																					className={`px-2 py-1 text-xs font-medium rounded-full ${
-																						isToday
-																							? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
-																							: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-																					}`}
-																				>
-																					{isToday
-																						? "Today"
-																						: "Yesterday"}
-																				</span>
-																			)}
-																		</div>
-																		<p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-																			{date.toLocaleDateString(
-																				"en-US",
-																				{
-																					month: "long",
-																					day: "numeric",
-																					year: "numeric",
-																				},
-																			)}
-																		</p>
-																	</div>
-																</div>
+                                {/* Metrics Section */}
+                                <div className="flex items-center gap-8">
+                                  {/* Total Time */}
+                                  <div className="text-right min-w-[120px]">
+                                    <div className="flex items-center justify-end gap-2 mb-1">
+                                      <span className="text-lg font-semibold text-gray-900 dark:text-white min-w-[60px] text-right">
+                                        {formatTime(task.totalTime)}
+                                      </span>
+                                      <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <Clock className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                      Total Time
+                                    </div>
+                                  </div>
 
-																{/* Metrics Section */}
-																<div className="flex items-center gap-8">
-																	{/* Time Spent */}
-																	<div className="text-right">
-																		<div className="flex items-center justify-end gap-2 mb-1">
-																			<span
-																				className={`text-lg font-semibold ${
-																					isToday
-																						? "text-blue-900 dark:text-blue-100"
-																						: "text-gray-900 dark:text-white"
-																				}`}
-																			>
-																				{formatTime(
-																					day.totalTime,
-																				)}
-																			</span>
-																			<div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-																				<Clock className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-																			</div>
-																		</div>
-																		<div className="text-xs text-gray-500 dark:text-gray-400">
-																			Time
-																			Spent
-																		</div>
-																	</div>
+                                  {/* Average Time Per Session */}
+                                  <div className="text-right min-w-[120px]">
+                                    <div className="flex items-center justify-end gap-2 mb-1">
+                                      <span className="text-lg font-semibold text-gray-900 dark:text-white min-w-[60px] text-right">
+                                        {formatTime(task.averageTimePerSession)}
+                                      </span>
+                                      <div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <Timer className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                      Avg Session
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  ) : (
+                    /* Empty State for Task Time */
+                    <div className="px-8 py-16 text-center">
+                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Timer className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                        No Task Time Data Yet
+                      </h4>
+                      <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
+                        Start tracking your time on tasks to see your time
+                        distribution patterns here.
+                      </p>
+                    </div>
+                  )}
 
-																	{/* Sessions */}
-																	<div className="text-right">
-																		<div className="flex items-center justify-end gap-2 mb-1">
-																			<span
-																				className={`text-lg font-semibold ${
-																					isToday
-																						? "text-blue-900 dark:text-blue-100"
-																						: "text-gray-900 dark:text-white"
-																				}`}
-																			>
-																				{
-																					day.sessions
-																				}
-																			</span>
-																			<div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-																				<Activity className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-																			</div>
-																		</div>
-																		<div className="text-xs text-gray-500 dark:text-gray-400">
-																			Sessions
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													);
-												})}
-										</div>
-									) : (
-										/* Empty State for Daily Activity */
-										<div className="px-8 py-16 text-center">
-											<div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-												<Calendar className="w-8 h-8 text-gray-400 dark:text-gray-500" />
-											</div>
-											<h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-												No Activity Data Yet
-											</h4>
-											<p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto text-sm leading-relaxed">
-												Start tracking your time and
-												completing tasks to see your
-												daily activity patterns here.
-											</p>
-										</div>
-									)}
+                  {/* Clean Footer */}
+                  {productivityData?.timeTracking?.timePerTask?.length > 0 && (
+                    <div className="px-8 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2 mb-2">
+                            <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                              <Clock className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {formatTime(
+                                productivityData.timeTracking.timePerTask.reduce(
+                                  (sum, task) => sum + task.totalTime,
+                                  0
+                                ) /
+                                  productivityData.timeTracking.timePerTask
+                                    .length
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Average Daily Time
+                          </div>
+                        </div>
 
-									{/* Clean Footer */}
-									{productivityData?.timeTracking
-										?.dailyTimeDistribution?.length > 0 && (
-										<div className="px-8 py-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
-											<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-												<div className="text-center">
-													<div className="flex items-center justify-center gap-2 mb-2">
-														<div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-															<Clock className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-														</div>
-														<div className="text-lg font-semibold text-gray-900 dark:text-white">
-															{formatTime(
-																productivityData.timeTracking.dailyTimeDistribution.reduce(
-																	(
-																		sum,
-																		day,
-																	) =>
-																		sum +
-																		day.totalTime,
-																	0,
-																) /
-																	productivityData
-																		.timeTracking
-																		.dailyTimeDistribution
-																		.length,
-															)}
-														</div>
-													</div>
-													<div className="text-sm text-gray-500 dark:text-gray-400">
-														Average Daily Time
-													</div>
-												</div>
-
-												<div className="text-center">
-													<div className="flex items-center justify-center gap-2 mb-2">
-														<div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
-															<TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-														</div>
-														<div className="text-lg font-semibold text-gray-900 dark:text-white">
-															{(() => {
-																const mostActive =
-																	productivityData.timeTracking.dailyTimeDistribution.reduce(
-																		(
-																			max,
-																			day,
-																		) =>
-																			day.totalTime >
-																			max.totalTime
-																				? day
-																				: max,
-																	);
-																return new Date(
-																	mostActive.date,
-																).toLocaleDateString(
-																	"en-US",
-																	{
-																		weekday:
-																			"short",
-																	},
-																);
-															})()}
-														</div>
-													</div>
-													<div className="text-sm text-gray-500 dark:text-gray-400">
-														Most Active Day
-													</div>
-												</div>
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-2 mb-2">
+                            <div className="w-6 h-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                              <TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {(() => {
+                                const mostTimeSpent =
+                                  productivityData.timeTracking.timePerTask.reduce(
+                                    (max, task) =>
+                                      task.totalTime > max.totalTime
+                                        ? task
+                                        : max
+                                  );
+                                return mostTimeSpent.taskTitle.length > 15
+                                  ? mostTimeSpent.taskTitle.substring(0, 15) +
+                                      "..."
+                                  : mostTimeSpent.taskTitle;
+                              })()}
+                            </div>
+                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Most Time Spent Task
+                          </div>
+                        </div>
 
 												<div className="text-center">
 													<div className="flex items-center justify-center gap-2 mb-2">

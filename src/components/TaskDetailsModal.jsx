@@ -446,23 +446,24 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 					</div>
 				)}
 
-				{activeTab === "time" && (
-					<div className="min-h-[500px]">
-						{!timeTabLoaded ? (
-							<TimeTrackingSkeleton />
-						) : (
-							<TimeTracking
-								taskTitle={title}
-								taskStatus={status}
-								taskPriority={priority}
-								taskId={taskId}
-							/>
-						)}
-					</div>
-				)}
-			</div>
-		</Modal>
-	);
+        {activeTab === "time" && (
+          <div className="min-h-[500px]">
+            {!timeTabLoaded ? (
+              <TimeTrackingSkeleton />
+            ) : (
+              <TimeTracking
+                taskTitle={title}
+                taskStatus={status}
+                taskPriority={priority}
+                taskId={taskId}
+                projectId={projectId}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </Modal>
+  );
 }
 
 export default TaskDetailsModal;

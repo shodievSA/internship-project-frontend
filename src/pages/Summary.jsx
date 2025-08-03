@@ -1,15 +1,47 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
 import { ArrowLeft } from "lucide-react";
 import ProjectStatusOverview from "../components/ProjectStatusOverview";
 import TeamWorkloadChart from "../components/TeamWorkloadChart";
-import SprintProgressOverview from "../components/SprintProgressOverview";
+
 import PriorityTaskChart from "../components/PriorityTaskChart";
 import RecentActivityStats from "../components/RecentActivityStats";
+import SprintSelectionDropdown from "../components/SprintSelectionDropdown";
+import RecentActivityStatsSkeleton from "../components/RecentActivityStatsSkeleton";
+import ProjectStatusOverviewSkeleton from "../components/ProjectStatusOverviewSkeleton";
+import TeamWorkloadChartSkeleton from "../components/TeamWorkloadChartSkeleton";
+import PriorityTaskChartSkeleton from "../components/PriorityTaskChartSkeleton";
+import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
 
 function Summary() {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { projectId } = useParams();
+  const [selectedSprintId, setSelectedSprintId] = useState(null);
+  const [isLoadingSprintData, setIsLoadingSprintData] = useState(false);
+
+  // Fetch all sprints and default sprint
+  const { data: sprintsData } = useAllSprints(projectId);
+  const { data: defaultSprintData } = useDefaultSprint(projectId);
+
+  // Set default sprint when data is loaded
+  useEffect(() => {
+    if (defaultSprintData?.defaultSprint) {
+      setSelectedSprintId(defaultSprintData.defaultSprint.id);
+    }
+  }, [defaultSprintData]);
+
+  const sprints = sprintsData?.sprints || [];
+
+  const handleSprintChange = (sprintId) => {
+    setIsLoadingSprintData(true);
+    setSelectedSprintId(sprintId);
+
+    // Add a small delay to show the skeleton loading state
+    setTimeout(() => {
+      setIsLoadingSprintData(false);
+    }, 500);
+  };
 
 	return (
 		<div className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 py-6 pb-16 overflow-y-auto">
@@ -29,21 +61,46 @@ function Summary() {
 				</div>
 			</header>
 
-			<div className="grid grid-cols-1 gap-6 px-8">
-				<RecentActivityStats />
-			</div>
+      <div className="grid grid-cols-1 gap-6 px-8">
+        {/* Sprint Selection Dropdown */}
+        <div className="flex justify-end">
+          <SprintSelectionDropdown
+            sprints={sprints}
+            selectedSprintId={selectedSprintId}
+            onSprintChange={handleSprintChange}
+          />
+        </div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
-				<ProjectStatusOverview />
-				<TeamWorkloadChart />
-			</div>
+        {/* Show skeleton or actual component based on loading state */}
+        {isLoadingSprintData ? (
+          <RecentActivityStatsSkeleton />
+        ) : (
+          <RecentActivityStats sprintId={selectedSprintId} />
+        )}
+      </div>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
-				<SprintProgressOverview />
-				<PriorityTaskChart />
-			</div>
-		</div>
-	);
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
+        {isLoadingSprintData ? (
+          <ProjectStatusOverviewSkeleton />
+        ) : (
+          <ProjectStatusOverview sprintId={selectedSprintId} />
+        )}
+        {isLoadingSprintData ? (
+          <TeamWorkloadChartSkeleton />
+        ) : (
+          <TeamWorkloadChart sprintId={selectedSprintId} />
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 px-8">
+        {isLoadingSprintData ? (
+          <PriorityTaskChartSkeleton />
+        ) : (
+          <PriorityTaskChart sprintId={selectedSprintId} />
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Summary;

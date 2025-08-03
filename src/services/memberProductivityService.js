@@ -6,16 +6,12 @@ const BASE = `${SERVER_BASE_URL}/api/v1/projects`;
 /**
  * Get productivity analytics for the current authenticated user in a project
  * @param {number} projectId - The project ID
- * @param {Object} filters - Optional filters for the request
- * @param {Object} filters.dateRange - Date range filter
- * @param {string} filters.dateRange.startDate - Start date in ISO format (YYYY-MM-DD)
- * @param {string} filters.dateRange.endDate - End date in ISO format (YYYY-MM-DD)
- * @param {string} filters.timeRange - Time range filter - 'day', 'week', 'month', 'all'
+ * @param {number} sprintId - Optional sprint ID to filter data
  * @returns {Promise<Object>} Member productivity data
  */
-export async function getMyProductivity(projectId, filters = {}) {
-	console.log("PROJECT ID IN FRONTEND", projectId);
-	console.log("FILTERS:", filters);
+export async function getMyProductivity(projectId, sprintId = null) {
+  console.log("PROJECT ID IN FRONTEND", projectId);
+  console.log("SPRINT ID IN FRONTEND", sprintId);
 
 	// Ensure projectId is a valid number
 	const validProjectId = parseInt(projectId);
@@ -23,23 +19,11 @@ export async function getMyProductivity(projectId, filters = {}) {
 		throw new Error("Invalid project ID");
 	}
 
-	const queryParams = new URLSearchParams();
-
-	if (filters.dateRange) {
-		if (filters.dateRange.startDate) {
-			queryParams.append(
-				"dateRange.startDate",
-				filters.dateRange.startDate,
-			);
-		}
-		if (filters.dateRange.endDate) {
-			queryParams.append("dateRange.endDate", filters.dateRange.endDate);
-		}
-	}
-
-	if (filters.timeRange) {
-		queryParams.append("timeRange", filters.timeRange);
-	}
+  // Build query parameters
+  const queryParams = new URLSearchParams();
+  if (sprintId) {
+    queryParams.append("sprintId", sprintId);
+  }
 
 	const url = `${BASE}/${validProjectId}/my-productivity${
 		queryParams.toString() ? `?${queryParams.toString()}` : ""

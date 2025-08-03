@@ -3,14 +3,18 @@ import { useParams } from "react-router-dom";
 import { useSprintProgress } from "../hooks/useSummary";
 import SprintProgressOverviewSkeleton from "./SprintProgressOverviewSkeleton";
 import ErrorState from "./ErrorState";
-import EmptyState from "./EmptyState";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 
-function SprintProgressOverview() {
-	const { projectId } = useParams();
-	const { data, isLoading, error } = useSprintProgress(projectId);
-	const [showAllSprints, setShowAllSprints] = useState(false);
-	const [hoveredSprint, setHoveredSprint] = useState(null);
-	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+function SprintProgressOverview({ sprintId = null }) {
+  const { projectId } = useParams();
+  const { data, isLoading, error } = useSprintProgress(projectId, sprintId);
 
 	if (isLoading) {
 		return <SprintProgressOverviewSkeleton />;
@@ -25,17 +29,17 @@ function SprintProgressOverview() {
 		);
 	}
 
-	if (!data || !data.sprints || data.sprints.length === 0) {
-		return (
-			<div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-				<div className="mb-6">
-					<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-						Sprint Progress
-					</h3>
-					<p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-						See how your sprints are progressing at a glance.
-					</p>
-				</div>
+  if (!data || !data.sprints || data.sprints.length === 0) {
+    return (
+      <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Sprint Progress
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            See how your sprints are progressing at a glance.
+          </p>
+        </div>
 
 				<div className="flex items-center justify-center h-64">
 					<div className="text-center">
@@ -68,253 +72,225 @@ function SprintProgressOverview() {
 		);
 	}
 
-	const sprints = data.sprints;
-	const hasMoreSprints = sprints.length > 3;
-	const displayedSprints = showAllSprints ? sprints : sprints.slice(0, 3);
+  const sprints = data.sprints;
 
-	return (
-		<div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-			{/* Header */}
-			<div className="mb-6">
-				<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-					Sprint Progress
-				</h3>
-				<p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-					See how your sprints are progressing at a glance.
-				</p>
-				<div className="flex items-center justify-between">
-					<div className="flex items-center space-x-4">
-						<div className="flex items-center space-x-1">
-							<div
-								className="w-3 h-3 rounded-sm"
-								style={{
-									background:
-										"linear-gradient(135deg, #00D4AA 0%, #00B894 50%, #00A085 100%)",
-								}}
-							></div>
-							<span className="text-xs text-gray-600 dark:text-gray-400">
-								completed
-							</span>
-						</div>
-						<div className="flex items-center space-x-1">
-							<div
-								className="w-3 h-3 rounded-sm"
-								style={{
-									background:
-										"linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B46C1 100%)",
-								}}
-							></div>
-							<span className="text-xs text-gray-600 dark:text-gray-400">
-								active
-							</span>
-						</div>
-						<div className="flex items-center space-x-1">
-							<div
-								className="w-3 h-3 rounded-sm"
-								style={{
-									background: "#6B7280",
-								}}
-							></div>
-							<span className="text-xs text-gray-600 dark:text-gray-400">
-								blocked
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
+  // Transform data for pie chart - aggregate all sprints
+  const totalProgress = {
+    completed: 0,
+    active: 0,
+    blocked: 0,
+  };
 
-			{/* Sprint Progress Items */}
-			<div className="space-y-2 -mx-6">
-				{displayedSprints.map((sprint, index) => (
-					<div
-						key={sprint.id}
-						className="space-y-1 px-6 py-3 rounded-md transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer relative"
-						onMouseEnter={(e) => {
-							setHoveredSprint(sprint);
-							setTooltipPosition({ x: e.clientX, y: e.clientY });
-						}}
-						onMouseLeave={() => setHoveredSprint(null)}
-						onMouseMove={(e) =>
-							setTooltipPosition({ x: e.clientX, y: e.clientY })
-						}
-					>
-						{/* Sprint Header */}
-						<div className="flex items-center justify-between">
-							<div className="flex items-center space-x-2">
-								<svg
-									className="w-4 h-4 text-purple-500"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M13 10V3L4 14h7v7l9-11h-7z"
-									/>
-								</svg>
-								<h4 className="text-sm font-medium text-gray-900 dark:text-white">
-									{sprint.title}
-								</h4>
-							</div>
-						</div>
+  sprints.forEach((sprint) => {
+    totalProgress.completed += sprint.progress.completed || 0;
+    totalProgress.active += sprint.progress.active || 0;
+    totalProgress.blocked += sprint.progress.blocked || 0;
+  });
 
-						{/* Progress Bar */}
-						<div className="w-full bg-gray-200 dark:bg-gray-700 h-7 overflow-hidden rounded-lg">
-							<div className="flex h-7">
-								{/* Completed tasks (closed) */}
-								{sprint.progressPercentage.completed > 0 && (
-									<div
-										className="h-full flex items-center justify-center transition-all duration-500 ease-out hover:scale-105"
-										style={{
-											width: `${sprint.progressPercentage.completed}%`,
-											background:
-												"linear-gradient(135deg, #00D4AA 0%, #00B894 50%, #00A085 100%)",
-										}}
-									>
-										<span className="text-white text-xs font-medium transition-all duration-300 ease-out">
-											{Math.round(
-												sprint.progressPercentage
-													.completed,
-											)}
-											%
-										</span>
-									</div>
-								)}
-								{/* Active tasks (ongoing + under review) */}
-								{sprint.progressPercentage.active > 0 && (
-									<div
-										className="h-full flex items-center justify-center transition-all duration-500 ease-out hover:scale-105"
-										style={{
-											width: `${sprint.progressPercentage.active}%`,
-											background:
-												"linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B46C1 100%)",
-										}}
-									>
-										<span className="text-white text-xs font-medium transition-all duration-300 ease-out">
-											{Math.round(
-												sprint.progressPercentage
-													.active,
-											)}
-											%
-										</span>
-									</div>
-								)}
-								{/* Blocked tasks (rejected + overdue) */}
-								{sprint.progressPercentage.blocked > 0 && (
-									<div
-										className="h-full flex items-center justify-center transition-all duration-500 ease-out hover:scale-105"
-										style={{
-											width: `${sprint.progressPercentage.blocked}%`,
-											background: "#6B7280",
-										}}
-									>
-										<span className="text-white text-xs font-medium transition-all duration-300 ease-out">
-											{Math.round(
-												sprint.progressPercentage
-													.blocked,
-											)}
-											%
-										</span>
-									</div>
-								)}
-							</div>
-						</div>
-					</div>
-				))}
-			</div>
+  const chartData = [
+    {
+      name: "Completed",
+      value: totalProgress.completed,
+      color: "linear-gradient(135deg, #00D4AA 0%, #00B894 50%, #00A085 100%)",
+      gradientId: "completedGradient",
+    },
+    {
+      name: "Active",
+      value: totalProgress.active,
+      color: "linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B46C1 100%)",
+      gradientId: "activeGradient",
+    },
+    {
+      name: "Blocked",
+      value: totalProgress.blocked,
+      color: "#6B7280",
+      gradientId: "blockedGradient",
+    },
+  ];
 
-			{/* Show More Sprints Button */}
-			{hasMoreSprints && (
-				<div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-					<button
-						onClick={() => setShowAllSprints(!showAllSprints)}
-						className="w-full text-center text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline py-2"
-					>
-						{showAllSprints
-							? `Show Less`
-							: `Show ${sprints.length - 3} More Sprints`}
-					</button>
-				</div>
-			)}
+  // Filter data for pie chart (only show segments with data)
+  const pieChartData = chartData.filter((item) => item.value > 0);
 
-			{/* Clean Tooltip */}
-			{hoveredSprint && (
-				<div
-					className="fixed bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 pointer-events-none min-w-[200px] transition-all duration-200 ease-out"
-					style={{
-						left: tooltipPosition.x + 8,
-						top: tooltipPosition.y - 8,
-						transform: "translateY(-100%)",
-					}}
-				>
-					<div className="p-3">
-						{/* Title */}
-						<h5 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-							{hoveredSprint.title}
-						</h5>
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const total = chartData.reduce((sum, item) => sum + item.value, 0);
+      const percentage = total > 0 ? Math.round((data.value / total) * 100) : 0;
 
-						{/* Task Breakdown */}
-						<div className="space-y-1">
-							<div className="flex items-center justify-between">
-								<div className="flex items-center space-x-1.5">
-									<div
-										className="w-2 h-2 rounded-full"
-										style={{
-											background:
-												"linear-gradient(135deg, #00D4AA 0%, #00B894 100%)",
-										}}
-									/>
-									<span className="text-xs text-gray-600 dark:text-gray-400">
-										Completed
-									</span>
-								</div>
-								<span className="text-xs font-semibold text-gray-900 dark:text-white">
-									{hoveredSprint.progress.completed}
-								</span>
-							</div>
+      return (
+        <div
+          className="border border-gray-200 rounded-lg shadow-xl p-3 min-w-[150px]"
+          style={{
+            backgroundColor: "white",
+            color: "black",
+          }}
+        >
+          <div className="flex items-center gap-x-2 mb-1">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{
+                background:
+                  data.name === "Completed"
+                    ? "linear-gradient(135deg, #00D4AA 0%, #00B894 100%)"
+                    : data.name === "Active"
+                    ? "linear-gradient(135deg, #667eea 0%, #6B46C1 100%)"
+                    : "#6B7280",
+              }}
+            />
+            <span className="font-semibold text-sm" style={{ color: "black" }}>
+              {data.name}
+            </span>
+          </div>
+          <div className="text-sm" style={{ color: "#6B7280" }}>
+            {data.value} tasks ({percentage}%)
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
 
-							<div className="flex items-center justify-between">
-								<div className="flex items-center space-x-1.5">
-									<div
-										className="w-2 h-2 rounded-full"
-										style={{
-											background:
-												"linear-gradient(135deg, #667eea 0%, #6B46C1 100%)",
-										}}
-									/>
-									<span className="text-xs text-gray-600 dark:text-gray-400">
-										Active
-									</span>
-								</div>
-								<span className="text-xs font-semibold text-gray-900 dark:text-white">
-									{hoveredSprint.progress.active}
-								</span>
-							</div>
+  // Custom legend component
+  const CustomLegend = ({ payload }) => (
+    <div className="flex flex-wrap gap-4 justify-center mt-4">
+      {payload.map((entry, index) => (
+        <div key={`legend-${index}`} className="flex items-center gap-x-2">
+          <div
+            className="w-3 h-3 rounded-sm"
+            style={{
+              background:
+                entry.value === "Completed"
+                  ? "linear-gradient(135deg, #00D4AA 0%, #00B894 100%)"
+                  : entry.value === "Active"
+                  ? "linear-gradient(135deg, #667eea 0%, #6B46C1 100%)"
+                  : "#6B7280",
+            }}
+          />
+          <span className="text-xs text-gray-600 dark:text-gray-400">
+            {entry.value}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 
-							<div className="flex items-center justify-between">
-								<div className="flex items-center space-x-1.5">
-									<div
-										className="w-2 h-2 rounded-full"
-										style={{
-											background: "#6B7280",
-										}}
-									/>
-									<span className="text-xs text-gray-600 dark:text-gray-400">
-										Blocked
-									</span>
-								</div>
-								<span className="text-xs font-semibold text-gray-900 dark:text-white">
-									{hoveredSprint.progress.blocked}
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+  return (
+    <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+      {/* Header */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          Sprint Progress
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          See how your sprints are progressing at a glance.
+        </p>
+      </div>
+
+      {/* Pie Chart */}
+      <div className="flex items-center justify-center">
+        <div className="relative w-60 h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              {/* SVG Gradient Definitions */}
+              <defs>
+                <linearGradient
+                  id="completedGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor="#00D4AA" />
+                  <stop offset="50%" stopColor="#00B894" />
+                  <stop offset="100%" stopColor="#00A085" />
+                </linearGradient>
+                <linearGradient id="activeGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#667eea" />
+                  <stop offset="50%" stopColor="#764ba2" />
+                  <stop offset="100%" stopColor="#6B46C1" />
+                </linearGradient>
+                <linearGradient
+                  id="blockedGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor="#6B7280" />
+                  <stop offset="100%" stopColor="#6B7280" />
+                </linearGradient>
+              </defs>
+
+              <Pie
+                data={pieChartData}
+                cx="50%"
+                cy="50%"
+                innerRadius={95}
+                outerRadius={120}
+                dataKey="value"
+                stroke="none"
+                animation={false}
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.gradientId
+                        ? `url(#${entry.gradientId})`
+                        : entry.color
+                    }
+                    className="cursor-pointer"
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+
+          {/* Center text - removed total */}
+        </div>
+      </div>
+
+      {/* Legend */}
+      <CustomLegend
+        payload={chartData.map((item, index) => ({
+          value: item.name,
+          color: item.color,
+          type: "circle",
+        }))}
+      />
+
+      {/* Sprint List */}
+      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          Sprint Breakdown
+        </h4>
+        <div className="space-y-2 max-h-32 overflow-y-auto">
+          {sprints.map((sprint) => (
+            <div
+              key={sprint.id}
+              className="flex items-center justify-between text-sm"
+              onMouseEnter={() => setHoveredSprint(sprint)}
+              onMouseLeave={() => setHoveredSprint(null)}
+            >
+              <span className="text-gray-600 dark:text-gray-400 truncate">
+                {sprint.title}
+              </span>
+              <div className="flex items-center gap-x-2">
+                <span className="text-gray-900 dark:text-white font-medium">
+                  {sprint.progress.completed +
+                    sprint.progress.active +
+                    sprint.progress.blocked}
+                </span>
+                <span className="text-gray-500 dark:text-gray-400">tasks</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default SprintProgressOverview;

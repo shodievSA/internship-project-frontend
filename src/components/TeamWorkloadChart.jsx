@@ -5,12 +5,12 @@ import TeamWorkloadChartSkeleton from "./TeamWorkloadChartSkeleton";
 import ErrorState from "./ErrorState";
 import { User } from "lucide-react";
 
-function TeamWorkloadChart() {
-	const { projectId } = useParams();
-	const { data, error, isLoading } = useTeamWorkload(projectId);
-	const [hoveredIndex, setHoveredIndex] = useState(null);
-	const [progressBarHovered, setProgressBarHovered] = useState(null);
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+function TeamWorkloadChart({ sprintId = null }) {
+  const { projectId } = useParams();
+  const { data, error, isLoading } = useTeamWorkload(projectId, sprintId);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [progressBarHovered, setProgressBarHovered] = useState(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
 	// Function to determine progress bar color based on work distribution percentage
 	const getProgressBarColor = (percentage) => {

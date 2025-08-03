@@ -5,16 +5,18 @@ import {
 	useStopTimer,
 } from "../hooks/useTimeTracker";
 import { fetchTimerStatus } from "../services/timeTrackerService";
+import projectService from "../services/projectService";
 import { useToast } from "./ui/ToastProvider";
 import TimerDisplay from "./TimerDisplay";
 import RecentActivity from "./RecentActivity";
 import TimeTrackingError from "./TimeTrackingError";
 
 export default function TimeTracking({
-	taskTitle,
-	taskStatus,
-	taskPriority,
-	taskId,
+  taskTitle,
+  taskStatus,
+  taskPriority,
+  taskId,
+  projectId,
 }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [apiError, setApiError] = useState(false);
@@ -38,81 +40,69 @@ export default function TimeTracking({
 	const startTimer = useStartTimer();
 	const stopTimer = useStopTimer();
 
-	// Check for API errors
-	useEffect(() => {
-		if (statsError) {
-			setApiError(true);
-		} else {
-			setApiError(false);
-		}
-	}, [statsError]);
+  // Function to fetch task title by ID
+  const fetchTaskTitle = async (taskId) => {
+    try {
+      const response = await projectService.getProject(projectId);
+      const projectDetails = response.projectDetails;
+      const tasks = projectDetails?.tasks || [];
+      const task = tasks.find((t) => t.id === taskId);
+      return task?.title || `Task #${taskId}`;
+    } catch (error) {
+      console.error("Failed to fetch task title:", error);
+      return `Task #${taskId}`;
+    }
+  };
 
-	// Server status check on mount
-	useEffect(() => {
-		async function checkServerStatus() {
-			setIsInitializing(true);
-			try {
-				console.log("Checking server timer status for taskId:", taskId);
-				const status = await fetchTimerStatus();
-				console.log("Server status response:", status);
-				console.log("Status isRunning:", status.isRunning);
-				console.log("Status taskId:", status.taskId);
-				console.log("Current taskId:", taskId);
-				console.log("Status currentEntry:", status.currentEntry);
+  // Check for API errors
+  useEffect(() => {
+    if (statsError) {
+      setApiError(true);
+    } else {
+      setApiError(false);
+    }
+  }, [statsError]);
 
-				if (
-					status.isRunning &&
-					status.currentEntry &&
-					status.currentEntry.taskId === taskId
-				) {
-					console.log(
-						"Timer is running on server, restoring state...",
-					);
-					// Restore timer state from server
-					setIsRunning(true);
-					setCurrentEntry(status.currentEntry);
-					const serverStartTime = new Date(
-						status.currentEntry.startTime,
-					).getTime();
-					setStartTime(serverStartTime);
-					// Calculate elapsed time from server start time
-					const elapsed = Math.floor(
-						(Date.now() - serverStartTime) / 1000,
-					);
-					setLiveElapsed(elapsed);
-					console.log(
-						"Timer state restored - elapsed:",
-						elapsed,
-						"startTime:",
-						serverStartTime,
-					);
-				} else {
-					console.log("No timer running on server for this task");
-					console.log(
-						"Reason: isRunning =",
-						status.isRunning,
-						"currentEntry =",
-						!!status.currentEntry,
-						"taskId match =",
-						status.currentEntry?.taskId === taskId,
-					);
-					// Ensure local state is reset
-					setIsRunning(false);
-					setCurrentEntry(null);
-					setStartTime(null);
-					setLiveElapsed(0);
-				}
-			} catch (error) {
-				console.error("Failed to check server timer status:", error);
-				// Reset local state on error
-				setIsRunning(false);
-				setCurrentEntry(null);
-				setStartTime(null);
-				setLiveElapsed(0);
-			} finally {
-				setIsInitializing(false);
-			}
-		}
+  // Server status check on mount
+  useEffect(() => {
+    async function checkServerStatus() {
+      setIsInitializing(true);
+      try {
+        const status = await fetchTimerStatus();
+
+        if (
+          status.isRunning &&
+          status.currentEntry &&
+          status.currentEntry.taskId === taskId
+        ) {
+          // Restore timer state from server
+          setIsRunning(true);
+          setCurrentEntry(status.currentEntry);
+          const serverStartTime = new Date(
+            status.currentEntry.startTime
+          ).getTime();
+          setStartTime(serverStartTime);
+          // Calculate elapsed time from server start time
+          const elapsed = Math.floor((Date.now() - serverStartTime) / 1000);
+          setLiveElapsed(elapsed);
+        } else {
+          // Ensure local state is reset
+          setIsRunning(false);
+          setCurrentEntry(null);
+          setStartTime(null);
+          setLiveElapsed(0);
+        }
+      } catch (error) {
+        console.error("Failed to check server timer status:", error);
+        // Reset local state on error
+        setIsRunning(false);
+        setCurrentEntry(null);
+        setStartTime(null);
+        setLiveElapsed(0);
+      } finally {
+        setIsInitializing(false);
+      }
+    }
 
 		checkServerStatus();
 	}, [taskId]);
@@ -143,54 +133,60 @@ export default function TimeTracking({
 		} catch (error) {
 			console.error("Failed to start timer:", error);
 
-			// Handle "Timer already running" error specifically
-			if (error.message === "Timer already running") {
-				try {
-					// Check server status to sync local state
-					const status = await fetchTimerStatus();
-					if (status.isRunning && status.taskId === taskId) {
-						// Update local state to match server state
-						setIsRunning(true);
-						setCurrentEntry(status.currentEntry);
-						setStartTime(new Date(status.startTime).getTime());
-						const elapsed = Math.floor(
-							(Date.now() -
-								new Date(status.startTime).getTime()) /
-								1000,
-						);
-						setLiveElapsed(elapsed);
-						// Show success toast since we successfully synced the state
-						showToast({
-							variant: "success",
-							title: "Timer Resumed",
-							message:
-								"Your timer was already running and has been resumed.",
-						});
-						return;
-					} else if (status.isRunning && status.taskId !== taskId) {
-						// Timer is running for a different task
-						showToast({
-							variant: "error",
-							title: "Timer Already Running",
-							message:
-								"Please stop the current timer before starting a new one.",
-						});
-						return;
-					}
-				} catch (statusError) {
-					console.error(
-						"Failed to check server status after timer conflict:",
-						statusError,
-					);
-					showToast({
-						variant: "error",
-						title: "Timer Error",
-						message:
-							"Unable to check timer status. Please try again.",
-					});
-					return;
-				}
-			}
+      // Handle "Timer already running" error specifically
+      if (
+        error.message === "Timer already running" ||
+        error.message.includes("already running") ||
+        error.message.toLowerCase().includes("already running") ||
+        error.message.includes("409") ||
+        error.message.includes("Conflict")
+      ) {
+        try {
+          // Check server status to sync local state
+          const status = await fetchTimerStatus();
+          if (status.isRunning && status.taskId === taskId) {
+            // Update local state to match server state
+            setIsRunning(true);
+            setCurrentEntry(status.currentEntry);
+            setStartTime(new Date(status.startTime).getTime());
+            const elapsed = Math.floor(
+              (Date.now() - new Date(status.startTime).getTime()) / 1000
+            );
+            setLiveElapsed(elapsed);
+            // Show success toast since we successfully synced the state
+            showToast({
+              variant: "success",
+              title: "Timer Resumed",
+              message: "Your timer was already running and has been resumed.",
+            });
+            return;
+          } else if (status.isRunning && status.taskId !== taskId) {
+            // Timer is running for a different task
+            // Get the running task ID
+            const runningTaskId = status.currentEntry?.taskId || status.taskId;
+
+            // Get the task title for better user experience
+            const runningTaskTitle = await fetchTaskTitle(runningTaskId);
+            showToast({
+              variant: "error",
+              title: "Timer Already Running",
+              message: `"${runningTaskTitle}" is currently running. Please stop it before starting a new timer.`,
+            });
+            return;
+          }
+        } catch (statusError) {
+          console.error(
+            "Failed to check server status after timer conflict:",
+            statusError
+          );
+          showToast({
+            variant: "error",
+            title: "Timer Error",
+            message: "Unable to check timer status. Please try again.",
+          });
+          return;
+        }
+      }
 
 			// Show error for other types of errors
 			showToast({
