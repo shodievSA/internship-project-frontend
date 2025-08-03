@@ -103,14 +103,11 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 									<ul className="flex flex-col gap-y-1 font-medium text-sm px-2">
 										<NavLink
 											to={"/projects"}
-											className={({
-												isActive,
-											}) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
-											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[border] duration-300 border ${
-												isActive
-													? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
-													: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+											className={({ isActive }) => `hover:dark:bg-violet-900 hover:bg-indigo-100 
+											dark:text-neutral-400 hover:dark:text-white hover:indigo-600 flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[border] duration-300 border-2 ${ isActive
+												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900 dark:border-violet-600 text-indigo-600 dark:text-violet-100"
+												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
 											<House className="w-5 h-5" />
@@ -118,10 +115,10 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/organizer"}
-											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
-											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
-												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+											className={({ isActive }) => `hover:dark:bg-violet-900 hover:bg-indigo-100
+											dark:text-neutral-400 hover:dark:text-white hover:text-indigo-600 flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900 dark:border-violet-600 text-indigo-600 dark:text-violet-100"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
@@ -130,10 +127,10 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/notifications"}
-											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
-											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
-												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+											className={({ isActive }) => `hover:dark:bg-violet-900 hover:bg-indigo-100 
+											dark:text-neutral-400 hover:dark:text-white hover:text-indigo-600 flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900 dark:border-violet-600 text-indigo-600 dark:text-violet-100"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
@@ -164,10 +161,10 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 										</NavLink>
 										<NavLink
 											to={"/invites"}
-											className={({ isActive }) => `hover:dark:bg-neutral-900 hover:bg-[rgb(235,235,235)] 
-											dark:text-neutral-400 hover:dark:text-white hover:text-black flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border ${isActive
-												? "bg-[rgb(235,235,235)] dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-black dark:text-white"
+											className={({ isActive }) => `hover:dark:bg-violet-900 hover:bg-indigo-100 
+											dark:text-neutral-400 hover:dark:text-white hover:text-indigo-600 flex items-center gap-x-3 
+											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900 dark:border-violet-600 text-indigo-600 dark:text-violet-100"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
 										>
