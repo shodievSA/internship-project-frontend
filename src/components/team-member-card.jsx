@@ -1,23 +1,20 @@
 import { useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useProject } from "../context/ProjectContext";
 import { StatusBadge } from "./status-badge";
 import { ActionMenu } from "./action-menu";
-import { useAuthContext } from "../context/AuthContext";
-import { Mail, MoreVertical, User, Pickaxe, Activity } from "lucide-react";
+import { Mail, MoreVertical, Pickaxe, Activity } from "lucide-react";
 import { TeamMemberProductivityModal } from "./TeamMemberProductivityModal";
 
 export function TeamMemberCard({ member }) {
-	const navigate = useNavigate();
-	const { projectId } = useParams();
-	const { user } = useAuthContext();
+
+	const { currentMemberId } = useProject();
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showProductivityModal, setShowProductivityModal] = useState(false);
 
 	const buttonRef = useRef(null);
 
-	// Check if this is the current user's card
-	const isCurrentUser = user?.id === member.id;
+	const isCurrentUser = currentMemberId === member.id;
 
 	const handleMenuToggle = (e) => {
 		e.stopPropagation();
