@@ -10,14 +10,11 @@ const BASE = `${SERVER_BASE_URL}/api/v1/projects`;
  * @returns {Promise<Object>} Member productivity data
  */
 export async function getMyProductivity(projectId, sprintId = null) {
-  console.log("PROJECT ID IN FRONTEND", projectId);
-  console.log("SPRINT ID IN FRONTEND", sprintId);
-
-	// Ensure projectId is a valid number
-	const validProjectId = parseInt(projectId);
-	if (isNaN(validProjectId)) {
-		throw new Error("Invalid project ID");
-	}
+  // Ensure projectId is a valid number
+  const validProjectId = parseInt(projectId);
+  if (isNaN(validProjectId)) {
+    throw new Error("Invalid project ID");
+  }
 
   // Build query parameters
   const queryParams = new URLSearchParams();
@@ -29,32 +26,27 @@ export async function getMyProductivity(projectId, sprintId = null) {
 		queryParams.toString() ? `?${queryParams.toString()}` : ""
 	}`;
 
-	console.log("REQUEST URL:", url);
+  const res = await fetch(url, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-	const res = await fetch(url, {
-		credentials: "include",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	console.log("RESPONSE STATUS:", res.status);
-	console.log("RESPONSE OK:", res.ok);
-
-	if (!res.ok) {
-		try {
-			const error = await res.json();
-			console.log("ERROR RESPONSE:", error);
-			throw new Error(
-				error.message ||
-					error.error ||
-					`Failed to get productivity data (${res.status})`,
-			);
-		} catch (parseError) {
-			console.log("ERROR PARSING RESPONSE:", parseError);
-			throw new Error(`Failed to get productivity data (${res.status})`);
-		}
-	}
+  if (!res.ok) {
+    try {
+      const error = await res.json();
+      console.log("ERROR RESPONSE:", error);
+      throw new Error(
+        error.message ||
+          error.error ||
+          `Failed to get productivity data (${res.status})`
+      );
+    } catch (parseError) {
+      console.log("ERROR PARSING RESPONSE:", parseError);
+      throw new Error(`Failed to get productivity data (${res.status})`);
+    }
+  }
 
 	const data = await res.json();
 	console.log("SUCCESS RESPONSE:", data);

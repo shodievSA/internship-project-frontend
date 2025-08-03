@@ -162,11 +162,13 @@ export default function TimeTracking({
             return;
           } else if (status.isRunning && status.taskId !== taskId) {
             // Timer is running for a different task
-            // Get the running task ID
-            const runningTaskId = status.currentEntry?.taskId || status.taskId;
 
-            // Get the task title for better user experience
-            const runningTaskTitle = await fetchTaskTitle(runningTaskId);
+            // Get the running task title from the current entry
+            const runningTaskTitle =
+              status.currentEntry?.task?.title ||
+              status.currentEntry?.taskTitle ||
+              `Task #${status.currentEntry?.taskId || status.taskId}`;
+
             showToast({
               variant: "error",
               title: "Timer Already Running",
