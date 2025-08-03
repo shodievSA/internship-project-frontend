@@ -75,7 +75,7 @@ function ProjectLayoutHeader() {
 			<div className="flex justify-between items-center gap-y-6 gap-x-6">
 				<div className="flex items-center gap-x-8">
 					<div className="flex items-center justify-between md:justify-start gap-x-4">
-						<h1 className="text-xl md:text-xl font-semibold">
+						<h1 className="text-lg font-medium">
 							{metaData.title}
 						</h1>
 						<div className={`${statusColors[metaData.status]} status-badge px-3 py-1 text-xs`}>
@@ -108,11 +108,10 @@ function ProjectLayoutHeader() {
 						</div>
 					</div>
 				</div>
-				<div className="flex items-center gap-x-5">
+				<div className="flex gap-x-5">
 					<div id="settings-modal" className="relative hidden md:block">
 						<button
-							className="dark:hover:bg-neutral-900 hover:bg-slate-50 
-							p-2.5 rounded-lg"
+							className="p-2 dark:hover:bg-neutral-900 hover:bg-slate-50 rounded-lg"
 							onClick={() => setSettingsButtonClicked(true)}
 						>
 							<Settings className="w-5 h-5" />

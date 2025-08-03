@@ -90,13 +90,11 @@ function ProjectSprintHeader({
 						{sprintMetaData.title}
 					</h1>
 				</div>
-				<div className="flex gap-x-6">
+				<div className="flex gap-x-5">
 					<div ref={settingsMenuRef} className="relative">
 						<button
 							className="p-2 hover:bg-slate-50 dark:hover:bg-neutral-900 rounded-lg"
-							onClick={() =>
-								setSettingsButtonClicked(true)
-							}
+							onClick={() => setSettingsButtonClicked(true)}
 						>
 							<Settings className="w-5 h-5" />
 						</button>

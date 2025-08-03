@@ -9,6 +9,7 @@ import { Calendar, Filter } from "lucide-react";
 import SprintPreview from "../components/SprintPreview";
 
 function ProjectSprints() {
+
 	const { sprints, projectLoaded } = useProject();
 
 	const [searchTerm, setSearchTerm] = useState("");
@@ -16,39 +17,39 @@ function ProjectSprints() {
 	const [dateFilter, setDateFilter] = useState("all");
 
 	const filteredSprints = useMemo(() => {
+
 		if (!projectLoaded || !sprints) return [];
 
 		return sprints.filter((sprint) => {
+
 			const matchesSearch = sprint.title
 				.toLowerCase()
 				.includes(searchTerm.trim().toLowerCase());
+
 			const matchesStatus =
 				statusFilter === "all" || sprint.status === statusFilter;
 
 			return matchesSearch && matchesStatus;
+
 		});
+
 	}, [projectLoaded, sprints, searchTerm, statusFilter]);
 
 	function clearFilters() {
+
 		setSearchTerm("");
 		setStatusFilter("all");
 		setDateFilter("all");
+
 	}
 
-	if (sprints.length === 0)
-		return (
-			<EmptyState
-				message={
-					"All quiet on the project front. Time to give it something to do!"
-				}
-			/>
-		);
+	if (sprints.length === 0) return <EmptyState message={"All quiet on the project front. Time to give it something to do!"} />
 
 	return (
 		<div className="grow">
 			<div className="flex flex-col h-full">
 				<div className="flex flex-col lg:flex-row justify-between items-stretch gap-4 mb-5">
-					<div className="flex justify-start w-full lg:w-1/3">
+					<div className="flex justify-start w-full lg:w-1/4">
 						<div className="relative w-full">
 							<SearchBar
 								value={searchTerm}
