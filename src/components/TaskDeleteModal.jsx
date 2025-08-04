@@ -6,16 +6,24 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { AlertTriangle } from "lucide-react";
 
-function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
-	const { setTasks, tasks } = useProject();
+function TaskDeleteModal({ 
+	projectId, 
+	taskId, 
+	taskTitle, 
+	closeModal 
+}) {
+
+	const { setTasks } = useProject();
 	const { showToast } = useToast();
 
 	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 
 	async function deleteTask() {
+
 		setTaskBeingDeleted(true);
 
 		try {
+
 			await projectService.deleteTask(projectId, taskId);
 
 			setTasks((prevTasks) =>
@@ -28,13 +36,17 @@ function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 			});
 
 			closeModal(false);
+
 		} catch (err) {
-			console.log(
-				"The following error occured while deleting task: " + err,
-			);
+
+			console.log("The following error occured while deleting task: " + err);
+
 		} finally {
+
 			setTaskBeingDeleted(false);
+
 		}
+
 	}
 
 	return (
@@ -43,6 +55,7 @@ function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 			titleIcon={<AlertTriangle className="text-red-800" />}
 			title="Delete Task"
 			subtitle={`Are you sure you want to delete the task "${taskTitle}"?`}
+			closeModal={closeModal}
 		>
 			<div className="flex flex-col px-7 pb-7 gap-y-7">
 				<div>
