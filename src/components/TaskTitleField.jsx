@@ -5,7 +5,13 @@ import Input from "./ui/Input";
 import { Asterisk, Sparkles, CircleAlert, Undo2 } from "lucide-react";
 import Button from "./ui/Button";
 
-function TaskTitleField({ taskDescription, value, setValue, disabled }) {
+function TaskTitleField({ 
+	taskDescription, 
+	value, 
+	setValue, 
+	disabled 
+}) {
+
 	const { showToast } = useToast();
 
 	const [showError, setShowError] = useState(false);
@@ -14,25 +20,34 @@ function TaskTitleField({ taskDescription, value, setValue, disabled }) {
 	const [previousTaskTitle, setPreviousTaskTitle] = useState(() => value);
 
 	async function generateTitle() {
+
 		setLoading(true);
 		setPreviousTaskTitle(value);
 
 		try {
-			const { generatedTaskTitle } =
-				await aiService.generateTaskTitle(taskDescription);
+
+			const { generatedTaskTitle } = await aiService.generateTaskTitle(taskDescription);
 
 			setGeneratedWithAi(true);
 			setValue(generatedTaskTitle);
+
 		} catch (err) {
+
 			showToast({ variant: "failure", title: err.message });
+
 		} finally {
+
 			setLoading(false);
+
 		}
+
 	}
 
 	function undoAiChanges() {
+
 		setValue(previousTaskTitle);
 		setGeneratedWithAi(false);
+		
 	}
 
 	return (
