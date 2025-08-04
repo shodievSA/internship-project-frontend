@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useThemeContext } from "../context/ThemeContext";
-import ReactMarkdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import {
@@ -24,9 +21,8 @@ import TaskDetailsModal from "./TaskDetailsModal";
 
 function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 
-	const { id, title, description, priority, status, assignedTo, deadline } = task;
+	const { id, title, priority, status, assignedTo, deadline } = task;
 
-	const { themeMode } = useThemeContext();
 	const { projectId } = useParams();
 	const { showToast } = useToast();
 
@@ -110,17 +106,8 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 				cursor-pointer"
 				onClick={() => setShowTaskDetails(true)}
 			>
-				<div className="flex flex-col gap-y-1">
-					<div className="flex items-start">
-						<h1 className="font-semibold">{title}</h1>
-					</div>
-					<ReactMarkdown 
-						className={`${themeMode} text-neutral-700 dark:text-neutral-400 max-h-10 
-						text-ellipsis overflow-hidden text-sm`}  
-						rehypePlugins={[rehypeHighlight]}
-					>
-						{description}
-					</ReactMarkdown>
+				<div>
+					<h1 className="font-semibold">{title}</h1>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">

@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useThemeContext } from "../context/ThemeContext";
-import ReactMarkdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
 import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { formatIsoDate } from "../utils/formatIsoDate";
@@ -22,9 +19,7 @@ import {
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
 
-	const { id, title, description, priority, status, assignedBy, deadline } = task;
-
-	const { themeMode } = useThemeContext();
+	const { id, title, priority, status, assignedBy, deadline } = task;
 
 	const { projectId } = useParams();
 	const { showToast } = useToast();
@@ -83,17 +78,8 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 				cursor-pointer"
 				onClick={() => setShowTaskDetailsModal(true)}
 			>
-				<div className="flex flex-col gap-y-1">
-					<div className="flex items-start">
-						<h1 className="font-semibold">{title}</h1>
-					</div>
-					<ReactMarkdown 
-						className={`${themeMode} text-neutral-700 dark:text-neutral-400 max-h-10 
-						text-ellipsis overflow-hidden text-sm`} 
-						rehypePlugins={[rehypeHighlight]}
-					>
-						{description}
-					</ReactMarkdown>
+				<div>
+					<h1 className="font-semibold">{title}</h1>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
