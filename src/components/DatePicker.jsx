@@ -1,7 +1,14 @@
 import { useRef } from "react";
 import { Asterisk, Calendar } from "lucide-react";
 
-function DatePicker({ label, disabled, value, setValue, required = false }) {
+function DatePicker({ 
+	label, 
+	disabled, 
+	value, 
+	setValue, 
+	required = false 
+}) {
+
 	const dateInput = useRef();
 
 	return (
@@ -22,10 +29,8 @@ function DatePicker({ label, disabled, value, setValue, required = false }) {
 					className="dark:bg-neutral-950 dark:border-neutral-800 bg-white rounded-md 
 					text-sm border-[1px] py-2 px-4 outline-none pl-10 w-full
 					disabled:opacity-50 disabled:cursor-none cursor-text"
-					onChange={(e) =>
-						setValue(e.target.value + "T00:00:00+05:00")
-					}
-					value={value ? value.split("T")[0] : ""}
+					onChange={(e) => setValue(e.target.value)} // "T00:00:00+05:00"
+					value={value ? value : ""}
 				/>
 				<Calendar
 					onClick={() => dateInput.current.showPicker()}
@@ -35,6 +40,7 @@ function DatePicker({ label, disabled, value, setValue, required = false }) {
 			</div>
 		</div>
 	);
+
 }
 
 export default DatePicker;

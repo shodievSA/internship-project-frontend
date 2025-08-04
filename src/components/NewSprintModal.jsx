@@ -15,8 +15,8 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 
 	const [sprintTitle, setSprintTitle] = useState("");
 	const [sprintDescription, setSprintDescription] = useState("");
-	const [sprintStartDate, setSprintStartDate] = useState("");
-	const [sprintEndDate, setSprintEndDate] = useState("");
+	const [sprintStartDate, setSprintStartDate] = useState(null);
+	const [sprintEndDate, setSprintEndDate] = useState(null);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 	const [sprintBeingCreated, setSprintBeingCreated] = useState(false);
 

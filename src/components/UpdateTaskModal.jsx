@@ -4,7 +4,6 @@ import { useToast } from "./ui/ToastProvider";
 import projectService from "../services/projectService";
 import { taskPriorityOptions } from "../utils/constant";
 import AiEditor from "./AiEditor";
-import InputField from "./InputField";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import SelectField from "./SelectField";
@@ -14,6 +13,7 @@ import taskService from "../services/taskService";
 import TaskTitleField from "./TaskTitleField";
 
 function UpdateTaskModal({ projectId, task, team, closeModal }) {
+
 	const {
 		id: taskId,
 		title,
@@ -30,14 +30,14 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
-	const [newTaskDeadline, setNewTaskDeadline] = useState(deadline);
+	const [newTaskDeadline, setNewTaskDeadline] = useState(() => deadline.split("T")[0]);
 	const [newTaskFiles, setNewTaskFiles] = useState([]);
-	const [newTaskAssignedToId, setNewTaskAssignedToId] =
-		useState(assignedToId);
+	const [newTaskAssignedToId, setNewTaskAssignedToId] = useState(assignedToId);
 	const [newTaskPriority, setNewTaskPriority] = useState(priority);
 	const [filesFetched, setFilesFetched] = useState(false);
 
 	const fileUpdates = useMemo(() => {
+
 		if (!filesFetched) return { filesToAdd: [], filesToDelete: [] };
 
 		const oldFileIds = filesMetaData.map((file) => file.id);
@@ -51,10 +51,12 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		);
 
 		return { filesToAdd, filesToDelete };
+
 	}, [newTaskFiles, filesMetaData, filesFetched]);
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedTaskProps = useMemo(() => {
+
 		const updatedProps = getUpdatedTaskProps({
 			newTaskTitle: newTaskTitle,
 			oldTaskTitle: title,
@@ -69,6 +71,7 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		});
 
 		return updatedProps;
+
 	}, [
 		newTaskTitle,
 		newTaskDescription,
@@ -79,23 +82,30 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
+
 		const allowToSubmit = shouldEnableSubmitButton(
 			updatedTaskProps,
 			fileUpdates,
 		);
+
 		return allowToSubmit ? false : true;
+
 	}, [updatedTaskProps, fileUpdates]);
 
 	useEffect(() => {
+
 		async function fetchPresignedUrls() {
+
 			const { fileUrls } = await taskService.getTaskFiles(
 				projectId,
 				taskId,
 			);
 			await fetchFilesFromPresignedUrls(fileUrls);
+
 		}
 
 		async function fetchFilesFromPresignedUrls(fileUrls) {
+
 			const responses = await Promise.all(
 				fileUrls.map((file) => fetch(file.url)),
 			);
@@ -116,12 +126,15 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 			);
 
 			setFilesFetched(true);
+
 		}
 
 		fetchPresignedUrls();
+
 	}, []);
 
 	async function updateTask() {
+
 		const formData = prepareDataForSubmission(
 			updatedTaskProps,
 			fileUpdates,
@@ -157,14 +170,17 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		} finally {
 			setTaskBeingUpdated(false);
 		}
+
 	}
 
 	return (
-		<Modal title="Edit Task" size="lg" closeModal={closeModal}>
-			<div
-				className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
-			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800"
-			>
+		<Modal 
+			title="Edit Task" 
+			size="lg" 
+			closeModal={closeModal}
+		>
+			<div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
+			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex flex-col gap-y-8">
 					<TaskTitleField
 						taskDescription={newTaskDescription}
