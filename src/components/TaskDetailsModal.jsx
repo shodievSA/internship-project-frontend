@@ -260,7 +260,8 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													return (
 														<div
 															key={file.fileName}
-															className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200"
+															className="flex py-2 px-4 rounded-lg gap-x-3 border border-neutral-200
+															dark:border-neutral-800"
 														>
 															<div className="flex items-center">
 																<File className="w-5 h-5" />
@@ -273,7 +274,8 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 															</div>
 															<div
 																onClick={() => downloadFile(file)}
-																className="flex items-center ml-auto px-2 py-1 rounded-lg hover:bg-neutral-100 cursor-pointer"
+																className="flex items-center ml-auto px-2 py-1 rounded-lg hover:bg-neutral-100 
+																hover:dark:bg-neutral-900 cursor-pointer"
 															>
 																<Download className="w-5 h-5" />
 															</div>
