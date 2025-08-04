@@ -15,33 +15,33 @@ import PriorityTaskChartSkeleton from "../components/PriorityTaskChartSkeleton";
 import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
 
 function Summary() {
-  const navigate = useNavigate();
-  const { projectId } = useParams();
-  const [selectedSprintId, setSelectedSprintId] = useState(null);
-  const [isLoadingSprintData, setIsLoadingSprintData] = useState(false);
+	const navigate = useNavigate();
+	const { projectId } = useParams();
+	const [selectedSprintId, setSelectedSprintId] = useState(null);
+	const [isLoadingSprintData, setIsLoadingSprintData] = useState(false);
 
-  // Fetch all sprints and default sprint
-  const { data: sprintsData } = useAllSprints(projectId);
-  const { data: defaultSprintData } = useDefaultSprint(projectId);
+	// Fetch all sprints and default sprint
+	const { data: sprintsData } = useAllSprints(projectId);
+	const { data: defaultSprintData } = useDefaultSprint(projectId);
 
-  // Set default sprint when data is loaded
-  useEffect(() => {
-    if (defaultSprintData?.defaultSprint) {
-      setSelectedSprintId(defaultSprintData.defaultSprint.id);
-    }
-  }, [defaultSprintData]);
+	// Set default sprint when data is loaded
+	useEffect(() => {
+		if (defaultSprintData?.defaultSprint) {
+			setSelectedSprintId(defaultSprintData.defaultSprint.id);
+		}
+	}, [defaultSprintData]);
 
-  const sprints = sprintsData?.sprints || [];
+	const sprints = sprintsData?.sprints || [];
 
-  const handleSprintChange = (sprintId) => {
-    setIsLoadingSprintData(true);
-    setSelectedSprintId(sprintId);
+	const handleSprintChange = (sprintId) => {
+		setIsLoadingSprintData(true);
+		setSelectedSprintId(sprintId);
 
-    // Add a small delay to show the skeleton loading state
-    setTimeout(() => {
-      setIsLoadingSprintData(false);
-    }, 500);
-  };
+		// Add a small delay to show the skeleton loading state
+		setTimeout(() => {
+			setIsLoadingSprintData(false);
+		}, 500);
+	};
 
 	return (
 		<div className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 py-6 pb-16 overflow-y-auto">
@@ -59,48 +59,44 @@ function Summary() {
 					</Button>
 					<h1 className="text-xl font-semibold">Project Summary</h1>
 				</div>
+				<SprintSelectionDropdown
+					sprints={sprints}
+					selectedSprintId={selectedSprintId}
+					onSprintChange={handleSprintChange}
+				/>
 			</header>
 
-      <div className="grid grid-cols-1 gap-6 px-8">
-        {/* Sprint Selection Dropdown */}
-        <div className="flex justify-end">
-          <SprintSelectionDropdown
-            sprints={sprints}
-            selectedSprintId={selectedSprintId}
-            onSprintChange={handleSprintChange}
-          />
-        </div>
+			<div className="grid grid-cols-1 gap-6 px-8">
+				{/* Show skeleton or actual component based on loading state */}
+				{isLoadingSprintData ? (
+					<RecentActivityStatsSkeleton />
+				) : (
+					<RecentActivityStats sprintId={selectedSprintId} />
+				)}
+			</div>
 
-        {/* Show skeleton or actual component based on loading state */}
-        {isLoadingSprintData ? (
-          <RecentActivityStatsSkeleton />
-        ) : (
-          <RecentActivityStats sprintId={selectedSprintId} />
-        )}
-      </div>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
+				{isLoadingSprintData ? (
+					<ProjectStatusOverviewSkeleton />
+				) : (
+					<ProjectStatusOverview sprintId={selectedSprintId} />
+				)}
+				{isLoadingSprintData ? (
+					<TeamWorkloadChartSkeleton />
+				) : (
+					<TeamWorkloadChart sprintId={selectedSprintId} />
+				)}
+			</div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
-        {isLoadingSprintData ? (
-          <ProjectStatusOverviewSkeleton />
-        ) : (
-          <ProjectStatusOverview sprintId={selectedSprintId} />
-        )}
-        {isLoadingSprintData ? (
-          <TeamWorkloadChartSkeleton />
-        ) : (
-          <TeamWorkloadChart sprintId={selectedSprintId} />
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 px-8">
-        {isLoadingSprintData ? (
-          <PriorityTaskChartSkeleton />
-        ) : (
-          <PriorityTaskChart sprintId={selectedSprintId} />
-        )}
-      </div>
-    </div>
-  );
+			<div className="grid grid-cols-1 gap-6 px-8">
+				{isLoadingSprintData ? (
+					<PriorityTaskChartSkeleton />
+				) : (
+					<PriorityTaskChart sprintId={selectedSprintId} />
+				)}
+			</div>
+		</div>
+	);
 }
 
 export default Summary;
