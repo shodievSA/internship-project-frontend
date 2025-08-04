@@ -76,7 +76,6 @@ function Modal({
 								<button
 									onClick={(e) => {
 										e.stopPropagation();
-										console.log("Close button clicked");
 										closeModal();
 									}}
 									className="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-neutral-900"

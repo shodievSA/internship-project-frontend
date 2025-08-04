@@ -30,8 +30,8 @@ function EditSprintModal({
 
 	const [newSprintTitle, setNewSprintTitle] = useState(title);
 	const [newSprintDescription, setNewSprintDescription] = useState(description);
-	const [newSprintStartDate, setNewSprintStartDate] = useState(startDate);
-	const [newSprintEndDate, setNewSprintEndDate] = useState(endDate);
+	const [newSprintStartDate, setNewSprintStartDate] = useState(() => startDate.split("T")[0]);
+	const [newSprintEndDate, setNewSprintEndDate] = useState(() => endDate.split("T")[0]);
 	const [newSprintStatus, setNewSprintStatus] = useState(status);
 	const [sprintBeingUpdated, setSprintBeingUpdated] = useState(false);
 

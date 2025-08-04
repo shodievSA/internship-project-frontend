@@ -114,7 +114,11 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 					<div className="flex items-start">
 						<h1 className="font-semibold">{title}</h1>
 					</div>
-					<ReactMarkdown className={themeMode} rehypePlugins={[rehypeHighlight]}>
+					<ReactMarkdown 
+						className={`${themeMode} text-neutral-700 dark:text-neutral-400 max-h-10 
+						text-ellipsis overflow-hidden text-sm`}  
+						rehypePlugins={[rehypeHighlight]}
+					>
 						{description}
 					</ReactMarkdown>
 				</div>
