@@ -6,7 +6,7 @@ import Button from "./ui/Button";
 import TimePicker from "./TimePicker";
 import MonthCalendar from "./MonthCalendar";
 import AiEditor from "./AiEditor";
-import { Clock, Calendar } from "lucide-react";
+import { Clock, Calendar, X } from "lucide-react";
 
 function LogTimeModal({ taskId, closeModal }) {
 	const { showToast } = useToast();
@@ -101,7 +101,7 @@ function LogTimeModal({ taskId, closeModal }) {
 				startTimeParts.hours,
 				startTimeParts.minutes,
 				0,
-				0,
+				0
 			);
 
 			const endDateTime = new Date(endDate);
@@ -109,7 +109,7 @@ function LogTimeModal({ taskId, closeModal }) {
 				endTimeParts.hours,
 				endTimeParts.minutes,
 				0,
-				0,
+				0
 			);
 
 			// Validate that end time is after start time
@@ -127,7 +127,7 @@ function LogTimeModal({ taskId, closeModal }) {
 				taskId,
 				startDateTime.toISOString(),
 				endDateTime.toISOString(),
-				note,
+				note
 			);
 
 			showToast({
@@ -158,15 +158,17 @@ function LogTimeModal({ taskId, closeModal }) {
 	return (
 		<Modal
 			title="Log Time"
-			titleIcon={<Clock className="w-5 h-5" />}
+			titleIcon={<Clock className="w-5 h-2" />}
 			customWidth={400}
 			closeModal={closeModal}
+			size="sm"
 			showOverlay="light"
+			alignTop={true}
 		>
-			<div className="flex flex-col px-6 pb-6 gap-y-6">
+			<div className="flex flex-col px-6 pb-3 gap-y-3">
 				{/* Start Date and Time Section */}
-				<div className="flex flex-col gap-y-3">
-					<h3 className="text-base font-semibold text-gray-900 dark:text-white">
+				<div className="flex flex-col gap-y-2">
+					<h3 className="text-sm font-medium text-gray-900 dark:text-white">
 						Start date *
 					</h3>
 					<div className="flex gap-x-3 items-stretch">
@@ -177,11 +179,11 @@ function LogTimeModal({ taskId, closeModal }) {
 								onClick={() =>
 									setShowStartCalendar(!showStartCalendar)
 								}
-								className="w-full h-10 text-left dark:bg-neutral-950 dark:border-neutral-800 bg-white rounded-md 
-                                text-sm border-[1px] px-4 outline-none pl-10 flex items-center
+								className="w-full h-9 text-left dark:bg-neutral-950 dark:border-neutral-800 bg-white rounded-md 
+                                text-sm border-[1px] px-3 outline-none pl-9 flex items-center
                                 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:border-gray-400 dark:hover:border-gray-600"
 							>
-								<Calendar className="w-4 h-4 absolute left-3 text-gray-400" />
+								<Calendar className="w-4 h-4 absolute left-2.5 text-gray-400" />
 								<span
 									className={
 										startDate
@@ -221,8 +223,8 @@ function LogTimeModal({ taskId, closeModal }) {
 				</div>
 
 				{/* End Date and Time Section */}
-				<div className="flex flex-col gap-y-3">
-					<h3 className="text-base font-semibold text-gray-900 dark:text-white">
+				<div className="flex flex-col gap-y-2">
+					<h3 className="text-sm font-medium text-gray-900 dark:text-white">
 						End date *
 					</h3>
 					<div className="flex gap-x-3 items-stretch">
@@ -233,11 +235,11 @@ function LogTimeModal({ taskId, closeModal }) {
 								onClick={() =>
 									setShowEndCalendar(!showEndCalendar)
 								}
-								className="w-full h-10 text-left dark:bg-neutral-950 dark:border-neutral-800 bg-white rounded-md 
-                                text-sm border-[1px] px-4 outline-none pl-10 flex items-center
+								className="w-full h-9 text-left dark:bg-neutral-950 dark:border-neutral-800 bg-white rounded-md 
+                                text-sm border-[1px] px-3 outline-none pl-9 flex items-center
                                 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:border-gray-400 dark:hover:border-gray-600"
 							>
-								<Calendar className="w-4 h-4 absolute left-3 text-gray-400" />
+								<Calendar className="w-4 h-4 absolute left-2.5 text-gray-400" />
 								<span
 									className={
 										endDate
@@ -277,8 +279,8 @@ function LogTimeModal({ taskId, closeModal }) {
 				</div>
 
 				{/* Note Section */}
-				<div className="flex flex-col gap-y-3">
-					<h3 className="text-base font-semibold text-gray-900 dark:text-white">
+				<div className="flex flex-col gap-y-2">
+					<h3 className="text-sm font-medium text-gray-900 dark:text-white">
 						Note *
 					</h3>
 					<div className="flex-1">
@@ -287,19 +289,21 @@ function LogTimeModal({ taskId, closeModal }) {
 							placeholder="What are you working on?"
 							value={note}
 							setValue={setNote}
-							rows={3}
+							rows={1}
 							disabled={isSubmitting}
 							showEnhance={false}
+							height="h-20"
 						/>
 					</div>
 				</div>
 
 				{/* Buttons */}
-				<div className="grid grid-cols-2 gap-4 pt-2">
+				<div className="flex justify-end gap-3 pt-1">
 					<Button
 						variant="secondary"
 						onClick={closeModal}
 						disabled={isSubmitting}
+						size="sm"
 					>
 						Cancel
 					</Button>
@@ -307,6 +311,7 @@ function LogTimeModal({ taskId, closeModal }) {
 						onClick={handleSubmit}
 						loading={isSubmitting}
 						disabled={submitButtonDisabled || isSubmitting}
+						size="sm"
 					>
 						Log Time
 					</Button>

@@ -41,7 +41,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 			try {
 				const { fileUrls } = await taskService.getTaskFiles(
 					projectId,
-					taskId,
+					taskId
 				);
 				setFileUrls(fileUrls);
 			} catch (err) {
@@ -85,25 +85,51 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 		<Modal size="lg" title={title} closeModal={closeModal}>
 			<div className="flex flex-col gap-y-5 px-5 pb-5">
 				{/* Tab Switcher */}
-				<div className="flex gap-x-2 mb-4">
+				<div className="flex bg-neutral-100 dark:bg-neutral-900 rounded-lg p-1 mb-4">
 					<button
-						className={`px-4 py-2 rounded-t-lg font-medium ${
+						className={`flex items-center gap-x-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
 							activeTab === "details"
-								? "bg-neutral-200 dark:bg-neutral-800"
-								: "bg-neutral-100 dark:bg-neutral-900"
+								? "bg-white dark:bg-neutral-800 text-black dark:text-white shadow-sm"
+								: "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
 						}`}
 						onClick={() => handleTabChange("details")}
 					>
+						<svg
+							className="w-4 h-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+							/>
+						</svg>
 						Details
 					</button>
 					<button
-						className={`px-4 py-2 rounded-t-lg font-medium ${
+						className={`flex items-center gap-x-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
 							activeTab === "time"
-								? "bg-neutral-200 dark:bg-neutral-800"
-								: "bg-neutral-100 dark:bg-neutral-900"
+								? "bg-white dark:bg-neutral-800 text-black dark:text-white shadow-sm"
+								: "text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"
 						}`}
 						onClick={() => handleTabChange("time")}
 					>
+						<svg
+							className="w-4 h-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
 						Time Log
 					</button>
 				</div>
@@ -204,7 +230,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													<Calendar className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
 													<span className="mt-0.5">
 														{formatIsoDate(
-															createdAt,
+															createdAt
 														)}
 													</span>
 												</div>
@@ -219,7 +245,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													</div>
 													<span className="mt-0.5">
 														{formatIsoDate(
-															deadline,
+															deadline
 														)}
 													</span>
 												</div>
@@ -234,7 +260,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													</div>
 													<span className="mt-0.5">
 														{formatIsoDate(
-															updatedAt,
+															updatedAt
 														)}
 													</span>
 												</div>
@@ -276,7 +302,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 															<div
 																onClick={() =>
 																	downloadFile(
-																		file,
+																		file
 																	)
 																}
 																className="flex items-center ml-auto px-2 py-1 rounded-lg hover:bg-neutral-100 cursor-pointer"
@@ -328,7 +354,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 															-
 															<span>
 																{formatIsoDate(
-																	stage.createdAt,
+																	stage.createdAt
 																)}
 															</span>
 														</div>
@@ -366,7 +392,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 																-
 																<span>
 																	{formatIsoDate(
-																		stage.createdAt,
+																		stage.createdAt
 																	)}
 																</span>
 															</div>
@@ -446,24 +472,24 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 					</div>
 				)}
 
-        {activeTab === "time" && (
-          <div className="min-h-[500px]">
-            {!timeTabLoaded ? (
-              <TimeTrackingSkeleton />
-            ) : (
-              <TimeTracking
-                taskTitle={title}
-                taskStatus={status}
-                taskPriority={priority}
-                taskId={taskId}
-                projectId={projectId}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    </Modal>
-  );
+				{activeTab === "time" && (
+					<div className="min-h-[500px]">
+						{!timeTabLoaded ? (
+							<TimeTrackingSkeleton />
+						) : (
+							<TimeTracking
+								taskTitle={title}
+								taskStatus={status}
+								taskPriority={priority}
+								taskId={taskId}
+								projectId={projectId}
+							/>
+						)}
+					</div>
+				)}
+			</div>
+		</Modal>
+	);
 }
 
 export default TaskDetailsModal;

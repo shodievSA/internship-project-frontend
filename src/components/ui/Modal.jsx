@@ -10,6 +10,7 @@ function Modal({
 	showOverlay = true,
 	customWidth,
 	customHeader,
+	alignTop = false,
 }) {
 	const sizes = {
 		sm: "w-[350px]",
@@ -36,13 +37,17 @@ function Modal({
 
 	return (
 		<div
-			className={`flex items-center justify-center fixed h-full w-full 
+			className={`flex ${
+				alignTop ? "items-start" : "items-center"
+			} justify-center fixed h-full w-full 
 			left-0 top-0 z-20 cursor-pointer ${getOverlayClass()}`}
 			onClick={handleClick}
 		>
 			<div
 				className={`dark:bg-neutral-950 dark:border-neutral-800 bg-white border-neutral-200 
-		border-[1px] flex flex-col ${widthClass} rounded-lg cursor-default shadow-lg dark:text-white`}
+		border-[1px] flex flex-col ${widthClass} rounded-lg cursor-default shadow-lg dark:text-white ${
+					alignTop ? "mt-28" : ""
+				}`}
 			>
 				<div className="p-5 flex flex-col gap-y-2">
 					{customHeader ? (

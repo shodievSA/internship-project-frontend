@@ -23,6 +23,7 @@ function AiEditor({
 	setValue,
 	disabled,
 	showEnhance = true,
+	height = "h-60",
 }) {
 	const { themeMode } = useThemeContext();
 
@@ -43,7 +44,7 @@ function AiEditor({
 		} catch (err) {
 			console.log(
 				"The following error occured while enhancing your task description: " +
-					err.message,
+					err.message
 			);
 		} finally {
 			setLoading(false);
@@ -136,7 +137,11 @@ function AiEditor({
 					></div>
 					<li
 						className={`flex justify-center items-center gap-x-3 p-1.5 cursor-pointer
-						z-10 ${currentTab === "write" ? "text-black dark:text-white" : "text-neutral-500"}
+						z-10 ${
+							currentTab === "write"
+								? "text-black dark:text-white"
+								: "text-neutral-500"
+						}
 						transition-[all] duration-200`}
 						onClick={() => handleTab("write", 0)}
 					>
@@ -145,7 +150,11 @@ function AiEditor({
 					</li>
 					<li
 						className={`flex justify-center items-center gap-x-3 p-1.5 cursor-pointer
-						z-10 ${currentTab === "preview" ? "text-black dark:text-white" : "text-neutral-500"}
+						z-10 ${
+							currentTab === "preview"
+								? "text-black dark:text-white"
+								: "text-neutral-500"
+						}
 						transition-[all] duration-200`}
 						onClick={() => handleTab("preview", 1)}
 					>
@@ -163,7 +172,7 @@ function AiEditor({
 							placeholder={placeholder}
 							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
 								focus:border-black/30 bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text h-60
+								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text ${height}
 								scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
 							onChange={(e) => {
 								setShowError(!e.target.value > 0);
@@ -178,7 +187,7 @@ function AiEditor({
 							placeholder={placeholder}
 							className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
 								focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text h-60
+								py-2.5 px-4 outline-none disabled:opacity-50 disabled:cursor-default cursor-text ${height}
 								scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800`}
 							onChange={(e) => {
 								setValue(e.target.value);
@@ -189,9 +198,9 @@ function AiEditor({
 				) : (
 					<div
 						className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
-						focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
-						outline-none disabled:opacity-50 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
-						dark:scrollbar-track-neutral-800 h-60 px-4 py-2.5`}
+					focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
+					outline-none disabled:opacity-50 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
+					dark:scrollbar-track-neutral-800 ${height} px-4 py-2.5`}
 					>
 						<ReactMarkdown
 							className={themeMode}
