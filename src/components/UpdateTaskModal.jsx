@@ -277,7 +277,7 @@ function getUpdatedTaskProps(task) {
 		delete updated.priority;
 	}
 
-	if (task.newTaskDeadline !== task.oldTaskDeadline) {
+	if (task.newTaskDeadline !== task.oldTaskDeadline.split("T")[0]) {
 		updated.deadline = task.newTaskDeadline;
 	} else {
 		delete updated.deadline;
