@@ -122,7 +122,7 @@ export function ActionMenu({ isOpen, onClose, anchorEl, selectedMember }) {
 			await projectService.removeMember(projectId, selectedMember.id);
 
 			setTeam((prevTeam) =>
-				prevTeam.filter((member) => member.id !== member.id),
+				prevTeam.filter((member) => member.id !== selectedMember.id),
 			);
 
 			setShowConfirmation(false);
