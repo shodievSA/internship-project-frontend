@@ -49,7 +49,13 @@ function ProjectSprintHeader({
 	function onNewTaskCreated(newTask) {
 
 		setSprintTasks([newTask, ...sprintTasks]);
-		setTasks([newTask, ...tasks]);
+
+		if (sprintMetaData.status === 'active') {
+
+			setTasks([newTask, ...tasks]);
+
+		}
+
 
 	}
 
