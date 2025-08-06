@@ -36,6 +36,7 @@ function FilterDropdown({ icon: Icon, value, onChange, options, disabled }) {
 				size="md"
 				onClick={() => setIsOpen(!isOpen)}
 				disabled={disabled}
+				className={"w-full lg:w-auto"}
 			>
 				<div className="flex items-center gap-x-3 text-sm">
 					<Icon className="w-4 h-4 flex-shrink-0" />

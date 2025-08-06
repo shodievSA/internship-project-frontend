@@ -64,19 +64,28 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
 	}
 
+	function handleLinkClick() {
+
+		if (shouldCollapseSidebar()) {
+
+			setSidebarCollapsed(true);
+
+		}
+
+	}
+
 	return (
 		<>
 			<div>
-				<div
-					className={`${sidebarCollapsed ? "bg-transparent pointer-events-none" : "bg-black/30"} 
-                fixed h-full w-full transition-bg-color duration-200 z-10 lg:hidden`}
-				></div>{" "}
+				<div className={`${sidebarCollapsed ? "bg-transparent pointer-events-none" : "bg-black/70"} 
+                fixed h-full w-full transition-bg-color duration-200 z-10 2xl:hidden`}
+				></div>
 				{/* dark, semi-transparent background color only for mobile and tablet screen sizes */}
 				<div className={`${sidebarCollapsed
-					? "w-0 lg:w-0 lg:pl-3 -translate-x-72 lg:-translate-x-64"
-					: "w-full lg:pl-0 lg:w-64"
-				} dark:text-white flex fixed lg:static h-full z-20 transition-all duration-500`}>
-					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 lg:grow`}>
+					? "w-0 -translate-x-72 2xl:pl-3 2xl:-translate-x-64"
+					: "w-full 2xl:pl-0 2xl:w-64"
+				} dark:text-white flex fixed 2xl:static h-full z-20 transition-all duration-500`}>
+					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 2xl:grow`}>
 						<div className={`flex flex-col h-full pt-4 gap-y-8`}>
 							<div className="flex gap-x-3 items-center justify-start px-2">
 								<div className="bg-neutral-200 w-10 h-10 rounded-full flex-shrink-0">
@@ -105,10 +114,11 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 											to={"/projects"}
 											className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
 											dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[border] duration-300 border-2 ${ isActive
+											py-2 px-3 rounded-md transition-[border] duration-300 border-2 ${isActive
 												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
+											onClick={handleLinkClick}
 										>
 											<House className="w-5 h-5" />
 											<span>Dashboard</span>
@@ -121,6 +131,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
+											onClick={handleLinkClick}
 										>
 											<Sparkles className="w-5 h-5" />
 											<span>Organizer</span>
@@ -133,6 +144,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
+											onClick={handleLinkClick}
 										>
 											<div className="flex items-center gap-x-3">
 												<Bell className="w-5 h-5" />
@@ -167,6 +179,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
 												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
 											}`}
+											onClick={handleLinkClick}
 										>
 											<div className="flex items-center gap-x-3">
 												<MailPlus className="w-5 h-5" />
@@ -262,7 +275,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 						</div>
 					</div>
 					<div
-						className="grow lg:hidden"
+						className="grow 2xl:hidden"
 						onClick={() => setSidebarCollapsed(true)}
 					></div>
 				</div>
@@ -317,6 +330,12 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 			)}
 		</>
 	);
+}
+
+function shouldCollapseSidebar() {
+
+	return window.innerWidth < 1440;
+
 }
 
 export default Sidebar;
