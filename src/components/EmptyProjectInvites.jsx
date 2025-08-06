@@ -3,6 +3,7 @@ import Button from "./ui/Button";
 import { UserPlus, Inbox, ArrowLeft } from "lucide-react";
 
 function EmptyProjectInvites({ openModal }) {
+
 	const navigate = useNavigate();
 
 	return (
@@ -21,8 +22,8 @@ function EmptyProjectInvites({ openModal }) {
 			</div>
 			<div className="grow flex flex-col justify-center items-center gap-y-2">
 				<Inbox className="w-16 h-16" />
-				<div className="flex items-center flex-col gap-y-5">
-					<h1 className="text-xl">
+				<div className="flex items-center flex-col gap-y-5 w-[380px]">
+					<h1 className="text-xl text-center">
 						No invites yet... but the party’s just getting started
 					</h1>
 					<Button
@@ -37,6 +38,7 @@ function EmptyProjectInvites({ openModal }) {
 			</div>
 		</div>
 	);
+	
 }
 
 export default EmptyProjectInvites;

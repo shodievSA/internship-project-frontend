@@ -24,7 +24,7 @@ function DeleteProjectModal({
 
 	const { showToast } = useToast();
 
-	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 	const [projectBeingDeleted, setProjectBeingDeleted] = useState(false);
 	const [projectName, setProjectName] = useState("");
 
