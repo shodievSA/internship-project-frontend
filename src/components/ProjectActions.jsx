@@ -69,7 +69,7 @@ function ProjectActions({
 					</button>
 					<div className={`dark:bg-black dark:border-neutral-800 bg-white shadow-md 
 					border-neutrals-200 border-[1px] rounded-md flex flex-col absolute w-[160px] 
-					mt-3 left-0 ${settingsButtonClicked ? "opacity-100" : "opacity-0 pointer-events-none"} 
+					mt-1 right-0 ${settingsButtonClicked ? "opacity-100" : "opacity-0 pointer-events-none"} 
 					transition-[opacity] duration-200 z-20`}>
 						{ currentMemberRole === "admin" ? (
 							<>
@@ -122,15 +122,19 @@ function ProjectActions({
 						)}
 					</div>
 				</div>
-				<Button
-					size="sm"
-					onClick={() => setShowNewSprintModal(true)}
-				>
-					<div className="flex items-center gap-x-2">
-						<Plus className="w-4 h-4" />
-						<span>New Sprint</span>
-					</div>
-				</Button>
+				{
+					currentMemberRole !== "member" && (
+						<Button
+							size="sm"
+							onClick={() => setShowNewSprintModal(true)}
+						>
+							<div className="flex items-center gap-x-2">
+								<Plus className="w-4 h-4" />
+								<span>New Sprint</span>
+							</div>
+						</Button>
+					)
+				}
 			</div>
 			{showEditProjectModal && (
 				<EditProjectModal
