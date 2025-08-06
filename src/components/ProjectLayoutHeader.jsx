@@ -8,11 +8,9 @@ import Button from "./ui/Button";
 import EditProjectModal from "../components/EditProjectModal";
 import DeleteProjectModal from "../components/DeleteProjectModal";
 import LeaveProjectModal from "../components/LeaveProjectModal";
-import GroupEmailModal from "../components/GroupEmailModal";
 import {
 	Plus,
 	Settings,
-	Mail,
 	SquarePen,
 	UserMinus,
 	Trash2,
@@ -23,7 +21,7 @@ import {
 
 function ProjectLayoutHeader() {
 
-	const { metaData, setMetaData, currentMemberId, team } = useProject();
+	const { metaData, setMetaData, currentMemberId } = useProject();
 	const { setProjects } = useProjectsContext();
 
 	const navigate = useNavigate();
@@ -33,7 +31,6 @@ function ProjectLayoutHeader() {
 	const [showEditProjectModal, setShowEditProjectModal] = useState(false);
 	const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
 	const [showLeaveProjectModal, setShowLeaveProjectModal] = useState(false);
-	const [showGroupEmailModal, setShowGroupEmailModal] = useState(false);
 
 	function deleteProject(projectIdToDelete) {
 
@@ -133,17 +130,6 @@ function ProjectLayoutHeader() {
 									<SquarePen className="w-4 h-4" />
 									<span>Edit Project</span>
 								</button>
-								<button
-									className="dark:hover:bg-neutral-900 hover:bg-slate-100 rounded-md flex items-center 
-									gap-x-4 px-2.5 py-1.5 transition[background-color] duration-200"
-									onClick={() => {
-										setSettingsButtonClicked(false);
-										setShowGroupEmailModal(true);
-									}}
-								>
-									<Mail className="w-4 h-4" />
-									<span>Send Email</span>
-								</button>
 							</div>
 							<div className="flex flex-col p-1.5">
 								<button
@@ -216,12 +202,6 @@ function ProjectLayoutHeader() {
 					projectTitle={metaData.title}
 					onProjectLeave={deleteProject}
 					closeModal={() => setShowLeaveProjectModal(false)}
-				/>
-			)}
-			{showGroupEmailModal && (
-				<GroupEmailModal
-					teamMembers={team}
-					closeModal={() => setShowGroupEmailModal(false)}
 				/>
 			)}
 		</>
