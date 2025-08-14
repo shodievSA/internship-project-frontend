@@ -1,5 +1,6 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 import scrollbar from "tailwind-scrollbar";
+import animate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class", ".dark-mode"],
@@ -9,8 +10,48 @@ export default {
 			screens: {
 				"2xl": "1440px"
 			},
+			colors: {
+				border: "hsl(var(--border))",
+				input: "hsl(var(--input))",
+				ring: "hsl(var(--ring))",
+				background: "hsl(var(--background))",
+				foreground: "hsl(var(--foreground))",
+				primary: {
+					DEFAULT: "hsl(var(--primary))",
+					foreground: "hsl(var(--primary-foreground))",
+				},
+				secondary: {
+					DEFAULT: "hsl(var(--secondary))",
+					foreground: "hsl(var(--secondary-foreground))",
+				},
+				destructive: {
+					DEFAULT: "hsl(var(--destructive))",
+					foreground: "hsl(var(--destructive-foreground))",
+				},
+				muted: {
+					DEFAULT: "hsl(var(--muted))",
+					foreground: "hsl(var(--muted-foreground))",
+				},
+				accent: {
+					DEFAULT: "hsl(var(--accent))",
+					foreground: "hsl(var(--accent-foreground))",
+				},
+				popover: {
+					DEFAULT: "hsl(var(--popover))",
+					foreground: "hsl(var(--popover-foreground))",
+				},
+				card: {
+					DEFAULT: "hsl(var(--card))",
+					foreground: "hsl(var(--card-foreground))",
+				},
+			},
 			fontFamily: {
 				inter: ["Inter", ...defaultTheme.fontFamily.sans],
+			},
+			borderRadius: {
+				customLg: "var(--radius)",
+				customMd: "calc(var(--radius) - 2px)",
+				customSm: "calc(var(--radius) - 4px)",
 			},
 			keyframes: {
 				"fade-in": {
@@ -38,6 +79,18 @@ export default {
 				},
 				float: {
 					"0%, 100%": { transform: "translateY(0)" },
+					"50%": { transform: "translateY(-10px)" },
+				},
+				floatLarge: {
+					"0%, 100%": { transform: "translateY(0)" },
+					"50%": { transform: "translateY(-20px)" },
+				},
+				"float-delayed": {
+					"0%, 100%": { transform: "translateY(0px)" },
+					"50%": { transform: "translateY(-15px)" },
+				},
+				"float-slowed": {
+					"0%, 100%": { transform: "translateY(0px)" },
 					"50%": { transform: "translateY(-10px)" },
 				},
 				sparkle: {
@@ -133,6 +186,9 @@ export default {
 				"bounce-in":
 					"bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
 				float: "float 1.5s ease-in-out infinite",
+				floatLarge: "floatLarge 2s ease-in-out infinite",
+				"float-delayed": "float-delayed 8s ease-in-out infinite",
+				"float-slow": "float-slow 10s ease-in-out infinite",
 				sparkle: "sparkle 2s ease-in-out infinite",
 				"pulse-subtle": "pulse-subtle 2s ease-in-out infinite",
 				"feature-pop": "feature-pop 0.8s ease-out forwards",
@@ -155,5 +211,8 @@ export default {
 			},
 		},
 	},
-	plugins: [scrollbar()],
+	plugins: [
+		scrollbar(),
+		animate,
+	],
 };

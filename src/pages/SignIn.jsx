@@ -1,15 +1,20 @@
-import GoogleSignIn from "../components/auth/GoogleSignIn";
+import BrandSection from "../components/auth/BrandSection";
+import Footer from "../components/auth/Footer";
 
 const SignIn = () => {
+
 	return (
-		<div className="min-h-screen bg-gray-50">
-			<div className="flex flex-col lg:flex-row min-h-screen lg:gap-8">
-				<div className="flex-1">
-					<GoogleSignIn />
-				</div>
-			</div>
-		</div>
+
+		<>
+		
+			<BrandSection/>
+
+			<Footer/>
+
+		</>
+
 	);
+
 };
 
 export default SignIn;

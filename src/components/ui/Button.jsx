@@ -30,7 +30,7 @@ function Button({
 			className={`${variants[variant]} ${sizes[size]} ${className}`}
 		>
 			{loading ? (
-				<div className="flex justify-center relative w-5 h-5 w-full">
+				<div className="flex justify-center relative w-5 h-5 lg:w-full">
 					<div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
 					<div
 						className="absolute w-5 h-5 border-2 border-transparent border-t-white 
