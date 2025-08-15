@@ -186,7 +186,7 @@ export default {
 				"bounce-in":
 					"bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
 				float: "float 1.5s ease-in-out infinite",
-				floatLarge: "floatLarge 2s ease-in-out infinite",
+				floatLarge: "floatLarge 4s ease-in-out infinite",
 				"float-delayed": "float-delayed 8s ease-in-out infinite",
 				"float-slow": "float-slow 10s ease-in-out infinite",
 				sparkle: "sparkle 2s ease-in-out infinite",

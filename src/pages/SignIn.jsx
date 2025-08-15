@@ -1,5 +1,5 @@
-import BrandSection from "../components/auth/BrandSection";
-import Footer from "../components/auth/Footer";
+import BrandSection from '../components/auth/BrandSection';
+import Footer from '../components/auth/Footer';
 
 const SignIn = () => {
 
