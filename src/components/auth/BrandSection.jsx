@@ -303,21 +303,14 @@ const Brandsection = () => {
 			{ /* Features section */ }
 			<section>
 
-
+				
 			
 			</section>
 
 			{ /* Call-to-Action section */ }
 			<section>
 
-
-		
-				{ /* Bg pattern */ }
-				<section>
-
-
-
-				</section>
+				
 				
 			</section>
 
