@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ScrollIndicator from './ScrollIndicator';
 import Shapes from './Shapes';
 import Button from '../ui/Button';
@@ -9,15 +9,95 @@ function signIn() {
 	
 }
 
+const target = { teams: 5000, projects: 25000, tasks: 50000 };
+
 const Brandsection = () => {
 
+	const [isLoaded, setLoaded] = useState(false);
 	const [isVisible, setVisible] = useState(false);
+	const [stats, setStats] = useState({ teams: 0, projects: 0, tasks: 0 });
 
-	useEffect(() => {						
+	const statsSectionRef = useRef(null);
 
-		setVisible(true);
+	const duration = 2000;
+	const steps = 60;
+	const stepsInterval = duration / steps;
+
+	useEffect(() => {
+
+		setLoaded(true);
 
 	}, [])
+
+	useEffect(() => {
+
+		const observer = new IntersectionObserver(
+
+			([entry]) => {
+
+				if (entry.isIntersecting) {
+
+					setVisible(true);
+					
+					observer.disconnect();
+
+				}
+
+			}, { threshold: 0.35 }
+
+		);
+
+		if (statsSectionRef.current) observer.observe(statsSectionRef.current);
+
+		return () => observer.disconnect();
+
+	}, [])
+
+	useEffect(() => {
+		
+		if (!isVisible) return;
+
+		const incBy = {
+
+			teams: Math.ceil(target.teams / steps),
+			projects: Math.ceil(target.projects / steps),
+			tasks: Math.ceil(target.tasks / steps),
+
+		};
+
+		const statsCounter = setInterval(() => {
+
+			setStats(prev => {
+
+				const finalStats = {
+
+					teams: Math.min((prev.teams + incBy.teams), target.teams),
+					projects: Math.min((prev.projects + incBy.projects), target.projects),
+					tasks: Math.min((prev.tasks + incBy.tasks), target.tasks),
+					
+				};
+
+				if (
+
+					finalStats.teams === target.teams &&
+					finalStats.projects === target.projects &&
+					finalStats.tasks === target.tasks
+
+				) {
+
+					clearInterval(statsCounter);
+					
+				}
+
+				return finalStats;
+
+			});
+
+		}, stepsInterval);
+
+		return () => clearInterval(statsCounter);
+
+	}, [isVisible])
 
 	return (
 
@@ -35,7 +115,7 @@ const Brandsection = () => {
 					className={ `
 
 						relative z-10 text-center max-w-6xl mx-auto transition-all duration-1000
-						${ isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10' }
+						${ isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10' }
 
 					` }
 
@@ -151,9 +231,72 @@ const Brandsection = () => {
 			</section>
 
 			{ /* Statistics section */ }
-			<section>
+			<section ref={statsSectionRef} className='px-4 py-20 bg-gradient-to-r from-purple-50 to-blue-50'>
 
+				<div className='max-w-6xl mx-auto'>
 
+					<div className='grid grid-cols-1 md:grid-cols-3 gap-8 text-center'>
+
+						<dl className='hover:scale-105 transition-transform duration-300'>
+							
+							<dt
+
+								className='
+
+									text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2
+
+								'
+
+							>
+
+								{ stats.teams }+
+								
+							</dt>
+							<dd className='text-slate-600 text-lg'>Active Teams</dd>
+
+						</dl>
+
+						<dl className='hover:scale-105 transition-transform duration-300'>
+							
+							<dt
+
+								className='
+
+									text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2
+
+								'
+
+							>
+
+								{ stats.projects }+
+
+							</dt>
+							<dd className='text-slate-600 text-lg'>Projects Completed</dd>
+
+						</dl>
+
+						<dl className='hover:scale-105 transition-transform duration-300'>
+							
+							<dt
+
+								className='
+
+									text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2
+
+								'
+
+							>
+
+								{ stats.tasks }+
+
+							</dt>
+							<dd className='text-slate-600 text-lg'>Tasks Managed</dd>
+
+						</dl>
+
+					</div>
+
+				</div>
 				
 			</section>
 
