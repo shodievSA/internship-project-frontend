@@ -1,4 +1,4 @@
-import BrandSection from '../components/auth/BrandSection';
+import Main from '../components/auth/Main';
 import Footer from '../components/auth/Footer';
 
 const SignIn = () => {
@@ -7,7 +7,7 @@ const SignIn = () => {
 
 		<>
 		
-			<BrandSection/>
+			<Main/>
 
 			<Footer/>
 

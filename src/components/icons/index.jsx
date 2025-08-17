@@ -1,7 +1,12 @@
-import {  } from "lucide-react";
+import { CheckCircle, FileText, Calendar, Brain, Bell, ChartArea } from "lucide-react"
 
 export const icons = {
 
-	// Add your icon imports here
+	CheckCircle,
+	FileText,
+	Calendar,
+	Brain,
+	Bell,
+	ChartArea,
 
 };
