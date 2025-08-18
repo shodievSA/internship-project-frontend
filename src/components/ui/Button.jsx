@@ -15,7 +15,8 @@ function Button({
 		destructive:
 			"bg-red-900 hover:bg-red-950 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200",
 		alert: "dark:bg-orange-800 bg-orange-600 dark:hover:bg-orange-900 hover:bg-orange-700 text-white rounded-md disabled:opacity-50 disabled:pointer-events-none transition-[background-color] duration-200",
-		signIn: "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105",
+		signInPr: "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105",
+		signInSec: "bg-white text-purple-700 hover:bg-gray-50 px-8 py-4 text-lg rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105",
 	};
 
 	const sizes = {
@@ -23,6 +24,7 @@ function Button({
 		md: "text-base py-2 px-4 text-sm md:text-base",
 		lg: "text-base py-3 px-6 text-sm md:text-base",
 		lgW: "w-[16.8rem] h-[2.8rem] text-sm md:text-base lg:text-lg",
+		xlW: "w-[22.5rem] h-[2.5rem] text-sm md:text-base lg:text-lg",
 	};
 
 	return (

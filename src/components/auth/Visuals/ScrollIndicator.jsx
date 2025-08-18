@@ -1,4 +1,4 @@
-const ScrollIndicator = () => (
+export const ScrollIndicator = () => (
 
     <div className='absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce'>
 
@@ -11,5 +11,3 @@ const ScrollIndicator = () => (
     </div>
 
 );
-
-export default ScrollIndicator;

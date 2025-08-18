@@ -1,20 +1,9 @@
-import Main from '../components/auth/Main';
-import Footer from '../components/auth/Footer';
+import { Layout } from '../components/auth';
 
-const SignIn = () => {
+const SignIn = () => (
 
-	return (
+  <Layout/>
 
-		<>
-		
-			<Main/>
-
-			<Footer/>
-
-		</>
-
-	);
-
-};
+)
 
 export default SignIn;

@@ -1,4 +1,4 @@
-const Shapes = () => (
+export const Shapes = () => (
 
     <div className='fixed inset-0 overflow-hidden pointer-events-none -z-1'>
 
@@ -38,5 +38,3 @@ const Shapes = () => (
     </div>
 
 );
-
-export default Shapes;
