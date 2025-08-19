@@ -85,7 +85,7 @@ const Stats = () => {
     
     return (
         
-		<section ref={statsSectionRef} className='px-4 py-20 bg-gradient-to-r from-purple-50 to-blue-50'>
+		<section ref={statsSectionRef} className='px-4 py-20 bg-gradient-to-r from-purple-50 to-blue-50' id="statistics">
 
 			<div className='max-w-6xl mx-auto'>
 

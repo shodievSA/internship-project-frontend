@@ -1,6 +1,5 @@
 import defaultTheme from "tailwindcss/defaultTheme";
 import scrollbar from "tailwind-scrollbar";
-import animate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class", ".dark-mode"],
@@ -178,6 +177,5 @@ export default {
 	},
 	plugins: [
 		scrollbar(),
-		animate,
 	],
 };

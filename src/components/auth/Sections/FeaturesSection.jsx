@@ -2,7 +2,7 @@ import features from '../../../utils/features';
 
 const Features = () => (
         
-	<section className='px-4 py-24'>
+	<section className='px-4 py-24' id="features">
 
 		<div className='max-w-6xl mx-auto'>
 
