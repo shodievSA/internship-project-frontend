@@ -97,7 +97,14 @@ const Hero = () => {
 
                 </p>
 
-                <Button className='group' size='lgW' variant='signInPr' onClick={ signIn }>
+                <Button
+
+                    className='group'
+                    size='lgW'
+                    variant='signInPr'
+                    onClick={ signIn }
+                    
+                >
 
                     <div className='flex items-center justify-center gap-2'>
 

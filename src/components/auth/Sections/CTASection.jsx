@@ -1,6 +1,7 @@
 import Button from '../../ui/Button';
 import { icons } from '../../icons/index';
 import GoogleIcon from '../../ui/Google';
+import AnimateOnScroll from '../Visuals/AnimateOnScroll';
 
 function signIn() {
 
@@ -8,8 +9,8 @@ function signIn() {
 	
 }
 
-const CallToAction = () => (
-        
+const CallToAction = () => ( 
+
 	<section className='relative px-4 py-24 bg-gradient-to-r from-purple-600 via-purple-700 to-blue-700 overflow-hidden'>
 
 		<div className='absolute inset-0 opacity-10'>
@@ -35,38 +36,54 @@ const CallToAction = () => (
 
 		</div>
 
-		<div className='relative max-w-4xl mx-auto text-center z-10'>
+		<AnimateOnScroll>
 
-			<h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>Ready to Transform Your Team's Productivity?</h2>
-			<p
+			<div
 
-				className='
-
-					text-xl text-purple-100 mb-12 max-w-2xl mx-auto
-
-				'
-
+				className='relative max-w-4xl mx-auto text-center z-10'
+				data-aos='fade-up'
+				
 			>
 
-				Join thousands of teams already using Smart-Desk Pro to streamline their workflow and achieve better results.
+				<h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>Ready to Transform Your Team's Productivity?</h2>
+				<p
 
-			</p>
+					className='
 
-			<Button className='group' size='xlW' variant='signInSec' onClick={ signIn }>
+						text-xl text-purple-100 mb-12 max-w-2xl mx-auto
 
-				<div className='flex items-center justify-around h-full'>
+					'
 
-					<GoogleIcon original={ false }/>
+				>
 
-					<span>Get Started with Google</span>
+					Join thousands of teams already using Smart-Desk Pro to streamline their workflow and achieve better results.
 
-					<icons.ArrowRight className='w-5 h-5 ml-2'/>
+				</p>
 
-				</div>
+				<Button
 
-			</Button>
+					className='group'
+					size='xlW'
+					variant='signInSec'
+					onClick={ signIn }
 
-		</div>
+				>
+
+					<div className='flex items-center justify-around h-full'>
+
+						<GoogleIcon original={ false }/>
+
+						<span>Get Started with Google</span>
+
+						<icons.ArrowRight className='w-5 h-5 ml-2'/>
+
+					</div>
+
+				</Button>
+
+			</div>
+
+		</AnimateOnScroll>
 		
 	</section>
     

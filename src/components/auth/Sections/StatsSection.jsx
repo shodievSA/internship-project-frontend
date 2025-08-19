@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import AnimateOnScroll from '../Visuals/AnimateOnScroll';
 
 const target = { teams: 5000, projects: 25000, tasks: 50000 };
 
@@ -85,9 +86,20 @@ const Stats = () => {
     
     return (
         
-		<section ref={statsSectionRef} className='px-4 py-20 bg-gradient-to-r from-purple-50 to-blue-50' id="statistics">
+		<section
 
-			<div className='max-w-6xl mx-auto'>
+			ref={statsSectionRef}
+			className='px-4 py-20 bg-gradient-to-r from-purple-50 to-blue-50'
+			id="statistics"
+			
+		>
+
+			<div
+
+				className='max-w-6xl mx-auto'
+				data-aos='fade-up'
+				
+			>
 
 				<div className='grid grid-cols-1 md:grid-cols-3 gap-8 text-center'>
 
