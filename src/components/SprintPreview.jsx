@@ -25,7 +25,7 @@ function SprintPreview({ sprint }) {
 	return (
 		<div
 			className="bg-gray-50 dark:bg-zinc-950 border border-gray-200 dark:border-neutral-800 
-			rounded-lg p-5 w-full text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-neutral-700 
+			rounded-lg p-4 w-full text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-neutral-700 
 			transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.01] 
 			transition-transform"
 			onClick={() => navigate(`${sprintId}`, { state: { sprint } })}
