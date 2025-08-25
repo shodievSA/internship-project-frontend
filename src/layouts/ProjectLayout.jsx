@@ -2,14 +2,14 @@ import { Outlet } from "react-router-dom";
 import { useProject } from "../context/ProjectContext";
 import ProjectLayoutNavigation from "../components/ProjectLayoutNavigation";
 import ProjectLayoutHeader from "../components/ProjectLayoutHeader";
-import ProjectLoadingState from "../components/ProjectLoadingState";
+import LoadingState from "../components/LoadingState";
 import ErrorState from "../components/ErrorState";
 
 function ProjectLayout() {
 
 	const { projectLoaded, error } = useProject();
 
-	if (!projectLoaded) return <ProjectLoadingState message={"One moment… making sense of your chaos"} />
+	if (!projectLoaded) return <LoadingState message={"One moment… making sense of your chaos"} />
 	if (error) return <ErrorState message={"Enexpected error occured while loading the project"} />
 
 	return (

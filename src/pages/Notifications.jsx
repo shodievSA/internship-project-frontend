@@ -9,7 +9,7 @@ import EmptyNotifications from "../components/EmptyNotifications";
 import notificationService from "../services/notificationService";
 import ErrorState from "../components/ErrorState";
 import EmptySearch from "../components/EmptySearch";
-import LoadingNotifications from "../components/LoadingNotifications";
+import LoadingState from "../components/LoadingState";
 
 function Notifications() {
 	const location = useLocation();
@@ -172,22 +172,13 @@ function Notifications() {
 		setSearch("");
 	}
 
-	const filteredNotifications = filterNotifications(notifications, {
-		search,
-	});
+	const filteredNotifications = filterNotifications(notifications, { search });
 
-	const unviewedCount = filteredNotifications.filter(
-		(n) => !n.isViewed,
-	).length;
+	const unviewedCount = filteredNotifications.filter((n) => !n.isViewed).length;
 	const totalCount = filteredNotifications.length;
 
-	if (loading) return <LoadingNotifications />;
-	if (error)
-		return (
-			<ErrorState
-				message={"Unexpected error while loading your notifications"}
-			/>
-		);
+	if (loading) return <LoadingState message={"Hang on - your notifications are on their way!"} />;
+	if (error) <ErrorState message={"Unexpected error while loading your notifications"} />;
 	if (notifications.length === 0) return <EmptyNotifications />;
 
 	return (

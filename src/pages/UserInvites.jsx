@@ -9,7 +9,7 @@ import { statusOptionsInviation, dateOptions } from "../utils/constant";
 import { filterInvitations } from "../utils/filterUtils";
 import SearchBar from "../components/SearchBar";
 import { EmptyInvitation } from "../components/EmptyInvitation";
-import LoadingInvites from "../components/LoadingInvites";
+import LoadingState from "../components/LoadingState";
 import { Calendar, Filter } from "lucide-react";
 
 function UserInvites() {
@@ -55,7 +55,7 @@ function UserInvites() {
 	return (
 		<div className="h-full bg-white dark:bg-black text-gray-900 dark:text-white p-4 md:p-6">
 			{!invitesFetched ? (
-				<LoadingInvites />
+				<LoadingState message={"Hang on - your invites are on their way!"} />
 			) : invites.length === 0 ? (
 				<EmptyInvitation />
 			) : (

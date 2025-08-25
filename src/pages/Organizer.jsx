@@ -8,7 +8,7 @@ import OrganizerTasksDueTomorrow from "../components/OrganizerTasksDueTomorrow";
 import OrganizerTasksDueThisWeek from "../components/OrganizerTasksDueThisWeek";
 import OrganizerTasksForReview from "../components/OrganizerTasksForReviews";
 import OrganizerNotifications from "../components/OrganizerNotifications";
-import LoadingReport from "../components/LoadingReport";
+import LoadingState from "../components/LoadingState";
 import ErrorState from "../components/ErrorState";
 
 function Organizer() {
@@ -43,15 +43,8 @@ function Organizer() {
 		setCurrentTab(newTab);
 	}
 
-	if (!reportFetched) return <LoadingReport />;
-	if (error)
-		return (
-			<ErrorState
-				message={
-					"Oops! Your daily report tripped on a glitch. We’re working on it!"
-				}
-			/>
-		);
+	if (!reportFetched) return <LoadingState message={"Hang on - your daily report is on its way!"} />;
+	if (error) <ErrorState message={"Oops! Your daily report tripped on a glitch. We’re working on it!"} />;
 	if (!dailyReport) return <EmptyAiPlanner />;
 
 	return (
