@@ -30,7 +30,7 @@ function SprintTask({ task }) {
 				onClick={() => setShowTaskDetailsModal(true)}
 			>
 				<div>
-					<h1 className="font-semibold">{title}</h1>
+					<h1 className="font-semibold truncate">{title}</h1>
 				</div>
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
