@@ -1,12 +1,14 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import projectService from "../services/projectService";
+import { useProjectsContext } from "./ProjectsContext";
 
 const ProjectContext = createContext();
 
 export function ProjectContextProvider({ children }) {
 
 	const { projectId } = useParams();
+	const { fetchProjects } = useProjectsContext();
 
 	const [projectLoaded, setProjectLoaded] = useState(false);
 	const [error, setError] = useState(null);
@@ -68,6 +70,12 @@ export function ProjectContextProvider({ children }) {
 		fetchProject(projectId);
 
 	}, [projectId]);
+
+	useEffect(() => {
+
+		fetchProjects();
+
+	}, [sprints, team, metaData]);
 
 	const contextData = {
 		error,

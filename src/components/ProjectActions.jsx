@@ -33,9 +33,6 @@ function ProjectActions({
 	function updateProject(updatedProject) {
 
 		setMetaData(() => ({ ...metaData, ...updatedProject }));
-		setProjects((prevProjects) => prevProjects.map((project) => {
-			return project.id === updatedProject.id ? { ...project, ...updatedProject } : project;
-		}));
 
 	}
 

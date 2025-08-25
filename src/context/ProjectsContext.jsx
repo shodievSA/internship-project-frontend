@@ -12,28 +12,28 @@ function ProjectsContextProvider({ children }) {
 	const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 	const [userProjectCount, setUserProjectCount] = useState(() => getProjectCount());
 
-	useEffect(() => {
+	async function fetchProjects() {
 
-		async function fetchProjects() {
+		try {
 
-			try {
+			const projectPreviews = await projectService.getProjects();
+			setProjects(projectPreviews);
 
-				const projectPreviews = await projectService.getProjects();
-				setProjects(projectPreviews);
+		} catch (err) {
 
-			} catch (err) {
+			setError(err.message || "Failed to load projects");
 
-				setError(err.message || "Failed to load projects");
+		} finally {
 
-			} finally {
-
-				setTimeout(() => {
-					setProjectsLoaded(true);
-				}, 800);
-				
-			}
-
+			setTimeout(() => {
+				setProjectsLoaded(true);
+			}, 800);
+			
 		}
+
+	}
+
+	useEffect(() => {
 
 		fetchProjects();
 
@@ -57,6 +57,7 @@ function ProjectsContextProvider({ children }) {
 		setShowNewProjectModal,
 		userProjectCount,
 		setUserProjectCount,
+		fetchProjects
 	};
 
 	return (
