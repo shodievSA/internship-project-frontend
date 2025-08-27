@@ -6,7 +6,7 @@ function RecentActivityStatsSkeleton() {
 			{[...Array(4)].map((_, index) => (
 				<div
 					key={index}
-					className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 flex items-center space-x-3"
+					className="bg-gray-50 dark:bg-black rounded-lg p-3 flex items-center space-x-3"
 				>
 					{/* Icon Placeholder */}
 					<div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse"></div>

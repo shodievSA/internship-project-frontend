@@ -32,7 +32,7 @@ function OrganizerOverview({
 				dark:hover:border-neutral-700 hover:shadow-md dark:hover:shadow-none"
 				onClick={() =>
 					navigate(
-						`/projects/${task.from.projectId}/my-tasks#task-${task.id}`,
+						`/projects/${task.from.projectId}/my-tasks#task-${task.id}`
 					)
 				}
 			>
@@ -40,7 +40,9 @@ function OrganizerOverview({
 					<span className="font-medium">{task.title}</span>
 					<div className="flex items-center gap-x-5">
 						<span
-							className={`${taskPriorityColors[task.priority]} text-xs px-3 
+							className={`${
+								taskPriorityColors[task.priority]
+							} text-xs px-3 
 						rounded-full py-0.5`}
 						>
 							{task.priority}
@@ -110,7 +112,7 @@ function OrganizerOverview({
 				cursor-pointer transition-[bow-shadow] duration-300"
 				onClick={() =>
 					navigate(
-						`/projects/${task.from.projectId}/review-tasks#task-${task.id}`,
+						`/projects/${task.from.projectId}/review-tasks#task-${task.id}`
 					)
 				}
 			>
@@ -118,7 +120,9 @@ function OrganizerOverview({
 					<span className="font-medium">{task.title}</span>
 					<div className="flex items-center gap-x-5">
 						<span
-							className={`${taskPriorityColors[task.priority]} text-sm px-3 
+							className={`${
+								taskPriorityColors[task.priority]
+							} text-sm px-3 
 						rounded-full py-0.5`}
 						>
 							{task.priority}
@@ -157,8 +161,10 @@ function OrganizerOverview({
 
 	return (
 		<div className="flex flex-col gap-y-5">
-			<div className="flex flex-col gap-y-3 border border-neutral-200 dark:border-neutral-800 
-			p-5 rounded-md">
+			<div
+				className="flex flex-col gap-y-3 border border-neutral-200 dark:border-neutral-800 
+			p-5 rounded-md"
+			>
 				<div className="flex items-center gap-x-2">
 					<div className="p-2 bg-fuchsia-500/10 dark:bg-fuchsia-500/30 rounded-full">
 						<Sparkles className="w-5 h-5 text-fuchsia-700 dark:text-fuchsia-600" />
@@ -166,11 +172,15 @@ function OrganizerOverview({
 					<h1 className="text-lg font-medium">AI summary</h1>
 				</div>
 				<div>
-					<p className="text-neutral-700 dark:text-neutral-400">{summary}</p>
+					<p className="text-neutral-700 dark:text-neutral-400">
+						{summary}
+					</p>
 				</div>
 			</div>
-			<div className="flex flex-col gap-y-3 border border-neutral-200 dark:border-neutral-800 
-			p-5 rounded-md">
+			<div
+				className="flex flex-col gap-y-3 border border-neutral-200 dark:border-neutral-800 
+			p-5 rounded-md"
+			>
 				<div className="flex items-center gap-x-2">
 					<div className="p-2 bg-red-700/10 dark:bg-red-800/30 rounded-full">
 						<CircleAlert className="w-5 h-5 text-red-700 dark:text-red-600" />
@@ -209,8 +219,10 @@ function OrganizerOverview({
 				)}
 			</div>
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-5 auto-rows-auto items-start pb-8">
-				<div className="flex flex-col gap-y-3 border border-neutral-200 
-				dark:border-neutral-800 p-5 rounded-md">
+				<div
+					className="flex flex-col gap-y-3 border border-neutral-200 
+				dark:border-neutral-800 p-5 rounded-md"
+				>
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-orange-600/10 dark:bg-orange-600/20 rounded-full">
 							<Calendar className="w-5 h-5 text-orange-600 dark:text-orange-600" />
@@ -244,7 +256,7 @@ function OrganizerOverview({
 						) : (
 							<div className="flex flex-col gap-y-3">
 								{tasksDueTomorrow.map((task) =>
-									returnTask(task),
+									returnTask(task)
 								)}
 							</div>
 						)
@@ -252,8 +264,10 @@ function OrganizerOverview({
 						<h1>No tasks due tomorrow</h1>
 					)}
 				</div>
-				<div className="flex flex-col gap-y-3 border border-neutral-200 
-				dark:border-neutral-800 p-5 rounded-md">
+				<div
+					className="flex flex-col gap-y-3 border border-neutral-200 
+				dark:border-neutral-800 p-5 rounded-md"
+				>
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-green-700/10 dark:bg-green-800/30 rounded-full">
 							<Calendar className="w-5 h-5 text-green-700 dark:text-green-600" />
@@ -287,7 +301,7 @@ function OrganizerOverview({
 						) : (
 							<div className="flex flex-col gap-y-3">
 								{tasksDueThisWeek.map((task) =>
-									returnTask(task),
+									returnTask(task)
 								)}
 							</div>
 						)
@@ -295,8 +309,10 @@ function OrganizerOverview({
 						<h1>No tasks due this week</h1>
 					)}
 				</div>
-				<div className="flex flex-col gap-y-3 border border-neutral-200 
-				dark:border-neutral-800 p-5 rounded-md">
+				<div
+					className="flex flex-col gap-y-3 border border-neutral-200 
+				dark:border-neutral-800 p-5 rounded-md"
+				>
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-blue-700/10 dark:bg-blue-800/30 rounded-full">
 							<Eye className="w-5 h-5 text-blue-700 dark:text-blue-600" />
@@ -313,7 +329,7 @@ function OrganizerOverview({
 									{tasksForReview
 										.slice(0, 3)
 										.map((taskForReview) =>
-											returnTaskForReview(taskForReview),
+											returnTaskForReview(taskForReview)
 										)}
 								</div>
 								<Button
@@ -330,7 +346,7 @@ function OrganizerOverview({
 						) : (
 							<div className="flex flex-col gap-y-3">
 								{tasksForReview.map((taskForReview) =>
-									returnTaskForReview(taskForReview),
+									returnTaskForReview(taskForReview)
 								)}
 							</div>
 						)
@@ -338,8 +354,10 @@ function OrganizerOverview({
 						<h1>No tasks for review</h1>
 					)}
 				</div>
-				<div className="flex flex-col gap-y-3 border border-neutral-200 
-				dark:border-neutral-800 p-5 rounded-md">
+				<div
+					className="flex flex-col gap-y-3 border border-neutral-200 
+				dark:border-neutral-800 p-5 rounded-md"
+				>
 					<div className="flex items-center gap-x-3">
 						<div className="p-2 bg-purple-700/10 dark:bg-purple-800/30 rounded-full">
 							<Bell className="w-5 h-5 text-purple-700 text-purple-600" />
@@ -356,7 +374,7 @@ function OrganizerOverview({
 									{newNotifications
 										.slice(0, 3)
 										.map((notification) =>
-											returnNotification(notification),
+											returnNotification(notification)
 										)}
 								</div>
 								<Button
@@ -375,7 +393,7 @@ function OrganizerOverview({
 						) : (
 							<div className="flex flex-col gap-y-3">
 								{newNotifications.map((notification) =>
-									returnNotification(notification),
+									returnNotification(notification)
 								)}
 							</div>
 						)
@@ -386,7 +404,6 @@ function OrganizerOverview({
 			</div>
 		</div>
 	);
-	
 }
 
 export default OrganizerOverview;
