@@ -1,33 +1,25 @@
 import { useState } from "react";
 import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
-import projectService from "../services/projectService";
+import taskService from "../services/taskService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { AlertTriangle } from "lucide-react";
 
-function TaskDeleteModal({ 
-	projectId, 
-	taskId, 
-	taskTitle, 
-	closeModal 
-}) {
-
+function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 	const { setTasks } = useProject();
 	const { showToast } = useToast();
 
 	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 
 	async function deleteTask() {
-
 		setTaskBeingDeleted(true);
 
 		try {
-
-			await projectService.deleteTask(projectId, taskId);
+			await taskService.deleteTask(projectId, taskId);
 
 			setTasks((prevTasks) =>
-				prevTasks.filter((task) => task.id !== taskId),
+				prevTasks.filter((task) => task.id !== taskId)
 			);
 
 			showToast({
@@ -36,17 +28,13 @@ function TaskDeleteModal({
 			});
 
 			closeModal(false);
-
 		} catch (err) {
-
-			console.log("The following error occured while deleting task: " + err);
-
+			console.log(
+				"The following error occured while deleting task: " + err
+			);
 		} finally {
-
 			setTaskBeingDeleted(false);
-
 		}
-
 	}
 
 	return (

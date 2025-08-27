@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import RemoveMemberModal from "./RemoveMemberModal";
 import { UserMinus, UserPlus, UserMinus2 } from "lucide-react";
 import ChangeRoleModal from "./ChangeRoleModal";
-import projectService from "../services/projectService";
+import teamMemberService from "../services/teamMemberService";
 
 export function ActionMenu({ isOpen, onClose, anchorEl, selectedMember }) {
 	const { currentMemberId, setTeam } = useProject();
@@ -81,20 +81,17 @@ export function ActionMenu({ isOpen, onClose, anchorEl, selectedMember }) {
 		try {
 			const newRole = roleAction === "promote" ? "manager" : "member";
 
-			const { updatedTeamMember } = await projectService.changeMemberRole(
-				{
+			const { updatedTeamMember } =
+				await teamMemberService.changeTeamMemberRole({
 					projectId: projectId,
 					memberId: selectedMember.id,
 					newRole: newRole,
-				},
-			);
+				});
 
 			setTeam((prevTeam) =>
 				prevTeam.map((member) =>
-					member.id === selectedMember.id
-						? updatedTeamMember
-						: member,
-				),
+					member.id === selectedMember.id ? updatedTeamMember : member
+				)
 			);
 
 			setShowRoleConfirmation(false);
@@ -119,10 +116,13 @@ export function ActionMenu({ isOpen, onClose, anchorEl, selectedMember }) {
 		setMemberBeingRemoved(true);
 
 		try {
-			await projectService.removeMember(projectId, selectedMember.id);
+			await teamMemberService.removeTeamMember(
+				projectId,
+				selectedMember.id
+			);
 
 			setTeam((prevTeam) =>
-				prevTeam.filter((member) => member.id !== selectedMember.id),
+				prevTeam.filter((member) => member.id !== selectedMember.id)
 			);
 
 			setShowConfirmation(false);
@@ -160,13 +160,13 @@ export function ActionMenu({ isOpen, onClose, anchorEl, selectedMember }) {
 					style={{
 						top: anchorEl
 							? anchorEl.getBoundingClientRect().top +
-								window.scrollY +
-								40
+							  window.scrollY +
+							  40
 							: 0,
 						left: anchorEl
 							? anchorEl.getBoundingClientRect().left +
-								window.scrollX -
-								180
+							  window.scrollX -
+							  180
 							: 0,
 					}}
 				>

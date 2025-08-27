@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useProject } from "../context/ProjectContext";
 import { useToast } from "./ui/ToastProvider";
-import projectService from "../services/projectService";
 import { taskPriorityOptions } from "../utils/constant";
 import AiEditor from "./AiEditor";
 import Modal from "./ui/Modal";
@@ -13,7 +12,6 @@ import taskService from "../services/taskService";
 import TaskTitleField from "./TaskTitleField";
 
 function UpdateTaskModal({ projectId, task, team, closeModal }) {
-
 	const {
 		id: taskId,
 		title,
@@ -30,33 +28,33 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	const [taskBeingUpdated, setTaskBeingUpdated] = useState(false);
 	const [newTaskTitle, setNewTaskTitle] = useState(title);
 	const [newTaskDescription, setNewTaskDescription] = useState(description);
-	const [newTaskDeadline, setNewTaskDeadline] = useState(() => deadline.split("T")[0]);
+	const [newTaskDeadline, setNewTaskDeadline] = useState(
+		() => deadline.split("T")[0]
+	);
 	const [newTaskFiles, setNewTaskFiles] = useState([]);
-	const [newTaskAssignedToId, setNewTaskAssignedToId] = useState(assignedToId);
+	const [newTaskAssignedToId, setNewTaskAssignedToId] =
+		useState(assignedToId);
 	const [newTaskPriority, setNewTaskPriority] = useState(priority);
 	const [filesFetched, setFilesFetched] = useState(false);
 
 	const fileUpdates = useMemo(() => {
-
 		if (!filesFetched) return { filesToAdd: [], filesToDelete: [] };
 
 		const oldFileIds = filesMetaData.map((file) => file.id);
 		const newFileIds = newTaskFiles.map((file) => file.id);
 
 		const filesToAdd = newTaskFiles.filter(
-			(newFile) => !oldFileIds.includes(newFile.id),
+			(newFile) => !oldFileIds.includes(newFile.id)
 		);
 		const filesToDelete = oldFileIds.filter(
-			(id) => !newFileIds.includes(id),
+			(id) => !newFileIds.includes(id)
 		);
 
 		return { filesToAdd, filesToDelete };
-
 	}, [newTaskFiles, filesMetaData, filesFetched]);
 
 	/* eslint-disable react-hooks/exhaustive-deps */
 	const updatedTaskProps = useMemo(() => {
-
 		const updatedProps = getUpdatedTaskProps({
 			newTaskTitle: newTaskTitle,
 			oldTaskTitle: title,
@@ -71,7 +69,6 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		});
 
 		return updatedProps;
-
 	}, [
 		newTaskTitle,
 		newTaskDescription,
@@ -82,38 +79,32 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	/* eslint-enable react-hooks/exhaustive-deps */
 
 	const submitButtonDisabled = useMemo(() => {
-
 		const allowToSubmit = shouldEnableSubmitButton(
 			updatedTaskProps,
-			fileUpdates,
+			fileUpdates
 		);
 
 		return allowToSubmit ? false : true;
-
 	}, [updatedTaskProps, fileUpdates]);
 
 	useEffect(() => {
-
 		async function fetchPresignedUrls() {
-
 			const { fileUrls } = await taskService.getTaskFiles(
 				projectId,
-				taskId,
+				taskId
 			);
 			await fetchFilesFromPresignedUrls(fileUrls);
-
 		}
 
 		async function fetchFilesFromPresignedUrls(fileUrls) {
-
 			const responses = await Promise.all(
-				fileUrls.map((file) => fetch(file.url)),
+				fileUrls.map((file) => fetch(file.url))
 			);
 			const blobs = await Promise.all(
-				responses.map((response) => response.blob()),
+				responses.map((response) => response.blob())
 			);
 			const files = blobs.map(
-				(blob, index) => new File([blob], fileUrls[index].fileName),
+				(blob, index) => new File([blob], fileUrls[index].fileName)
 			);
 
 			setNewTaskFiles(
@@ -122,28 +113,25 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 						id: fileUrls[index].id,
 						file: file,
 					};
-				}),
+				})
 			);
 
 			setFilesFetched(true);
-
 		}
 
 		fetchPresignedUrls();
-
 	}, []);
 
 	async function updateTask() {
-
 		const formData = prepareDataForSubmission(
 			updatedTaskProps,
-			fileUpdates,
+			fileUpdates
 		);
 
 		setTaskBeingUpdated(true);
 
 		try {
-			const { updatedTask } = await projectService.updateTask({
+			const { updatedTask } = await taskService.updateTask({
 				projectId,
 				taskId,
 				formData,
@@ -151,8 +139,8 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 
 			setTasks((prevTasks) =>
 				prevTasks.map((task) =>
-					task.id === taskId ? updatedTask : task,
-				),
+					task.id === taskId ? updatedTask : task
+				)
 			);
 
 			closeModal();
@@ -170,17 +158,14 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		} finally {
 			setTaskBeingUpdated(false);
 		}
-
 	}
 
 	return (
-		<Modal 
-			title="Edit Task" 
-			size="lg" 
-			closeModal={closeModal}
-		>
-			<div className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
-			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
+		<Modal title="Edit Task" size="lg" closeModal={closeModal}>
+			<div
+				className="flex gap-y-8 flex-col grow overflow-y-auto px-6 pb-6 scrollbar-thin 
+			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800"
+			>
 				<div className="flex flex-col gap-y-8">
 					<TaskTitleField
 						taskDescription={newTaskDescription}
@@ -323,7 +308,7 @@ function prepareDataForSubmission(updatedTaskProps, fileUpdates) {
 	if (fileUpdates.filesToDelete.length > 0) {
 		formData.append(
 			"filesToDelete",
-			JSON.stringify(fileUpdates.filesToDelete),
+			JSON.stringify(fileUpdates.filesToDelete)
 		);
 	}
 

@@ -29,7 +29,7 @@ const projectService = {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ updatedProjectProps }),
-			},
+			}
 		);
 
 		if (!response.ok) {
@@ -46,13 +46,13 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(
-				error.message || "Error occured while deleting the project",
+				error.message || "Error occured while deleting the project"
 			);
 		}
 	},
@@ -82,33 +82,14 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(
-				error.message ||
-					"Error occured while getting project's details",
+				error.message || "Error occured while getting project's details"
 			);
-		}
-
-		return response.json();
-	},
-
-	createTask: async (projectId, sprintId, formData) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/sprints/${sprintId}/tasks`,
-			{
-				method: "POST",
-				credentials: "include",
-				body: formData,
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to create task");
 		}
 
 		return response.json();
@@ -120,115 +101,14 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			console.log(error);
 			throw new Error(
-				error.message || "Error occured while deleting the project.",
-			);
-		}
-	},
-
-	deleteTask: async (projectId, taskId) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
-			{
-				method: "DELETE",
-				credentials: "include",
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to delete task");
-		}
-	},
-
-	changeTaskStatus: async ({
-		projectId,
-		taskId,
-		updatedTaskStatus,
-		updateComment,
-	}) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}/status`,
-			{
-				method: "PATCH",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					updatedTaskStatus: updatedTaskStatus,
-					comment: updateComment,
-				}),
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update task");
-		}
-
-		return response.json();
-	},
-
-	updateTask: async ({ projectId, taskId, formData }) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`,
-			{
-				method: "PATCH",
-				credentials: "include",
-				body: formData,
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update the task");
-		}
-
-		return response.json();
-	},
-
-	changeMemberRole: async ({ projectId, memberId, newRole }) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${memberId}`,
-			{
-				method: "PATCH",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ newRole: newRole }),
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to change member's role");
-		}
-
-		return response.json();
-	},
-
-	removeMember: async (projectId, memberId) => {
-		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${memberId}`,
-			{
-				method: "DELETE",
-				credentials: "include",
-			},
-		);
-
-		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(
-				error.message ||
-					"Unexpected error occured while deleting the user",
+				error.message || "Error occured while deleting the project."
 			);
 		}
 	},
@@ -239,7 +119,7 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
@@ -256,7 +136,7 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
