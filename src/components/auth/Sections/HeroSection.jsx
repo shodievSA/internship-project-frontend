@@ -45,8 +45,6 @@ const Hero = () => {
                         bg-gradient-to-r from-slate-900 via-purple-800 to-blue-800
                         bg-clip-text text-transparent
                         leading-tight,
-                        xss:mb-7
-                        xss:mt-5
 
                     '
 
@@ -60,7 +58,7 @@ const Hero = () => {
 
                     className='
 
-                        text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 xss:mb-24 mb-28 leading-tight
+                        text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-28 leading-tight
 
                     '
 
