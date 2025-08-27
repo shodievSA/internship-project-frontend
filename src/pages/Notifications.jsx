@@ -30,13 +30,13 @@ function Notifications() {
 				setTimeout(() => {
 					element.classList.add(
 						"animate-notification-ping-light",
-						"dark:animate-notification-ping-dark",
+						"dark:animate-notification-ping-dark"
 					);
 
 					setTimeout(() => {
 						element.classList.remove(
 							"animate-notification-ping-light",
-							"dark:animate-notification-ping-dark",
+							"dark:animate-notification-ping-dark"
 						);
 					}, 500);
 				}, 800);
@@ -48,7 +48,7 @@ function Notifications() {
 		setSelectedIds((prev) =>
 			prev.includes(id)
 				? prev.filter((selectedId) => selectedId !== id)
-				: [...prev, id],
+				: [...prev, id]
 		);
 	};
 
@@ -70,9 +70,9 @@ function Notifications() {
 							...notification,
 							isViewed: true,
 							updated_at: new Date().toISOString(),
-						}
-					: notification,
-			),
+					  }
+					: notification
+			)
 		);
 
 		try {
@@ -93,9 +93,9 @@ function Notifications() {
 							...notification,
 							isViewed: true,
 							updated_at: currentTime,
-						}
-					: notification,
-			),
+					  }
+					: notification
+			)
 		);
 
 		setSelectedIds([]);
@@ -103,7 +103,7 @@ function Notifications() {
 		try {
 			await notificationService.updateNotificationViewStatus(
 				selectedIds,
-				true,
+				true
 			);
 		} catch (err) {
 			setNotifications(prevNotifications);
@@ -121,9 +121,9 @@ function Notifications() {
 							...notification,
 							isViewed: false,
 							updated_at: currentTime,
-						}
-					: notification,
-			),
+					  }
+					: notification
+			)
 		);
 
 		setSelectedIds([]);
@@ -131,7 +131,7 @@ function Notifications() {
 		try {
 			await notificationService.updateNotificationViewStatus(
 				selectedIds,
-				false,
+				false
 			);
 		} catch (err) {
 			setNotifications(prevNotifications);
@@ -143,7 +143,7 @@ function Notifications() {
 
 		setNotifications((prev) => prev.filter((n) => n.id !== id));
 		setSelectedIds((prev) =>
-			prev.filter((selectedId) => selectedId !== id),
+			prev.filter((selectedId) => selectedId !== id)
 		);
 
 		try {
@@ -157,7 +157,7 @@ function Notifications() {
 		const prevNotifications = notifications;
 
 		setNotifications((prev) =>
-			prev.filter((n) => !selectedIds.includes(n.id)),
+			prev.filter((n) => !selectedIds.includes(n.id))
 		);
 		setSelectedIds([]);
 
@@ -172,14 +172,37 @@ function Notifications() {
 		setSearch("");
 	}
 
-	const filteredNotifications = filterNotifications(notifications, { search });
+	const filteredNotifications = filterNotifications(notifications, {
+		search,
+	});
 
-	const unviewedCount = filteredNotifications.filter((n) => !n.isViewed).length;
+	const unviewedCount = filteredNotifications.filter(
+		(n) => !n.isViewed
+	).length;
 	const totalCount = filteredNotifications.length;
 
-	if (loading) return <LoadingState message={"Hang on - your notifications are on their way!"} />;
-	if (error) <ErrorState message={"Unexpected error while loading your notifications"} />;
-	if (notifications.length === 0) return <EmptyState message={"No new notifications right now. We'll let you know when something important happens."} />;
+	if (loading)
+		return (
+			<LoadingState
+				message={"Hang on - your notifications are on their way!"}
+			/>
+		);
+	if (error)
+		return (
+			<ErrorState
+				message={
+					error || "Unexpected error while loading your notifications"
+				}
+			/>
+		);
+	if (notifications.length === 0)
+		return (
+			<EmptyState
+				message={
+					"No new notifications right now. We'll let you know when something important happens."
+				}
+			/>
+		);
 	if (notifications.length === 0) return <EmptyNotifications />;
 
 	return (
@@ -270,7 +293,7 @@ function Notifications() {
 								key={notification.id}
 								notification={notification}
 								isSelected={selectedIds.includes(
-									notification.id,
+									notification.id
 								)}
 								onSelect={handleSelectNotification}
 								onMarkAsViewed={handleMarkAsViewed}

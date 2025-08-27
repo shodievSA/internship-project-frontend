@@ -43,8 +43,21 @@ function Organizer() {
 		setCurrentTab(newTab);
 	}
 
-	if (!reportFetched) return <LoadingState message={"Hang on - your daily report is on its way!"} />;
-	if (error) <ErrorState message={"Oops! Your daily report tripped on a glitch. We’re working on it!"} />;
+	if (!reportFetched)
+		return (
+			<LoadingState
+				message={"Hang on - your daily report is on its way!"}
+			/>
+		);
+	if (error)
+		return (
+			<ErrorState
+				message={
+					error ||
+					"Oops! Your daily report tripped on a glitch. We're working on it!"
+				}
+			/>
+		);
 	if (!dailyReport) return <EmptyAiPlanner />;
 
 	return (
@@ -70,42 +83,66 @@ function Organizer() {
 						></div>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "overview" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "overview"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("overview", 0)}
 						>
 							Overview
 						</li>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "tasks-due-today" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "tasks-due-today"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("tasks-due-today", 1)}
 						>
 							Today
 						</li>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "tasks-due-tomorrow" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "tasks-due-tomorrow"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("tasks-due-tomorrow", 2)}
 						>
 							Tomorrow
 						</li>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "tasks-due-this-week" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "tasks-due-this-week"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("tasks-due-this-week", 3)}
 						>
 							This Week
 						</li>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "reviews" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "reviews"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("reviews", 4)}
 						>
 							Reviews
 						</li>
 						<li
 							className={`transition-['background-color,text'] duration-300 cursor-pointer z-10
-							${currentTab === "notifications" ? "text-black dark:text-white" : "text-neutral-500"}`}
+							${
+								currentTab === "notifications"
+									? "text-black dark:text-white"
+									: "text-neutral-500"
+							}`}
 							onClick={() => handleTab("notifications", 5)}
 						>
 							Updates

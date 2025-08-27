@@ -11,13 +11,7 @@ import TaskTitleField from "./TaskTitleField";
 import FileAttachments from "./FileAttachments";
 import { taskPriorityOptions } from "../utils/constant";
 
-function NewTaskModal({
-	projectId,
-	sprintId,
-	onNewTaskCreated,
-	closeModal,
-}) {
-
+function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 	const { team, currentMemberId } = useProject();
 	const { showToast } = useToast();
 
@@ -31,7 +25,6 @@ function NewTaskModal({
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
 	async function createNewTask() {
-
 		const formData = new FormData();
 
 		formData.append("title", taskTitle);
@@ -50,11 +43,10 @@ function NewTaskModal({
 		setIsNewTaskBeingCreated(true);
 
 		try {
-
 			const { newTask } = await projectService.createTask(
 				projectId,
 				sprintId,
-				formData,
+				formData
 			);
 
 			onNewTaskCreated(newTask);
@@ -66,25 +58,21 @@ function NewTaskModal({
 			});
 
 			closeModal();
-
 		} catch (err) {
-
 			console.log(
-				"The following error occured while creating task: " + err,
+				"The following error occured while creating task: " + err
 			);
 
 			showToast({
 				variant: "failure",
-				title: "Unexpected error occured!",
-				message: "Unexpected error occured while creating new task",
+				title: "Failed to create task",
+				message:
+					err.message ||
+					"Unexpected error occured while creating new task",
 			});
-
 		} finally {
-
 			setIsNewTaskBeingCreated(false);
-
 		}
-
 	}
 
 	useEffect(() => {
@@ -109,8 +97,10 @@ function NewTaskModal({
 
 	return (
 		<Modal title="Create New Task" size="lg" closeModal={closeModal}>
-			<div className="flex flex-col grow gap-y-8 overflow-y-auto px-6 pb-6 
-			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
+			<div
+				className="flex flex-col grow gap-y-8 overflow-y-auto px-6 pb-6 
+			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800"
+			>
 				<div className="flex flex-col gap-y-8">
 					<TaskTitleField
 						disabled={isNewTaskBeingCreated}
@@ -161,8 +151,10 @@ function NewTaskModal({
 					/>
 				</div>
 			</div>
-			<div className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
-            border-neutral-200 p-4">
+			<div
+				className="grid grid-cols-2 gap-4 border-t-[1px] dark:border-neutral-800 
+            border-neutral-200 p-4"
+			>
 				<Button
 					size="md"
 					variant="secondary"
@@ -185,7 +177,6 @@ function NewTaskModal({
 }
 
 function getAssignToOptions(teamMembers) {
-
 	const assignToOptions = teamMembers.map((member) => {
 		return {
 			label: `${member.name} - ${member.position}`,
@@ -194,7 +185,6 @@ function getAssignToOptions(teamMembers) {
 	});
 
 	return assignToOptions;
-	
 }
 
 export default NewTaskModal;
