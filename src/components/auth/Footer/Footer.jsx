@@ -68,7 +68,7 @@ const Footer = () => (
                         <a
                         
                             className='text-slate-400 hover:text-white transition-colors duration-300'
-                            href="#statistic"
+                            href="#statistics"
                             data-aos='fade-up'
 
                         >
