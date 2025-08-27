@@ -19,7 +19,7 @@ const teamMemberService = {
 		return response.json();
 	},
 
-	// Get specific team member details
+	// Get specific team member detail
 	getTeamMember: async (projectId, memberId) => {
 		const response = await fetch(
 			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/members/${memberId}`,
