@@ -7,7 +7,9 @@ export default {
 	theme: {
 		extend: {
 			screens: {
-				"2xl": "1440px"
+				"xss": { "max": "450px" },
+				"xs": "450px",
+				"2xl": "1440px",
 			},
 			fontFamily: {
 				inter: ["Inter", ...defaultTheme.fontFamily.sans],
