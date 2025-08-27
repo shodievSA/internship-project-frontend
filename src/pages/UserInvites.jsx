@@ -8,9 +8,10 @@ import { CustomDropdown } from "../components/CustomDropdown";
 import { statusOptionsInviation, dateOptions } from "../utils/constant";
 import { filterInvitations } from "../utils/filterUtils";
 import SearchBar from "../components/SearchBar";
-import { EmptyInvitation } from "../components/EmptyInvitation";
 import LoadingState from "../components/LoadingState";
 import { Calendar, Filter } from "lucide-react";
+import EmptyState from "../components/EmptyState";
+import EmptySearch from "../components/EmptySearch";
 
 function UserInvites() {
 
@@ -46,6 +47,14 @@ function UserInvites() {
 
 	}
 
+	function clearFilters() {
+
+		setSearchTerm("");
+		setStatusFilter("all");
+		setDateFilter("all");
+
+	}
+
 	const filteredInvites = filterInvitations(invites, {
 		search: searchTerm,
 		status: statusFilter,
@@ -57,9 +66,9 @@ function UserInvites() {
 			{!invitesFetched ? (
 				<LoadingState message={"Hang on - your invites are on their way!"} />
 			) : invites.length === 0 ? (
-				<EmptyInvitation />
+				<EmptyState message={"No new invites right now. We'll let you know when someone invites you."} />
 			) : (
-				<div className="w-full">
+				<div className="h-full flex flex-col w-full">
 					<div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-x-6 mb-6 w-full">
 						<div className="w-full lg:w-96 mb-4 lg:mb-0">
 							<SearchBar
@@ -90,18 +99,27 @@ function UserInvites() {
 							/>
 						</div>
 					</div>
-					<div className="space-y-4">
-						{filteredInvites.length > 0 ? (
-							filteredInvites.map((invite) => (
-								<UserInviteCard
-									key={invite.id}
-									invite={invite}
-									onRespond={handleInvite}
+					<div className="grow">
+						{
+							filteredInvites.length > 0 ? (
+								<div className="flex flex-col gap-y-4">
+									{
+										filteredInvites.map((invite) => (
+											<UserInviteCard
+												key={invite.id}
+												invite={invite}
+												onRespond={handleInvite}
+											/>
+										))
+									}
+								</div>
+							) : (
+								<EmptySearch 
+									message={"No results that match your search"} 
+									onClearFilters={clearFilters}
 								/>
-							))
-						) : (
-							<div>No results that match your query</div>
-						)}
+							)
+						}
 					</div>
 				</div>
 			)}

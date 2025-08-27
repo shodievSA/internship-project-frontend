@@ -5,11 +5,11 @@ import NotificationItem from "../components/NotificationItem";
 import { Trash2 } from "lucide-react";
 import { filterNotifications } from "../utils/filterUtils";
 import SearchBar from "../components/SearchBar";
-import EmptyNotifications from "../components/EmptyNotifications";
 import notificationService from "../services/notificationService";
 import ErrorState from "../components/ErrorState";
 import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
+import EmptyState from "../components/EmptyState";
 
 function Notifications() {
 	const location = useLocation();
@@ -179,6 +179,7 @@ function Notifications() {
 
 	if (loading) return <LoadingState message={"Hang on - your notifications are on their way!"} />;
 	if (error) <ErrorState message={"Unexpected error while loading your notifications"} />;
+	if (notifications.length === 0) return <EmptyState message={"No new notifications right now. We'll let you know when something important happens."} />;
 	if (notifications.length === 0) return <EmptyNotifications />;
 
 	return (
