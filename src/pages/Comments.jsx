@@ -144,7 +144,7 @@ function Comments() {
 			} finally {
 				setTimeout(() => {
 					setCommentsFetched(true);
-				}, 500);
+				}, 200);
 			}
 		}
 

@@ -29,7 +29,7 @@ function Organizer() {
 			} finally {
 				setTimeout(() => {
 					setReportFetched(true);
-				}, 500);
+				}, 200);
 			}
 		}
 

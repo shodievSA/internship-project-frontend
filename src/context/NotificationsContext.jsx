@@ -83,7 +83,7 @@ export function NotificationsContextProvider({ children }) {
 			} finally {
 				setTimeout(() => {
 					setLoading(false);
-				}, 600);
+				}, 200);
 			}
 		};
 
@@ -100,7 +100,7 @@ export function NotificationsContextProvider({ children }) {
 			} finally {
 				setTimeout(() => {
 					setInvitesFetched(true);
-				}, 600);
+				}, 200);
 			}
 		}
 

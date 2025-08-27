@@ -40,7 +40,7 @@ function Summary() {
 		// Add a small delay to show the skeleton loading state
 		setTimeout(() => {
 			setIsLoadingSprintData(false);
-		}, 500);
+		}, 200);
 	};
 
 	return (

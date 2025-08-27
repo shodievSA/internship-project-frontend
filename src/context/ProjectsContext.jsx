@@ -27,7 +27,7 @@ function ProjectsContextProvider({ children }) {
 
 			setTimeout(() => {
 				setProjectsLoaded(true);
-			}, 800);
+			}, 400);
 			
 		}
 

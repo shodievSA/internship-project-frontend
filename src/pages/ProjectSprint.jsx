@@ -63,7 +63,7 @@ function ProjectSprint() {
 
 				setTimeout(() => {
 					setSprintTasksBeingLoaded(false);
-				}, 300);
+				}, 200);
 
 			}
 

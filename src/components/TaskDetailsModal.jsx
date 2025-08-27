@@ -68,7 +68,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 				setTimeout(() => {
 					setFileUrlsLoaded(true);
 					setIsLoading(false);
-				}, 400);
+				}, 200);
 
 			}
 
@@ -87,7 +87,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 			// Show skeleton for 400ms when switching to time tab
 			setTimeout(() => {
 				setTimeTabLoaded(true);
-			}, 400);
+			}, 200);
 		}
 
 	};

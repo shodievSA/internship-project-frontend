@@ -77,7 +77,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
     // Add a small delay to show the skeleton loading state
     setTimeout(() => {
       setIsChangingFilter(false);
-    }, 500);
+    }, 400);
   };
 
 	// Reset changing filter state when data loads
@@ -86,7 +86,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 			// Add a small delay to ensure skeleton is visible
 			setTimeout(() => {
 				setIsChangingFilter(false);
-			}, 500);
+			}, 400);
 		}
 	}, [productivityData, isChangingFilter]);
 
@@ -96,7 +96,7 @@ export function TeamMemberProductivityModal({ member, isOpen, onClose }) {
 			// Show skeleton for initial load
 			setTimeout(() => {
 				setIsInitialLoad(false);
-			}, 1000);
+			}, 500);
 		}
 	}, [isOpen, isInitialLoad]);
 
