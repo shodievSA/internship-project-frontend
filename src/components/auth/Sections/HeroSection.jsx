@@ -21,7 +21,7 @@ const Hero = () => {
 
     return (
         
-        <section className='relative min-h-screen flex items-center justify-center px-4 overflow-hidden'>
+        <section className='relative min-h-screen flex items-center justify-center px-4 py-24 overflow-hidden'>
 
             <div className='absolute inset-0 bg-gradient-to-br from-purple-600/10 via-blue-600/10 to-transparent'></div>
 
@@ -44,7 +44,9 @@ const Hero = () => {
                         font-bold mb-10
                         bg-gradient-to-r from-slate-900 via-purple-800 to-blue-800
                         bg-clip-text text-transparent
-                        leading-tight
+                        leading-tight,
+                        xss:mb-7
+                        xss:mt-5
 
                     '
 
@@ -58,7 +60,7 @@ const Hero = () => {
 
                     className='
 
-                        text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-28 leading-tight
+                        text-4xl md:text-6xl lg:text-7xl font-bold text-slate-900 xss:mb-24 mb-28 leading-tight
 
                     '
 

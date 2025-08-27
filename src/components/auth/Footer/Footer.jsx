@@ -12,7 +12,7 @@ const Footer = () => (
 
                     <div
 
-                        className='mb-0 md:mb-0'
+                        className='mb-0 sm:mb-12 xs:mb-14 xss:mb-12 text-center'
                         data-aos='fade-up'
 
                     >
@@ -36,7 +36,16 @@ const Footer = () => (
 
                 </AnimateOnScroll>
 
-                <nav className='flex space-x-8'>
+                <nav
+
+                    className='
+
+                        flex space-x-8 text-center xss:space-x-0 xss:space-y-2 xss:grid xss:grid-cols-1 xss:place-items-center
+                        md:space-x-0 md:grid md:grid-cols-2 md:space-y-4 md:place-items-baseline md:place-content-end lg:flex lg:space-x-8
+
+                    '
+
+                >
 
                     <AnimateOnScroll>
 
