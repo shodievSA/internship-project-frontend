@@ -49,7 +49,7 @@ export function ProjectContextProvider({ children }) {
 
 			setTimeout(() => {
 				setProjectLoaded(true);
-			}, 400);
+			}, 200);
 
 		}
 
@@ -73,9 +73,11 @@ export function ProjectContextProvider({ children }) {
 
 	useEffect(() => {
 
+		if (!projectLoaded) return;
+
 		fetchProjects();
 
-	}, [sprints, team, metaData]);
+	}, [sprints, team, metaData, projectLoaded]);
 
 	const contextData = {
 		error,
