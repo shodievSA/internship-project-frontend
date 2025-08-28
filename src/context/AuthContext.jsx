@@ -16,15 +16,17 @@ function AuthContextProvider({ children }) {
 				});
 
 				if (!res.ok) {
-					throw new Error(
-						"request for fetching user data was unsuccessfull",
-					);
+					const error = await res.json();
+					throw new Error(error.error || "Failed to fetch user data");
 				}
 
 				const { user } = await res.json();
 				setUser(user);
-			} catch {
-				console.log("error occured while fetching user data");
+			} catch (error) {
+				console.log(
+					"Error occurred while fetching user data:",
+					error.message
+				);
 				setUser(null);
 			} finally {
 				setIsUserFetched(true);

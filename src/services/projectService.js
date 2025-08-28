@@ -13,7 +13,7 @@ const projectService = {
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to create project");
+			throw new Error(error.error || "Failed to create project");
 		}
 
 		return response.json();
@@ -29,12 +29,12 @@ const projectService = {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ updatedProjectProps }),
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to update project");
+			throw new Error(error.error || "Failed to update project");
 		}
 
 		return response.json();
@@ -46,13 +46,13 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(
-				error.message || "Error occured while deleting the project",
+				error.error || "Error occured while deleting the project"
 			);
 		}
 	},
@@ -68,7 +68,7 @@ const projectService = {
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to fetch projects");
+			throw new Error(error.error || "Failed to fetch projects");
 		}
 
 		const { projects } = await response.json();
@@ -82,14 +82,13 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(
-				error.message ||
-					"Error occured while getting project's details",
+				error.error || "Error occured while getting project's details"
 			);
 		}
 
@@ -103,12 +102,12 @@ const projectService = {
 				method: "POST",
 				credentials: "include",
 				body: formData,
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to create task");
+			throw new Error(error.error || "Failed to create task");
 		}
 
 		return response.json();
@@ -120,14 +119,14 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			console.log(error);
 			throw new Error(
-				error.message || "Error occured while deleting the project.",
+				error.error || "Error occured while deleting the project."
 			);
 		}
 	},
@@ -138,12 +137,12 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to delete task");
+			throw new Error(error.error || "Failed to delete task");
 		}
 	},
 
@@ -165,12 +164,12 @@ const projectService = {
 					updatedTaskStatus: updatedTaskStatus,
 					comment: updateComment,
 				}),
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to update task");
+			throw new Error(error.error || "Failed to update task");
 		}
 
 		return response.json();
@@ -183,12 +182,12 @@ const projectService = {
 				method: "PATCH",
 				credentials: "include",
 				body: formData,
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to update the task");
+			throw new Error(error.error || "Failed to update the task");
 		}
 
 		return response.json();
@@ -204,12 +203,12 @@ const projectService = {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ newRole: newRole }),
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to change member's role");
+			throw new Error(error.error || "Failed to change member's role");
 		}
 
 		return response.json();
@@ -221,14 +220,14 @@ const projectService = {
 			{
 				method: "DELETE",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
 			throw new Error(
-				error.message ||
-					"Unexpected error occured while deleting the user",
+				error.error ||
+					"Unexpected error occured while deleting the user"
 			);
 		}
 	},
@@ -239,12 +238,12 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to load project invites");
+			throw new Error(error.error || "Failed to load project invites");
 		}
 
 		return response.json();
@@ -256,12 +255,12 @@ const projectService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to load project members");
+			throw new Error(error.error || "Failed to load project members");
 		}
 
 		return response.json();

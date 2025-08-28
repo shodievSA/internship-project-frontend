@@ -7,12 +7,12 @@ const taskService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(error.message || "Failed to load file attachments");
+			throw new Error(error.error || "Failed to load file attachments");
 		}
 
 		return response.json();

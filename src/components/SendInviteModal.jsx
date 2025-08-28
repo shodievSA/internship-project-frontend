@@ -9,7 +9,6 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-
 function SendInviteModal({ closeModal, onNewInviteCreated }) {
 	const { projectId } = useParams();
 	const { showToast } = useToast();
@@ -25,34 +24,34 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 
 	useEffect(() => {
-
 		getGmailContacts();
 
 		async function getGmailContacts() {
-
 			try {
-
-				const res = await fetch(`${SERVER_BASE_URL}/api/v1/me/gmail-contacts`, {
+				const res = await fetch(
+					`${SERVER_BASE_URL}/api/v1/me/gmail-contacts`,
+					{
 						method: "GET",
 						credentials: "include",
 					}
 				);
 
+				if (!res.ok) {
+					const error = await res.json();
+					throw new Error(
+						error.error || "Failed to fetch Gmail contacts"
+					);
+				}
+
 				const { contacts } = await res.json();
 
 				setGmailContacts(contacts);
-
 			} catch (err) {
-
 				console.log(err);
-
 			} finally {
-
 				setGmailContactsFetched(true);
 			}
-
 		}
-
 	}, []);
 
 	useEffect(() => {
@@ -64,17 +63,13 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 	}, [email, position, role]);
 
 	useEffect(() => {
-
 		if (gmailContactsFetched) {
-
 			if (!searchQuery) {
 				return setSearchResults(gmailContacts);
 			}
 
 			setSearchResults(() => {
-
 				return gmailContacts.filter((contact) => {
-
 					if (
 						contact.fullName
 							.toLowerCase()
@@ -85,21 +80,15 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 					) {
 						return contact;
 					}
-
 				});
-
 			});
-
 		}
-
 	}, [searchQuery, gmailContactsFetched, gmailContacts]);
 
 	async function sendInvite() {
-
 		setInviteBeingSent(true);
 
 		try {
-
 			const res = await fetch(
 				`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites`,
 				{
@@ -113,11 +102,12 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 						positionOffered: position,
 						roleOffered: role,
 					}),
-				},
+				}
 			);
 
 			if (!res.ok) {
-				throw new Error("response was unsuccessfull");
+				const error = await res.json();
+				throw new Error(error.error || "Failed to send invite");
 			}
 
 			const { invite } = await res.json();
@@ -131,25 +121,21 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 				title: "Invite sent successfully!",
 				message: `Your invite to ${email} has been delivered successfully!`,
 			});
-
 		} catch (err) {
-
 			console.log(
-				"Error occured while sending project invite: " + err.message,
+				"Error occurred while sending project invite: " + err.message
 			);
 
 			showToast({
 				variant: "failure",
-				title: "Unexpected error occured!",
-				message: `Error occured while sending invite to ${email}. Please, try again later!`,
+				title: "Failed to send invite",
+				message:
+					err.message ||
+					`Error occurred while sending invite to ${email}. Please, try again later!`,
 			});
-
 		} finally {
-
 			setInviteBeingSent(false);
-
 		}
-
 	}
 
 	return (
@@ -159,23 +145,29 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 			titleIcon={<Mail />}
 			closeModal={closeModal}
 		>
-			<div className="flex flex-col px-7 pb-7 gap-y-8 grow overflow-y-auto scrollbar-thin 
-			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800 grow">
+			<div
+				className="flex flex-col px-7 pb-7 gap-y-8 grow overflow-y-auto scrollbar-thin 
+			dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800 grow"
+			>
 				<div className="flex flex-col gap-y-2">
 					<SearchBar
 						placeholder="Search your gmail contacts..."
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
-					<div className="rounded-md dark:border-neutral-800 border-neutral-200 border-[1px] 
+					<div
+						className="rounded-md dark:border-neutral-800 border-neutral-200 border-[1px] 
 					p-4 max-h-48 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
-					dark:scrollbar-track-neutral-800">
+					dark:scrollbar-track-neutral-800"
+					>
 						{!gmailContactsFetched ? (
 							<div className="flex items-center justify-center gap-x-3">
 								<div className="flex justify-center relative w-5 h-5">
 									<div className="absolute w-5 h-5 border-2 dark:border-gray-300 border-gray-400 rounded-full"></div>
-									<div className="absolute w-5 h-5 border-2 border-transparent border-t-white 
-									dark:border-t-black rounded-full animate-spin"></div>
+									<div
+										className="absolute w-5 h-5 border-2 border-transparent border-t-white 
+									dark:border-t-black rounded-full animate-spin"
+									></div>
 								</div>
 								<h1>Loading your gmail contacts</h1>
 							</div>
@@ -203,7 +195,9 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 											</div>
 											<div className="flex flex-col">
 												<span>{contact.fullName}</span>
-												<span className="text-sm">{contact.email}</span>
+												<span className="text-sm">
+													{contact.email}
+												</span>
 											</div>
 										</div>
 									);

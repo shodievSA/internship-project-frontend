@@ -7,14 +7,12 @@ export const organizerService = {
 			{
 				method: "GET",
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
 			const error = await response.json();
-			throw new Error(
-				error.message || "Failed to get user's daily report",
-			);
+			throw new Error(error.error || "Failed to get user's daily report");
 		}
 
 		return response.json();
