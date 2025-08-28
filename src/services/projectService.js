@@ -12,8 +12,10 @@ const projectService = {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to create project");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to create project"
+			);
 		}
 
 		return response.json();
@@ -33,8 +35,10 @@ const projectService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update project");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to update project"
+			);
 		}
 
 		return response.json();
@@ -50,9 +54,11 @@ const projectService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message || "Error occured while deleting the project"
+				error.error ||
+					error.message ||
+					"Error occured while deleting the project"
 			);
 		}
 	},
@@ -67,8 +73,10 @@ const projectService = {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to fetch projects");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to fetch projects"
+			);
 		}
 
 		const { projects } = await response.json();
@@ -86,9 +94,11 @@ const projectService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message || "Error occured while getting project's details"
+				error.error ||
+					error.message ||
+					"Error occured while getting project's details"
 			);
 		}
 
@@ -105,10 +115,12 @@ const projectService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			console.log(error);
 			throw new Error(
-				error.message || "Error occured while deleting the project."
+				error.error ||
+					error.message ||
+					"Error occured while deleting the project."
 			);
 		}
 	},

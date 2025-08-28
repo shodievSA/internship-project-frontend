@@ -15,7 +15,9 @@ export async function getTaskComments(projectId, taskId) {
 	});
 	if (!res.ok) {
 		const error = await res.json().catch(() => ({}));
-		throw new Error(error.message || "Failed to get task comments");
+		throw new Error(
+			error.error || error.message || "Failed to get task comments"
+		);
 	}
 	return await res.json();
 }
@@ -39,7 +41,9 @@ export async function createTaskComment(projectId, taskId, commentData) {
 	});
 	if (!res.ok) {
 		const error = await res.json().catch(() => ({}));
-		throw new Error(error.message || "Failed to create comment");
+		throw new Error(
+			error.error || error.message || "Failed to create comment"
+		);
 	}
 	return await res.json();
 }
@@ -57,7 +61,7 @@ export async function updateTaskComment(
 	projectId,
 	taskId,
 	commentId,
-	commentData,
+	commentData
 ) {
 	const res = await fetch(
 		`${BASE}/${projectId}/tasks/${taskId}/comments/${commentId}`,
@@ -68,11 +72,13 @@ export async function updateTaskComment(
 			},
 			credentials: "include",
 			body: JSON.stringify(commentData),
-		},
+		}
 	);
 	if (!res.ok) {
 		const error = await res.json().catch(() => ({}));
-		throw new Error(error.message || "Failed to update comment");
+		throw new Error(
+			error.error || error.message || "Failed to update comment"
+		);
 	}
 	return await res.json();
 }
@@ -90,11 +96,13 @@ export async function deleteTaskComment(projectId, taskId, commentId) {
 		{
 			method: "DELETE",
 			credentials: "include",
-		},
+		}
 	);
 	if (!res.ok) {
 		const error = await res.json().catch(() => ({}));
-		throw new Error(error.message || "Failed to delete comment");
+		throw new Error(
+			error.error || error.message || "Failed to delete comment"
+		);
 	}
 	return await res.json();
 }

@@ -10,12 +10,14 @@ const notificationService = {
 					"Content-Type": "application/json",
 				},
 				credentials: "include",
-			},
+			}
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to fetch notifications");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to fetch notifications"
+			);
 		}
 
 		const { notifications } = await response.json();
@@ -31,11 +33,13 @@ const notificationService = {
 				body: JSON.stringify({
 					notificationsToDelete: { notificationIds },
 				}),
-			},
+			}
 		);
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to delete notifications");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to delete notifications"
+			);
 		}
 		return true;
 	},
@@ -49,12 +53,14 @@ const notificationService = {
 				body: JSON.stringify({
 					notificationViewUpdates: { notificationIds, isViewed },
 				}),
-			},
+			}
 		);
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message || "Failed to update notification view status",
+				error.error ||
+					error.message ||
+					"Failed to update notification view status"
 			);
 		}
 		return true;

@@ -8,8 +8,10 @@ const userService = {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to log you out");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to log you out"
+			);
 		}
 
 		return response;
@@ -22,15 +24,16 @@ const userService = {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to load your invites");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to load your invites"
+			);
 		}
 
 		return response.json();
 	},
 
 	updateInviteStatus: async ({ updatedStatus, projectId, inviteId }) => {
-
 		const response = await fetch(
 			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/invites/${inviteId}`,
 			{
@@ -44,14 +47,14 @@ const userService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update invite status");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to update invite status"
+			);
 		}
 
 		return response.json();
-
-	}
-
+	},
 };
 
 export default userService;
