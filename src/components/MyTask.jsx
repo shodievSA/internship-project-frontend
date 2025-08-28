@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useToast } from "./ui/ToastProvider";
-import projectService from "../services/projectService";
+import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import TaskDetailsModal from "./TaskDetailsModal";
@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
-
 	const { id, title, priority, status, assignedBy, deadline } = task;
 
 	const { projectId } = useParams();
@@ -32,12 +31,10 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
 
 	async function submitTask() {
-
 		setTaskBeingSubmitted(true);
 
 		try {
-
-			const { updatedTask } = await projectService.changeTaskStatus({
+			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
 				updateComment: completionNote,
@@ -53,20 +50,14 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			});
 
 			setShowSubmitModal(false);
-
 		} catch (err) {
-
 			console.log(
 				"The following error occured while submitting task: " +
-					err.message,
+					err.message
 			);
-
 		} finally {
-
 			setTaskBeingSubmitted(false);
-
 		}
-
 	}
 
 	return (
@@ -207,7 +198,6 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			)}
 		</>
 	);
-	
 }
 
 export default MyTask;

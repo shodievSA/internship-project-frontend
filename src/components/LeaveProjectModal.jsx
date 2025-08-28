@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "./ui/ToastProvider";
-import projectService from "../services/projectService";
+import teamMemberService from "../services/teamMemberService";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
@@ -12,16 +12,15 @@ const leaveWarnings = [
 	"Unassign you from all tasks",
 	"Remove you from project communications",
 	"Remove team member access",
-	"You'll need to be re-invited to rejoin"
+	"You'll need to be re-invited to rejoin",
 ];
 
-function LeaveProjectModal({ 
-	projectId, 
-	projectTitle, 
+function LeaveProjectModal({
+	projectId,
+	projectTitle,
 	onProjectLeave,
-	closeModal 
+	closeModal,
 }) {
-
 	const { showToast } = useToast();
 
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
@@ -31,18 +30,14 @@ function LeaveProjectModal({
 	const navigate = useNavigate();
 
 	useEffect(() => {
-
 		setSubmitButtonDisabled(projectName !== projectTitle);
-
 	}, [projectName, projectTitle]);
 
 	async function leaveProject() {
-
 		setLeavingProject(true);
 
 		try {
-			
-			await projectService.leaveProject(projectId);
+			await teamMemberService.leaveProject(projectId);
 
 			onProjectLeave(projectId);
 
@@ -52,20 +47,14 @@ function LeaveProjectModal({
 				variant: "success",
 				title: "You've left the project successfully!",
 			});
-
 		} catch (err) {
-
 			showToast({
 				variant: "failure",
 				title: err.message,
 			});
-
 		} finally {
-
 			setLeavingProject(false);
-
 		}
-
 	}
 
 	return (

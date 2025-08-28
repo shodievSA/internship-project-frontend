@@ -15,12 +15,11 @@ import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
 import AiEditor from "./AiEditor";
-import projectService from "../services/projectService";
+import taskService from "../services/taskService";
 import { useToast } from "./ui/ToastProvider";
 import TaskDetailsModal from "./TaskDetailsModal";
 
 function ReviewTask({ task, onTaskApprove, onTaskReject }) {
-
 	const { id, title, priority, status, assignedTo, deadline } = task;
 
 	const { projectId } = useParams();
@@ -41,7 +40,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 		setTaskBeingApproved(true);
 
 		try {
-			const { updatedTask } = await projectService.changeTaskStatus({
+			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
 				updatedTaskStatus: "closed",
@@ -59,8 +58,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 			setShowApproveTaskModal(false);
 		} catch (err) {
 			console.log(
-				"The following error occured while closing task: " +
-					err.message,
+				"The following error occured while closing task: " + err.message
 			);
 		} finally {
 			setTaskBeingApproved(false);
@@ -71,7 +69,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 		setTaskBeingRejected(true);
 
 		try {
-			const { updatedTask } = await projectService.changeTaskStatus({
+			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
 				updatedTaskStatus: "rejected",
@@ -90,7 +88,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 		} catch (err) {
 			console.log(
 				"The following error occured while rejection task: " +
-					err.message,
+					err.message
 			);
 		} finally {
 			setTaskBeingRejected(false);

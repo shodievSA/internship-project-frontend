@@ -8,7 +8,7 @@ import Button from "../components/ui/Button";
 import SearchBar from "../components/SearchBar";
 import SendInviteModal from "../components/SendInviteModal";
 import EmptyProjectInvites from "../components/EmptyProjectInvites";
-import projectService from "../services/projectService";
+import teamMemberService from "../services/teamMemberService";
 import { ArrowLeft } from "lucide-react";
 import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
@@ -68,7 +68,7 @@ function ProjectInvitesPage() {
 		async function getProjectInvites() {
 			try {
 				const { projectInvites } =
-					await projectService.getProjectInvites(projectId);
+					await teamMemberService.getProjectInvites(projectId);
 				setProjectInvites(projectInvites);
 			} catch (err) {
 				setError(err.message);
@@ -82,9 +82,17 @@ function ProjectInvitesPage() {
 		getProjectInvites();
 	}, [projectId]);
 
-	if (!projectInvitesLoaded) return <LoadingState message={"Fetching your project invites!"} />;
-	if (showInviteModal) return <SendInviteModal closeModal={closeModal} onNewInviteCreated={handleNewInvite} />;
-	if (projectInvites.length === 0) return <EmptyProjectInvites openModal={openModal} />;
+	if (!projectInvitesLoaded)
+		return <LoadingState message={"Fetching your project invites!"} />;
+	if (showInviteModal)
+		return (
+			<SendInviteModal
+				closeModal={closeModal}
+				onNewInviteCreated={handleNewInvite}
+			/>
+		);
+	if (projectInvites.length === 0)
+		return <EmptyProjectInvites openModal={openModal} />;
 
 	return (
 		<div className="flex flex-col gap-y-6 h-full px-8 py-6">
