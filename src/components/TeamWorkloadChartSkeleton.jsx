@@ -2,57 +2,51 @@ import React from "react";
 
 function TeamWorkloadChartSkeleton() {
 	return (
-		<div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+		<div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
 			{/* Header skeleton */}
-			<div className="mb-6">
-				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-40 mb-2 animate-pulse"></div>
+			<div className="flex items-center justify-between p-4 pb-0">
+				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-40 animate-pulse"></div>
+			</div>
+
+			<div className="px-4 mb-4 mt-0">
 				<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-56 animate-pulse"></div>
 			</div>
 
-			{/* Team members list skeleton */}
-			<div className="space-y-4">
-				{[1, 2, 3, 4].map((item) => (
-					<div key={item} className="flex items-center space-x-4">
-						{/* Avatar skeleton */}
-						<div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse flex-shrink-0"></div>
-
-						{/* Content skeleton */}
-						<div className="flex-1 space-y-2">
-							{/* Name skeleton */}
-							<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 animate-pulse"></div>
-
-							{/* Progress bar skeleton */}
-							<div className="w-full bg-gray-200 dark:bg-gray-700 h-7 rounded animate-pulse">
-								<div
-									className="h-7 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"
-									style={{
-										width: `${Math.random() * 60 + 20}%`,
-									}}
-								></div>
-							</div>
-						</div>
-
-						{/* Percentage skeleton */}
-						<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-12 animate-pulse flex-shrink-0"></div>
-					</div>
-				))}
+			{/* Headers skeleton */}
+			<div className="grid grid-cols-3 gap-0 mb-2 text-sm font-medium text-gray-700 dark:text-gray-300 px-4">
+				<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20 animate-pulse"></div>
+				<div className="col-span-2 h-4 bg-gray-200 dark:bg-gray-700 rounded w-32 animate-pulse"></div>
 			</div>
 
-			{/* Unassigned section skeleton */}
-			<div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-				<div className="flex items-center space-x-4">
-					<div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse flex-shrink-0"></div>
-					<div className="flex-1 space-y-2">
-						<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
-						<div className="w-full bg-gray-200 dark:bg-gray-700 h-7 rounded animate-pulse">
-							<div
-								className="h-7 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"
-								style={{ width: `${Math.random() * 40 + 10}%` }}
-							></div>
+			{/* Team members list skeleton */}
+			<div className="space-y-3 px-4 pb-4 max-h-80 overflow-y-auto workload-scroll">
+				{[1, 2, 3, 4].map((item) => (
+					<div key={item} className="py-2">
+						<div className="grid grid-cols-3 gap-0 items-center">
+							{/* Avatar skeleton */}
+							<div className="col-span-1 flex items-center gap-x-3 min-w-0">
+								<div className="flex-shrink-0">
+									<div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+								</div>
+								<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
+							</div>
+
+							{/* Progress bar skeleton */}
+							<div className="col-span-2 flex items-center">
+								<div className="flex-1 h-7 bg-gray-200 dark:bg-gray-700 overflow-hidden relative min-w-[200px] rounded animate-pulse">
+									<div
+										className="h-7 bg-gray-300 dark:bg-gray-600 rounded animate-pulse"
+										style={{
+											width: `${
+												Math.random() * 60 + 20
+											}%`,
+										}}
+									></div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-12 animate-pulse flex-shrink-0"></div>
-				</div>
+				))}
 			</div>
 		</div>
 	);
