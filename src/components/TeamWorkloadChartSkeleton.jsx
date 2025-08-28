@@ -3,9 +3,9 @@ import React from "react";
 function TeamWorkloadChartSkeleton() {
 	return (
 		<div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
-			{/* Header skeleton */}
+			{/* Header skeleton - matching exact structure */}
 			<div className="flex items-center justify-between p-4 pb-0">
-				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-40 mb-0 animate-pulse"></div>
+				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-0 animate-pulse"></div>
 			</div>
 
 			<div className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-4">
@@ -39,16 +39,8 @@ function TeamWorkloadChartSkeleton() {
 								<div className="flex-1 h-7 bg-gray-200 dark:bg-gray-700 overflow-hidden relative min-w-[200px]">
 									<div
 										className="h-full transition-all duration-300 relative bg-gray-300 dark:bg-gray-600 animate-pulse"
-										style={{
-											width: `${
-												Math.random() * 60 + 20
-											}%`,
-										}}
-									>
-										<span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
-											<div className="h-3 bg-gray-400 dark:bg-gray-500 rounded w-8 animate-pulse"></div>
-										</span>
-									</div>
+										style={{ width: "60%" }}
+									></div>
 								</div>
 							</div>
 						</div>

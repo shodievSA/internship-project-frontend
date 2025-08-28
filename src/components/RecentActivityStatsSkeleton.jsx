@@ -14,13 +14,19 @@ function RecentActivityStatsSkeleton() {
 						<div className="w-5 h-5 bg-gray-200 dark:bg-gray-600 rounded"></div>
 					</div>
 
-					{/* Text Content */}
-					<div className="flex-1 flex items-center">
+					{/* Text Content - matching exact structure */}
+					<div className="flex-1">
 						<div className="flex items-center gap-2 mb-1">
-							<div className="w-8 h-7 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-							<div className="w-16 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+							<div className="text-xl font-bold text-gray-900 dark:text-white">
+								<div className="w-8 h-7 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+							</div>
+							<div className="text-sm font-semibold text-gray-900 dark:text-white capitalize">
+								<div className="w-16 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+							</div>
 						</div>
-						<div className="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse ml-auto"></div>
+						<div className="text-xs text-gray-500 dark:text-gray-400">
+							<div className="w-20 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+						</div>
 					</div>
 				</div>
 			))}
