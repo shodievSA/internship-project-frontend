@@ -11,13 +11,15 @@ import {
 import commentService from "../services/commentService";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
+import ReactMarkdown from "react-markdown";
+import { useThemeContext } from "../context/ThemeContext";
+import rehypeHighlight from "rehype-highlight";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
+
 	const { projectId, taskId } = useParams();
-	const {
-		state: { task, currentMemberId },
-	} = useLocation();
+	const { state: { task, currentMemberId } } = useLocation();
 
 	const navigate = useNavigate();
 
@@ -29,31 +31,36 @@ function Comments() {
 	const [commentsFetched, setCommentsFetched] = useState(false);
 
 	const chatPartner = useMemo(() => {
+
 		return currentMemberId !== task.assignedBy.id
 			? task.assignedBy
 			: task.assignedTo;
+
 	}, [task, currentMemberId]);
 
 	const currentUser = useMemo(() => {
+
 		return currentMemberId === task.assignedBy.id
 			? task.assignedBy
 			: task.assignedTo;
+
 	}, [task, currentMemberId]);
 
 	function sendComment() {
-		socketRef.current.send(
-			JSON.stringify({
-				type: "new-comment",
-				message: commentMessage,
-				taskId: taskId,
-				memberId: currentMemberId,
-			}),
-		);
+
+		socketRef.current.send(JSON.stringify({
+			type: "new-comment",
+			message: commentMessage,
+			taskId: taskId,
+			memberId: currentMemberId,
+		}));
 
 		setCommentMessage("");
+
 	}
 
 	function onCommentUpdate(commentId, updatedComment) {
+
 		socketRef.current.send(
 			JSON.stringify({
 				type: "update-comment",
@@ -62,9 +69,11 @@ function Comments() {
 				taskId: taskId,
 			}),
 		);
+
 	}
 
 	function onCommentDelete(commentId) {
+
 		socketRef.current.send(
 			JSON.stringify({
 				type: "delete-comment",
@@ -72,16 +81,22 @@ function Comments() {
 				taskId: taskId,
 			}),
 		);
+
 	}
 
 	function handleOnKeyDown(event) {
+
 		if (event.key === "Enter" && !event.shiftKey && commentMessage) {
+
 			event.preventDefault();
 			sendComment();
+
 		}
+
 	}
 
 	useEffect(() => {
+
 		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
 		socketRef.current.onopen = (event) => {
@@ -96,13 +111,17 @@ function Comments() {
 		};
 
 		socketRef.current.onmessage = (event) => {
+
 			const data = JSON.parse(event.data);
 
 			if (data.type === "new-comment") {
+
 				const newComment = data.comment;
 
 				setComments((prevComments) => [...prevComments, newComment]);
+
 			} else if (data.type === "updated-comment") {
+
 				const updatedComment = data.updatedComment;
 
 				setComments((prevComments) =>
@@ -112,7 +131,9 @@ function Comments() {
 							: comment;
 					}),
 				);
+
 			} else if (data.type === "deleted-comment") {
+
 				const deletedCommentId = data.deletedCommentId;
 
 				setComments((prevComments) =>
@@ -120,52 +141,61 @@ function Comments() {
 						return comment.id !== deletedCommentId;
 					}),
 				);
+
 			}
+
 		};
 
 		return () => {
-			socketRef.current.close(
-				1000,
-				"Closing the websocket connection from the client side normally!",
-			);
+
+			socketRef.current.close(1000, "Closing the websocket connection from the client side normally!");
+
 		};
+
 	}, []);
 
 	useEffect(() => {
+
 		async function getTaskComments() {
+
 			try {
-				const { comments } = await commentService.getTaskComments(
-					projectId,
-					taskId,
-				);
+
+				const { comments } = await commentService.getTaskComments(projectId, taskId);
+
 				setComments(comments);
+
 			} catch (err) {
+
 				console.log(err.message);
+
 			} finally {
+
 				setTimeout(() => {
 					setCommentsFetched(true);
 				}, 200);
+
 			}
+
 		}
 
 		getTaskComments();
+
 	}, []);
 
 	useEffect(() => {
+
 		if (commentsFetched && chatWindowRef.current) {
+
 			chatWindowRef.current.scrollTo({
 				top: chatWindowRef.current.scrollHeight,
 				behavior: "smooth",
 			});
+
 		}
+
 	}, [comments, commentsFetched]);
 
-	if (!commentsFetched)
-		return (
-			<LoadingState
-				message={"Hang on - the comments are on their way!"}
-			/>
-		);
+	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
 	return (
 		<div className="h-full flex flex-col px-8 pt-4">
@@ -197,22 +227,17 @@ function Comments() {
 			</div>
 			<div className="flex flex-col flex-1 min-h-0 gap-y-4">
 				{comments.length === 0 ? (
-					<EmptyState
-						message={
-							"No comments yet - be the first to break the silence!"
-						}
-					/>
+					<EmptyState message={"No comments yet - be the first to break the silence!"} />
 				) : (
 					<div
 						ref={chatWindowRef}
 						className="h-full flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
-							dark:scrollbar-track-neutral-800 overflow-y-auto"
+						dark:scrollbar-track-neutral-800 overflow-y-auto"
 					>
 						<div className="pr-5 flex flex-col gap-y-4 py-5">
 							<div className="flex flex-col gap-y-3">
 								{comments.map((comment) => {
-									return comment.projectMemberId ===
-										currentMemberId ? (
+									return comment.projectMemberId === currentMemberId ? (
 										<CurrentUserComment
 											comment={comment}
 											currentUser={currentUser}
@@ -260,6 +285,9 @@ function CurrentUserComment({
 	onCommentUpdate,
 	onCommentDelete,
 }) {
+
+	const { themeMode } = useThemeContext();
+
 	const [showEditInput, setShowEditInput] = useState(false);
 	const [newMessage, setNewMessage] = useState();
 
@@ -297,67 +325,56 @@ function CurrentUserComment({
 	}
 
 	return (
-		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
+		<div className="flex items-start gap-x-3 max-w-lg ml-auto whitespace-pre">
 			{showEditInput ? (
-				<div
-					className="min-w-[400px] h-28 bg-neutral-100 dark:bg-neutral-900 
-					rounded-md border dark:border-neutral-700"
-				>
+				<div className="min-w-[400px] h-28 bg-neutral-100 dark:bg-neutral-900 
+				rounded-md border dark:border-neutral-700">
 					<div className="flex flex-col h-full">
 						<textarea
 							className="w-full h-full resize-none dark:bg-black focus:outline-none 
-								px-3 pt-3 scrollbar-none rounded-md bg-neutral-100 dark:bg-neutral-900"
+							px-3 pt-3 scrollbar-none rounded-md bg-neutral-100 dark:bg-neutral-900"
 							placeholder="Edit your commend here..."
 							onKeyDown={handleOnKeyDown}
 							value={newMessage}
 							onChange={(e) => setNewMessage(e.target.value)}
 						></textarea>
 						<div className="grow flex items-center gap-x-4 p-2 p-2">
-							<div
+							<div 
 								className="p-1 rounded-md hover:bg-red-700/10 hover:dark:bg-red-700/30 
-									cursor-pointer"
+								cursor-pointer"
 								onClick={() => deleteComment(comment.id)}
 							>
 								<Trash className="w-4 h-4 text-red-700 dark:text-red-800" />
 							</div>
 							<div className="flex gap-x-4 ml-auto">
-								<div
-									className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
-									cursor-pointer"
-								>
+								<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
+								cursor-pointer">
 									<Check
 										className="w-4 h-4"
-										onClick={() =>
-											updateComment(
-												comment.id,
-												newMessage,
-											)
-										}
+										onClick={() => updateComment(comment.id, newMessage)}
 									/>
 								</div>
-								<div
-									className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
-									cursor-pointer"
-								>
-									<X
-										className="w-4 h-4"
-										onClick={reverseChanges}
-									/>
+								<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
+								cursor-pointer">
+									<X className="w-4 h-4" onClick={reverseChanges} />
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			) : (
-				<div
-					className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-					dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900"
-				>
+				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+				dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
 					<div className="flex justify-between gap-x-5 group/item">
-						<p>{comment.message}</p>
+						<ReactMarkdown
+							className={themeMode} 
+							rehypePlugins={[rehypeHighlight]}
+						>
+							{comment.message}
+						</ReactMarkdown>
 						<div
 							className="opacity-0 group-hover/item:opacity-100 transition-[opacity]
-								duration-300 self-start cursor-pointer"
+							duration-300 self-start cursor-pointer"
 							onClick={onEditButtonClicked}
 						>
 							<Pencil className="w-3.5 h-3.5 mt-0.5" />
@@ -375,8 +392,11 @@ function CurrentUserComment({
 }
 
 function ChatPartnerComment({ comment, chatPartner }) {
+
+	const { themeMode } = useThemeContext();
+
 	return (
-		<div className="flex flex-col max-w-md mr-auto gap-y-2">
+		<div className="flex flex-col max-w-md mr-auto gap-y-2 whitespace-pre">
 			<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
 			<div className="flex items-start gap-x-3">
 				<img
@@ -387,7 +407,12 @@ function ChatPartnerComment({ comment, chatPartner }) {
 					className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
 				dark:border-neutral-700"
 				>
-					<p>{comment.message}</p>
+					<ReactMarkdown
+						className={themeMode} 
+						rehypePlugins={[rehypeHighlight]}
+					>
+						{comment.message}
+					</ReactMarkdown>
 					<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
 						<span>{getTimeFromIso(comment.createdAt)}</span>
 						<span>{getDateFromIso(comment.createdAt)}</span>
@@ -396,9 +421,11 @@ function ChatPartnerComment({ comment, chatPartner }) {
 			</div>
 		</div>
 	);
+
 }
 
 function getTimeFromIso(isoString) {
+
 	const date = new Date(isoString);
 	const timeString = date.toLocaleTimeString("en-US", {
 		hour: "2-digit",
@@ -407,13 +434,16 @@ function getTimeFromIso(isoString) {
 	});
 
 	return timeString;
+
 }
 
 function getDateFromIso(isoString) {
+
 	const date = new Date(isoString);
 	const dateString = date.toLocaleDateString("en-US");
 
 	return dateString;
+
 }
 
 export default Comments;
