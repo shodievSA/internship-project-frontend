@@ -198,7 +198,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													<ul className="list-disc ml-4" {...props} />
 												),
 											}}
-											className={`${themeMode} text-neutral-700 dark:text-neutral-400 text-sm`} 
+											className={`${themeMode} text-neutral-700 dark:text-neutral-400`} 
 											rehypePlugins={[rehypeHighlight]}
 										>
 											{ description }
