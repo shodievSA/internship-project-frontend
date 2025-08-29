@@ -61,7 +61,7 @@ export function NotificationsContextProvider({ children }) {
 
 					const audio = document.createElement("audio");
 
-					audio.src = "/src/assets/new-notif-melody.wav";
+					audio.src = "/new-notif-melody.wav";
 					audio.preload = "auto";
 					audio.style.display = "none";      
 					document.body.appendChild(audio);
