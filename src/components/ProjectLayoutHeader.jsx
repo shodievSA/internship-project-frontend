@@ -29,27 +29,30 @@ function ProjectLayoutHeader() {
 					<div className="flex text-sm gap-x-5">
 						<div 
 							className="flex items-center gap-x-2 dark:hover:bg-neutral-900 
-							hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md"
+							hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md border 
+							border-slate-200 dark:border-neutral-800"
 							onClick={() => navigate("summary")}
 						>
-							<TrendingUp className="w-4 h-4" />
+							<TrendingUp className="w-3.5 h-3.5" />
 							<span>Analytics</span>
 						</div>
 						<div
 							className="flex items-center gap-x-2 dark:hover:bg-neutral-900 
-							hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md"
+							hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md border 
+							border-slate-200 dark:border-neutral-800"
 							onClick={() => navigate("team")}
 						>
-							<Users className="w-4 h-4" />
+							<Users className="w-3.5 h-3.5" />
 							<span>Team</span>
 						</div>
 						{ currentMemberRole === "admin" && (
 							<div
 								className="flex items-center gap-x-2 dark:hover:bg-neutral-900 
-								hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md"
+								hover:bg-slate-100 px-4 py-1.5 cursor-pointer rounded-md border 
+								border-slate-200 dark:border-neutral-800"
 								onClick={() => navigate("invites")}
 							>
-								<UserPlus className="w-4 h-4" />
+								<UserPlus className="w-3.5 h-3.5" />
 								<span>Invites</span>
 							</div>
 						)}

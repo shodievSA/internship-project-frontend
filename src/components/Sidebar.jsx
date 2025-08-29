@@ -85,22 +85,19 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 					? "w-0 -translate-x-72 2xl:pl-3 2xl:-translate-x-64"
 					: "w-full 2xl:pl-0 2xl:w-64"
 				} dark:text-white flex fixed 2xl:static h-full z-20 transition-all duration-500`}>
-					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 2xl:grow`}>
+					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 2xl:flex-1 2xl:min-w-0 2xl:max-w-full`}>
 						<div className={`flex flex-col h-full pt-4 gap-y-8`}>
 							<div className="flex gap-x-3 items-center justify-start px-2">
 								<div className="bg-neutral-200 w-10 h-10 rounded-full flex-shrink-0">
-									<img
-										src={user.avatarUrl}
-										className="w-full h-full rounded-full"
-									/>
+									<img src={user.avatarUrl} className="w-full h-full rounded-full" />
 								</div>
-								<div className="flex flex-col">
-									<p className="text-sm font-medium">
+								<div className="flex flex-col flex-1 min-w-0 max-w-full">
+									<span className="text-sm font-medium truncate">
 										{user.fullName}
-									</p>
-									<p className="dark:text-neutral-400 text-neutral-500 text-sm truncate">
+									</span>
+									<span className="dark:text-neutral-400 text-neutral-500 text-sm truncate">
 										{user.email}
-									</p>
+									</span>
 								</div>
 							</div>
 							<div className="flex flex-col grow">
