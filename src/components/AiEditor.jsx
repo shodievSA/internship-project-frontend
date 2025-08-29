@@ -193,7 +193,7 @@ function AiEditor({
 					<div className={`dark:bg-neutral-950 dark:border-neutral-800 dark:focus:border-neutral-600 
 					focus:border-black bg-white resize-none rounded-md text-sm lg:text-base border-[1px] w-full 
 					outline-none disabled:opacity-50 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
-					dark:scrollbar-track-neutral-800 ${height} px-4 py-2.5 whitespace-pre`}>
+					dark:scrollbar-track-neutral-800 ${height} px-4 py-2.5 whitespace-pre-wrap`}>
 						<ReactMarkdown 
 							className={themeMode} 
 							rehypePlugins={[rehypeHighlight]}
