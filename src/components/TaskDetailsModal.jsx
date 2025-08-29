@@ -188,12 +188,22 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 										<Text className="w-4 h-4" />
 										<h1 className="font-medium">Description:</h1>
 									</div>
-									<ReactMarkdown 
-										className={`${themeMode} text-neutral-700 dark:text-neutral-400 text-sm`} 
-										rehypePlugins={[rehypeHighlight]}
-									>
-										{ description }
-									</ReactMarkdown>
+									<div className="whitespace-pre-wrap">
+										<ReactMarkdown 
+											components={{
+												ol: ({ node, ...props }) => (
+													<ol className="list-decimal ml-4" {...props} />
+												),
+												ul: ({ node, ...props }) => (
+													<ul className="list-disc ml-4" {...props} />
+												),
+											}}
+											className={`${themeMode} text-neutral-700 dark:text-neutral-400 text-sm`} 
+											rehypePlugins={[rehypeHighlight]}
+										>
+											{ description }
+										</ReactMarkdown>
+									</div>
 								</div>
 								<div className="grid grid-cols-2 gap-x-5">
 									<div className="flex flex-col gap-y-4 border dark:border-neutral-700 p-3 rounded-lg">
