@@ -325,7 +325,7 @@ function CurrentUserComment({
 	}
 
 	return (
-		<div className="flex items-start gap-x-3 max-w-lg ml-auto whitespace-pre">
+		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
 			{showEditInput ? (
 				<div className="min-w-[400px] h-28 bg-neutral-100 dark:bg-neutral-900 
 				rounded-md border dark:border-neutral-700">
@@ -365,7 +365,7 @@ function CurrentUserComment({
 			) : (
 				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
 				dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
-					<div className="flex justify-between gap-x-5 group/item">
+					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap">
 						<ReactMarkdown
 							className={themeMode} 
 							rehypePlugins={[rehypeHighlight]}
@@ -396,17 +396,15 @@ function ChatPartnerComment({ comment, chatPartner }) {
 	const { themeMode } = useThemeContext();
 
 	return (
-		<div className="flex flex-col max-w-md mr-auto gap-y-2 whitespace-pre">
+		<div className="flex flex-col max-w-md mr-auto gap-y-2">
 			<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
 			<div className="flex items-start gap-x-3">
 				<img
 					src={chatPartner.avatarUrl}
 					className="w-8 h-8 rounded-full"
 				/>
-				<div
-					className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-				dark:border-neutral-700"
-				>
+				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
+				dark:border-neutral-700 whitespace-pre-wrap">
 					<ReactMarkdown
 						className={themeMode} 
 						rehypePlugins={[rehypeHighlight]}
