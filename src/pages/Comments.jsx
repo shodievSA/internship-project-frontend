@@ -367,6 +367,14 @@ function CurrentUserComment({
 				dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
 					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap">
 						<ReactMarkdown
+							components={{
+								ol: ({ node, ...props }) => (
+									<ol className="list-decimal ml-4" {...props} />
+								),
+								ul: ({ node, ...props }) => (
+									<ul className="list-disc ml-4" {...props} />
+								),
+							}}
 							className={themeMode} 
 							rehypePlugins={[rehypeHighlight]}
 						>
@@ -406,6 +414,14 @@ function ChatPartnerComment({ comment, chatPartner }) {
 				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
 				dark:border-neutral-700 whitespace-pre-wrap">
 					<ReactMarkdown
+						components={{
+							ol: ({ node, ...props }) => (
+								<ol className="list-decimal ml-4" {...props} />
+							),
+							ul: ({ node, ...props }) => (
+								<ul className="list-disc ml-4" {...props} />
+							),
+						}}
 						className={themeMode} 
 						rehypePlugins={[rehypeHighlight]}
 					>
