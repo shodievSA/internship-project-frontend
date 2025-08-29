@@ -8,6 +8,7 @@ const SERVER_HOST = import.meta.env.VITE_HOST;
 const NotificationsContext = createContext();
 
 export function NotificationsContextProvider({ children }) {
+
 	const { user } = useAuthContext();
 	const { showToast } = useToast();
 
@@ -21,26 +22,30 @@ export function NotificationsContextProvider({ children }) {
 	const sockekRef = useRef(null);
 
 	useEffect(() => {
+
 		if (user) {
-			sockekRef.current = new WebSocket(
-				`wss://${SERVER_HOST}/notifications`,
-			);
+
+			sockekRef.current = new WebSocket(`wss://${SERVER_HOST}/notifications`);
 
 			sockekRef.current.onopen = (event) => {
+
 				if (event.type === "open") {
-					sockekRef.current.send(
-						JSON.stringify({
-							type: "identify-user",
-							userId: user.id,
-						}),
-					);
+
+					sockekRef.current.send(JSON.stringify({
+						type: "identify-user",
+						userId: user.id,
+					}));
+
 				}
+
 			};
 
 			sockekRef.current.onmessage = (event) => {
+
 				const data = JSON.parse(event.data);
 
 				if (data.type === "new-notification") {
+
 					const newNotification = data.newNotification;
 
 					setNotifications((prevNotifications) => [
@@ -53,7 +58,24 @@ export function NotificationsContextProvider({ children }) {
 						title: "New notification!",
 						message: newNotification.message,
 					});
+
+					const audio = document.createElement("audio");
+
+					audio.src = "/src/assets/new-notif-melody.wav";
+					audio.preload = "auto";
+					audio.style.display = "none";      
+					document.body.appendChild(audio);
+
+					audio.play().then(() => {
+						audio.addEventListener("ended", () => {
+							audio.remove();
+						});
+					}).catch(err => {
+						console.error("Playback failed:", err);
+					});
+
 				} else if (data.type === "new-invite") {
+
 					const newInvite = data.newInvite;
 
 					console.log(newInvite);
@@ -65,9 +87,13 @@ export function NotificationsContextProvider({ children }) {
 						title: "New invite!",
 						message: newInvite.message,
 					});
+
 				}
+
 			};
+
 		}
+
 	}, [user]);
 
 	useEffect(() => {
