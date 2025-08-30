@@ -202,13 +202,13 @@ function getSprintUpdatedProps(sprint) {
 		delete updated.status;
 	}
 
-	if (sprint.newStartDate !== sprint.oldStartDate) {
+	if (sprint.newStartDate !== sprint.oldStartDate.split("T")[0]) {
 		updated.startDate = sprint.newStartDate;
 	} else {
 		delete updated.startDate;
 	}
 
-	if (sprint.newEndDate !== sprint.oldEndDate) {
+	if (sprint.newEndDate !== sprint.oldEndDate.split("T")[0]) {
 		updated.endDate = sprint.newEndDate;
 	} else {
 		delete updated.endDate;
