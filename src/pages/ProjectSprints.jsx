@@ -80,11 +80,9 @@ function ProjectSprints() {
 					</div>
 				</div>
 				{filteredSprints.length > 0 ? (
-					<div
-						className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-					gap-6 grid-auto-rows-[200px] pb-5"
-					>
-						{sprints.map((sprint) => (
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+					gap-6 grid-auto-rows-[200px] pb-5">
+						{filteredSprints.map((sprint) => (
 							<SprintPreview key={sprint.id} sprint={sprint} />
 						))}
 					</div>
