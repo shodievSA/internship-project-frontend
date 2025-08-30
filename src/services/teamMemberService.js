@@ -12,8 +12,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to load project members");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to load project members"
+			);
 		}
 
 		return response.json();
@@ -30,8 +32,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get team member");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get team member"
+			);
 		}
 
 		return response.json();
@@ -52,8 +56,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to change member's role");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to change member's role"
+			);
 		}
 
 		return response.json();
@@ -70,9 +76,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message ||
+				error.error ||
+					error.message ||
 					"Unexpected error occured while deleting the user"
 			);
 		}
@@ -89,10 +96,12 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			console.log(error);
 			throw new Error(
-				error.message || "Error occured while leaving the project."
+				error.error ||
+					error.message ||
+					"Error occured while leaving the project."
 			);
 		}
 	},
@@ -112,8 +121,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to send invitation");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to send invitation"
+			);
 		}
 
 		return response.json();
@@ -130,8 +141,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to load project invites");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to load project invites"
+			);
 		}
 
 		return response.json();
@@ -148,8 +161,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to cancel invitation");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to cancel invitation"
+			);
 		}
 	},
 
@@ -164,8 +179,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to resend invitation");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to resend invitation"
+			);
 		}
 
 		return response.json();
@@ -186,9 +203,11 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message || "Failed to get member productivity"
+				error.error ||
+					error.message ||
+					"Failed to get member productivity"
 			);
 		}
 
@@ -206,8 +225,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get member workload");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get member workload"
+			);
 		}
 
 		return response.json();
@@ -228,9 +249,11 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
+			const error = await response.json().catch(() => ({}));
 			throw new Error(
-				error.message || "Failed to update member permissions"
+				error.error ||
+					error.message ||
+					"Failed to update member permissions"
 			);
 		}
 
@@ -248,8 +271,10 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get member activity");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get member activity"
+			);
 		}
 
 		return response.json();
@@ -270,8 +295,12 @@ const teamMemberService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to send bulk invitations");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error ||
+					error.message ||
+					"Failed to send bulk invitations"
+			);
 		}
 
 		return response.json();

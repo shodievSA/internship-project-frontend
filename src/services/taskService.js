@@ -12,8 +12,12 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to load file attachments");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error ||
+					error.message ||
+					"Failed to load file attachments"
+			);
 		}
 
 		return response.json();
@@ -31,8 +35,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to create task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to create task"
+			);
 		}
 
 		return response.json();
@@ -50,8 +56,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update the task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to update the task"
+			);
 		}
 
 		return response.json();
@@ -68,8 +76,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to delete task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to delete task"
+			);
 		}
 	},
 
@@ -96,8 +106,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to update task"
+			);
 		}
 
 		return response.json();
@@ -114,8 +126,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get task"
+			);
 		}
 
 		return response.json();
@@ -132,8 +146,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get project tasks");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get project tasks"
+			);
 		}
 
 		return response.json();
@@ -150,8 +166,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get sprint tasks");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get sprint tasks"
+			);
 		}
 
 		return response.json();
@@ -172,8 +190,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to assign task");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to assign task"
+			);
 		}
 
 		return response.json();
@@ -194,8 +214,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to update task priority");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to update task priority"
+			);
 		}
 
 		return response.json();
@@ -216,8 +238,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to add comment");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to add comment"
+			);
 		}
 
 		return response.json();
@@ -234,8 +258,10 @@ const taskService = {
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to get task comments");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to get task comments"
+			);
 		}
 
 		return response.json();

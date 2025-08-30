@@ -12,8 +12,10 @@ const aiService = {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message);
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to enhance text"
+			);
 		}
 
 		return response.json();
@@ -29,12 +31,14 @@ const aiService = {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ taskDescription }),
-			},
+			}
 		);
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || "Failed to generate task title");
+			const error = await response.json().catch(() => ({}));
+			throw new Error(
+				error.error || error.message || "Failed to generate task title"
+			);
 		}
 
 		return response.json();
