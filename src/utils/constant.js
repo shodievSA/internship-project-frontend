@@ -118,6 +118,7 @@ export const taskStatusOptions = [
 	{ value: "closed", label: "Closed" },
 	{ value: "under review", label: "Under Review" },
 	{ value: "rejected", label: "Rejected" },
+	{ value: "overdue", label: "Overdue" },
 ];
 
 export const sprintStatusFilters = [

@@ -10,6 +10,7 @@ import EmptyState from "../components/EmptyState";
 import { Calendar, Filter } from "lucide-react";
 
 function MyTasksPage() {
+
 	const { tasks, setTasks, projectLoaded, currentMemberId } = useProject();
 	const location = useLocation();
 
@@ -18,9 +19,11 @@ function MyTasksPage() {
 	const [dateFilter, setDateFilter] = useState("all");
 
 	const myTasks = useMemo(() => {
+
 		if (!projectLoaded || !tasks) return [];
 
 		return tasks.filter((task) => task.assignedTo.id === currentMemberId);
+
 	}, [tasks, projectLoaded, currentMemberId]);
 
 	const filteredTasks = useMemo(() => {
@@ -52,19 +55,24 @@ function MyTasksPage() {
 	}
 
 	function onTaskSubmit(taskId, updatedTask) {
+
 		setTasks((prevTasks) =>
 			prevTasks.map((task) => {
 				return task.id === taskId ? updatedTask : task;
 			}),
 		);
+		
 	}
 
 	useEffect(() => {
+
 		if (projectLoaded && location.hash) {
+
 			const elementId = location.hash.substring(1);
 			const element = document.getElementById(elementId);
 
 			if (element) {
+
 				element.scrollIntoView({ behavior: "smooth", block: "center" });
 
 				setTimeout(() => {
@@ -80,18 +88,14 @@ function MyTasksPage() {
 						);
 					}, 500);
 				}, 800);
+
 			}
+
 		}
+
 	}, [location, projectLoaded]);
 
-	if (myTasks.length === 0)
-		return (
-			<EmptyState
-				message={
-					"All clear! No tasks for now - enjoy the calm before the storm"
-				}
-			/>
-		);
+	if (myTasks.length === 0) return <EmptyState message={"All clear! No tasks for now - enjoy the calm before the storm"} />
 
 	return (
 		<div className="h-full">
@@ -128,10 +132,8 @@ function MyTasksPage() {
 					</div>
 				</div>
 				{filteredTasks.length > 0 ? (
-					<div
-						className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
-					gap-6 grid-auto-rows-[200px] pb-5"
-					>
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 
+					gap-6 grid-auto-rows-[200px] pb-5">
 						{filteredTasks.map((task) => (
 							<MyTask
 								key={task.id}
