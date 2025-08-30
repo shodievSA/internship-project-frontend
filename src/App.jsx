@@ -31,8 +31,8 @@ import Summary from "./pages/Summary";
 function App() {
 
 	return (
-		<AuthContextProvider>
-			<ToastProvider>
+		<ToastProvider>
+			<AuthContextProvider>
 				<ThemeContextProvider>
 					<ProjectsContextProvider>
 						<NotificationsContextProvider>
@@ -77,8 +77,8 @@ function App() {
 						</NotificationsContextProvider>
 					</ProjectsContextProvider>
 				</ThemeContextProvider>
-			</ToastProvider>
-		</AuthContextProvider>
+			</AuthContextProvider>
+		</ToastProvider>
 	);
 	
 }

@@ -136,23 +136,30 @@ function LogTimeModal({ taskId, closeModal }) {
 			});
 
 			closeModal();
-		} catch (error) {
-			console.error("Failed to log time:", error);
+
+		} catch (err) {
+
 			showToast({
-				variant: "failure",
-				message: error.message || "Failed to log time entry",
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setIsSubmitting(false);
+
 		}
+
 	};
 
 	const formatDateForDisplay = (date) => {
+
 		return date.toLocaleDateString("en-US", {
 			month: "short",
 			day: "numeric",
 			year: "numeric",
 		});
+		
 	};
 
 	return (

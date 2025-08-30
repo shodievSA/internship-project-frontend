@@ -53,16 +53,15 @@ function DeleteSprintModal({
 
 		} catch (err) {
 
-			console.log("The following error occured while deleting the project: " + err.message);
-
 			showToast({
-				variant: "failure",
-				title: "Failed to delete the sprint!",
+				variant: "error",
+				title: err.message
 			});
 
 		} finally {
 
 			setSprintBeingDeleted(false);
+			
 		}
 
 	}

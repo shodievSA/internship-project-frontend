@@ -12,11 +12,13 @@ import LoadingState from "../components/LoadingState";
 import { Calendar, Filter } from "lucide-react";
 import EmptyState from "../components/EmptyState";
 import EmptySearch from "../components/EmptySearch";
+import { useToast } from "../components/ui/ToastProvider";
 
 function UserInvites() {
 
 	const { addNewProject } = useProjectsContext();
 	const { invitesFetched, invites, setInvites } = useNotifications();
+	const { showToast } = useToast();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
@@ -41,7 +43,10 @@ function UserInvites() {
 
 		} catch (err) {
 
-			console.log(err);
+			showToast({
+				variant: "error",
+				title: err.message
+			});
 
 		}
 

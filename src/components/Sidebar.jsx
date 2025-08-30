@@ -4,6 +4,7 @@ import { useNotifications } from "../context/NotificationsContext";
 import { useProjectsContext } from "../context/ProjectsContext";
 import userService from "../services/userService";
 import { NavLink } from "react-router-dom";
+import { useToast } from "./ui/ToastProvider";
 import {
 	House,
 	Sparkles,
@@ -17,6 +18,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
 	const { user, setUser } = useAuthContext();
 	const { loading, error, notifications, invitesFetched, invites } = useNotifications();
+	const { showToast } = useToast();
 	const {
 		projectsLoaded,
 		projects,
@@ -52,9 +54,12 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 			await userService.logOut();
 			setUser(null);
 
-		} catch {
+		} catch(err) {
 
-			console.log("Error occured while logging out the user.");
+			showToast({
+				variant: "error",
+				title: err.message
+			});
 
 		} finally {
 

@@ -92,11 +92,9 @@ function EditSprintModal({
 
 		} catch (err) {
 
-			console.log("The following error occured while updating the sprint " + err.message);
-
 			showToast({
-				variant: "failure",
-				title: "Failed to update sprint!",
+				variant: "error",
+				title: err.message
 			});
 
 		} finally {

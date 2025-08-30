@@ -10,6 +10,7 @@ import Button from "./ui/Button";
 import { Timer } from "lucide-react";
 
 function NewSprintModal({ projectId, currentMemberId, closeModal }) {
+	
 	const { sprints, setSprints } = useProject();
 	const { showToast } = useToast();
 
@@ -21,17 +22,21 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 	const [sprintBeingCreated, setSprintBeingCreated] = useState(false);
 
 	useEffect(() => {
+
 		if (sprintTitle && sprintStartDate && sprintEndDate) {
 			setSubmitButtonDisabled(false);
 		} else {
 			setSubmitButtonDisabled(true);
 		}
+
 	}, [sprintTitle, sprintStartDate, sprintEndDate]);
 
 	async function createNewSprint() {
+
 		setSprintBeingCreated(true);
 
 		try {
+
 			const { newSprint } = await sprintService.createSprint(projectId, {
 				title: sprintTitle,
 				description: sprintDescription,
@@ -48,14 +53,20 @@ function NewSprintModal({ projectId, currentMemberId, closeModal }) {
 			});
 
 			closeModal();
+
 		} catch (err) {
+
 			showToast({
-				variant: "failure",
-				title: err.message,
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setSprintBeingCreated(false);
+
 		}
+
 	}
 
 	return (

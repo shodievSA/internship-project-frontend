@@ -20,20 +20,30 @@ function Organizer() {
 	const tabRef = useRef();
 
 	useEffect(() => {
+
 		async function getDailyReport() {
+
 			try {
+
 				const { report } = await organizerService.getDailyReport();
 				setDailyReport(report ? report : null);
+
 			} catch (err) {
+
 				setError(err.message);
+
 			} finally {
+
 				setTimeout(() => {
 					setReportFetched(true);
 				}, 200);
+				
 			}
+
 		}
 
 		getDailyReport();
+
 	}, []);
 
 	function handleTab(newTab, index) {

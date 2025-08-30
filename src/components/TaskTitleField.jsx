@@ -33,7 +33,10 @@ function TaskTitleField({
 
 		} catch (err) {
 
-			showToast({ variant: "failure", title: err.message });
+			showToast({ 
+				variant: "error", 
+				title: err.message 
+			});
 
 		} finally {
 

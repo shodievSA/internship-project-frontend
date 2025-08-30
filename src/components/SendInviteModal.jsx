@@ -44,7 +44,10 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 			} catch (err) {
 
-				console.log(err);
+				showToast({
+					variant: "error",
+					title: err.message
+				});
 
 			} finally {
 
@@ -117,7 +120,7 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 			);
 
 			if (!res.ok) {
-				throw new Error("response was unsuccessfull");
+				throw new Error("response was unsuccessful");
 			}
 
 			const { invite } = await res.json();
@@ -134,14 +137,9 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 
 		} catch (err) {
 
-			console.log(
-				"Error occured while sending project invite: " + err.message,
-			);
-
 			showToast({
-				variant: "failure",
-				title: "Unexpected error occured!",
-				message: `Error occured while sending invite to ${email}. Please, try again later!`,
+				variant: "error",
+				title: err.message
 			});
 
 		} finally {

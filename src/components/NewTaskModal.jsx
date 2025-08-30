@@ -12,6 +12,7 @@ import FileAttachments from "./FileAttachments";
 import { taskPriorityOptions } from "../utils/constant";
 
 function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
+
 	const { team, currentMemberId } = useProject();
 	const { showToast } = useToast();
 
@@ -25,6 +26,7 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
 	async function createNewTask() {
+
 		const formData = new FormData();
 
 		formData.append("title", taskTitle);
@@ -43,6 +45,7 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 		setIsNewTaskBeingCreated(true);
 
 		try {
+
 			const { newTask } = await taskService.createTask(
 				projectId,
 				sprintId,
@@ -58,22 +61,24 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 			});
 
 			closeModal();
+
 		} catch (err) {
-			console.log(
-				"The following error occured while creating task: " + err
-			);
 
 			showToast({
-				variant: "failure",
-				title: "Unexpected error occured!",
-				message: "Unexpected error occured while creating new task",
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setIsNewTaskBeingCreated(false);
+
 		}
+
 	}
 
 	useEffect(() => {
+
 		if (
 			taskTitle &&
 			taskDescription &&
@@ -85,6 +90,7 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 		} else {
 			setSubmitButtonDisabled(true);
 		}
+
 	}, [
 		taskDescription,
 		taskPriority,
@@ -95,10 +101,8 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 
 	return (
 		<Modal title="Create New Task" size="lg" closeModal={closeModal}>
-			<div
-				className="flex flex-col grow gap-y-8 overflow-y-auto px-6 pb-6 
-			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800"
-			>
+			<div className="flex flex-col grow gap-y-8 overflow-y-auto px-6 pb-6 
+			scrollbar-thin dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
 				<div className="flex flex-col gap-y-8">
 					<TaskTitleField
 						disabled={isNewTaskBeingCreated}

@@ -20,6 +20,7 @@ import { useToast } from "./ui/ToastProvider";
 import TaskDetailsModal from "./TaskDetailsModal";
 
 function ReviewTask({ task, onTaskApprove, onTaskReject }) {
+
 	const { id, title, priority, status, assignedTo, deadline } = task;
 
 	const { projectId } = useParams();
@@ -37,9 +38,11 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 	const [showTaskDetails, setShowTaskDetails] = useState(false);
 
 	async function approveTask() {
+
 		setTaskBeingApproved(true);
 
 		try {
+
 			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
@@ -56,19 +59,28 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 			});
 
 			setShowApproveTaskModal(false);
+
 		} catch (err) {
-			console.log(
-				"The following error occured while closing task: " + err.message
-			);
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 		} finally {
+
 			setTaskBeingApproved(false);
+
 		}
+
 	}
 
 	async function rejectTask() {
+
 		setTaskBeingRejected(true);
 
 		try {
+
 			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
@@ -85,14 +97,20 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 			});
 
 			setShowRejectTaskModal(false);
+
 		} catch (err) {
-			console.log(
-				"The following error occured while rejection task: " +
-					err.message
-			);
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 		} finally {
+
 			setTaskBeingRejected(false);
+
 		}
+
 	}
 
 	return (

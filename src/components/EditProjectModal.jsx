@@ -70,11 +70,9 @@ function EditProjectModal({
 
 		} catch (err) {
 
-			console.log("The following error occured while updating the project: " + err.message);
-
 			showToast({
-				variant: "failure",
-				title: "Unexpected error occured while updating the project!",
+				variant: "error",
+				title: err.message
 			});
 
 		} finally {

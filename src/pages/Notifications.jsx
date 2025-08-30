@@ -10,21 +10,27 @@ import ErrorState from "../components/ErrorState";
 import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
 import EmptyState from "../components/EmptyState";
+import { useToast } from "../components/ui/ToastProvider";
 
 function Notifications() {
+
 	const location = useLocation();
-	const { loading, error, notifications, setNotifications } =
-		useNotifications();
+
+	const { loading, error, notifications, setNotifications } = useNotifications();
+	const { showToast } = useToast();
 
 	const [selectedIds, setSelectedIds] = useState([]);
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
+
 		if (!loading && location.hash) {
+
 			const elementId = location.hash.substring(1);
 			const element = document.getElementById(elementId);
 
 			if (element) {
+
 				element.scrollIntoView({ behavior: "smooth", block: "center" });
 
 				setTimeout(() => {
@@ -40,8 +46,11 @@ function Notifications() {
 						);
 					}, 500);
 				}, 800);
+
 			}
+
 		}
+
 	}, [loading, location]);
 
 	const handleSelectNotification = (id) => {
@@ -61,28 +70,36 @@ function Notifications() {
 	};
 
 	const handleMarkAsViewed = async (id) => {
+
 		const prevNotifications = notifications;
 
-		setNotifications((prev) =>
-			prev.map((notification) =>
-				notification.id === id
-					? {
-							...notification,
-							isViewed: true,
-							updated_at: new Date().toISOString(),
-						}
-					: notification,
-			),
-		);
+		setNotifications((prev) => prev.map((notification) =>
+			notification.id === id ? {
+				...notification,
+				isViewed: true,
+				updated_at: new Date().toISOString(),
+			} : notification
+		));
 
 		try {
+
 			await notificationService.updateNotificationViewStatus([id], true);
+
 		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 			setNotifications(prevNotifications);
+
 		}
+
 	};
 
 	const handleMarkSelectedAsViewed = async () => {
+
 		const currentTime = new Date().toISOString();
 		const prevNotifications = notifications;
 
@@ -101,13 +118,23 @@ function Notifications() {
 		setSelectedIds([]);
 
 		try {
+
 			await notificationService.updateNotificationViewStatus(
 				selectedIds,
 				true,
 			);
+
 		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 			setNotifications(prevNotifications);
+
 		}
+
 	};
 
 	const handleMarkSelectedAsUnviewed = async () => {
@@ -129,43 +156,71 @@ function Notifications() {
 		setSelectedIds([]);
 
 		try {
+
 			await notificationService.updateNotificationViewStatus(
 				selectedIds,
 				false,
 			);
+
 		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 			setNotifications(prevNotifications);
+
 		}
+
 	};
 
 	const handleDeleteNotification = async (id) => {
+
 		const prevNotifications = notifications;
 
 		setNotifications((prev) => prev.filter((n) => n.id !== id));
-		setSelectedIds((prev) =>
-			prev.filter((selectedId) => selectedId !== id),
-		);
+		setSelectedIds((prev) => prev.filter((selectedId) => selectedId !== id));
 
 		try {
+
 			await notificationService.deleteNotifications([id]);
+
 		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 			setNotifications(prevNotifications);
+
 		}
+
 	};
 
 	const handleDeleteSelected = async () => {
+
 		const prevNotifications = notifications;
 
-		setNotifications((prev) =>
-			prev.filter((n) => !selectedIds.includes(n.id)),
-		);
+		setNotifications((prev) => prev.filter((n) => !selectedIds.includes(n.id)));
 		setSelectedIds([]);
 
 		try {
+
 			await notificationService.deleteNotifications(selectedIds);
+
 		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 			setNotifications(prevNotifications);
+
 		}
+
 	};
 
 	function clearFilters() {

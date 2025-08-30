@@ -30,13 +30,17 @@ function LeaveProjectModal({
 	const navigate = useNavigate();
 
 	useEffect(() => {
+
 		setSubmitButtonDisabled(projectName !== projectTitle);
+
 	}, [projectName, projectTitle]);
 
 	async function leaveProject() {
+
 		setLeavingProject(true);
 
 		try {
+
 			await teamMemberService.leaveProject(projectId);
 
 			onProjectLeave(projectId);
@@ -47,14 +51,20 @@ function LeaveProjectModal({
 				variant: "success",
 				title: "You've left the project successfully!",
 			});
+
 		} catch (err) {
+
 			showToast({
-				variant: "failure",
-				title: err.message,
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setLeavingProject(false);
+
 		}
+
 	}
 
 	return (
@@ -66,10 +76,8 @@ function LeaveProjectModal({
 			closeModal={closeModal}
 		>
 			<div className="flex flex-col px-7 pb-7 gap-y-8">
-				<div
-					className="dark:bg-orange-950 dark:border-orange-800 bg-orange-100 border-orange-300 
-				text-orange-500 flex flex-col gap-y-2 p-4 rounded-md border-[1px]"
-				>
+				<div className="dark:bg-orange-950 dark:border-orange-800 bg-orange-100 border-orange-300 
+				text-orange-500 flex flex-col gap-y-2 p-4 rounded-md border-[1px]">
 					<span>This action will permanently:</span>
 					<ul className="list-disc pl-5">
 						{leaveWarnings.map((warning) => {

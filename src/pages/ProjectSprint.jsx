@@ -9,11 +9,14 @@ import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
 import { CustomDropdown } from "../components/CustomDropdown";
 import EmptyState from "../components/EmptyState";
+import { useToast } from "../components/ui/ToastProvider";
 import { Calendar, Filter } from "lucide-react";
 
 function ProjectSprint() {
 
 	const { projectId, sprintId } = useParams();
+
+	const { showToast } = useToast();
 
 	const [sprintTasks, setSprintTasks] = useState([]);
 	const [sprintMetaData, setSprintMetaData] = useState(null);
@@ -57,7 +60,10 @@ function ProjectSprint() {
 
 			} catch (err) {
 
-				console.log(err.message);
+				showToast({
+					variant: "error",
+					title: err.message
+				});
 
 			} finally {
 

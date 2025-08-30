@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 function MyTask({ task, onTaskSubmit, currentMemberId }) {
+
 	const { id, title, priority, status, assignedBy, deadline } = task;
 
 	const { projectId } = useParams();
@@ -31,9 +32,11 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
 
 	async function submitTask() {
+
 		setTaskBeingSubmitted(true);
 
 		try {
+
 			const { updatedTask } = await taskService.changeTaskStatus({
 				projectId: projectId,
 				taskId: id,
@@ -50,14 +53,20 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			});
 
 			setShowSubmitModal(false);
+
 		} catch (err) {
-			console.log(
-				"The following error occured while submitting task: " +
-					err.message
-			);
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 		} finally {
+
 			setTaskBeingSubmitted(false);
+
 		}
+		
 	}
 
 	return (

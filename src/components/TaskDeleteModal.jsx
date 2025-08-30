@@ -13,9 +13,11 @@ function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 	const [taskBeingDeleted, setTaskBeingDeleted] = useState(false);
 
 	async function deleteTask() {
+		
 		setTaskBeingDeleted(true);
 
 		try {
+
 			await taskService.deleteTask(projectId, taskId);
 
 			setTasks((prevTasks) =>
@@ -28,13 +30,20 @@ function TaskDeleteModal({ projectId, taskId, taskTitle, closeModal }) {
 			});
 
 			closeModal(false);
+
 		} catch (err) {
-			console.log(
-				"The following error occured while deleting task: " + err
-			);
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
 		} finally {
+
 			setTaskBeingDeleted(false);
+
 		}
+
 	}
 
 	return (

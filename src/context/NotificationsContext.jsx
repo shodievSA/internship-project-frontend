@@ -97,40 +97,60 @@ export function NotificationsContextProvider({ children }) {
 	}, [user]);
 
 	useEffect(() => {
+
 		const fetchNotifications = async () => {
+
 			setLoading(true);
 			setError(null);
 
 			try {
+
 				const data = await notificationService.getNotifications();
 				setNotifications(data);
+
 			} catch (err) {
+
 				setError(err.message);
+
 			} finally {
+
 				setTimeout(() => {
 					setLoading(false);
 				}, 200);
+
 			}
+
 		};
 
 		fetchNotifications();
+
 	}, []);
 
 	useEffect(() => {
+
 		async function getUserInvites() {
+
 			try {
+
 				const { invites } = await userService.getUserInvites();
 				setInvites(invites);
+
 			} catch (err) {
+
 				console.log(err);
+
 			} finally {
+
 				setTimeout(() => {
 					setInvitesFetched(true);
 				}, 200);
+
 			}
+
 		}
 
 		getUserInvites();
+
 	}, []);
 
 	const contextData = {
@@ -148,6 +168,7 @@ export function NotificationsContextProvider({ children }) {
 			{children}
 		</NotificationsContext.Provider>
 	);
+	
 }
 
 export const useNotifications = () => useContext(NotificationsContext);

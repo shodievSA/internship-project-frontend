@@ -6,6 +6,7 @@ import Modal from "./ui/Modal";
 import InputField from "./InputField";
 
 function NewProjectModal({ closeModal, onProjectCreated }) {
+
 	const { showToast } = useToast();
 
 	const [projectTitle, setProjectTitle] = useState("");
@@ -13,13 +14,17 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 	const [projectBeingSaved, setProjectBeingSaved] = useState(false);
 
 	const submitButtonDisabled = useMemo(() => {
+
 		return !projectTitle.trim() || !userPosition.trim();
+
 	}, [projectTitle, userPosition]);
 
 	async function createNewProject() {
+
 		setProjectBeingSaved(true);
 
 		try {
+
 			const { project } = await projectService.createProject(
 				projectTitle,
 				userPosition,
@@ -33,14 +38,20 @@ function NewProjectModal({ closeModal, onProjectCreated }) {
 				variant: "success",
 				title: "Project created successfully!",
 			});
+
 		} catch (err) {
+
 			showToast({
-				variant: "failure",
-				title: err.message,
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setProjectBeingSaved(false);
+
 		}
+
 	}
 
 	return (

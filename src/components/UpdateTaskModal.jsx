@@ -123,6 +123,7 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 	}, []);
 
 	async function updateTask() {
+
 		const formData = prepareDataForSubmission(
 			updatedTaskProps,
 			fileUpdates
@@ -131,6 +132,7 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 		setTaskBeingUpdated(true);
 
 		try {
+
 			const { updatedTask } = await taskService.updateTask({
 				projectId,
 				taskId,
@@ -150,14 +152,20 @@ function UpdateTaskModal({ projectId, task, team, closeModal }) {
 				title: "Task updated successfully!",
 				message: "The task has been updated successfully",
 			});
+
 		} catch (err) {
+
 			showToast({
-				variant: "failure",
-				title: err.message,
+				variant: "error",
+				title: err.message
 			});
+
 		} finally {
+
 			setTaskBeingUpdated(false);
+
 		}
+
 	}
 
 	return (

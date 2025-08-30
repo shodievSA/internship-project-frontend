@@ -17,13 +17,12 @@ import {
 	CircleDot,
 	History
 } from "lucide-react";
-// Add import for TimeTrackingTab (to be implemented)
-// import TimeTrackingTab from "./TimeTrackingTab";
 import TimeTracking from "./TimeTracking";
 import TaskDetailsSkeleton from "./TaskDetailsSkeleton";
 import TimeTrackingSkeleton from "./TimeTrackingSkeleton";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import { useToast } from "./ui/ToastProvider";
 
 function TaskDetailsModal({ task, projectId, closeModal }) {
 
@@ -42,6 +41,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 	} = task;
 
 	const { themeMode } = useThemeContext();
+	const { showToast } = useToast();
 
 	const [fileUrls, setFileUrls] = useState([]);
 	const [fileUrlsLoaded, setFileUrlsLoaded] = useState(false);
@@ -61,7 +61,10 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 			} catch (err) {
 
-				console.log(err);
+				showToast({
+					variant: "error",
+					title: err.message
+				});
 
 			} finally {
 

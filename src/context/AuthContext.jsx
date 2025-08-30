@@ -1,37 +1,55 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useToast } from "../components/ui/ToastProvider";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const AuthContext = createContext();
 
 function AuthContextProvider({ children }) {
+
+	const { showToast } = useToast();
+
 	const [user, setUser] = useState();
 	const [isUserFetched, setIsUserFetched] = useState(false);
 
 	useEffect(() => {
+
 		async function getUserData() {
+
 			try {
+
 				const res = await fetch(`${SERVER_BASE_URL}/api/v1/me`, {
 					method: "GET",
 					credentials: "include",
 				});
 
 				if (!res.ok) {
-					throw new Error(
-						"request for fetching user data was unsuccessfull",
-					);
+
+					throw new Error("Request for getting user data was unsuccessful");
+
 				}
 
 				const { user } = await res.json();
 				setUser(user);
-			} catch {
-				console.log("error occured while fetching user data");
+
+			} catch(err) {
+
+				showToast({
+					variant: "error",
+					title: err.message
+				});
+
 				setUser(null);
+
 			} finally {
+
 				setIsUserFetched(true);
+
 			}
+
 		}
 
 		getUserData();
+
 	}, []);
 
 	return (
@@ -42,7 +60,9 @@ function AuthContextProvider({ children }) {
 }
 
 export function useAuthContext() {
+
 	return useContext(AuthContext);
+
 }
 
 export default AuthContextProvider;

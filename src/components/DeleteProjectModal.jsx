@@ -55,13 +55,9 @@ function DeleteProjectModal({
 
 		} catch (err) {
 
-			console.log(
-				"The following error occured while deleting the project: " + err.message,
-			);
-
 			showToast({
-				variant: "failure",
-				message: "Unexpected error occured while deleting the project!",
+				variant: "error",
+				title: err.message
 			});
 
 		} finally {

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useThemeContext } from "../context/ThemeContext";
+import { useToast } from "./ui/ToastProvider";
 import aiService from "../services/aiService";
 import {
 	Asterisk,
@@ -26,6 +27,7 @@ function AiEditor({
 }) {
 
 	const { themeMode } = useThemeContext();
+	const { showToast } = useToast();
 
 	const [loading, setLoading] = useState(false);
 	const [showError, setShowError] = useState(false);
@@ -50,7 +52,10 @@ function AiEditor({
 
 		} catch (err) {
 
-			console.log("The following error occured while enhancing your task description: " + err.message);
+			showToast({
+				variant: "error",
+				title: err.message
+			});
 
 		} finally {
 

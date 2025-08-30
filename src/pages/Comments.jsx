@@ -14,12 +14,15 @@ import LoadingState from "../components/LoadingState";
 import ReactMarkdown from "react-markdown";
 import { useThemeContext } from "../context/ThemeContext";
 import rehypeHighlight from "rehype-highlight";
+import { useToast } from "../components/ui/ToastProvider";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
 
 	const { projectId, taskId } = useParams();
 	const { state: { task, currentMemberId } } = useLocation();
+
+	const { showToast } = useToast();
 
 	const navigate = useNavigate();
 
@@ -166,7 +169,10 @@ function Comments() {
 
 			} catch (err) {
 
-				console.log(err.message);
+				showToast({
+					variant: "error",
+					title: err.message
+				});
 
 			} finally {
 
