@@ -22,6 +22,7 @@ import TaskDetailsSkeleton from "./TaskDetailsSkeleton";
 import TimeTrackingSkeleton from "./TimeTrackingSkeleton";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm"
 import { useToast } from "./ui/ToastProvider";
 
 function TaskDetailsModal({ task, projectId, closeModal }) {
@@ -200,9 +201,14 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 												ul: ({ node, ...props }) => (
 													<ul className="list-disc ml-4" {...props} />
 												),
+												a: ({ node, ...props }) => (
+													<a className="underline decoration-blue-500 decoration-solid text-blue-500 
+													hover:text-blue-700 dark:decoration-blue-500 dark:text-blue-400 hover:dark:text-blue-500" {...props} />
+												)
 											}}
 											className={`${themeMode} text-neutral-700 dark:text-neutral-400`} 
 											rehypePlugins={[rehypeHighlight]}
+											remarkPlugins={[remarkGfm]}
 										>
 											{ description }
 										</ReactMarkdown>
