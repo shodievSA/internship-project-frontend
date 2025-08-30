@@ -44,7 +44,9 @@ function Summary() {
 	};
 
 	return (
-		<div className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 py-6 pb-16 overflow-y-auto">
+		<div className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 
+		py-6 pb-16 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
+		dark:scrollbar-track-neutral-800">
 			<header className="flex justify-between items-center">
 				<div className="flex items-center gap-x-6">
 					<Button
