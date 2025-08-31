@@ -16,7 +16,7 @@ function ProjectSprintHeader({
 	setSprintTasks
 }) {
 
-	const { tasks, setTasks, setSprints } = useProject();
+	const { refetchProject, setSprints } = useProject();
 
 	const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
 	const [showEditSprintModal, setShowEditSprintModal] = useState(false);
@@ -29,11 +29,13 @@ function ProjectSprintHeader({
 
 	function onSprintUpdate(updatedSprint) {
 
-		setSprints((prevSprints) => prevSprints.map((sprint) => {
-			return sprint.id === updatedSprint.id ? updatedSprint : sprint;
-		}));
-
 		setSprintMetaData(updatedSprint);
+
+	}
+
+	function onNewTaskCreated(newTask) {
+
+		setSprintTasks([newTask, ...sprintTasks]);
 
 	}
 
@@ -45,28 +47,17 @@ function ProjectSprintHeader({
 
 	}
 
-	function onNewTaskCreated(newTask) {
-
-		setSprintTasks([newTask, ...sprintTasks]);
-
-		if (sprintMetaData.status === 'active') {
-
-			setTasks([newTask, ...tasks]);
-
-		}
-
-
-	}
-
 	useEffect(() => {
 	
 		function handleClickOutside(event) {
+
 			if (
 				settingsButtonClicked &&
 				!settingsMenuRef.current.contains(event.target)
 			) {
 				setSettingsButtonClicked(false);
 			}
+
 		}
 
 		document.addEventListener("click", handleClickOutside);
@@ -76,6 +67,12 @@ function ProjectSprintHeader({
 		};
 	
 	}, [settingsButtonClicked]);
+
+	useEffect(() => {
+
+		refetchProject();
+
+	}, [sprintTasks, sprintMetaData]);
 
 	return (
 		<>

@@ -20,7 +20,7 @@ export function ProjectContextProvider({ children }) {
 	const [currentMemberId, setCurrentMemberId] = useState(null);
 	const [currentMemberRole, setCurrentMemberRole] = useState(null);
 
-	async function fetchProject(projectId) {
+	async function fetchProject() {
 
 		try {
 
@@ -55,6 +55,12 @@ export function ProjectContextProvider({ children }) {
 
 	}
 
+	function refetchProject() {
+
+		fetchProject();
+
+	}
+
 	useEffect(() => {
 
 		setMetaData(null);
@@ -67,7 +73,7 @@ export function ProjectContextProvider({ children }) {
 		setProjectLoaded(false);
 		setError(null);
 		
-		fetchProject(projectId);
+		fetchProject();
 
 	}, [projectId]);
 
@@ -96,6 +102,7 @@ export function ProjectContextProvider({ children }) {
 		currentMemberRole,
 		setCurrentMemberRole,
 		fetchProject,
+		refetchProject,
 		projectLoaded,
 	};
 
