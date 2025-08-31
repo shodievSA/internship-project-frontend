@@ -13,13 +13,27 @@ function SprintPreview({ sprint }) {
 		description,
 		startDate,
 		endDate,
-		status
+		status,
+		totalTasks,
+		totalTasksCompleted,
 	} = sprint;
 
 	const { tasks } = useProject();
 
-	const total = tasks.filter((task) => task.sprintId === sprintId).length;
-	const completed = tasks.filter((task) => task.sprintId === sprintId && task.status === "closed").length;
+	let total, completed;
+
+	if (status === "active") {
+
+		total = tasks.filter((task) => task.sprintId === sprintId).length;
+		completed = tasks.filter((task) => task.sprintId === sprintId && task.status === "closed").length;
+
+	} else {
+
+		total = totalTasks;
+		completed = totalTasksCompleted;
+
+	}
+
 	const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
 	const navigate = useNavigate();
