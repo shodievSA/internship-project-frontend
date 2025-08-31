@@ -15,7 +15,6 @@ import { Calendar, Filter } from "lucide-react";
 function ProjectSprint() {
 
 	const { projectId, sprintId } = useParams();
-
 	const { showToast } = useToast();
 
 	const [sprintTasks, setSprintTasks] = useState([]);

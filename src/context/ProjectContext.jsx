@@ -22,6 +22,16 @@ export function ProjectContextProvider({ children }) {
 
 	async function fetchProject() {
 
+		setMetaData(null);
+		setSprints([]);
+		setTeam([]);
+		setInvites([]);
+		setCurrentMemberId(null);
+		setCurrentMemberRole(null);
+		setTasks([]);
+		setProjectLoaded(false);
+		setError(null);
+
 		try {
 
 			const { projectDetails } = await projectService.getProject(projectId);
@@ -62,16 +72,6 @@ export function ProjectContextProvider({ children }) {
 	}
 
 	useEffect(() => {
-
-		setMetaData(null);
-		setSprints([]);
-		setTeam([]);
-		setInvites([]);
-		setCurrentMemberId(null);
-		setCurrentMemberRole(null);
-		setTasks([]);
-		setProjectLoaded(false);
-		setError(null);
 		
 		fetchProject();
 

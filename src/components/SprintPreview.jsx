@@ -1,23 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import { sprintStatusColors } from "../utils/constant";
 import { formatIsoDate } from "../utils/formatIsoDate";
-import { Calendar, TicketCheck } from "lucide-react";
 import ProgressBar from "./ProgressBar";
+import { useProject } from "../context/ProjectContext";
+import { Calendar, TicketCheck } from "lucide-react";
 
 function SprintPreview({ sprint }) {
+
 	const {
 		id: sprintId,
 		title,
 		description,
 		startDate,
 		endDate,
-		status,
-		totalTasks,
-		totalTasksCompleted,
+		status
 	} = sprint;
 
-	const total = totalTasks;
-	const completed = totalTasksCompleted;
+	const { tasks } = useProject();
+
+	const total = tasks.filter((task) => task.sprintId === sprintId).length;
+	const completed = tasks.filter((task) => task.sprintId === sprintId && task.status === "closed").length;
 	const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
 	const navigate = useNavigate();
@@ -28,16 +30,14 @@ function SprintPreview({ sprint }) {
 			rounded-lg p-4 w-full text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-neutral-700 
 			transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer hover:scale-[1.01] 
 			transition-transform"
-			onClick={() => navigate(`${sprintId}`, { state: { sprint } })}
+			onClick={() => navigate(`${sprintId}`)}
 		>
 			<div className="flex flex-col gap-y-2">
 				<div className="flex items-start justify-between">
 					<h2 className="font-semibold text-gray-900 dark:text-white line-clamp-1">
 						{title || ""}
 					</h2>
-					<span
-						className={`${sprintStatusColors[status]} status-badge`}
-					>
+					<span className={`${sprintStatusColors[status]} status-badge`}>
 						{status}
 					</span>
 				</div>
@@ -70,7 +70,7 @@ function SprintPreview({ sprint }) {
 						<div className="flex flex-col">
 							<span className="font-medium">Tickets</span>
 							<span className="text-xs">
-								{totalTasksCompleted}/{totalTasks}
+								{completed}/{total}
 							</span>
 						</div>
 					</div>
