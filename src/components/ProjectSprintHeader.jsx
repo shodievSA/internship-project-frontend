@@ -21,7 +21,6 @@ function ProjectSprintHeader({
 	const [showDeleteSprintModal, setShowDeleteSprintModal] = useState(false);
 	const [showEditSprintModal, setShowEditSprintModal] = useState(false);
 	const [showNewTaskModal, setShowNewTaskModal] = useState(false);
-	
 	const [settingsButtonClicked, setSettingsButtonClicked] = useState(false);
 
 	const navigate = useNavigate();
@@ -81,7 +80,7 @@ function ProjectSprintHeader({
 	return (
 		<>
 			<header className="flex items-center justify-between">
-				<div className="flex gap-x-6 items-center">
+				<div className="flex gap-x-4 items-center">
 					<Button
 						size="sm"
 						variant="secondary"
@@ -92,9 +91,15 @@ function ProjectSprintHeader({
 							<span>Back to project</span>
 						</div>
 					</Button>
-					<h1 className="text-lg font-semibold">
-						{sprintMetaData.title}
-					</h1>
+					<div className="flex flex-col">
+						<h1 className="font-semibold truncate">
+							{sprintMetaData.title}
+						</h1>
+						<div className="flex text-sm text-slate-500 dark:text-neutral-500 gap-x-2">
+							<h3>Sprint #{sprintMetaData.sprintNumber}</h3>
+							<h3>{sprintTasks.length} tickets</h3>
+						</div>
+					</div>
 				</div>
 				<div className="flex gap-x-5">
 					<div ref={settingsMenuRef} className="relative">

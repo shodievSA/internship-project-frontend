@@ -21,7 +21,6 @@ function ProjectSprint() {
 	const [sprintTasks, setSprintTasks] = useState([]);
 	const [sprintMetaData, setSprintMetaData] = useState(null);
 	const [sprintTasksBeingLoaded, setSprintTasksBeingLoaded] = useState(true);
-
 	const [searchTerm, setSearchTerm] = useState("");
 	const [dateFilter, setDateFilter] = useState("all");
 	const [statusFilter, setStatusFilter] = useState("all");
