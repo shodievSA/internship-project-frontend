@@ -214,7 +214,9 @@ function Comments() {
 					>
 						<ArrowLeft className="w-4 h-4" />
 					</button>
-					<h1 className="text-lg font-medium">{task.title}</h1>
+					<h1 className="font-semibold truncate">
+						{task.title}
+					</h1>
 				</div>
 				<div>
 					<div className="flex items-center gap-x-2">
