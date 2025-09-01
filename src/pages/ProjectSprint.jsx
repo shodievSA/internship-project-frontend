@@ -11,6 +11,7 @@ import { CustomDropdown } from "../components/CustomDropdown";
 import EmptyState from "../components/EmptyState";
 import { useToast } from "../components/ui/ToastProvider";
 import { Calendar, Filter } from "lucide-react";
+import ProjectSprintError from "../components/ProjectSprintError";
 
 function ProjectSprint() {
 
@@ -23,6 +24,8 @@ function ProjectSprint() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [dateFilter, setDateFilter] = useState("all");
 	const [statusFilter, setStatusFilter] = useState("all");
+
+	const [error, setError] = useState(null);
 
 	function clearFilters() {
 
@@ -63,6 +66,8 @@ function ProjectSprint() {
 					title: err.message
 				});
 
+				setError(err);				
+
 			} finally {
 
 				setTimeout(() => {
@@ -78,6 +83,7 @@ function ProjectSprint() {
 	}, []);
 
 	if (sprintTasksBeingLoaded) return <LoadingState message="Loading sprint's tasks" />;
+	if (error) return <ProjectSprintError message="Failed to load sprint tasks!" />;
 
 	return (
 		<>

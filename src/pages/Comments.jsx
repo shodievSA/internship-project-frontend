@@ -266,7 +266,7 @@ function Comments() {
 						<textarea
 							className="w-full h-full rounded-md resize-none dark:bg-black 
 							focus:outline-none p-3 scrollbar-none"
-							placeholder="Write your commend here..."
+							placeholder="Write your comment here..."
 							onKeyDown={handleOnKeyDown}
 							value={commentMessage}
 							onChange={(e) => setCommentMessage(e.target.value)}
