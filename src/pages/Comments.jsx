@@ -205,7 +205,7 @@ function Comments() {
 
 	return (
 		<div className="h-full flex flex-col relative">
-			<div ref={chatWindowRef} className="flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
+			<div ref={chatWindowRef} className="flex grow flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
 			dark:scrollbar-track-neutral-800 overflow-y-auto relative">
 				<div className="flex justify-between items-center w-full px-8 h-16 
 				sticky top-0 bg-white/20 dark:bg-black/20 backdrop-blur-lg">
