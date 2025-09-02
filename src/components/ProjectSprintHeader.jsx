@@ -94,7 +94,7 @@ function ProjectSprintHeader({
 						</h1>
 						<div className="flex text-sm text-slate-500 dark:text-neutral-500 gap-x-2">
 							<h3>Sprint #{sprintMetaData.sprintNumber}</h3>
-							<h3>{sprintTasks.length} tickets</h3>
+							<h3>{sprintTasks.length} ticket(s)</h3>
 						</div>
 					</div>
 				</div>
