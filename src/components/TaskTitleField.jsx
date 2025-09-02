@@ -121,7 +121,7 @@ function TaskTitleField({
                     setValue(value);
                 }}
                 disabled={disabled}
-                charLimit={102}
+                charLimit={100}
             />
             {showError && (
                 <div className="flex gap-x-1.5 text-red-500">
