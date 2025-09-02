@@ -204,11 +204,11 @@ function Comments() {
 	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
 	return (
-		<div className="h-full flex flex-col">
-			<div className="flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
+		<div className="h-full flex flex-col relative">
+			<div ref={chatWindowRef} className="flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
 			dark:scrollbar-track-neutral-800 overflow-y-auto relative">
-				<div className="flex justify-between items-center w-full px-8 h-16 sticky top-0
-				bg-white/20 dark:bg-black/20 backdrop-blur-md">
+				<div className="flex justify-between items-center w-full px-8 h-16 
+				sticky top-0 bg-white/20 dark:bg-black/20 backdrop-blur-lg">
 					<div className="flex items-center gap-x-5">
 						<button
 							className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
@@ -240,10 +240,7 @@ function Comments() {
 					{comments.length === 0 ? (
 						<EmptyState message={"No comments yet - be the first to break the silence!"} />
 					) : (
-						<div
-							ref={chatWindowRef}
-							className="grow flex flex-col px-12"
-						>
+						<div className="grow flex flex-col px-28 pb-40">
 							<div className="flex flex-col gap-y-4 py-5">
 								<div className="flex flex-col gap-y-3">
 									{comments.map((comment) => {
@@ -267,24 +264,23 @@ function Comments() {
 					)}
 				</div>
 			</div>
-			<div className="flex justify-center h-28 px-2 pt-2">
-				<div className="flex flex-col border-t border-l border-r dark:border-neutral-800 
-				rounded-t-lg w-9/12 bg-neutral-100 dark:bg-[rgb(20,20,20)]">
-					<textarea
-						className="w-full h-full rounded-lg resize-none bg-neutral-100 dark:bg-[rgb(20,20,20)] 
-						focus:outline-none px-3 pt-3 scrollbar-none"
-						placeholder="Type your message here..."
-						onKeyDown={handleOnKeyDown}
-						value={commentMessage}
-						onChange={(e) => setCommentMessage(e.target.value)}
-					/>
-					<div
-						className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-200 
-						dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
-						onClick={sendComment}
-					>
-						<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
-					</div>
+			<div className="flex flex-col border dark:border-neutral-800 
+			rounded-xl w-8/12 bg-neutral-100/20 backdrop-blur-xl dark:bg-[rgb(20,20,20)]/50 
+			absolute bottom-4 left-1/2 -translate-x-1/2">
+				<textarea
+					className="w-full h-full rounded-lg resize-none bg-neutral-100/20 
+					dark:bg-transparent focus:outline-none px-3 pt-3 scrollbar-none"
+					placeholder="Type your message here..."
+					onKeyDown={handleOnKeyDown}
+					value={commentMessage}
+					onChange={(e) => setCommentMessage(e.target.value)}
+				/>
+				<div
+					className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-100 
+					dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
+					onClick={sendComment}
+				>
+					<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
 				</div>
 			</div>
 		</div>
