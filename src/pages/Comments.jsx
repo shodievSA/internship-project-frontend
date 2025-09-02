@@ -6,8 +6,7 @@ import {
 	Pencil,
 	Check,
 	X,
-	Trash,
-	CircleDot
+	Trash
 } from "lucide-react";
 import commentService from "../services/commentService";
 import EmptyState from "../components/EmptyState";
@@ -16,7 +15,6 @@ import ReactMarkdown from "react-markdown";
 import { useThemeContext } from "../context/ThemeContext";
 import rehypeHighlight from "rehype-highlight";
 import { useToast } from "../components/ui/ToastProvider";
-import { taskStatusColors } from "../utils/constant";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
@@ -207,82 +205,85 @@ function Comments() {
 
 	return (
 		<div className="h-full flex flex-col">
-			<div className="flex justify-between items-center w-full px-8 h-16">
-				<div className="flex items-center gap-x-5">
-					<button
-						className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
-						dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2"
-						onClick={() => navigate(-1)}
-					>
-						<ArrowLeft className="w-4 h-4" />
-					</button>
-					<h1 className="font-semibold truncate">
-						{task.title}
-					</h1>
-				</div>
-				<div>
-					<div className="flex items-center gap-x-2">
-						<img
-							src={chatPartner.avatarUrl}
-							className="w-8 h-8 rounded-full"
-						/>
-						<div className="flex flex-col text-sm">
-							<span className="font-medium">
-								{chatPartner.name}
-							</span>
-							<span>{chatPartner.position}</span>
-						</div>
+			<div className="flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
+			dark:scrollbar-track-neutral-800 overflow-y-auto relative">
+				<div className="flex justify-between items-center w-full px-8 h-16 sticky top-0
+				bg-white/20 dark:bg-black/20 backdrop-blur-md">
+					<div className="flex items-center gap-x-5">
+						<button
+							className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
+							dark:hover:bg-neutral-900 bg-white hover:bg-slate-100 border-[1px] rounded-md p-2"
+							onClick={() => navigate(-1)}
+						>
+							<ArrowLeft className="w-4 h-4" />
+						</button>
+						<h1 className="font-semibold truncate">
+							{task.title}
+						</h1>
 					</div>
-				</div>
-			</div>
-			<div className="flex flex-col flex-1 min-h-0">
-				{comments.length === 0 ? (
-					<EmptyState message={"No comments yet - be the first to break the silence!"} />
-				) : (
-					<div
-						ref={chatWindowRef}
-						className="grow flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
-						dark:scrollbar-track-neutral-800 overflow-y-auto px-12"
-					>
-						<div className="flex flex-col gap-y-4 py-5">
-							<div className="flex flex-col gap-y-3">
-								{comments.map((comment) => {
-									return comment.projectMemberId === currentMemberId ? (
-										<CurrentUserComment
-											comment={comment}
-											currentUser={currentUser}
-											onCommentUpdate={onCommentUpdate}
-											onCommentDelete={onCommentDelete}
-										/>
-									) : (
-										<ChatPartnerComment
-											comment={comment}
-											chatPartner={chatPartner}
-										/>
-									);
-								})}
+					<div>
+						<div className="flex items-center gap-x-2">
+							<img
+								src={chatPartner.avatarUrl}
+								className="w-8 h-8 rounded-full"
+							/>
+							<div className="flex flex-col text-sm">
+								<span className="font-medium">
+									{chatPartner.name}
+								</span>
+								<span>{chatPartner.position}</span>
 							</div>
 						</div>
 					</div>
-				)}
-				<div className="flex justify-center h-28 px-2 pt-2">
-					<div className="flex flex-col border-t border-l border-r dark:border-neutral-800 
-					rounded-t-lg w-9/12 bg-neutral-100 dark:bg-[rgb(20,20,20)]">
-						<textarea
-							className="w-full h-full rounded-lg resize-none bg-neutral-100 dark:bg-[rgb(20,20,20)] 
-							focus:outline-none px-3 pt-3 scrollbar-none"
-							placeholder="Type your message here..."
-							onKeyDown={handleOnKeyDown}
-							value={commentMessage}
-							onChange={(e) => setCommentMessage(e.target.value)}
-						/>
+				</div>
+				<div className="flex flex-col flex-1 min-h-0">
+					{comments.length === 0 ? (
+						<EmptyState message={"No comments yet - be the first to break the silence!"} />
+					) : (
 						<div
-							className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-200 
-							dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
-							onClick={sendComment}
+							ref={chatWindowRef}
+							className="grow flex flex-col px-12"
 						>
-							<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
+							<div className="flex flex-col gap-y-4 py-5">
+								<div className="flex flex-col gap-y-3">
+									{comments.map((comment) => {
+										return comment.projectMemberId === currentMemberId ? (
+											<CurrentUserComment
+												comment={comment}
+												currentUser={currentUser}
+												onCommentUpdate={onCommentUpdate}
+												onCommentDelete={onCommentDelete}
+											/>
+										) : (
+											<ChatPartnerComment
+												comment={comment}
+												chatPartner={chatPartner}
+											/>
+										);
+									})}
+								</div>
+							</div>
 						</div>
+					)}
+				</div>
+			</div>
+			<div className="flex justify-center h-28 px-2 pt-2">
+				<div className="flex flex-col border-t border-l border-r dark:border-neutral-800 
+				rounded-t-lg w-9/12 bg-neutral-100 dark:bg-[rgb(20,20,20)]">
+					<textarea
+						className="w-full h-full rounded-lg resize-none bg-neutral-100 dark:bg-[rgb(20,20,20)] 
+						focus:outline-none px-3 pt-3 scrollbar-none"
+						placeholder="Type your message here..."
+						onKeyDown={handleOnKeyDown}
+						value={commentMessage}
+						onChange={(e) => setCommentMessage(e.target.value)}
+					/>
+					<div
+						className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-200 
+						dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
+						onClick={sendComment}
+					>
+						<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
 					</div>
 				</div>
 			</div>
