@@ -7,6 +7,7 @@ import {
 	Check,
 	X,
 	Trash,
+	CircleDot
 } from "lucide-react";
 import commentService from "../services/commentService";
 import EmptyState from "../components/EmptyState";
@@ -15,6 +16,7 @@ import ReactMarkdown from "react-markdown";
 import { useThemeContext } from "../context/ThemeContext";
 import rehypeHighlight from "rehype-highlight";
 import { useToast } from "../components/ui/ToastProvider";
+import { taskStatusColors } from "../utils/constant";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
@@ -204,8 +206,8 @@ function Comments() {
 	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
 	return (
-		<div className="h-full flex flex-col px-8 pt-4">
-			<div className="flex justify-between items-center pb-6">
+		<div className="h-full flex flex-col">
+			<div className="flex justify-between items-center w-full px-8 h-16">
 				<div className="flex items-center gap-x-5">
 					<button
 						className="dark:bg-neutral-950 dark:border-neutral-800 dark:text-white 
@@ -222,7 +224,7 @@ function Comments() {
 					<div className="flex items-center gap-x-2">
 						<img
 							src={chatPartner.avatarUrl}
-							className="w-10 h-10 rounded-full"
+							className="w-8 h-8 rounded-full"
 						/>
 						<div className="flex flex-col text-sm">
 							<span className="font-medium">
@@ -233,16 +235,16 @@ function Comments() {
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col flex-1 min-h-0 gap-y-4">
+			<div className="flex flex-col flex-1 min-h-0">
 				{comments.length === 0 ? (
 					<EmptyState message={"No comments yet - be the first to break the silence!"} />
 				) : (
 					<div
 						ref={chatWindowRef}
-						className="h-full flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
-						dark:scrollbar-track-neutral-800 overflow-y-auto"
+						className="grow flex flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
+						dark:scrollbar-track-neutral-800 overflow-y-auto px-12"
 					>
-						<div className="pr-5 flex flex-col gap-y-4 py-5">
+						<div className="flex flex-col gap-y-4 py-5">
 							<div className="flex flex-col gap-y-3">
 								{comments.map((comment) => {
 									return comment.projectMemberId === currentMemberId ? (
@@ -263,22 +265,23 @@ function Comments() {
 						</div>
 					</div>
 				)}
-				<div className="h-32 pb-4">
-					<div className="flex flex-col border dark:border-neutral-700 rounded-md">
+				<div className="flex justify-center h-28 px-2 pt-2">
+					<div className="flex flex-col border-t border-l border-r dark:border-neutral-800 
+					rounded-t-lg w-9/12 bg-neutral-100 dark:bg-[rgb(20,20,20)]">
 						<textarea
-							className="w-full h-full rounded-md resize-none dark:bg-black 
-							focus:outline-none p-3 scrollbar-none"
-							placeholder="Write your commend here..."
+							className="w-full h-full rounded-lg resize-none bg-neutral-100 dark:bg-[rgb(20,20,20)] 
+							focus:outline-none px-3 pt-3 scrollbar-none"
+							placeholder="Type your message here..."
 							onKeyDown={handleOnKeyDown}
 							value={commentMessage}
 							onChange={(e) => setCommentMessage(e.target.value)}
 						/>
 						<div
-							className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-100 
+							className="flex items-center justify-center self-end p-2 rounded-full hover:bg-neutral-200 
 							dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
 							onClick={sendComment}
 						>
-							<SendHorizontal className="w-5 h-5 text-neutral-500 dark:text-white" />
+							<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
 						</div>
 					</div>
 				</div>
@@ -335,45 +338,52 @@ function CurrentUserComment({
 	return (
 		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
 			{showEditInput ? (
-				<div className="min-w-[400px] h-28 bg-neutral-100 dark:bg-neutral-900 
-				rounded-md border dark:border-neutral-700">
+				<div className="min-w-[400px] h-28 bg-blue-100 dark:bg-indigo-600 
+				rounded-xl border border-slate-300 dark:border-gray-600">
 					<div className="flex flex-col h-full">
 						<textarea
-							className="w-full h-full resize-none dark:bg-black focus:outline-none 
-							px-3 pt-3 scrollbar-none rounded-md bg-neutral-100 dark:bg-neutral-900"
-							placeholder="Edit your commend here..."
+							className="w-full h-full resize-none focus:outline-none px-3 pt-3 
+							scrollbar-none rounded-xl bg-blue-100 dark:bg-indigo-600"
+							placeholder="Edit your comment here..."
 							onKeyDown={handleOnKeyDown}
 							value={newMessage}
 							onChange={(e) => setNewMessage(e.target.value)}
 						></textarea>
 						<div className="grow flex items-center gap-x-4 p-2 p-2">
-							<div 
-								className="p-1 rounded-md hover:bg-red-700/10 hover:dark:bg-red-700/30 
-								cursor-pointer"
+							<button 
+								className="py-1.5 px-2.5 rounded-lg hover:bg-red-700/30 hover:dark:bg-red-700/50 
+								cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
 								onClick={() => deleteComment(comment.id)}
 							>
-								<Trash className="w-4 h-4 text-red-700 dark:text-red-800" />
-							</div>
+								<Trash className="w-4 h-4 text-red-700 dark:text-red-600" />
+								<span className="mt-0.5">Delete</span>
+							</button>
 							<div className="flex gap-x-4 ml-auto">
-								<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
-								cursor-pointer">
-									<Check
-										className="w-4 h-4"
-										onClick={() => updateComment(comment.id, newMessage)}
-									/>
-								</div>
-								<div className="p-1 rounded-md hover:bg-neutral-200 hover:dark:bg-neutral-800 
-								cursor-pointer">
-									<X className="w-4 h-4" onClick={reverseChanges} />
-								</div>
+								<button 
+									className="py-1.5 px-2.5 rounded-lg hover:bg-blue-200 hover:dark:bg-neutral-800 
+									cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
+									onClick={() => updateComment(comment.id, newMessage)}
+								>
+									<Check className="w-4 h-4" />
+									<span>Save</span>
+								</button>
+								<button 
+									className="py-1.5 px-2.5 rounded-lg hover:bg-blue-200 hover:dark:bg-neutral-800 
+									cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
+									onClick={reverseChanges} 
+								>
+									<X className="w-4 h-4" />
+									<span>Cancel</span>
+								</button>
 							</div>
 						</div>
 					</div>
 				</div>
 			) : (
-				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-				dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900">
-					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap">
+				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border 
+				border-slate-300 dark:border-gray-600 bg-blue-100 dark:bg-indigo-600">
+					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap
+					text-blue-800 dark:text-white">
 						<ReactMarkdown
 							components={{
 								ol: ({ node, ...props }) => (
@@ -396,7 +406,8 @@ function CurrentUserComment({
 							<Pencil className="w-3.5 h-3.5 mt-0.5" />
 						</div>
 					</div>
-					<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+					<div className="flex gap-x-1.5 text-xs text-slate-600 
+					dark:text-gray-300 mr-auto">
 						<span>{getTimeFromIso(comment.createdAt)}</span>
 						<span>{getDateFromIso(comment.createdAt)}</span>
 					</div>
@@ -412,15 +423,15 @@ function ChatPartnerComment({ comment, chatPartner }) {
 	const { themeMode } = useThemeContext();
 
 	return (
-		<div className="flex flex-col max-w-md mr-auto gap-y-2">
-			<span className="text-sm">{chatPartner.name.split(" ")[0]}</span>
+		<div className="flex max-w-md mr-auto">
 			<div className="flex items-start gap-x-3">
 				<img
 					src={chatPartner.avatarUrl}
 					className="w-8 h-8 rounded-full"
 				/>
-				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-lg border 
-				dark:border-neutral-700 whitespace-pre-wrap">
+				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border border-slate-300
+				dark:border-neutral-700 whitespace-pre-wrap bg-slate-100 dark:bg-gray-700 text-slate-800
+				dark:text-slate-100">
 					<ReactMarkdown
 						components={{
 							ol: ({ node, ...props }) => (
@@ -435,7 +446,7 @@ function ChatPartnerComment({ comment, chatPartner }) {
 					>
 						{comment.message}
 					</ReactMarkdown>
-					<div className="flex gap-x-1.5 text-xs dark:text-neutral-400 mr-auto">
+					<div className="flex gap-x-1.5 text-xs text-slate-400 mr-auto">
 						<span>{getTimeFromIso(comment.createdAt)}</span>
 						<span>{getDateFromIso(comment.createdAt)}</span>
 					</div>
