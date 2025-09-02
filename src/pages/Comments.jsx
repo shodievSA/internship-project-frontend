@@ -268,7 +268,7 @@ function Comments() {
 			rounded-xl w-8/12 bg-neutral-100/20 backdrop-blur-xl dark:bg-[rgb(20,20,20)]/50 
 			absolute bottom-4 left-1/2 -translate-x-1/2">
 				<textarea
-					className="w-full h-full rounded-lg resize-none bg-neutral-100/20 
+					className="w-full h-full rounded-lg resize-none bg-transparent 
 					dark:bg-transparent focus:outline-none px-3 pt-3 scrollbar-none"
 					placeholder="Type your message here..."
 					onKeyDown={handleOnKeyDown}
