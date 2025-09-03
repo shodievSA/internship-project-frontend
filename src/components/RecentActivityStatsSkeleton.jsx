@@ -8,18 +8,18 @@ function RecentActivityStatsSkeleton() {
 					key={index}
 					className="bg-gray-50 dark:bg-black rounded-lg p-3 flex items-center space-x-3"
 				>
-					{/* Icon Placeholder */}
+					{/* Icon Placeholder - match exact dimensions */}
 					<div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
 
-					{/* Text Placeholders */}
+					{/* Text Placeholders - match exact layout and dimensions */}
 					<div className="flex-1">
 						<div className="flex items-center gap-2 mb-1">
-							{/* Count skeleton */}
+							{/* Count skeleton - match exact height */}
 							<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-12 animate-pulse"></div>
-							{/* Title skeleton */}
+							{/* Title skeleton - match exact height */}
 							<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
 						</div>
-						{/* Period text skeleton */}
+						{/* Period text skeleton - match exact height and width */}
 						<div
 							className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"
 							style={{ width: "80%" }}

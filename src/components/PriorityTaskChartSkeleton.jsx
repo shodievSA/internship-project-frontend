@@ -3,16 +3,16 @@ import React from "react";
 function PriorityTaskChartSkeleton() {
 	return (
 		<div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-			{/* Header skeleton */}
+			{/* Header skeleton - match exact padding and margins */}
 			<div className="mb-4">
 				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-2 animate-pulse"></div>
 				<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-64 animate-pulse"></div>
 			</div>
 
-			{/* Chart skeleton */}
+			{/* Chart skeleton - match exact dimensions and layout */}
 			<div className="h-96 -ml-8 -mr-6 relative">
 				<div className="h-full flex items-end justify-center space-x-8 px-8">
-					{/* Bar 1 - High Priority */}
+					{/* Bar 1 - High Priority - match exact dimensions */}
 					<div className="flex flex-col items-center space-y-2">
 						<div
 							className="w-12 bg-gray-200 dark:bg-gray-700 rounded-t animate-pulse"
@@ -24,7 +24,7 @@ function PriorityTaskChartSkeleton() {
 						</div>
 					</div>
 
-					{/* Bar 2 - Middle Priority */}
+					{/* Bar 2 - Middle Priority - match exact dimensions */}
 					<div className="flex flex-col items-center space-y-2">
 						<div
 							className="w-12 bg-gray-200 dark:bg-gray-700 rounded-t animate-pulse"
@@ -36,7 +36,7 @@ function PriorityTaskChartSkeleton() {
 						</div>
 					</div>
 
-					{/* Bar 3 - Low Priority */}
+					{/* Bar 3 - Low Priority - match exact dimensions */}
 					<div className="flex flex-col items-center space-y-2">
 						<div
 							className="w-12 bg-gray-200 dark:bg-gray-700 rounded-t animate-pulse"
@@ -49,7 +49,7 @@ function PriorityTaskChartSkeleton() {
 					</div>
 				</div>
 
-				{/* Y-axis labels skeleton */}
+				{/* Y-axis labels skeleton - match exact positioning */}
 				<div className="absolute left-0 top-0 h-full flex flex-col justify-between py-4">
 					{[6, 4, 2, 0].map((value) => (
 						<div
