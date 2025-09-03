@@ -1,24 +1,30 @@
 export const getStatusBadge = (status) => {
+
 	switch (status) {
-		case "pending":
+
+		case 'accepted':
+
 			return (
-				<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900">
-					Pending
-				</span>
-			);
-		case "accepted":
-			return (
-				<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+
+				<span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900 text-white'>
 					Accepted
 				</span>
+
 			);
-		case "rejected":
+
+		case 'rejected':
+			
 			return (
-				<span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-white dark:bg-red-900 dark:text-white">
+
+				<span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-white'>
 					Rejected
 				</span>
+
 			);
+			
 		default:
 			return null;
+			
 	}
+
 };

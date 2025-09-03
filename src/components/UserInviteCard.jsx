@@ -1,91 +1,174 @@
-import Button from "./ui/Button";
-import { getStatusBadge } from "../utils/uiUtils";
-import { Calendar, Mail, User, Check, X, Pickaxe } from "lucide-react";
+import { Check, X, } from 'lucide-react';
+import { getStatusBadge } from '../utils/uiUtils';
 
 function UserInviteCard({ invite, onRespond }) {
+
 	return (
+
 		<div
-			className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 
-		rounded-lg px-6 py-4 shadow-sm hover:shadow-md transition-shadow"
+
+			className={
+
+				`
+					grid sm:grid-cols-[2fr_4fr_1fr] grid-cols-1 gap-y-7
+					items-start sm:items-center bg-white dark:bg-black border border-slate-100 dark:border-slate-800
+					border-l-2 last:border-b-0 dark:last-border-b-0 hover:bg-indigo-100
+					dark:hover:bg-violet-900/30 transition-colors rounded-lg px-4 py-3 sm:px-6 sm:py-4
+
+					${
+
+						invite.status === 'accepted'
+							? 'border-l-green-500 dark:border-l-green-500'
+							: invite.status === "rejected"
+							? 'border-l-red-500 dark:border-l-red-500'
+							: 'border-l-blue-500 dark:border-l-blue-500'
+
+					}
+
+				`
+
+			}
+
 		>
-			<div className="flex flex-col sm:flex-row items-start justify-between">
-				<div
-					className="flex flex-col sm:flex-row items-center sm:items-start gap-6 
-				flex-1 w-full"
-				>
-					<img
-						src={invite.from.avatarUrl}
-						alt={`${invite.from.fullName}'s avatar`}
-						className="w-12 h-12 rounded-full flex-shrink-0 object-cover self-center"
-					/>
-					<div className="flex-1 min-w-0 text-left w-full">
-						<h3 className="text-lg text-gray-900 dark:text-white mb-1">
-							<span className="font-semibold">Project: </span>{" "}
-							{invite.project.title}
-						</h3>
-						<p className="text-gray-600 dark:text-gray-400 mb-2 sm:mb-4 text-sm">
-							Invited by{" "}
-							<span className="font-medium text-gray-900 dark:text-white">
-								{invite.from.fullName}
-							</span>
-						</p>
-						<div className="flex justify-start sm:hidden mb-4">
-							{getStatusBadge(invite.status)}
-						</div>
-						<div className="flex md:gap-x-8 sm:gap-6 text-sm text-gray-600 dark:text-gray-400 mb-4">
-							<div className="flex items-center gap-2 justify-start">
-								<Mail className="h-4 w-4 flex-shrink-0" />
-								<span className="truncate">
-									{invite.from.email}
-								</span>
-							</div>
-							<div className="flex items-center gap-2 justify-start">
-								<User className="h-4 w-4 flex-shrink-0" />
-								<span>{invite.roleOffered}</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<Pickaxe className="h-4 w-4" />
-								<span>{invite.positionOffered}</span>
-							</div>
-							<div className="flex items-center gap-2 justify-start">
-								<Calendar className="h-4 w-4 flex-shrink-0" />
-								<span>{invite.createdAt.split("T")[0]}</span>
-							</div>
-						</div>
-					</div>
+
+			<div className='grid grid-cols-[1fr_5fr]'>
+
+				<img
+
+					src={invite.from.avatarUrl}
+					alt={`${invite.from.fullName}'s avatar`}
+					className='w-10 h-10 rounded-full object-cover self-center'
+
+				/>
+
+				<div className='text-gray-900 dark:text-white truncate'>
+
+					<span className='font-medium text-sm text-slate-900 dark:text-white whitespace-nowrap truncate'>{invite.from.fullName}</span>
+
+					<br />
+
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>{invite.from.email}</span>
+
 				</div>
-				<div className="hidden sm:block flex-shrink-0 ml-4">
-					{getStatusBadge(invite.status)}
-				</div>
+
 			</div>
-			{invite.status === "pending" && (
-				<div className="flex flex-col sm:flex-row gap-3 justify-center sm:justify-start sm:ml-16">
-					<Button
-						size="sm"
-						onClick={() =>
-							onRespond("accepted", invite.projectId, invite.id)
-						}
-					>
-						<div className="flex items-center gap-x-2">
-							<Check className="h-4 w-4" />
-							Accept
-						</div>
-					</Button>
-					<Button
-						size="sm"
-						onClick={() =>
-							onRespond("rejected", invite.projectId, invite.id)
-						}
-					>
-						<div className="flex items-center gap-x-2">
-							<X className="h-4 w-4" />
-							Reject
-						</div>
-					</Button>
+
+			<div className='grid grid-cols-[1fr_2fr_1fr] grid-flow-row items-center w-full gap-3'>
+
+				<div className='truncate'>
+
+					<h3 className='font-medium text-base text-slate-900 dark:text-white truncate'>
+
+						<span>Project: {invite.project.title}</span>{' '}
+	
+					</h3>
+
 				</div>
+
+				<div className='flex gap-3 items-center'>
+
+					<span
+
+						className={
+
+							`
+
+								inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border
+
+								${
+
+									invite.roleOffered === 'member'
+										? 'bg-green-100 text-green-700 border-green-200 dark:text-green-200 dark:bg-green-500/30 dark:border-green-300'
+										: 'bg-purple-100 text-purple-700 border-purple-200 dark:text-purple-200 dark:bg-purple-500/30 dark:border-purple-300'
+
+								}
+
+							`
+						}
+
+					>
+
+						{invite.roleOffered}
+
+					</span>
+
+					<span>{invite.positionOffered}</span>
+
+				</div>
+
+				<div>
+
+					<span className='text-sm text-slate-500'>{invite.createdAt.split('T')[0]}</span>
+
+				</div>
+
+			</div>
+
+			{ invite.status === 'pending' && (
+
+				<div className='flex justify-end items-center gap-4'>
+
+					<div
+
+						onClick={ () =>
+
+							onRespond('accepted', invite.projectId, invite.id)
+
+						}
+
+					>
+
+						<Check className='
+
+							h-5 w-5 text-green-600 hover:scale-150 transition-transform duration-200 ease-in-out cursor-pointer
+
+						'
+						/>
+
+					</div>
+
+					
+					<div
+
+						className='pl-4 border-l-2 border-slate-500 dark:border-white'
+						
+						onClick={ () =>
+
+							onRespond('rejected', invite.projectId, invite.id)
+
+						}
+						
+					>
+
+						<X className='
+
+							h-5 w-5 text-red-500 hover:scale-150 transition-transform duration-200 ease-in-out cursor-pointer
+
+						'
+						/>
+						
+					</div>
+		
+				</div>
+
 			)}
+
+			{ invite.status === 'accepted' && (
+
+				getStatusBadge(invite.status)
+
+			)}
+
+			{ invite.status === 'rejected' && (
+
+				getStatusBadge(invite.status)
+
+			)}
+
 		</div>
+
 	);
+
 }
 
 export default UserInviteCard;
