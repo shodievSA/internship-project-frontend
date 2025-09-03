@@ -1,11 +1,19 @@
-export function formatIsoDate(date) {
-	const dateObj = new Date(date);
+export function formatIsoDate(isoDate) {
 
-	const year = dateObj.getFullYear();
-	const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-	const day = String(dateObj.getDate()).padStart(2, "0");
+	// const dateObj = new Date(date);
 
-	const formattedDate = `${year}/${month}/${day}`;
+	// const year = dateObj.getFullYear();
+	// const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+	// const day = String(dateObj.getDate()).padStart(2, "0");
 
-	return formattedDate;
+	// const formattedDate = `${year}/${month}/${day}`;
+
+	const date = new Date(isoDate);
+
+	// Format it
+	const options = { weekday: "short", month: "short", day: "numeric" };
+	const formatted = new Intl.DateTimeFormat("en-US", options).format(date);
+
+	return formatted;
+
 }
