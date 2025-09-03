@@ -240,7 +240,7 @@ function Comments() {
 					{comments.length === 0 ? (
 						<EmptyState message={"No comments yet - be the first to break the silence!"} />
 					) : (
-						<div className="grow flex flex-col px-28 pb-40">
+						<div className="grow flex flex-col px-28 pb-52">
 							<div className="flex flex-col gap-y-4 py-5">
 								<div className="flex flex-col gap-y-3">
 									{comments.map((comment) => {
@@ -266,7 +266,7 @@ function Comments() {
 			</div>
 			<div className="flex flex-col border dark:border-neutral-800 
 			rounded-xl w-8/12 bg-neutral-100/20 backdrop-blur-xl dark:bg-[rgb(20,20,20)]/50 
-			absolute bottom-4 left-1/2 -translate-x-1/2">
+			absolute bottom-4 left-1/2 -translate-x-1/2 h-32">
 				<textarea
 					className="w-full h-full rounded-lg resize-none bg-transparent 
 					dark:bg-transparent focus:outline-none px-3 pt-3 scrollbar-none"
@@ -280,7 +280,7 @@ function Comments() {
 					dark:hover:bg-neutral-800 cursor-pointer mr-2 mb-2 w-fit"
 					onClick={sendComment}
 				>
-					<SendHorizontal className="w-4 h-4 text-neutral-500 dark:text-white" />
+					<SendHorizontal className="w-5 h-5 text-neutral-500 dark:text-white" />
 				</div>
 			</div>
 		</div>
