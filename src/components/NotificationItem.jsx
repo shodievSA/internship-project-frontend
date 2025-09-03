@@ -75,10 +75,7 @@ function NotificationItem({
 						</div>
 					</div>
 
-					{/* Message */}
-					<p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">
-						{notification.message}
-					</p>
+					<div dangerouslySetInnerHTML={{ __html: notification.message }} />
 
 					{/* Footer */}
 					<div className="flex items-center justify-between">
