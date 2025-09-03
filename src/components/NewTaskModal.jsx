@@ -115,7 +115,7 @@ function NewTaskModal({ projectId, sprintId, onNewTaskCreated, closeModal }) {
 						placeholder="Describe the task requirements, goals, and any important details..."
 						required={true}
 						error="You must include task description"
-						rows={7}
+						height={"h-80"}
 						value={taskDescription}
 						setValue={setTaskDescription}
 						disabled={isNewTaskBeingCreated}
