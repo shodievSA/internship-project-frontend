@@ -3,26 +3,26 @@ import React from "react";
 function ProjectStatusOverviewSkeleton() {
 	return (
 		<div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
-			{/* Header skeleton */}
+			{/* Header skeleton - match exact padding and margins */}
 			<div className="pt-4 px-6 mb-4">
 				<div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-2 animate-pulse"></div>
 				<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-64 animate-pulse"></div>
 			</div>
 
-			{/* Chart area skeleton */}
+			{/* Chart area skeleton - match exact layout and dimensions */}
 			<div className="flex items-center justify-center px-6 pb-6">
-				{/* Pie chart skeleton */}
+				{/* Pie chart skeleton - match exact dimensions */}
 				<div className="relative w-60 h-64">
 					<div className="w-48 h-48 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse mx-auto"></div>
 
-					{/* Center text skeleton */}
+					{/* Center text skeleton - match exact positioning */}
 					<div className="absolute inset-0 flex flex-col items-center justify-center">
 						<div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16 mb-2 animate-pulse"></div>
 						<div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 animate-pulse"></div>
 					</div>
 				</div>
 
-				{/* Legend skeleton */}
+				{/* Legend skeleton - match exact spacing and dimensions */}
 				<div className="ml-16 space-y-2">
 					{[1, 2, 3, 4].map((item) => (
 						<div
