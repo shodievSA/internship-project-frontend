@@ -64,7 +64,14 @@ function App() {
 										}/>
 										<Route path="/projects/:projectId/summary" element={<Summary />} />
 										<Route path="/projects/:projectId/invites" element={<ProjectInvitesPage />} />
-										<Route path="/projects/:projectId/:taskId/comments" element={<Comments />} />
+										<Route 
+											path="/projects/:projectId/:taskId/comments" 
+											element={
+												<ProjectContextProvider>
+													<Comments />
+												</ProjectContextProvider>
+											} 
+										/>
 										<Route path="/projects/:projectId/team/:memberId" element={<TeamMemberDetailsPage />} />
 										<Route path="/notifications" element={<Notifications />} />
 										<Route path="/organizer" element={<Organizer />} />

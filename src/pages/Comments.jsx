@@ -1,53 +1,29 @@
-import { useEffect, useState, useMemo, useRef } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-	ArrowLeft,
-	SendHorizontal,
-	Pencil,
-	Check,
-	X,
-	Trash
-} from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, SendHorizontal, Info } from "lucide-react";
 import commentService from "../services/commentService";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
-import ReactMarkdown from "react-markdown";
-import { useThemeContext } from "../context/ThemeContext";
-import rehypeHighlight from "rehype-highlight";
 import { useToast } from "../components/ui/ToastProvider";
+import { useProject } from "../context/ProjectContext";
+import CurrentUserComment from "../components/CurrentUserComment";
+import ChatPartnerComment from "../components/ChatPartnerComment";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
 
 	const { projectId, taskId } = useParams();
-	const { state: { task, currentMemberId } } = useLocation();
-
 	const { showToast } = useToast();
+	const { currentMemberId } = useProject();
 
 	const navigate = useNavigate();
 
 	const socketRef = useRef(null);
 	const chatWindowRef = useRef(null);
 
-	const [comments, setComments] = useState([]);
+	const [taskCommentsData, setTaskCommentsData] = useState({});
 	const [commentMessage, setCommentMessage] = useState("");
 	const [commentsFetched, setCommentsFetched] = useState(false);
-
-	const chatPartner = useMemo(() => {
-
-		return currentMemberId !== task.assignedBy.id
-			? task.assignedBy
-			: task.assignedTo;
-
-	}, [task, currentMemberId]);
-
-	const currentUser = useMemo(() => {
-
-		return currentMemberId === task.assignedBy.id
-			? task.assignedBy
-			: task.assignedTo;
-
-	}, [task, currentMemberId]);
 
 	function sendComment() {
 
@@ -55,7 +31,7 @@ function Comments() {
 			type: "new-comment",
 			message: commentMessage,
 			taskId: taskId,
-			memberId: currentMemberId,
+			memberId: currentMemberId
 		}));
 
 		setCommentMessage("");
@@ -64,26 +40,22 @@ function Comments() {
 
 	function onCommentUpdate(commentId, updatedComment) {
 
-		socketRef.current.send(
-			JSON.stringify({
-				type: "update-comment",
-				commentId: commentId,
-				updatedComment: updatedComment,
-				taskId: taskId,
-			}),
-		);
+		socketRef.current.send(JSON.stringify({
+			type: "update-comment",
+			commentId: commentId,
+			updatedComment: updatedComment,
+			taskId: taskId
+		}));
 
 	}
 
 	function onCommentDelete(commentId) {
 
-		socketRef.current.send(
-			JSON.stringify({
-				type: "delete-comment",
-				commentId: commentId,
-				taskId: taskId,
-			}),
-		);
+		socketRef.current.send(JSON.stringify({
+			type: "delete-comment",
+			commentId: commentId,
+			taskId: taskId
+		}));
 
 	}
 
@@ -103,14 +75,16 @@ function Comments() {
 		socketRef.current = new WebSocket(`wss://${SERVER_HOST}/comments`);
 
 		socketRef.current.onopen = (event) => {
+
 			if (event.type === "open") {
-				socketRef.current.send(
-					JSON.stringify({
-						type: "join-comment-section",
-						taskId: taskId,
-					}),
-				);
+
+				socketRef.current.send(JSON.stringify({
+					type: "join-comment-section",
+					taskId: taskId,
+				}));
+
 			}
+
 		};
 
 		socketRef.current.onmessage = (event) => {
@@ -121,29 +95,32 @@ function Comments() {
 
 				const newComment = data.comment;
 
-				setComments((prevComments) => [...prevComments, newComment]);
+				setTaskCommentsData((prevData) => ({
+					...prevData,
+					comments: [...prevData.comments, newComment]
+				}));
 
 			} else if (data.type === "updated-comment") {
 
 				const updatedComment = data.updatedComment;
 
-				setComments((prevComments) =>
-					prevComments.map((comment) => {
-						return comment.id === updatedComment.id
-							? updatedComment
-							: comment;
-					}),
-				);
+				setTaskCommentsData((prevData) => ({
+					...prevData,
+					comments: prevData.comments.map((comment) => {
+						return comment.id === updatedComment.id ? updatedComment : comment;
+					})
+				}));
 
 			} else if (data.type === "deleted-comment") {
 
 				const deletedCommentId = data.deletedCommentId;
 
-				setComments((prevComments) =>
-					prevComments.filter((comment) => {
+				setTaskCommentsData((prevData) => ({
+					...prevData,
+					comments: prevData.comments.filter((comment) => {
 						return comment.id !== deletedCommentId;
-					}),
-				);
+					})
+				}));
 
 			}
 
@@ -163,9 +140,9 @@ function Comments() {
 
 			try {
 
-				const { comments } = await commentService.getTaskComments(projectId, taskId);
+				const { taskCommentsData } = await commentService.getTaskComments(projectId, taskId);
 
-				setComments(comments);
+				setTaskCommentsData(taskCommentsData);
 
 			} catch (err) {
 
@@ -199,7 +176,7 @@ function Comments() {
 
 		}
 
-	}, [comments, commentsFetched]);
+	}, [taskCommentsData, commentsFetched]);
 
 	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
@@ -207,7 +184,7 @@ function Comments() {
 		<div className="h-full flex flex-col relative">
 			<div ref={chatWindowRef} className="flex grow flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
 			dark:scrollbar-track-neutral-800 overflow-y-auto relative">
-				<div className="flex justify-between items-center w-full px-8 h-16 
+				<div className="flex justify-between items-center w-full px-5 h-16 
 				sticky top-0 bg-white/20 dark:bg-black/20 backdrop-blur-lg">
 					<div className="flex items-center gap-x-5">
 						<button
@@ -217,44 +194,52 @@ function Comments() {
 						>
 							<ArrowLeft className="w-4 h-4" />
 						</button>
-						<h1 className="font-semibold truncate">
-							{task.title}
-						</h1>
+						<div className="flex gap-x-2 items-center">
+							<h1 className="font-semibold truncate">
+								{taskCommentsData.taskInfo.title}
+							</h1>
+							<div className="p-1.5 hover:bg-slate-100 rounded-full cursor-pointer
+							mt-[1px]">
+								<Info className="w-4 h-4 text-slate-700" />	
+							</div>
+						</div>
 					</div>
 					<div>
-						<div className="flex items-center gap-x-2">
+						<div className="flex items-center gap-x-4">
+							<div className="flex flex-col text-right">
+								<span className="font-medium text-sm">
+									{taskCommentsData.chatPartner.name}
+								</span>
+								<span className="text-slate-500 text-xs">
+									{taskCommentsData.chatPartner.position}
+								</span>
+							</div>
 							<img
-								src={chatPartner.avatarUrl}
+								src={taskCommentsData.chatPartner.avatarUrl}
 								className="w-8 h-8 rounded-full"
 							/>
-							<div className="flex flex-col text-sm">
-								<span className="font-medium">
-									{chatPartner.name}
-								</span>
-								<span>{chatPartner.position}</span>
-							</div>
 						</div>
 					</div>
 				</div>
 				<div className="flex flex-col flex-1 min-h-0">
-					{comments.length === 0 ? (
+					{taskCommentsData.comments.length === 0 ? (
 						<EmptyState message={"No comments yet - be the first to break the silence!"} />
 					) : (
 						<div className="grow flex flex-col px-28 pb-52">
 							<div className="flex flex-col gap-y-4 py-5">
 								<div className="flex flex-col gap-y-3">
-									{comments.map((comment) => {
+									{taskCommentsData.comments.map((comment) => {
 										return comment.projectMemberId === currentMemberId ? (
 											<CurrentUserComment
 												comment={comment}
-												currentUser={currentUser}
+												currentUser={taskCommentsData.currentUser}
 												onCommentUpdate={onCommentUpdate}
 												onCommentDelete={onCommentDelete}
 											/>
 										) : (
 											<ChatPartnerComment
 												comment={comment}
-												chatPartner={chatPartner}
+												chatPartner={taskCommentsData.chatPartner}
 											/>
 										);
 									})}
@@ -265,7 +250,7 @@ function Comments() {
 				</div>
 			</div>
 			<div className="flex flex-col border dark:border-neutral-800 
-			rounded-xl w-8/12 bg-neutral-100/20 backdrop-blur-xl dark:bg-[rgb(20,20,20)]/50 
+			rounded-xl w-8/12 bg-neutral-100/20 dark:bg-[rgb(20,20,20)]/50 backdrop-blur-xl 
 			absolute bottom-4 left-1/2 -translate-x-1/2 h-32">
 				<textarea
 					className="w-full h-full rounded-lg resize-none bg-transparent 
@@ -285,195 +270,6 @@ function Comments() {
 			</div>
 		</div>
 	);
-}
-
-function CurrentUserComment({
-	comment,
-	currentUser,
-	onCommentUpdate,
-	onCommentDelete,
-}) {
-
-	const { themeMode } = useThemeContext();
-
-	const [showEditInput, setShowEditInput] = useState(false);
-	const [newMessage, setNewMessage] = useState();
-
-	function handleOnKeyDown(e) {
-		if (e.key === "Enter" && !e.shiftKey && isUpdateValid()) {
-			onCommentUpdate(comment.id, newMessage);
-			setShowEditInput(false);
-		}
-	}
-
-	function updateComment(commentId, newMessage) {
-		if (isUpdateValid()) {
-			onCommentUpdate(commentId, newMessage);
-			setShowEditInput(false);
-		}
-	}
-
-	function deleteComment(commentId) {
-		onCommentDelete(commentId);
-	}
-
-	function reverseChanges() {
-		setShowEditInput(false);
-	}
-
-	function onEditButtonClicked() {
-		setNewMessage(comment.message);
-		setShowEditInput(true);
-	}
-
-	function isUpdateValid() {
-		return (
-			newMessage.trim() !== "" && newMessage.trim() !== comment.message
-		);
-	}
-
-	return (
-		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
-			{showEditInput ? (
-				<div className="min-w-[400px] h-28 bg-blue-100 dark:bg-indigo-600 
-				rounded-xl border border-slate-300 dark:border-gray-600">
-					<div className="flex flex-col h-full">
-						<textarea
-							className="w-full h-full resize-none focus:outline-none px-3 pt-3 
-							scrollbar-none rounded-xl bg-blue-100 dark:bg-indigo-600"
-							placeholder="Edit your comment here..."
-							onKeyDown={handleOnKeyDown}
-							value={newMessage}
-							onChange={(e) => setNewMessage(e.target.value)}
-						></textarea>
-						<div className="grow flex items-center gap-x-4 p-2 p-2">
-							<button 
-								className="py-1.5 px-2.5 rounded-lg hover:bg-red-700/30 hover:dark:bg-red-700/50 
-								cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
-								onClick={() => deleteComment(comment.id)}
-							>
-								<Trash className="w-4 h-4 text-red-700 dark:text-red-600" />
-								<span className="mt-0.5">Delete</span>
-							</button>
-							<div className="flex gap-x-4 ml-auto">
-								<button 
-									className="py-1.5 px-2.5 rounded-lg hover:bg-blue-200 hover:dark:bg-neutral-800 
-									cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
-									onClick={() => updateComment(comment.id, newMessage)}
-								>
-									<Check className="w-4 h-4" />
-									<span>Save</span>
-								</button>
-								<button 
-									className="py-1.5 px-2.5 rounded-lg hover:bg-blue-200 hover:dark:bg-neutral-800 
-									cursor-pointer flex items-center gap-x-1 text-sm gap-x-1.5"
-									onClick={reverseChanges} 
-								>
-									<X className="w-4 h-4" />
-									<span>Cancel</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			) : (
-				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border 
-				border-slate-300 dark:border-gray-600 bg-blue-100 dark:bg-indigo-600">
-					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap
-					text-blue-800 dark:text-white">
-						<ReactMarkdown
-							components={{
-								ol: ({ node, ...props }) => (
-									<ol className="list-decimal ml-4" {...props} />
-								),
-								ul: ({ node, ...props }) => (
-									<ul className="list-disc ml-4" {...props} />
-								),
-							}}
-							className={themeMode} 
-							rehypePlugins={[rehypeHighlight]}
-						>
-							{comment.message}
-						</ReactMarkdown>
-						<div
-							className="opacity-0 group-hover/item:opacity-100 transition-[opacity]
-							duration-300 self-start cursor-pointer"
-							onClick={onEditButtonClicked}
-						>
-							<Pencil className="w-3.5 h-3.5 mt-0.5" />
-						</div>
-					</div>
-					<div className="flex gap-x-1.5 text-xs text-slate-600 
-					dark:text-gray-300 mr-auto">
-						<span>{getTimeFromIso(comment.createdAt)}</span>
-						<span>{getDateFromIso(comment.createdAt)}</span>
-					</div>
-				</div>
-			)}
-			<img src={currentUser.avatarUrl} className="w-8 h-8 rounded-full" />
-		</div>
-	);
-}
-
-function ChatPartnerComment({ comment, chatPartner }) {
-
-	const { themeMode } = useThemeContext();
-
-	return (
-		<div className="flex max-w-md mr-auto">
-			<div className="flex items-start gap-x-3">
-				<img
-					src={chatPartner.avatarUrl}
-					className="w-8 h-8 rounded-full"
-				/>
-				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border border-slate-300
-				dark:border-neutral-700 whitespace-pre-wrap bg-slate-100 dark:bg-gray-700 text-slate-800
-				dark:text-slate-100">
-					<ReactMarkdown
-						components={{
-							ol: ({ node, ...props }) => (
-								<ol className="list-decimal ml-4" {...props} />
-							),
-							ul: ({ node, ...props }) => (
-								<ul className="list-disc ml-4" {...props} />
-							),
-						}}
-						className={themeMode} 
-						rehypePlugins={[rehypeHighlight]}
-					>
-						{comment.message}
-					</ReactMarkdown>
-					<div className="flex gap-x-1.5 text-xs text-slate-400 mr-auto">
-						<span>{getTimeFromIso(comment.createdAt)}</span>
-						<span>{getDateFromIso(comment.createdAt)}</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-
-}
-
-function getTimeFromIso(isoString) {
-
-	const date = new Date(isoString);
-	const timeString = date.toLocaleTimeString("en-US", {
-		hour: "2-digit",
-		minute: "2-digit",
-		hour12: false,
-	});
-
-	return timeString;
-
-}
-
-function getDateFromIso(isoString) {
-
-	const date = new Date(isoString);
-	const dateString = date.toLocaleDateString("en-US");
-
-	return dateString;
-
 }
 
 export default Comments;
