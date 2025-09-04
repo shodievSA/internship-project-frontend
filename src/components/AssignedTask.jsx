@@ -33,18 +33,22 @@ function AssignedTask({ task, team, currentMemberId }) {
 	const dropDownMenuRef = useRef();
 
 	useEffect(() => {
+
 		function handleClickOutside(e) {
+
 			if (
 				editButtonClicked &&
 				!dropDownMenuRef.current.contains(e.target)
 			) {
 				setEditButtonClicked(false);
 			}
+			
 		}
 
 		document.addEventListener("click", handleClickOutside);
 
 		return () => document.removeEventListener("click", handleClickOutside);
+
 	}, [editButtonClicked]);
 
 	return (
@@ -65,31 +69,23 @@ function AssignedTask({ task, team, currentMemberId }) {
 									rounded-md"
 									onClick={(e) => {
 										e.stopPropagation();
-										setEditButtonClicked(
-											!editButtonClicked,
-										);
+										setEditButtonClicked(!editButtonClicked);
 									}}
 								>
 									{<EllipsisVertical className="w-4 h-4" />}
 								</button>
 								{editButtonClicked && (
-									<ul
-										className="absolute flex flex-col bg-white dark:bg-neutral-950 w-max 
-										rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2 shadow-md
-										text-sm"
-									>
-										<li
-											className="flex items-center p-1 border-b-[1px] dark:border-neutral-800
-											cursor-pointer"
-										>
+									<ul className="absolute flex flex-col bg-white dark:bg-neutral-950 w-max 
+									rounded-md dark:border-neutral-800 border-[1px] right-0 mt-2 shadow-md
+									text-sm">
+										<li className="flex items-center p-1 border-b-[1px] dark:border-neutral-800
+										cursor-pointer">
 											<div
 												className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
-													hover:bg-slate-100 w-full"
+												hover:bg-slate-100 w-full"
 												onClick={(e) => {
 													e.stopPropagation();
-													setShowUpdateTaskModal(
-														true,
-													);
+													setShowUpdateTaskModal(true);
 													setEditButtonClicked(false);
 												}}
 											>
@@ -100,12 +96,10 @@ function AssignedTask({ task, team, currentMemberId }) {
 										<li className="flex items-center p-1.5 text-red-700 cursor-pointer">
 											<div
 												className="px-2 py-1.5 flex items-center gap-x-2 rounded-md dark:hover:bg-neutral-900
-													hover:bg-slate-100 w-full"
+												hover:bg-slate-100 w-full"
 												onClick={(e) => {
 													e.stopPropagation();
-													setShowDeleteTaskModal(
-														true,
-													);
+													setShowDeleteTaskModal(true);
 													setEditButtonClicked(false);
 												}}
 											>
@@ -122,19 +116,15 @@ function AssignedTask({ task, team, currentMemberId }) {
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
 						<div className="flex gap-x-4">
-							<div
-								className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
-							py-1.5 rounded-full`}
-							>
+							<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
+							py-1.5 rounded-full`}>
 								<Flame className="w-4 h-4" />
 								<span className="text-xs font-medium">
 									{priority} priority
 								</span>
 							</div>
-							<div
-								className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
-							py-1 rounded-full`}
-							>
+							<div className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
+							py-1 rounded-full`}>
 								<CircleDot className="w-4 h-4" />
 								<span className="text-xs font-medium">
 									{status}
@@ -145,9 +135,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 							<span className="text-xs">ASSIGNED TO</span>
 							<div className="flex items-center gap-x-2">
 								<img
-									src={
-										assignedTo.avatarUrl ?? userPlaceholder
-									}
+									src={assignedTo.avatarUrl ?? userPlaceholder}
 									className="w-6 h-6 rounded-full"
 								/>
 								<span className="dark:text-neutral-300 font-medium">
@@ -166,7 +154,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 							size="sm"
 							onClick={(e) => {
 								e.stopPropagation();
-								navigate(`${id}/comments`, {
+								navigate(`/projects/${projectId}/${id}/comments`, {
 									state: {
 										task: task,
 										currentMemberId: currentMemberId,
