@@ -6,7 +6,7 @@ export const getStatusBadge = (status) => {
 
 			return (
 
-				<span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900 text-white'>
+				<span className='inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium bg-green-900 text-white'>
 					Accepted
 				</span>
 
@@ -16,7 +16,7 @@ export const getStatusBadge = (status) => {
 			
 			return (
 
-				<span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-white'>
+				<span className='inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium bg-red-900 text-white'>
 					Rejected
 				</span>
 

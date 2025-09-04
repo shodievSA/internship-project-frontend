@@ -1,4 +1,4 @@
-import { Check, X, } from 'lucide-react';
+import { Check, X, Mail, Folder, Calendar } from 'lucide-react';
 import { getStatusBadge } from '../utils/uiUtils';
 
 function UserInviteCard({ invite, onRespond }) {
@@ -10,9 +10,9 @@ function UserInviteCard({ invite, onRespond }) {
 			className={
 
 				`
-					grid sm:grid-cols-[2fr_4fr_1fr] grid-cols-1 gap-y-7
-					items-start sm:items-center bg-white dark:bg-black border border-slate-100 dark:border-slate-800
-					border-l-2 last:border-b-0 dark:last-border-b-0 hover:bg-indigo-100
+					grid grid-cols-1 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-y-5
+					items-start justify-items-stretch sm:items-center bg-white dark:bg-black border border-slate-100 dark:border-slate-800
+					border-l-8 last:border-b-0 dark:last:border-b-0 hover:bg-indigo-100
 					dark:hover:bg-violet-900/30 transition-colors rounded-lg px-4 py-3 sm:px-6 sm:py-4
 
 					${
@@ -31,41 +31,62 @@ function UserInviteCard({ invite, onRespond }) {
 
 		>
 
-			<div className='grid grid-cols-[1fr_5fr]'>
+			<div className='flex items-center gap-3 col-span-3'>
 
 				<img
 
-					src={invite.from.avatarUrl}
-					alt={`${invite.from.fullName}'s avatar`}
-					className='w-10 h-10 rounded-full object-cover self-center'
+					src={ invite.from.avatarUrl }
+					alt={ `${invite.from.fullName}'s avatar` }
+					className='col-span-1 w-10 h-10 rounded-full object-cover self-center'
 
 				/>
-
-				<div className='text-gray-900 dark:text-white truncate'>
-
-					<span className='font-medium text-sm text-slate-900 dark:text-white whitespace-nowrap truncate'>{invite.from.fullName}</span>
+	
+				<div className='col-span-2 text-gray-900 dark:text-white truncate'>
+					
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>Invited By</span>
 
 					<br />
 
-					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>{invite.from.email}</span>
+					<span className='font-medium text-sm text-slate-900 dark:text-white whitespace-nowrap truncate'>{ invite.from.fullName }</span>
+
+					<br />
+
+					<span className='flex text-xs text-slate-500 truncate whitespace-nowrap'>
+
+						<Mail className='w-3 h-4 mr-1' /> { invite.from.email }
+
+					</span>
 
 				</div>
 
 			</div>
 
-			<div className='grid grid-cols-[1fr_2fr_1fr] grid-flow-row items-center w-full gap-3'>
+			<div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 col-span-8 grid-flow-row items-center w-full gap-3'>
 
-				<div className='truncate'>
+				<div className='sm:col-span-3 col-span-4 truncate'>
+
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>Project</span>
+
+					<br />
 
 					<h3 className='font-medium text-base text-slate-900 dark:text-white truncate'>
 
-						<span>Project: {invite.project.title}</span>{' '}
+						<span className='flex'>
+
+							<Folder className='w-3 h-6 mr-1' /> { invite.project.title }
+
+						</span>
 	
 					</h3>
 
 				</div>
 
-				<div className='flex gap-3 items-center'>
+				<div className='sm:col-span-3 col-span-4'>
+
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap mr-2'>Role Offered</span>
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>Position Offered</span>
+
+					<br />
 
 					<span
 
@@ -92,13 +113,22 @@ function UserInviteCard({ invite, onRespond }) {
 
 					</span>
 
-					<span>{invite.positionOffered}</span>
-
+					<span className='ml-3'>{invite.positionOffered}</span>
+					
 				</div>
 
-				<div>
+				<div className='grid'>
 
-					<span className='text-sm text-slate-500'>{invite.createdAt.split('T')[0]}</span>
+					<span className='text-xs text-slate-500 truncate whitespace-nowrap'>Invited At</span>
+
+					<br />
+
+					<span className='flex text-sm text-slate-500'>
+
+						<Calendar className='w-3 h-5 mr-1' />
+						{invite.createdAt.split('T')[0]}
+						
+					</span>
 
 				</div>
 
@@ -109,7 +139,7 @@ function UserInviteCard({ invite, onRespond }) {
 				<div className='flex justify-end items-center gap-4'>
 
 					<div
-
+					
 						onClick={ () =>
 
 							onRespond('accepted', invite.projectId, invite.id)
