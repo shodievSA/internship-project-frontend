@@ -103,7 +103,7 @@ function EditSprintModal({
 
     return (
         <Modal
-            size="lg"
+            size="md"
             title="Edit Sprint"
             titleIcon={<SquarePen className="w-5 h-5" />}
             closeModal={closeModal}
