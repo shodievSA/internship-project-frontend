@@ -18,7 +18,7 @@ import {
 	Trash2,
 } from "lucide-react";
 
-function AssignedTask({ task, team, currentMemberId }) {
+function AssignedTask({ task, team }) {
 
 	const { id, title, priority, status, assignedTo, deadline } = task;
 
@@ -154,12 +154,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 							size="sm"
 							onClick={(e) => {
 								e.stopPropagation();
-								navigate(`/projects/${projectId}/${id}/comments`, {
-									state: {
-										task: task,
-										currentMemberId: currentMemberId,
-									},
-								});
+								navigate(`/projects/${projectId}/${id}/comments`);
 							}}
 						>
 							<div className="flex items-center gap-x-2 text-sm">
