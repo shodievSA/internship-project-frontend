@@ -7,93 +7,95 @@ import InputField from "./InputField";
 
 function NewProjectModal({ closeModal, onProjectCreated }) {
 
-	const { showToast } = useToast();
+    const { showToast } = useToast();
 
-	const [projectTitle, setProjectTitle] = useState("");
-	const [userPosition, setUserPosition] = useState("");
-	const [projectBeingSaved, setProjectBeingSaved] = useState(false);
+    const [projectTitle, setProjectTitle] = useState("");
+    const [userPosition, setUserPosition] = useState("");
+    const [projectBeingSaved, setProjectBeingSaved] = useState(false);
 
-	const submitButtonDisabled = useMemo(() => {
+    const submitButtonDisabled = useMemo(() => {
 
-		return !projectTitle.trim() || !userPosition.trim();
+        return !projectTitle.trim() || !userPosition.trim();
 
-	}, [projectTitle, userPosition]);
+    }, [projectTitle, userPosition]);
 
-	async function createNewProject() {
+    async function createNewProject() {
 
-		setProjectBeingSaved(true);
+        setProjectBeingSaved(true);
 
-		try {
+        try {
 
-			const { project } = await projectService.createProject(
-				projectTitle,
-				userPosition,
-			);
+            const { project } = await projectService.createProject(
+                projectTitle,
+                userPosition,
+            );
 
-			closeModal();
+            closeModal();
 
-			onProjectCreated(project);
+            onProjectCreated(project);
 
-			showToast({
-				variant: "success",
-				title: "Project created successfully!",
-			});
+            showToast({
+                variant: "success",
+                title: "Project created successfully!",
+            });
 
-		} catch (err) {
+        } catch (err) {
 
-			showToast({
-				variant: "error",
-				title: err.message
-			});
+            showToast({
+                variant: "error",
+                title: err.message
+            });
 
-		} finally {
+        } finally {
 
-			setProjectBeingSaved(false);
+            setProjectBeingSaved(false);
 
-		}
+        }
 
-	}
+    }
 
-	return (
-		<Modal size="md" title="New Project" closeModal={closeModal}>
-			<div className="flex flex-col gap-y-4 px-5 pb-5">
-				<InputField
-					label="Project Title"
-					disabled={projectBeingSaved}
-					required={true}
-					value={projectTitle}
-					setValue={setProjectTitle}
-					error="You must include project title"
-				/>
-				<InputField
-					label="Your position in this project (e.g team lead)"
-					disabled={projectBeingSaved}
-					required={true}
-					value={userPosition}
-					setValue={setUserPosition}
-					error="You must include your position"
-				/>
-			</div>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-				<Button
-					variant="secondary"
-					size="md"
-					disabled={projectBeingSaved}
-					onClick={closeModal}
-				>
-					Cancel
-				</Button>
-				<Button
-					size="md"
-					disabled={submitButtonDisabled}
-					loading={projectBeingSaved}
-					onClick={createNewProject}
-				>
-					Create Project
-				</Button>
-			</div>
-		</Modal>
-	);
+    return (
+        <Modal size="md" title="New Project" closeModal={closeModal}>
+            <div className="flex flex-col gap-y-4 px-5 pb-5">
+                <InputField
+                    label="Project Title"
+                    disabled={projectBeingSaved}
+                    required={true}
+                    value={projectTitle}
+                    charLimit={50}
+                    setValue={setProjectTitle}
+                    error="You must include project title"
+                />
+                <InputField
+                    label="Your position in this project (e.g team lead)"
+                    disabled={projectBeingSaved}
+                    required={true}
+                    value={userPosition}
+                    charLimit={50}
+                    setValue={setUserPosition}
+                    error="You must include your position"
+                />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+                <Button
+                    variant="secondary"
+                    size="md"
+                    disabled={projectBeingSaved}
+                    onClick={closeModal}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    size="md"
+                    disabled={submitButtonDisabled}
+                    loading={projectBeingSaved}
+                    onClick={createNewProject}
+                >
+                    Create Project
+                </Button>
+            </div>
+        </Modal>
+    );
 }
 
 export default NewProjectModal;
