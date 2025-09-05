@@ -8,6 +8,7 @@ import { useToast } from "../components/ui/ToastProvider";
 import { useProject } from "../context/ProjectContext";
 import CurrentUserComment from "../components/CurrentUserComment";
 import ChatPartnerComment from "../components/ChatPartnerComment";
+import TaskDetailsModal from "../components/TaskDetailsModal";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
@@ -24,6 +25,7 @@ function Comments() {
 	const [taskCommentsData, setTaskCommentsData] = useState({});
 	const [commentMessage, setCommentMessage] = useState("");
 	const [commentsFetched, setCommentsFetched] = useState(false);
+	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
 
 	function sendComment() {
 
@@ -181,6 +183,7 @@ function Comments() {
 	if (!commentsFetched) return <LoadingState message={"Hang on - the comments are on their way!"} />
 
 	return (
+		<>
 		<div className="h-full flex flex-col relative">
 			<div ref={chatWindowRef} className="flex grow flex-col scrollbar-thin dark:scrollbar-thumb-neutral-950 
 			dark:scrollbar-track-neutral-800 overflow-y-auto relative">
@@ -198,10 +201,13 @@ function Comments() {
 							<h1 className="font-semibold truncate">
 								{taskCommentsData.taskInfo.title}
 							</h1>
-							<div className="p-1.5 hover:bg-slate-100 rounded-full cursor-pointer
-							mt-[1px]">
+							<button 
+								className="p-1.5 hover:bg-slate-100 rounded-full cursor-pointer
+								mt-[1px]"
+								onClick={() => setShowTaskDetailsModal(true)}
+							>
 								<Info className="w-4 h-4 text-slate-700" />	
-							</div>
+							</button>
 						</div>
 					</div>
 					<div>
@@ -269,6 +275,15 @@ function Comments() {
 				</div>
 			</div>
 		</div>
+		{
+			showTaskDetailsModal && (
+				<TaskDetailsModal 
+					taskId={taskId}
+					closeModal={() => setShowTaskDetailsModal(false)} 
+				/>
+			)
+		}
+		</>
 	);
 }
 

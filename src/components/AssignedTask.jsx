@@ -172,8 +172,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 			</div>
 			{showTaskDetailsModal && (
 				<TaskDetailsModal
-					task={task}
-					projectId={projectId}
+					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>
 			)}

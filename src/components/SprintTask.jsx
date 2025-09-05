@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import TaskDetailsModal from "./TaskDetailsModal";
 import { Flame, CircleDot, Clock } from "lucide-react";
@@ -9,6 +8,7 @@ import userPlaceholder from "../assets/user-placeholder.png";
 function SprintTask({ task }) {
 
 	const {
+		id,
 		title,
 		priority,
 		status,
@@ -16,8 +16,6 @@ function SprintTask({ task }) {
 		assignedTo,
 		deadline,
 	} = task;
-
-	const { projectId } = useParams();
 
 	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState();
 
@@ -95,8 +93,7 @@ function SprintTask({ task }) {
 			</div>
 			{showTaskDetailsModal && (
 				<TaskDetailsModal
-					task={task}
-					projectId={projectId}
+					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>
 			)}
