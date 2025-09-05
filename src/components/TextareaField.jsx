@@ -12,10 +12,11 @@ function TextareaField({
 	disabled,
 	rows,
 }) {
+
 	const [showError, setShowError] = useState(false);
 
 	return (
-		<div className="flex flex-col gap-y-3 w-full">
+		<div className="flex flex-col gap-y-2 w-full">
 			<label className="flex gap-x-0.5">
 				<span className="dark:text-white text-sm md:text-base font-semibold">
 					{label}
@@ -42,9 +43,7 @@ function TextareaField({
 						value={value}
 						placeholder={placeholder}
 						rows={rows}
-						onChange={(e) => {
-							setValue(e.target.value);
-						}}
+						onChange={(e) => { setValue(e.target.value) }}
 					/>
 				)}
 				{required && showError && (
@@ -56,6 +55,7 @@ function TextareaField({
 			</div>
 		</div>
 	);
+
 }
 
 export default TextareaField;

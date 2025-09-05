@@ -139,7 +139,6 @@ function MyTasksPage() {
 								key={task.id}
 								task={task}
 								onTaskSubmit={onTaskSubmit}
-								currentMemberId={currentMemberId}
 							/>
 						))}
 					</div>

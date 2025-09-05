@@ -1,71 +1,35 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useToast } from "./ui/ToastProvider";
 import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import TaskDetailsWithLogModal from "./TaskDetailsWithLogModal";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
-import Modal from "./ui/Modal";
-import AiEditor from "./AiEditor";
-import {
-	Flame,
-	CircleDot,
-	Clock,
-	CircleCheckBig,
-	MessageSquare,
-} from "lucide-react";
+import SubmitTaskModal from "./SubmitTaskModal";
+import { Flame, CircleDot, Clock, CircleCheckBig, MessageSquare } from "lucide-react";
 
-function MyTask({ task, onTaskSubmit, currentMemberId }) {
+function MyTask({ task, onTaskSubmit }) {
 
 	const { id, title, priority, status, assignedBy, deadline } = task;
 
 	const { projectId } = useParams();
-	const { showToast } = useToast();
 
 	const navigate = useNavigate();
 
 	const [showTaskDetailsModal, setShowTaskDetailsModal] = useState(false);
 	const [showSubmitModal, setShowSubmitModal] = useState(false);
-	const [completionNote, setCompletionNote] = useState("");
-	const [taskBeingSubmitted, setTaskBeingSubmitted] = useState(false);
 
-	async function submitTask() {
+	async function submitTask(submissionNote) {
 
-		setTaskBeingSubmitted(true);
+		const { updatedTask } = await taskService.changeTaskStatus({
+			projectId: projectId,
+			taskId: id,
+			updateComment: submissionNote,
+			updatedTaskStatus: "under review",
+		});
 
-		try {
-
-			const { updatedTask } = await taskService.changeTaskStatus({
-				projectId: projectId,
-				taskId: id,
-				updateComment: completionNote,
-				updatedTaskStatus: "under review",
-			});
-
-			onTaskSubmit(id, updatedTask);
-
-			showToast({
-				variant: "success",
-				title: "Task submitted for review!",
-				message: "Your task has been successfully submitted for review",
-			});
-
-			setShowSubmitModal(false);
-
-		} catch (err) {
-
-			showToast({
-				variant: "error",
-				title: err.message
-			});
-
-		} finally {
-
-			setTaskBeingSubmitted(false);
-
-		}
+		onTaskSubmit(id, updatedTask);
 		
 	}
 
@@ -118,34 +82,28 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 					</div>
 				</div>
 				<div className="grid grid-cols-2 gap-x-3">
-					{(status === "ongoing" ||
-						status === "rejected" ||
-						status === "overdue") && (
-						<Button
-							size="sm"
-							onClick={(e) => {
-								e.stopPropagation();
-								setShowSubmitModal(true);
-							}}
-							loading={taskBeingSubmitted}
-						>
-							<div className="flex justify-center items-center gap-x-2 text-sm">
-								<CircleCheckBig className="w-4 h-4" />
-								<span>Complete</span>
-							</div>
-						</Button>
-					)}
+					{
+						(shouldAllowToSubmit(status)) && (
+							<Button
+								size="sm"
+								onClick={(e) => {
+									e.stopPropagation();
+									setShowSubmitModal(true);
+								}}
+							>
+								<div className="flex justify-center items-center gap-x-2 text-sm">
+									<CircleCheckBig className="w-4 h-4" />
+									<span>Submit</span>
+								</div>
+							</Button>
+						)
+					}
 					<Button
 						variant="secondary"
 						size="sm"
 						onClick={(e) => {
 							e.stopPropagation();
-							navigate(`/projects/${projectId}/${id}/comments`, {
-								state: {
-									task: task,
-									currentMemberId: currentMemberId,
-								},
-							});
+							navigate(`/projects/${projectId}/${id}/comments`);
 						}}
 					>
 						<div className="flex justify-center items-center gap-x-2 text-sm">
@@ -162,44 +120,20 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 				/>
 			)}
 			{showSubmitModal && (
-				<Modal
-					titleIcon={<CircleCheckBig className="w-5 h-5" />}
-					title="Complete Task"
-					size="lg"
-					closeModal={() => setShowSubmitModal(false)}
-				>
-					<div className="flex flex-col gap-y-4 px-5 pb-5">
-						<AiEditor
-							label="Completion note (optional)"
-							placeholder="Describe how you completed this task..."
-							value={completionNote}
-							setValue={setCompletionNote}
-							disabled={taskBeingSubmitted}
-						/>
-						<div className="grid grid-cols-2 gap-4">
-							<Button
-								size="md"
-								variant="secondary"
-								onClick={() => setShowSubmitModal(false)}
-								disabled={taskBeingSubmitted}
-							>
-								Cancel
-							</Button>
-							<Button
-								size="md"
-								variant="primary"
-								onClick={submitTask}
-								loading={taskBeingSubmitted}
-								disabled={taskBeingSubmitted}
-							>
-								Complete Task
-							</Button>
-						</div>
-					</div>
-				</Modal>
+				<SubmitTaskModal 
+					onTaskSubmit={submitTask}
+					onClose={() => setShowSubmitModal(false)}
+				/>
 			)}
 		</>
 	);
+
+}
+
+function shouldAllowToSubmit(taskStatus) {
+
+	return (taskStatus !== "under review" && taskStatus !== "closed");
+
 }
 
 export default MyTask;
