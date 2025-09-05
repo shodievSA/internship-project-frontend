@@ -28,7 +28,6 @@ function EditSprintModal({
     const { showToast } = useToast();
 
     const [newSprintTitle, setNewSprintTitle] = useState(title);
-    const [newSprintDescription, setNewSprintDescription] = useState(description);
     const [newSprintStartDate, setNewSprintStartDate] = useState(() => startDate.split("T")[0]);
     const [newSprintEndDate, setNewSprintEndDate] = useState(() => endDate.split("T")[0]);
     const [newSprintStatus, setNewSprintStatus] = useState(status);
@@ -39,7 +38,6 @@ function EditSprintModal({
 
         const updatedProps = getSprintUpdatedProps({
             newTitle: newSprintTitle,
-            newDescription: newSprintDescription,
             newStatus: newSprintStatus,
             newStartDate: newSprintStartDate,
             newEndDate: newSprintEndDate,
@@ -54,7 +52,6 @@ function EditSprintModal({
 
     }, [
         newSprintTitle,
-        newSprintDescription,
         newSprintStartDate,
         newSprintEndDate,
         newSprintStatus,
@@ -121,6 +118,7 @@ function EditSprintModal({
                         required={true}
                         error="Sprint title can't be empty"
                         disabled={sprintBeingUpdated}
+						charLimit={50}
                     />
                     <SelectField
                         label="Sprint status"
@@ -179,12 +177,6 @@ function getSprintUpdatedProps(sprint) {
         updated.title = sprint.newTitle;
     } else {
         delete updated.title;
-    }
-
-    if (sprint.newDescription.trim() !== sprint.oldDescription) {
-        updated.description = sprint.newDescription;
-    } else {
-        delete updated.description;
     }
 
     if (sprint.newStatus !== sprint.oldStatus) {
