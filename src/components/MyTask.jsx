@@ -82,6 +82,19 @@ function MyTask({ task, onTaskSubmit }) {
 					</div>
 				</div>
 				<div className="grid grid-cols-2 gap-x-3">
+					<Button
+						variant="secondary"
+						size="sm"
+						onClick={(e) => {
+							e.stopPropagation();
+							navigate(`/projects/${projectId}/${id}/comments`);
+						}}
+					>
+						<div className="flex justify-center items-center gap-x-2 text-sm">
+							<MessageSquare className="w-4 h-4" />
+							<span>Comments</span>
+						</div>
+					</Button>
 					{
 						(shouldAllowToSubmit(status)) && (
 							<Button
@@ -98,19 +111,6 @@ function MyTask({ task, onTaskSubmit }) {
 							</Button>
 						)
 					}
-					<Button
-						variant="secondary"
-						size="sm"
-						onClick={(e) => {
-							e.stopPropagation();
-							navigate(`/projects/${projectId}/${id}/comments`);
-						}}
-					>
-						<div className="flex justify-center items-center gap-x-2 text-sm">
-							<MessageSquare className="w-4 h-4" />
-							<span>Comments</span>
-						</div>
-					</Button>
 				</div>
 			</div>
 			{showTaskDetailsModal && (
