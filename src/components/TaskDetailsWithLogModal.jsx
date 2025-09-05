@@ -325,88 +325,32 @@ function TaskDetailsWithLogModal({ taskId, closeModal }) {
 									</div>
 									<div className="flex flex-col gap-y-5 pl-6 dark:text-neutral-300 dark:text-neutral-300 
 									border-l-[1px] dark:border-neutral-800 ml-2">
-										{task.history.map((stage, index) => {
-											const status = stage.status;
-											if (status === "ongoing" || status === "overdue") {
-
-												return (
-													<div key={index} className="flex items-center gap-x-3">
-														<span>{task.history.length - index}.</span>
+										{ task.history.map((stage, index) => {
+											return (
+												<div key={index} className="flex items-center gap-x-3">
+													<div className="flex flex-col gap-y-3">
 														<div className="flex items-center gap-x-2">
-															<div className={`text-xs dark:border-neutral-800 border-[1px] 
-															rounded-full py-1 px-2 font-medium ${taskStatusColors[stage.status]}`}>
-																{stage.status}
-															</div>
-															-
-															<span className="text-xs">{ formatIsoDate(stage.createdAt) }</span>
+															<span>{task.history.length - index}.</span>
+															<div className={`text-sm dark:border-neutral-800 border-[1px] 
+															rounded-full py-1 px-3 font-medium ${taskStatusColors[stage.status]}`}>
+																{ stage.status }
+															</div>{"-"}
+															<span className="text-sm">{ formatIsoDate(stage.createdAt) }</span>
 														</div>
-													</div>
-												);
-
-											} else if (status === "rejected" || status === "closed" || status === "under review") {
-
-												return (
-													<div
-														key={index}
-														className="flex items-center gap-x-3"
-													>
-														<div className="flex flex-col gap-y-3">
-															<div className="flex items-center gap-x-2">
-																<span>{task.history.length - index}.</span>
-																<div className={`text-xs dark:border-neutral-800 border-[1px] 
-																rounded-full py-1 px-2 font-medium ${taskStatusColors[stage.status]}`}>
-																	{ stage.status }
-																</div>
-																-
-																<span className="text-xs">{formatIsoDate(stage.createdAt)}</span>
+														{ stage.comment && (
+															<div>
+																<p>
+																	<span className="font-medium">Note:</span>{" "}
+																	<span className="dark:text-neutral-400">
+																		{ stage.comment }
+																	</span>
+																</p>
 															</div>
-															<div className="text-sm">
-																{stage.comment ? (
-																	status === "rejected" ? (
-																		<p>
-																			<span className="font-medium">
-																				Rejection reason:
-																			</span>{" "}
-																			<span className="dark:text-neutral-400">
-																				{ stage.comment }
-																			</span>
-																		</p>
-																	) : status === "under review" ? (
-																		<p>
-																			<span className="font-medium">
-																				Completion note:
-																			</span>{" "}
-																			<span className="dark:text-neutral-400">
-																				{ stage.comment }
-																			</span>
-																		</p>
-																	) : (
-																		<p>
-																			<span className="font-medium">
-																				Approval note:
-																			</span>{" "}
-																			<span className="dark:text-neutral-400">
-																				{
-																					stage.comment
-																				}
-																			</span>
-																		</p>
-																	)
-																) : status === "rejected" ? (
-																	<p>No rejection reason</p>
-																) : status === "under review" ? (
-																	<p>No completion note</p>
-																) : (
-																	<p>No approval note</p>
-																)}
-															</div>
-														</div>
+														) }
 													</div>
-												);
-
-											}
-											return null;
-										})}
+												</div>
+											)
+										}) }
 									</div>
 								</div>
 							</div>

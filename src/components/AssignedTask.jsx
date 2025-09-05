@@ -7,7 +7,7 @@ import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import TaskDeleteModal from "./TaskDeleteModal";
 import UpdateTaskModal from "./UpdateTaskModal";
-import TaskDetailsWithLogModal from "./TaskDetailsWithLogModal";
+import TaskDetailsModal from "./TaskDetailsModal";
 import {
 	Flame,
 	CircleDot,
@@ -171,7 +171,7 @@ function AssignedTask({ task, team, currentMemberId }) {
 				</div>
 			</div>
 			{showTaskDetailsModal && (
-				<TaskDetailsWithLogModal
+				<TaskDetailsModal
 					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>

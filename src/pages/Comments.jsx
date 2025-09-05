@@ -8,7 +8,7 @@ import { useToast } from "../components/ui/ToastProvider";
 import { useProject } from "../context/ProjectContext";
 import CurrentUserComment from "../components/CurrentUserComment";
 import ChatPartnerComment from "../components/ChatPartnerComment";
-import TaskDetailsWithLogModal from "../components/TaskDetailsWithLogModal";
+import TaskDetailsModal from "../components/TaskDetailsModal";
 const SERVER_HOST = import.meta.env.VITE_HOST;
 
 function Comments() {
@@ -277,7 +277,7 @@ function Comments() {
 		</div>
 		{
 			showTaskDetailsModal && (
-				<TaskDetailsWithLogModal 
+				<TaskDetailsModal
 					taskId={taskId}
 					closeModal={() => setShowTaskDetailsModal(false)} 
 				/>
