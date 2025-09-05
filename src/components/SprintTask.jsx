@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatIsoDate } from "../utils/formatIsoDate";
-import TaskDetailsModal from "./TaskDetailsModal";
+import TaskDetailsWithLogModal from "./TaskDetailsWithLogModal";
 import { Flame, CircleDot, Clock } from "lucide-react";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
 import userPlaceholder from "../assets/user-placeholder.png";
@@ -92,7 +92,7 @@ function SprintTask({ task }) {
 				</div>
 			</div>
 			{showTaskDetailsModal && (
-				<TaskDetailsModal
+				<TaskDetailsWithLogModal
 					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>

@@ -4,7 +4,7 @@ import { useToast } from "./ui/ToastProvider";
 import taskService from "../services/taskService";
 import { formatIsoDate } from "../utils/formatIsoDate";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
-import TaskDetailsModal from "./TaskDetailsModal";
+import TaskDetailsWithLogModal from "./TaskDetailsWithLogModal";
 import userPlaceholder from "../assets/user-placeholder.png";
 import Button from "./ui/Button";
 import Modal from "./ui/Modal";
@@ -156,7 +156,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 				</div>
 			</div>
 			{showTaskDetailsModal && (
-				<TaskDetailsModal
+				<TaskDetailsWithLogModal
 					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>

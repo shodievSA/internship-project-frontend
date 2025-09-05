@@ -17,7 +17,7 @@ import Modal from "./ui/Modal";
 import AiEditor from "./AiEditor";
 import taskService from "../services/taskService";
 import { useToast } from "./ui/ToastProvider";
-import TaskDetailsModal from "./TaskDetailsModal";
+import TaskDetailsWithLogModal from "./TaskDetailsWithLogModal";
 
 function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 
@@ -197,7 +197,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 				</div>
 			</div>
 			{showTaskDetails && (
-				<TaskDetailsModal
+				<TaskDetailsWithLogModal
 					taskId={id}
 					closeModal={() => setShowTaskDetails(false)}
 				/>

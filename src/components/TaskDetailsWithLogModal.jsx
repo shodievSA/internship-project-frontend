@@ -26,7 +26,7 @@ import remarkGfm from "remark-gfm"
 import { useToast } from "./ui/ToastProvider";
 import { useParams } from "react-router-dom";
 
-function TaskDetailsModal({ taskId, closeModal }) {
+function TaskDetailsWithLogModal({ taskId, closeModal }) {
 
 	const { themeMode } = useThemeContext();
 	const { showToast } = useToast();
@@ -434,4 +434,4 @@ function TaskDetailsModal({ taskId, closeModal }) {
 	);
 }
 
-export default TaskDetailsModal;
+export default TaskDetailsWithLogModal;
