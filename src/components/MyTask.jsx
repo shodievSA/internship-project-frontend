@@ -84,19 +84,15 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 				<div className="flex flex-col gap-y-5">
 					<div className="flex flex-col gap-y-5 text-sm">
 						<div className="flex gap-x-4">
-							<div
-								className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
-							py-1.5 rounded-full`}
-							>
+							<div className={`flex items-center gap-x-2 ${taskPriorityColors[priority]} px-3 
+							py-1.5 rounded-full`}>
 								<Flame className="w-4 h-4" />
 								<span className="text-xs font-medium">
 									{priority} priority
 								</span>
 							</div>
-							<div
-								className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
-							py-1 rounded-full`}
-							>
+							<div className={`flex items-center gap-x-2 ${taskStatusColors[status]} px-3 
+							py-1 rounded-full`}>
 								<CircleDot className="w-4 h-4" />
 								<span className="text-xs font-medium">
 									{status}
@@ -107,9 +103,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 							<span className="text-xs">ASSIGNED BY</span>
 							<div className="flex items-center gap-x-2">
 								<img
-									src={
-										assignedBy.avatarUrl ?? userPlaceholder
-									}
+									src={assignedBy.avatarUrl ?? userPlaceholder}
 									className="w-6 h-6 rounded-full"
 								/>
 								<span className="dark:text-neutral-300 font-medium">
@@ -146,7 +140,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 						size="sm"
 						onClick={(e) => {
 							e.stopPropagation();
-							navigate(`${id}/comments`, {
+							navigate(`/projects/${projectId}/${id}/comments`, {
 								state: {
 									task: task,
 									currentMemberId: currentMemberId,
@@ -163,8 +157,7 @@ function MyTask({ task, onTaskSubmit, currentMemberId }) {
 			</div>
 			{showTaskDetailsModal && (
 				<TaskDetailsModal
-					task={task}
-					projectId={projectId}
+					taskId={id}
 					closeModal={() => setShowTaskDetailsModal(false)}
 				/>
 			)}

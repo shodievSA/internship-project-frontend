@@ -1,26 +1,25 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
 const taskService = {
-	// Get task files
-	getTaskFiles: async (projectId, taskId) => {
+	
+	getTaskDetails: async (projectId, taskId) => {
+
 		const response = await fetch(
-			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}/files`,
-			{
+			`${SERVER_BASE_URL}/api/v1/projects/${projectId}/tasks/${taskId}`, {
 				method: "GET",
 				credentials: "include",
 			}
 		);
 
 		if (!response.ok) {
+
 			const error = await response.json().catch(() => ({}));
-			throw new Error(
-				error.error ||
-					error.message ||
-					"Failed to load file attachments"
-			);
+			throw new Error(error.error || error.message || "Failed to load file attachments");
+
 		}
 
 		return response.json();
+
 	},
 
 	// Create a new task

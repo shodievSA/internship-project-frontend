@@ -24,41 +24,28 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm"
 import { useToast } from "./ui/ToastProvider";
+import { useParams } from "react-router-dom";
 
-function TaskDetailsModal({ task, projectId, closeModal }) {
-
-	const {
-		id: taskId,
-		title,
-		description,
-		priority,
-		status,
-		createdAt,
-		updatedAt,
-		deadline,
-		history,
-		assignedBy,
-		assignedTo,
-	} = task;
+function TaskDetailsModal({ taskId, closeModal }) {
 
 	const { themeMode } = useThemeContext();
 	const { showToast } = useToast();
+	const { projectId } = useParams();
 
-	const [fileUrls, setFileUrls] = useState([]);
-	const [fileUrlsLoaded, setFileUrlsLoaded] = useState(false);
+	const [task, setTask] = useState({});
+	const [taskBeingLoaded, setTaskBeingLoaded] = useState(true);
 	const [activeTab, setActiveTab] = useState("details");
-	const [isLoading, setIsLoading] = useState(true);
 	const [timeTabLoaded, setTimeTabLoaded] = useState(false);
 
 	useEffect(() => {
 
-		async function getTaskFiles() {
+		async function getTaskDetails() {
 
 			try {
 
-				const { fileUrls } = await taskService.getTaskFiles(projectId, taskId);
+				const { task } = await taskService.getTaskDetails(projectId, taskId);
 
-				setFileUrls(fileUrls);
+				setTask(task);
 
 			} catch (err) {
 
@@ -70,28 +57,27 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 			} finally {
 
 				setTimeout(() => {
-					setFileUrlsLoaded(true);
-					setIsLoading(false);
+					setTaskBeingLoaded(false);
 				}, 200);
 
 			}
 
 		}
 
-		getTaskFiles();
+		getTaskDetails();
 
 	}, []);
 
-	// Handle tab switching for Time Log tab
 	const handleTabChange = (tab) => {
 
 		setActiveTab(tab);
 
 		if (tab === "time" && !timeTabLoaded) {
-			// Show skeleton for 400ms when switching to time tab
+
 			setTimeout(() => {
 				setTimeTabLoaded(true);
 			}, 200);
+
 		}
 
 	};
@@ -114,7 +100,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 	return (
 		<Modal 
 			size="lg" 
-			title={title} 
+			title={taskBeingLoaded ? "" : task.title} 
 			closeModal={closeModal}
 		>
 			<div className="flex flex-col gap-y-5 px-5 overflow-y-auto scrollbar-thin 
@@ -171,7 +157,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 
 				{activeTab === "details" && (
 					<div className="max-h-[500px]">
-						{!fileUrlsLoaded ? (
+						{taskBeingLoaded ? (
 							<TaskDetailsSkeleton />
 						) : (
 							<div className="flex flex-col gap-y-5 pb-5">
@@ -179,12 +165,12 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 									<div className={`flex items-center gap-x-2 px-4 py-1.5 rounded-full 
 									text-xs ${taskPriorityColors[task.priority]}`}>
 										<Flame className="w-4 h-4" />
-										{priority} priority
+										{task.priority} priority
 									</div>
 									<div className={`flex items-center gap-x-2 px-4 py-1.5 rounded-full 
 									text-xs ${taskStatusColors[task.status]}`}>
 										<CircleDot className="w-4 h-4" />
-										{status}
+										{task.status}
 									</div>
 								</div>
 								<div className="flex flex-col gap-y-2 border dark:border-neutral-700 p-3 rounded-lg">
@@ -210,7 +196,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 											rehypePlugins={[rehypeHighlight]}
 											remarkPlugins={[remarkGfm]}
 										>
-											{ description }
+											{ task.description }
 										</ReactMarkdown>
 									</div>
 								</div>
@@ -227,17 +213,15 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 												</h1>
 												<div className="flex gap-x-2 items-center">
 													<img
-														src={
-															assignedTo.avatarUrl
-														}
+														src={task.assignedTo.avatarUrl}
 														className="w-7 h-7 rounded-full"
 													/>
 													<div className="flex flex-col">
 														<h1 className="font-medium">
-															{assignedTo.name}
+															{task.assignedTo.name}
 														</h1>
 														<h2>
-															{assignedTo.email}
+															{task.assignedTo.email}
 														</h2>
 													</div>
 												</div>
@@ -248,17 +232,15 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 												</h1>
 												<div className="flex gap-x-2 items-center">
 													<img
-														src={
-															assignedBy.avatarUrl
-														}
+														src={task.assignedBy.avatarUrl}
 														className="w-7 h-7 rounded-full"
 													/>
 													<div className="flex flex-col">
 														<h1 className="font-medium">
-															{assignedBy.name}
+															{task.assignedBy.name}
 														</h1>
 														<h2>
-															{assignedBy.email}
+															{task.assignedBy.email}
 														</h2>
 													</div>
 												</div>
@@ -275,21 +257,21 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 												<h1 className="dark:text-neutral-300">Created</h1>
 												<div className="flex items-center gap-x-2">
 													<Calendar className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
-													<span className="mt-0.5">{ formatIsoDate(createdAt) }</span>
+													<span className="mt-0.5">{ formatIsoDate(task.createdAt) }</span>
 												</div>
 											</div>
 											<div className="flex flex-col gap-y-1">
 												<h1 className="dark:text-neutral-300">Deadline</h1>
 												<div className="flex items-center gap-x-2">
 													<Clock className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
-													<span className="mt-0.5">{ formatIsoDate(deadline) }</span>
+													<span className="mt-0.5">{ formatIsoDate(task.deadline) }</span>
 												</div>
 											</div>
 											<div className="flex flex-col gap-y-1">
 												<h1 className="dark:text-neutral-300">Updated</h1>
 												<div className="flex items-center gap-x-2">													
 													<RefreshCw className="text-neutral-500 dark:text-neutral-400 w-4 h-4" />
-													<span className="mt-0.5">{ formatIsoDate(updatedAt) }</span>
+													<span className="mt-0.5">{ formatIsoDate(task.updatedAt) }</span>
 												</div>
 											</div>
 										</div>
@@ -300,10 +282,10 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 										<Paperclip className="w-4 h-4" />
 										<h1 className="font-medium">Attachments</h1>
 									</div>
-									{fileUrlsLoaded &&
-										(fileUrls.length > 0 ? (
+									{!taskBeingLoaded &&
+										(task.fileUrls.length > 0 ? (
 											<div className="flex flex-col gap-y-2">
-												{fileUrls.map((file) => {
+												{task.fileUrls.map((file) => {
 													return (
 														<div
 															key={file.fileName}
@@ -343,13 +325,13 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 									</div>
 									<div className="flex flex-col gap-y-5 pl-6 dark:text-neutral-300 dark:text-neutral-300 
 									border-l-[1px] dark:border-neutral-800 ml-2">
-										{history.map((stage, index) => {
+										{task.history.map((stage, index) => {
 											const status = stage.status;
 											if (status === "ongoing" || status === "overdue") {
 
 												return (
 													<div key={index} className="flex items-center gap-x-3">
-														<span>{history.length - index}.</span>
+														<span>{task.history.length - index}.</span>
 														<div className="flex items-center gap-x-2">
 															<div className={`text-xs dark:border-neutral-800 border-[1px] 
 															rounded-full py-1 px-2 font-medium ${taskStatusColors[stage.status]}`}>
@@ -370,7 +352,7 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 													>
 														<div className="flex flex-col gap-y-3">
 															<div className="flex items-center gap-x-2">
-																<span>{history.length - index}.</span>
+																<span>{task.history.length - index}.</span>
 																<div className={`text-xs dark:border-neutral-800 border-[1px] 
 																rounded-full py-1 px-2 font-medium ${taskStatusColors[stage.status]}`}>
 																	{ stage.status }
@@ -438,9 +420,9 @@ function TaskDetailsModal({ task, projectId, closeModal }) {
 							<TimeTrackingSkeleton />
 						) : (
 							<TimeTracking
-								taskTitle={title}
-								taskStatus={status}
-								taskPriority={priority}
+								taskTitle={task.title}
+								taskStatus={task.status}
+								taskPriority={task.priority}
 								taskId={taskId}
 								projectId={projectId}
 							/>
