@@ -17,3 +17,25 @@ export function formatIsoDate(isoDate) {
 	return formatted;
 
 }
+
+export function getTimeFromIso(isoString) {
+
+	const date = new Date(isoString);
+	const timeString = date.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	});
+
+	return timeString;
+
+}
+
+export function getDateFromIso(isoString) {
+
+	const date = new Date(isoString);
+	const dateString = date.toLocaleDateString("en-US");
+
+	return dateString;
+
+}
