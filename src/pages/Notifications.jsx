@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNotifications } from "../context/NotificationsContext";
-import NotificationItem from "../components/NotificationItem";
-import { Trash2 } from "lucide-react";
+import Notification from "../components/Notification";
 import { filterNotifications } from "../utils/filterUtils";
 import SearchBar from "../components/SearchBar";
 import notificationService from "../services/notificationService";
@@ -11,6 +10,7 @@ import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
 import EmptyState from "../components/EmptyState";
 import { useToast } from "../components/ui/ToastProvider";
+import { Trash2, Check } from "lucide-react";
 
 function Notifications() {
 
@@ -54,19 +54,26 @@ function Notifications() {
 	}, [loading, location]);
 
 	const handleSelectNotification = (id) => {
-		setSelectedIds((prev) =>
-			prev.includes(id)
-				? prev.filter((selectedId) => selectedId !== id)
-				: [...prev, id],
+
+		setSelectedIds((prev) => prev.includes(id)
+			? prev.filter((selectedId) => selectedId !== id)
+			: [...prev, id],
 		);
+
 	};
 
 	const handleSelectAll = () => {
-		if (selectedIds.length === notifications.length) {
+
+		if (selectedIds.length === filteredNotifications.length) {
+
 			setSelectedIds([]);
+
 		} else {
-			setSelectedIds(notifications.map((n) => n.id));
+
+			setSelectedIds(filteredNotifications.map((n) => n.id));
+
 		}
+
 	};
 
 	const handleMarkAsViewed = async (id) => {
@@ -77,7 +84,7 @@ function Notifications() {
 			notification.id === id ? {
 				...notification,
 				isViewed: true,
-				updated_at: new Date().toISOString(),
+				updated_at: new Date().toISOString()
 			} : notification
 		));
 
@@ -98,31 +105,53 @@ function Notifications() {
 
 	};
 
+	const handleMarkAsUnviewed = async (id) => {
+
+		const prevNotifications = notifications;
+
+		setNotifications((prev) => prev.map((notification) =>
+			notification.id === id ? {
+				...notification,
+				isViewed: false,
+				updated_at: new Date().toISOString(),
+			} : notification
+		));
+
+		try {
+
+			await notificationService.updateNotificationViewStatus([id], false);
+
+		} catch (err) {
+
+			showToast({
+				variant: "error",
+				title: err.message
+			});
+
+			setNotifications(prevNotifications);
+
+		}
+
+	};
+
 	const handleMarkSelectedAsViewed = async () => {
 
 		const currentTime = new Date().toISOString();
 		const prevNotifications = notifications;
 
-		setNotifications((prev) =>
-			prev.map((notification) =>
-				selectedIds.includes(notification.id)
-					? {
-							...notification,
-							isViewed: true,
-							updated_at: currentTime,
-						}
-					: notification,
-			),
-		);
+		setNotifications((prev) => prev.map((notification) =>
+			selectedIds.includes(notification.id) ? {
+				...notification,
+				isViewed: true,
+				updated_at: currentTime,
+			} : notification
+		));
 
 		setSelectedIds([]);
 
 		try {
 
-			await notificationService.updateNotificationViewStatus(
-				selectedIds,
-				true,
-			);
+			await notificationService.updateNotificationViewStatus(selectedIds, true);
 
 		} catch (err) {
 
@@ -138,29 +167,23 @@ function Notifications() {
 	};
 
 	const handleMarkSelectedAsUnviewed = async () => {
+
 		const currentTime = new Date().toISOString();
 		const prevNotifications = notifications;
 
-		setNotifications((prev) =>
-			prev.map((notification) =>
-				selectedIds.includes(notification.id)
-					? {
-							...notification,
-							isViewed: false,
-							updated_at: currentTime,
-						}
-					: notification,
-			),
-		);
+		setNotifications((prev) => prev.map((notification) =>
+			selectedIds.includes(notification.id) ? {
+				...notification,
+				isViewed: false,
+				updated_at: currentTime,
+			} : notification
+		));
 
 		setSelectedIds([]);
 
 		try {
 
-			await notificationService.updateNotificationViewStatus(
-				selectedIds,
-				false,
-			);
+			await notificationService.updateNotificationViewStatus(selectedIds, false);
 
 		} catch (err) {
 
@@ -171,7 +194,7 @@ function Notifications() {
 
 			setNotifications(prevNotifications);
 
-		}
+		} 
 
 	};
 
@@ -224,47 +247,64 @@ function Notifications() {
 	};
 
 	function clearFilters() {
+
 		setSearch("");
+
 	}
 
 	const filteredNotifications = filterNotifications(notifications, { search });
 
-	const unviewedCount = filteredNotifications.filter((n) => !n.isViewed).length;
-	const totalCount = filteredNotifications.length;
-
 	if (loading) return <LoadingState message={"Hang on - your notifications are on their way!"} />;
-	if (error) <ErrorState message={"Unexpected error while loading your notifications"} />;
+	if (error) return <ErrorState message={"Unexpected error while loading your notifications"} />;
 	if (notifications.length === 0) return <EmptyState message={"No new notifications right now. We'll let you know when something important happens."} />;
-	if (notifications.length === 0) return <EmptyNotifications />;
 
 	return (
-		<div className="h-full px-6 pt-6 md:px-8 md:pt-8">
-			<div className="h-full flex flex-col gap-y-10">
+		<div className="h-full px-8 pt-5 md:px-8 md:pt-5">
+			<div className="h-full flex flex-col gap-y-6">
 				<div className="flex items-center justify-between">
 					<div className="w-full sm:w-96">
 						<SearchBar
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
-							placeholder="Search notifications..."
+							placeholder="Search notifications by title..."
 						/>
 					</div>
-					<p className="text-gray-600 dark:text-gray-300">
-						{unviewedCount} unread of {totalCount} total
-						notification
-						{totalCount !== 1 ? "s" : ""}
-					</p>
+					<button 
+						className="border border-neutral-300 dark:border-neutral-800 px-5 py-1.5 
+						rounded-lg text-neutral-700 dark:text-white hover:bg-slate-100 hover:dark:bg-neutral-900 
+						active:scale-95 transition-all duration-300"
+						onClick={handleSelectAll}
+					>
+						{
+							(selectedIds.length === filteredNotifications.length) ? (
+								<div className="flex items-center gap-x-3 rounded-lg">
+									<Check className="w-4 h-4" />
+									<span>Deselect All</span>
+								</div>
+							) : (
+								<div
+									className="flex items-center gap-x-3 rounded-lg"
+									onClick={handleSelectAll}
+								>
+									<div
+										className="flex items-center justify-center w-4 h-4 
+										rounded-md cursor-pointer border dark:border-neutral-700
+										border-neutral-500"
+									></div>
+									<span>Select All</span>
+								</div>
+							)
+						}
+					</button>
 				</div>
 				{selectedIds.length > 0 && (
-					<div
-						className="bg-gray-100 dark:bg-black border border-gray-200 dark:border-neutral-800 
-						rounded-lg px-6 py-4"
-					>
+					<div className="bg-gray-100 dark:bg-black border border-gray-200 dark:border-neutral-800 
+					rounded-lg px-6 py-4">
 						<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 							<span className="font-medium text-gray-700 dark:text-white">
 								{selectedIds.length}{" "}
-								{selectedIds.length === 1
-									? "notification"
-									: "notifications"}{" "}
+								of {filteredNotifications.length}{" "}
+								{selectedIds.length === 1 ? "item" : "items"}{" "}
 								selected
 							</span>
 							<div className="flex flex-wrap gap-5">
@@ -296,49 +336,28 @@ function Notifications() {
 						</div>
 					</div>
 				)}
-				<div>
-					<label className="flex items-center gap-4 text-gray-600 dark:text-gray-300 cursor-pointer">
-						<div
-							className="flex items-center justify-center w-5 h-5 bg-white dark:bg-neutral-800 
-							rounded-full p-0.5 cursor-pointer border border-neutral-500"
-							onClick={handleSelectAll}
-						>
-							<div
-								className={`h-3 w-3 ${
-									selectedIds.length ===
-										filteredNotifications.length &&
-									filteredNotifications.length > 0
-										? "bg-blue-500"
-										: "bg-white dark:bg-neutral-800"
-								} rounded-full`}
-							></div>
-						</div>
-						Select all visible notifications
-					</label>
-				</div>
 
 				{/* Notifications */}
-				<div className="flex flex-col gap-y-2 pb-6 md:pb-8 grow">
-					{filteredNotifications.length > 0 ? (
-						filteredNotifications.map((notification) => (
-							<NotificationItem
+				{filteredNotifications.length > 0 ? (
+					<div className="flex flex-col gap-y-4 pb-6 md:pb-8 grow">
+						{ filteredNotifications.map((notification) => (
+							<Notification
 								key={notification.id}
 								notification={notification}
-								isSelected={selectedIds.includes(
-									notification.id,
-								)}
+								isSelected={selectedIds.includes(notification.id)}
 								onSelect={handleSelectNotification}
 								onMarkAsViewed={handleMarkAsViewed}
+								onMarkAsUnviewed={handleMarkAsUnviewed}
 								onDelete={handleDeleteNotification}
 							/>
-						))
-					) : (
-						<EmptySearch
-							message="No matching notifications"
-							onClearFilters={clearFilters}
-						/>
-					)}
-				</div>
+						)) }
+					</div>
+				) : (
+					<EmptySearch
+						message="No matching notifications"
+						onClearFilters={clearFilters}
+					/>
+				)}
 			</div>
 		</div>
 	);
