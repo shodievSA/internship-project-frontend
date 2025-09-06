@@ -29,14 +29,18 @@ function Comments() {
 
 	function sendComment() {
 
-		socketRef.current.send(JSON.stringify({
-			type: "new-comment",
-			message: commentMessage,
-			taskId: taskId,
-			memberId: currentMemberId
-		}));
+		if (commentMessage.trim()) {
 
-		setCommentMessage("");
+			socketRef.current.send(JSON.stringify({
+				type: "new-comment",
+				message: commentMessage,
+				taskId: taskId,
+				memberId: currentMemberId
+			}));
+	
+			setCommentMessage("");
+
+		}
 
 	}
 
