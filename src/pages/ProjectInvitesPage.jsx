@@ -12,8 +12,10 @@ import teamMemberService from "../services/teamMemberService";
 import { ArrowLeft } from "lucide-react";
 import EmptySearch from "../components/EmptySearch";
 import LoadingState from "../components/LoadingState";
+import ErrorState from "../components/ErrorState";
 
 function ProjectInvitesPage() {
+
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
@@ -26,20 +28,27 @@ function ProjectInvitesPage() {
 	const [error, setError] = useState();
 
 	function openModal() {
+
 		setShowInviteModal(true);
+
 	}
 
 	function closeModal() {
+
 		setShowInviteModal(false);
+
 	}
 
 	function handleNewInvite(newInvite) {
+
 		setProjectInvites((prevInvites) => {
 			return [newInvite, ...prevInvites];
 		});
+
 	}
 
 	const filteredInvites = useMemo(() => {
+
 		if (!projectInvitesLoaded || !projectInvites) return [];
 
 		return projectInvites.filter((invite) => {
@@ -56,43 +65,49 @@ function ProjectInvitesPage() {
 
 			return matchesSearch && matchesStatus;
 		});
+
 	}, [projectInvitesLoaded, projectInvites, statusFilter, searchTerm]);
 
 	function clearFilters() {
+
 		setSearchTerm("");
 		setStatusFilter("all");
 		setDateFilter("all");
+
 	}
 
 	useEffect(() => {
+
 		async function getProjectInvites() {
+
 			try {
-				const { projectInvites } =
-					await teamMemberService.getProjectInvites(projectId);
+
+				const { projectInvites } = await teamMemberService.getProjectInvites(projectId);
+
 				setProjectInvites(projectInvites);
+
 			} catch (err) {
+
 				setError(err.message);
+
 			} finally {
+
 				setTimeout(() => {
 					setProjectInvitesLoaded(true);
 				}, 500);
+
 			}
+
 		}
 
 		getProjectInvites();
+
 	}, [projectId]);
 
-	if (!projectInvitesLoaded)
-		return <LoadingState message={"Fetching your project invites!"} />;
-	if (showInviteModal)
-		return (
-			<SendInviteModal
-				closeModal={closeModal}
-				onNewInviteCreated={handleNewInvite}
-			/>
-		);
-	if (projectInvites.length === 0)
-		return <EmptyProjectInvites openModal={openModal} />;
+	if (!projectInvitesLoaded) return <LoadingState message={"Fetching your project invites!"} />;
+	if (error) return <ErrorState message={"Unexpected error occured while fetching project invites"} />
+	if (showInviteModal) return <SendInviteModal closeModal={closeModal} onNewInviteCreated={handleNewInvite} />
+	if (projectInvites.length === 0) return <EmptyProjectInvites openModal={openModal} />;
 
 	return (
 		<div className="flex flex-col gap-y-6 h-full px-8 py-6">
