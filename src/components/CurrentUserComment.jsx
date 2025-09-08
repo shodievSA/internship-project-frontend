@@ -66,7 +66,7 @@ function CurrentUserComment({
 	}
 
 	return (
-		<div className="flex items-start gap-x-3 max-w-lg ml-auto">
+		<div className="flex items-start gap-x-3 ml-auto">
 			{showEditInput ? (
 				<div className="min-w-[400px] h-28 bg-blue-100 dark:bg-indigo-600 
 				rounded-xl border border-slate-300 dark:border-gray-600">
@@ -111,7 +111,9 @@ function CurrentUserComment({
 				</div>
 			) : (
 				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border 
-				border-slate-300 dark:border-gray-600 bg-blue-100 dark:bg-indigo-600">
+				border-slate-300 dark:border-gray-600 bg-blue-100 dark:bg-indigo-600
+				overflow-x-auto max-w-2xl scrollbar-thin dark:scrollbar-thumb-neutral-950 
+				dark:scrollbar-track-neutral-800">
 					<div className="flex justify-between gap-x-5 group/item whitespace-pre-wrap
 					text-blue-800 dark:text-white">
 						<ReactMarkdown
