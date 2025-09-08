@@ -83,7 +83,7 @@ function ProjectSprint() {
 	}, []);
 
 	if (sprintTasksBeingLoaded) return <LoadingState message="Loading sprint's tasks" />;
-	if (error) return <ProjectSprintError message="Failed to load sprint tasks!" />;
+	if (error) return <ProjectSprintError message="Oops! The sprint tasks ran off for a coffee break" />;
 
 	return (
 		<>
