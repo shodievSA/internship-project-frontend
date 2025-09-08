@@ -69,7 +69,7 @@ function Modal({
 							<div className="flex justify-between items-center gap-x-2">
 								<div className="flex items-center gap-x-2">
 									{titleIcon && titleIcon}
-									<h1 className="text-base md:text-xl font-semibold">
+									<h1 className="text-base md:text-lg font-semibold">
 										{title}
 									</h1>
 								</div>

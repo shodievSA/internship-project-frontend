@@ -15,75 +15,78 @@ import {
 } from "recharts";
 
 function PriorityTaskChart({ sprintId = null }) {
-  const { projectId } = useParams();
-  const { data, error, isLoading } = usePriorityBreakdown(projectId, sprintId);
+	const { projectId } = useParams();
+	const { data, error, isLoading } = usePriorityBreakdown(
+		projectId,
+		sprintId
+	);
 
 	if (isLoading) {
 		return <PriorityTaskChartSkeleton />;
 	}
 
-  if (error) {
-    return (
-      <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Priority breakdown
-        </h3>
-        <ErrorState
-          message="Failed to load priority data"
-          error={error.message}
-        />
-      </div>
-    );
-  }
+	if (error) {
+		return (
+			<div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+				<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+					Priority breakdown
+				</h3>
+				<ErrorState
+					message="Failed to load priority data"
+					error={error.message}
+				/>
+			</div>
+		);
+	}
 
-  // Check if we have valid data with priorities
-  const hasValidData =
-    data &&
-    data.priorities &&
-    data.priorities.length > 0 &&
-    data.priorities.some((priority) => priority.count > 0);
+	// Check if we have valid data with priorities
+	const hasValidData =
+		data &&
+		data.priorities &&
+		data.priorities.length > 0 &&
+		data.priorities.some((priority) => priority.count > 0);
 
-  if (!hasValidData) {
-    return (
-      <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
-        <h2 className="text-lg font-semibold mb-0 pb-0 pt-4 px-6">
-          Priority breakdown
-        </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-6">
-          Get a holistic view of how work is being prioritized for the selected
-          sprint.
-        </p>
+	if (!hasValidData) {
+		return (
+			<div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-lg p-0">
+				<h2 className="text-lg font-semibold mb-0 pb-0 pt-4 px-6">
+					Priority breakdown
+				</h2>
+				<p className="text-sm text-gray-600 dark:text-gray-400 mb-4 mt-0 px-6">
+					Get a holistic view of how work is being prioritized for the
+					selected sprint.
+				</p>
 
-        <div className="flex items-center justify-center h-64 px-6 pb-6">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-              <svg
-                className="w-8 h-8 text-gray-400 dark:text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-            </div>
-            <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-              No Priority Data Available
-            </h4>
-            <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm">
-              There are no tasks with priority levels for the selected sprint
-              yet. Priority data will appear here once tasks are created and
-              assigned priority levels.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+				<div className="flex items-center justify-center h-64 px-6 pb-6">
+					<div className="text-center">
+						<div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+							<svg
+								className="w-8 h-8 text-gray-400 dark:text-gray-500"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={1.5}
+									d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+								/>
+							</svg>
+						</div>
+						<h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+							No Priority Data Available
+						</h4>
+						<p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm">
+							There are no tasks with priority levels for the
+							selected sprint yet. Priority data will appear here
+							once tasks are created and assigned priority levels.
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	// Transform data for the chart - map to high, middle, low as per API docs
 	const chartData = [
@@ -142,16 +145,16 @@ function PriorityTaskChart({ sprintId = null }) {
 		return null;
 	};
 
-  return (
-    <div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          Priority breakdown
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Get a holistic view of how work is being prioritized.
-        </p>
-      </div>
+	return (
+		<div className="bg-white dark:bg-black rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 min-h-[400px]">
+			<div className="mb-4">
+				<h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+					Priority breakdown
+				</h3>
+				<p className="text-sm text-gray-600 dark:text-gray-400">
+					Get a holistic view of how work is being prioritized.
+				</p>
+			</div>
 
 			{/* Chart */}
 			<div className="h-96 -ml-8 -mr-6">

@@ -9,8 +9,8 @@ import InputField from "./InputField";
 import SelectField from "./SelectField";
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
-
 function SendInviteModal({ closeModal, onNewInviteCreated }) {
+
 	const { projectId } = useParams();
 	const { showToast } = useToast();
 
@@ -23,26 +23,26 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 	const [gmailContactsFetched, setGmailContactsFetched] = useState(false);
 	const [inviteBeingSent, setInviteBeingSent] = useState(false);
 	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
-
-		getGmailContacts();
 
 		async function getGmailContacts() {
 
 			try {
 
 				const res = await fetch(`${SERVER_BASE_URL}/api/v1/me/gmail-contacts`, {
-						method: "GET",
-						credentials: "include",
-					}
-				);
+					method: "GET",
+					credentials: "include"
+				});
 
 				const { contacts } = await res.json();
 
-				setGmailContacts(contacts);
+				setGmailContacts(contacts ?? []);
 
 			} catch (err) {
+
+				setError(err.message);
 
 				showToast({
 					variant: "error",
@@ -52,27 +52,34 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 			} finally {
 
 				setGmailContactsFetched(true);
+
 			}
 
 		}
 
+		getGmailContacts();
+
 	}, []);
 
 	useEffect(() => {
+
 		if (email && position && role) {
+
 			setSubmitButtonDisabled(false);
+
 		} else {
+
 			setSubmitButtonDisabled(true);
+
 		}
+
 	}, [email, position, role]);
 
 	useEffect(() => {
 
 		if (gmailContactsFetched) {
 
-			if (!searchQuery) {
-				return setSearchResults(gmailContacts);
-			}
+			if (!searchQuery) return setSearchResults(gmailContacts);
 
 			setSearchResults(() => {
 
@@ -177,6 +184,8 @@ function SendInviteModal({ closeModal, onNewInviteCreated }) {
 								</div>
 								<h1>Loading your gmail contacts</h1>
 							</div>
+						) : error ? (
+							<div>Failed to load your gmail contacts</div>
 						) : gmailContacts.length === 0 ? (
 							<div>No Contacts</div>
 						) : searchResults.length > 0 ? (

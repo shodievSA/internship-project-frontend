@@ -12,17 +12,26 @@ import RecentActivityStatsSkeleton from "../components/RecentActivityStatsSkelet
 import ProjectStatusOverviewSkeleton from "../components/ProjectStatusOverviewSkeleton";
 import TeamWorkloadChartSkeleton from "../components/TeamWorkloadChartSkeleton";
 import PriorityTaskChartSkeleton from "../components/PriorityTaskChartSkeleton";
-import { useAllSprints, useDefaultSprint } from "../hooks/useSummary";
+import {
+	useAllSprints,
+	useDefaultSprint,
+	useSummary,
+} from "../hooks/useSummary";
 
 function Summary() {
 	const navigate = useNavigate();
 	const { projectId } = useParams();
 	const [selectedSprintId, setSelectedSprintId] = useState(null);
-	const [isLoadingSprintData, setIsLoadingSprintData] = useState(false);
 
 	// Fetch all sprints and default sprint
 	const { data: sprintsData } = useAllSprints(projectId);
 	const { data: defaultSprintData } = useDefaultSprint(projectId);
+
+	// Fetch summary data with unified loading state
+	const { loading: isSummaryLoading } = useSummary(
+		projectId,
+		selectedSprintId
+	);
 
 	// Set default sprint when data is loaded
 	useEffect(() => {
@@ -34,19 +43,15 @@ function Summary() {
 	const sprints = sprintsData?.sprints || [];
 
 	const handleSprintChange = (sprintId) => {
-		setIsLoadingSprintData(true);
 		setSelectedSprintId(sprintId);
-
-		// Add a small delay to show the skeleton loading state
-		setTimeout(() => {
-			setIsLoadingSprintData(false);
-		}, 200);
 	};
 
 	return (
-		<div className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 
+		<div
+			className="flex flex-col gap-y-8 h-full text-gray-900 dark:text-white px-8 
 		py-6 pb-16 overflow-y-auto scrollbar-thin dark:scrollbar-thumb-neutral-950 
-		dark:scrollbar-track-neutral-800">
+		dark:scrollbar-track-neutral-800"
+		>
 			<header className="flex justify-between items-center">
 				<div className="flex items-center gap-x-6">
 					<Button
@@ -69,8 +74,7 @@ function Summary() {
 			</header>
 
 			<div className="grid grid-cols-1 gap-6 px-8">
-				{/* Show skeleton or actual component based on loading state */}
-				{isLoadingSprintData ? (
+				{isSummaryLoading ? (
 					<RecentActivityStatsSkeleton />
 				) : (
 					<RecentActivityStats sprintId={selectedSprintId} />
@@ -78,12 +82,12 @@ function Summary() {
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
-				{isLoadingSprintData ? (
+				{isSummaryLoading ? (
 					<ProjectStatusOverviewSkeleton />
 				) : (
 					<ProjectStatusOverview sprintId={selectedSprintId} />
 				)}
-				{isLoadingSprintData ? (
+				{isSummaryLoading ? (
 					<TeamWorkloadChartSkeleton />
 				) : (
 					<TeamWorkloadChart sprintId={selectedSprintId} />
@@ -91,7 +95,7 @@ function Summary() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-6 px-8">
-				{isLoadingSprintData ? (
+				{isSummaryLoading ? (
 					<PriorityTaskChartSkeleton />
 				) : (
 					<PriorityTaskChart sprintId={selectedSprintId} />

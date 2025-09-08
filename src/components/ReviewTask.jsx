@@ -198,8 +198,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 			</div>
 			{showTaskDetails && (
 				<TaskDetailsModal
-					task={task}
-					projectId={projectId}
+					taskId={id}
 					closeModal={() => setShowTaskDetails(false)}
 				/>
 			)}
