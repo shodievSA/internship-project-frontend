@@ -67,7 +67,8 @@ function UserInvites() {
 	});
 
 	return (
-		<div className="h-full bg-white dark:bg-black text-gray-900 dark:text-white p-4 md:p-6">
+		<div className="h-full bg-white dark:bg-black text-gray-900 dark:text-white 
+		px-4 lg:px-8 pt-5">
 			{!invitesFetched ? (
 				<LoadingState message={"Hang on - your invites are on their way!"} />
 			) : invites.length === 0 ? (

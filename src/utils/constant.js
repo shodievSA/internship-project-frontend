@@ -7,27 +7,21 @@ export const getProgressColor = (progress) => {
 export const statusColors = {
 	active: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-400 dark:border dark:border-green-500/30",
 	paused: "bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-400 dark:border dark:border-orange-500/30",
-	completed:
-		"bg-gray-100 text-gray-800 dark:bg-slate-500/20 dark:text-slate-400 dark:border dark:border-slate-500/30",
+	completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/20 dark:text-slate-400 dark:border dark:border-slate-500/30",
 };
 
 export const sprintStatusColors = {
 	active: "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400 dark:border dark:border-green-500/20",
-	completed:
-		"bg-gray-100 text-gray-800 dark:bg-slate-500/10 dark:text-slate-400 dark:border dark:border-slate-500/20",
-	planned:
-		"bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-400 dark:border dark:border-fuchsia-500/30",
+	completed: "bg-gray-100 text-gray-800 dark:bg-slate-500/10 dark:text-slate-400 dark:border dark:border-slate-500/20",
+	planned: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-500/20 dark:text-fuchsia-400 dark:border dark:border-fuchsia-500/30",
 };
 
 export const taskStatusColors = {
-	ongoing:
-		"bg-blue-200/80 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300",
-	"under review":
-		"bg-purple-200/80 dark:bg-purple-800/50 text-purple-700 dark:text-purple-300",
+	ongoing: "bg-blue-200/80 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300",
+	"under review": "bg-purple-200/80 dark:bg-purple-800/50 text-purple-700 dark:text-purple-300",
 	closed: "bg-green-200/80 dark:bg-green-800/50 text-green-700 dark:text-green-300",
 	rejected: "bg-red-200/80 dark:bg-red-800/50 text-red-700 dark:text-red-300",
-	overdue:
-		"bg-orange-200/80 dark:bg-orange-800/50 text-orange-700 dark:text-orange-300",
+	overdue: "bg-orange-200/80 dark:bg-orange-800/50 text-orange-700 dark:text-orange-300",
 };
 
 export const taskPriorityColors = {
@@ -65,8 +59,7 @@ export const features = [
 	{
 		icon: Calendar,
 		title: "Daily Reports",
-		description:
-			"Receive comprehensive daily summaries of your tasks and progress",
+		description: "Receive comprehensive daily summaries of your tasks and progress",
 		color: "blue",
 		delay: 1,
 	},
@@ -80,8 +73,7 @@ export const features = [
 	{
 		icon: Clock,
 		title: "Time Insights",
-		description:
-			"Analyze your productivity patterns and optimize your schedule",
+		description: "Analyze your productivity patterns and optimize your schedule",
 		color: "purple",
 		delay: 3,
 	},
