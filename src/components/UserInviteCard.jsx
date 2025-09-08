@@ -19,8 +19,8 @@ function UserInviteCard({ invite, onRespond }) {
 					<div className="flex gap-y-2 flex-col justify-between flex-1 min-w-0 text-left w-full">
 						<div className="flex justify-between">
 							<div>
-								<h3 className="text-lg text-gray-900 dark:text-white">
-									<span className="font-semibold">Project: </span>{" "}
+								<h3 className="text-gray-900 dark:text-white">
+									<span>Project: </span>{" "}
 									{invite.project.title}
 								</h3>
 								<p className="text-gray-600 dark:text-gray-400 md:mb-0 sm:mb-4 text-sm">
