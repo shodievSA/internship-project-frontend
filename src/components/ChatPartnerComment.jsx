@@ -8,7 +8,7 @@ function ChatPartnerComment({ comment, chatPartner }) {
 	const { themeMode } = useThemeContext();
 
 	return (
-		<div className="flex max-w-md mr-auto">
+		<div className="flex mr-auto">
 			<div className="flex items-start gap-x-3">
 				<img
 					src={chatPartner.avatarUrl}
@@ -16,7 +16,8 @@ function ChatPartnerComment({ comment, chatPartner }) {
 				/>
 				<div className="flex flex-col gap-y-1 px-4 py-2 rounded-xl border border-slate-300
 				dark:border-neutral-700 whitespace-pre-wrap bg-slate-100 dark:bg-gray-700 text-slate-800
-				dark:text-slate-100">
+				dark:text-slate-100 overflow-x-auto max-w-2xl scrollbar-thin dark:scrollbar-thumb-neutral-950 
+				dark:scrollbar-track-neutral-800">
 					<ReactMarkdown
 						components={{
 							ol: ({ node, ...props }) => (
