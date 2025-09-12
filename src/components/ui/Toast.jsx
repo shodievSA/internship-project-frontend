@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
 export function Toast({ id, variant, title, message, onClose }) {
+
 	const [isVisible, setIsVisible] = useState(false);
 	const [isLeaving, setIsLeaving] = useState(false);
 
 	useEffect(() => {
+
 		// Trigger entrance animation
 		const timer = setTimeout(() => setIsVisible(true), 10);
 
@@ -18,13 +20,17 @@ export function Toast({ id, variant, title, message, onClose }) {
 			clearTimeout(timer);
 			clearTimeout(dismissTimer);
 		};
+
 	}, []);
 
 	const handleClose = () => {
+
 		setIsLeaving(true);
+
 		setTimeout(() => {
 			onClose(id);
 		}, 500); // Match the transition duration
+
 	};
 
 	const baseClasses =
@@ -61,9 +67,7 @@ export function Toast({ id, variant, title, message, onClose }) {
 			: "flex-shrink-0 rounded-md p-1.5 transition-colors text-red-500 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900";
 
 	return (
-		<div
-			className={`${baseClasses} ${visibilityClasses} ${variantClasses}`}
-		>
+		<div className={`${baseClasses} ${visibilityClasses} ${variantClasses}`}>
 			<div className="p-4">
 				<div className="flex items-start gap-3">
 					<div className="flex-shrink-0">
@@ -75,7 +79,10 @@ export function Toast({ id, variant, title, message, onClose }) {
 					</div>
 					<div className="flex-1 min-w-0">
 						<h4 className={titleClasses}>{title}</h4>
-						<p className={messageClasses}>{message}</p>
+						<div 
+							className={messageClasses} 
+							dangerouslySetInnerHTML={{ __html: message }} 
+						/>
 					</div>
 					<button onClick={handleClose} className={buttonClasses}>
 						<X className="h-4 w-4" />
@@ -84,4 +91,5 @@ export function Toast({ id, variant, title, message, onClose }) {
 			</div>
 		</div>
 	);
+
 }
