@@ -167,20 +167,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 						</div>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-x-3">
-					<Button
-						size="sm"
-						variant="primary"
-						onClick={(e) => {
-							e.stopPropagation();
-							setShowApproveTaskModal(true);
-						}}
-					>
-						<div className="flex justify-center items-center gap-x-2 text-sm">
-							<Check className="w-4 h-4" />
-							<span>Approve</span>
-						</div>
-					</Button>
+				<div className="grid grid-cols-1 gap-y-3">
 					<Button
 						size="sm"
 						variant="secondary"
@@ -191,7 +178,20 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 					>
 						<div className="flex justify-center items-center gap-x-2 text-sm">
 							<X className="w-4 h-4" />
-							<span>Reject</span>
+							<span>Request Changes</span>
+						</div>
+					</Button>
+					<Button
+						size="sm"
+						variant="primary"
+						onClick={(e) => {
+							e.stopPropagation();
+							setShowApproveTaskModal(true);
+						}}
+					>
+						<div className="flex justify-center items-center gap-x-2 text-sm">
+							<Check className="w-4 h-4" />
+							<span>Close Ticket</span>
 						</div>
 					</Button>
 				</div>
