@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate, isDatePast } from "../utils/dateUtils";
 import { taskStatusColors } from "../utils/constant";
 import { taskPriorityColors } from "../utils/constant";
 import userPlaceholder from "../assets/user-placeholder.png";
@@ -145,7 +145,7 @@ function AssignedTask({ task, team }) {
 						</div>
 						<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
 							<Clock className="w-4 h-4" />
-							<span>{formatIsoDate(deadline)}</span>
+							<span>{formatIsoDate(deadline)} {isDatePast(deadline) && "(overdue)"}</span>
 						</div>
 					</div>
 					<div>

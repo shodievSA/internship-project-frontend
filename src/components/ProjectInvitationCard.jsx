@@ -1,5 +1,5 @@
-import { formatIsoDate } from "../utils/formatIsoDate";
-import { Mail, User, Calendar, Pickaxe, Loader } from "lucide-react";
+import { formatIsoDate } from "../utils/dateUtils";
+import { Mail, User, Calendar, Pickaxe } from "lucide-react";
 import userPlaceholder from "../assets/user-placeholder.png";
 import InviteStatusBadge from "./InviteStatusBadge";
 

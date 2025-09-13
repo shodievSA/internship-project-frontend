@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useThemeContext } from "../context/ThemeContext";
 import taskService from "../services/taskService";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import { taskStatusColors, taskPriorityColors } from "../utils/constant";
 import Modal from "./ui/Modal";
 import { 

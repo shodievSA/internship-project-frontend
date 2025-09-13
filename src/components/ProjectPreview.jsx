@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import { statusColors } from "../utils/constant";
 import { Calendar, Users, CheckCircle } from "lucide-react";
 

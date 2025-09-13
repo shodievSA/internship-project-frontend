@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { organizerService } from "../services/organizerService";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import EmptyAiPlanner from "../components/EmptyAiPlanner";
 import OrganizerOverview from "../components/OrganizerOverview";
 import OrganizerTasksDueToday from "../components/OrganizerTasksDueToday";

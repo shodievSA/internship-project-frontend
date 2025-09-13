@@ -30,3 +30,9 @@ export function getDateFromIso(isoString) {
 	return dateString;
 
 }
+
+export function isDatePast(date) {
+
+	return new Date(date) < Date.now();
+
+}

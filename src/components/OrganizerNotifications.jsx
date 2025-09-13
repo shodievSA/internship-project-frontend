@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import EmptyState from "./EmptyState";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import { ChevronRight } from "lucide-react";
 
 function OrganizerNotifications({ newNotifications }) {

@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import Button from "./ui/Button";
 import { taskPriorityColors } from "../utils/constant";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import {
 	Calendar,
 	Bell,

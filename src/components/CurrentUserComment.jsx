@@ -8,7 +8,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import { useThemeContext } from "../context/ThemeContext";
 import rehypeHighlight from "rehype-highlight";
-import { getDateFromIso, getTimeFromIso } from "../utils/formatIsoDate";
+import { getDateFromIso, getTimeFromIso } from "../utils/dateUtils";
 
 function CurrentUserComment({
 	comment,

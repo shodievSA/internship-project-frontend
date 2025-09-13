@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate, isDatePast } from "../utils/dateUtils";
 import {
 	Flame,
 	CircleDot,
@@ -163,7 +163,7 @@ function ReviewTask({ task, onTaskApprove, onTaskReject }) {
 						</div>
 						<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
 							<Clock className="w-4 h-4" />
-							<span>{formatIsoDate(deadline)}</span>
+							<span>{formatIsoDate(deadline)} {isDatePast(deadline) && "(overdue)"}</span>
 						</div>
 					</div>
 				</div>

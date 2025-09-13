@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate, isDatePast } from "../utils/dateUtils";
 import TaskDetailsModal from "./TaskDetailsModal";
 import { Flame, CircleDot, Clock } from "lucide-react";
 import { taskPriorityColors, taskStatusColors } from "../utils/constant";
@@ -86,7 +86,7 @@ function SprintTask({ task }) {
 						</div>
 						<div className="dark:text-red-500 text-red-600 flex items-center gap-x-2">
 							<Clock className="w-4 h-4" />
-							<span>{formatIsoDate(deadline)}</span>
+							<span>{formatIsoDate(deadline)} {isDatePast(deadline) && "(overdue)"}</span>
 						</div>
 					</div>
 				</div>

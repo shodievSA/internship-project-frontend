@@ -1,6 +1,6 @@
 import Button from "./ui/Button";
 import { Calendar, Mail, User, Check, X, Pickaxe } from "lucide-react";
-import { getDateFromIso } from "../utils/formatIsoDate";
+import { getDateFromIso } from "../utils/dateUtils";
 import InviteStatusBadge from "./InviteStatusBadge";
 
 function UserInviteCard({ invite, onRespond }) {

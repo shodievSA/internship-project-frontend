@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { sprintStatusColors } from "../utils/constant";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import ProgressBar from "./ProgressBar";
 import { useProject } from "../context/ProjectContext";
 import { Calendar, TicketCheck } from "lucide-react";

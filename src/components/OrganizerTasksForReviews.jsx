@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import EmptyState from "./EmptyState";
 import { taskPriorityColors } from "../utils/constant";
-import { formatIsoDate } from "../utils/formatIsoDate";
+import { formatIsoDate } from "../utils/dateUtils";
 import { ChevronRight, Clock } from "lucide-react";
 
 function OrganizerTasksForReview({ tasksForReviews }) {

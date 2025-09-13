@@ -1,4 +1,4 @@
-import { formatIsoDate, getTimeFromIso } from "../utils/formatIsoDate";
+import { formatIsoDate, getTimeFromIso } from "../utils/dateUtils";
 import { Calendar, Trash2, Clock } from "lucide-react";
 
 function Notification({
