@@ -81,7 +81,7 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 
 	return (
 		<>
-			<div>
+			<div className="h-screen">
 				<div className={`${sidebarCollapsed ? "bg-transparent pointer-events-none" : "bg-black/70"} 
                 fixed h-full w-full transition-bg-color duration-200 z-10 2xl:hidden`}
 				></div>
@@ -90,7 +90,8 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 					? "w-0 -translate-x-72 2xl:pl-3 2xl:-translate-x-64"
 					: "w-full 2xl:pl-0 2xl:w-64"
 				} dark:text-white flex fixed 2xl:static h-full z-20 transition-all duration-500`}>
-					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 2xl:flex-1 2xl:min-w-0 2xl:max-w-full`}>
+					<div className={`dark:bg-[rgb(12,12,12)] bg-neutral-100 w-72 2xl:flex-1 
+					2xl:min-w-0 2xl:max-w-full h-full`}>
 						<div className={`flex flex-col h-full pt-4 gap-y-8`}>
 							<div className="flex gap-x-3 items-center justify-start px-2">
 								<div className="bg-neutral-200 w-10 h-10 rounded-full flex-shrink-0">
@@ -105,157 +106,160 @@ function Sidebar({ sidebarCollapsed, setSidebarCollapsed }) {
 									</span>
 								</div>
 							</div>
-							<div className="flex flex-col grow">
-								<div className="flex flex-col gap-y-2 border-b dark:border-b-neutral-800 pb-3">
-									<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 
-									font-semibold px-1">
-										MAIN MENU
-									</h4>
-									<ul className="flex flex-col gap-y-1 font-medium text-sm px-2">
-										<NavLink
-											to={"/projects"}
-											className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
-											dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[border] duration-300 border-2 ${isActive
-												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
-												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
-											}`}
-											onClick={handleLinkClick}
-										>
-											<House className="w-5 h-5" />
-											<span>Dashboard</span>
-										</NavLink>
-										<NavLink
-											to={"/organizer"}
-											className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100
-											dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
-												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
-												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
-											}`}
-											onClick={handleLinkClick}
-										>
-											<Sparkles className="w-5 h-5" />
-											<span>Organizer</span>
-										</NavLink>
-										<NavLink
-											to={"/notifications"}
-											className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
-											dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
-												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
-												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
-											}`}
-											onClick={handleLinkClick}
-										>
-											<div className="flex items-center gap-x-3">
-												<Bell className="w-5 h-5" />
-												<span>Notifications</span>
-											</div>
-											{unviewedNotifications.length > 0 && (
-												<div className="flex items-center gap-x-4">
-													<span
-														className="flex items-center justify-center text-[10px] bg-red-500 
-													rounded-full text-white w-5 h-5"
-													>
-														{unviewedNotifications.length >
-														99
-															? "99+"
-															: unviewedNotifications.length}
-													</span>
-													<span className="relative flex h-3 w-3">
-														<span
-															className="animate-ping absolute inline-flex h-full w-full rounded-full 
-														bg-sky-400 opacity-75"
-														></span>
-														<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-													</span>
-												</div>
-											)}
-										</NavLink>
-										<NavLink
-											to={"/invites"}
-											className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
-											dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
-											py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
-												? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
-												: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
-											}`}
-											onClick={handleLinkClick}
-										>
-											<div className="flex items-center gap-x-3">
-												<MailPlus className="w-5 h-5" />
-												<span>Invites</span>
-											</div>
-											{pendingInvites.length > 0 && (
-												<div className="flex items-center gap-x-4">
-													<span className="flex items-center justify-center text-[10px] bg-red-500 
-													rounded-full text-white w-5 h-5">
-														{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
-													</span>
-													<span className="relative flex h-3 w-3">
-														<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
-														bg-sky-400 opacity-75"
-														></span>
-														<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-													</span>
-												</div>
-											)}
-										</NavLink>
-									</ul>
-								</div>
-								<div className="grow flex flex-col gap-y-2 pt-3 overflow-y-auto">
-									<div className="flex items-center justify-between gap-x-5">
-										<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
-											MY PROJECTS
-										</h4>
-										<button
-											disabled={!projectsLoaded}
-											className="p-1.5 cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900
-											rounded-lg mr-5 disabled:opacity-50 disabled:pointer-events-none"
-											onClick={() => setShowNewProjectModal(true)}
-										>
-											<SquarePlus className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
-										</button>
-									</div>
-									{projectsLoaded ? (
-										<ul className="grow overflow-y-auto flex flex-col gap-y-1 font-medium text-sm px-3">
-											{projects.map((project) => (
-												<NavLink
-													key={project.id}
-													to={`projects/${project.id}/my-tasks`}
-													className="px-3 py-2 dark:hover:bg-neutral-900 dark:text-neutral-300 truncate
-													dark:hover:text-white hover:bg-[rgb(235,235,235)] text-neutral-600 hover:text-black flex 
-													items-center gap-x-3 rounded-md transition-[background-color] duration-200"
-												>
-													{project.title}
-												</NavLink>
-											))}
-										</ul>
-									) : (
-										<div className="grow overflow-y-auto flex flex-col gap-y-1 font-medium 
-										text-sm px-3">
-											{Array.from(
-												{ length: userProjectCount },
-												(_, i) => {
-													return (
-														<div
-															key={i}
-															className="px-3 py-2 flex items-center gap-x-3 rounded-md
-														bg-slate-300 dark:bg-neutral-800 animate-pulse"
-														>
-															<span className="invisible">
-																Project Title
-															</span>
-														</div>
-													);
-												},
-											)}
+							<div className="flex flex-col gap-y-2">
+								<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 
+								font-semibold px-1">
+									MAIN MENU
+								</h4>
+								<ul className="flex flex-col gap-y-1 font-medium text-sm px-2">
+									<NavLink
+										to={"/projects"}
+										className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
+										dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
+										py-2 px-3 rounded-md transition-[border] duration-300 border-2 ${isActive
+											? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+										}`}
+										onClick={handleLinkClick}
+									>
+										<House className="w-5 h-5" />
+										<span>Dashboard</span>
+									</NavLink>
+									<NavLink
+										to={"/organizer"}
+										className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100
+										dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
+										py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+											? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+										}`}
+										onClick={handleLinkClick}
+									>
+										<Sparkles className="w-5 h-5" />
+										<span>Organizer</span>
+									</NavLink>
+									<NavLink
+										to={"/notifications"}
+										className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
+										dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
+										py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+											? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+										}`}
+										onClick={handleLinkClick}
+									>
+										<div className="flex items-center gap-x-3">
+											<Bell className="w-5 h-5" />
+											<span>Notifications</span>
 										</div>
-									)}
-								</div>
+										{unviewedNotifications.length > 0 && (
+											<div className="flex items-center gap-x-4">
+												<span
+													className="flex items-center justify-center text-[10px] bg-red-500 
+												rounded-full text-white w-5 h-5"
+												>
+													{unviewedNotifications.length >
+													99
+														? "99+"
+														: unviewedNotifications.length}
+												</span>
+												<span className="relative flex h-3 w-3">
+													<span
+														className="animate-ping absolute inline-flex h-full w-full rounded-full 
+													bg-sky-400 opacity-75"
+													></span>
+													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+												</span>
+											</div>
+										)}
+									</NavLink>
+									<NavLink
+										to={"/invites"}
+										className={({ isActive }) => `hover:dark:bg-violet-900/30 hover:bg-indigo-100 
+										dark:text-neutral-400 hover:dark:text-violet-300 hover:text-indigo-600 flex items-center gap-x-3 
+										py-2 px-3 rounded-md transition-[all] duration-300 border-2 ${isActive
+											? "border-2 bg-indigo-100 border-indigo-200 dark:bg-violet-900/30 dark:border-violet-900/50 text-indigo-600 dark:text-violet-300"
+											: "bg-neutral-100 dark:bg-[rgb(12,12,12)] border-neutral-100 dark:border-[rgb(12,12,12)] text-neutral-600"
+										}`}
+										onClick={handleLinkClick}
+									>
+										<div className="flex items-center gap-x-3">
+											<MailPlus className="w-5 h-5" />
+											<span>Invites</span>
+										</div>
+										{pendingInvites.length > 0 && (
+											<div className="flex items-center gap-x-4">
+												<span className="flex items-center justify-center text-[10px] bg-red-500 
+												rounded-full text-white w-5 h-5">
+													{ pendingInvites.length > 99 ? "99+" : pendingInvites.length }
+												</span>
+												<span className="relative flex h-3 w-3">
+													<span className="animate-ping absolute inline-flex h-full w-full rounded-full 
+													bg-sky-400 opacity-75"
+													></span>
+													<span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+												</span>
+											</div>
+										)}
+									</NavLink>
+								</ul>
 							</div>
-							<div className="flex flex-col gap-y-5 p-4">
+							<div className="grow overflow-y-auto flex flex-col gap-y-2 scrollbar-thin 
+							dark:scrollbar-thumb-neutral-950 dark:scrollbar-track-neutral-800">
+								<div className="flex items-center justify-between gap-x-5">
+									<h4 className="dark:text-neutral-400 text-neutral-500 text-xs px-3 font-semibold px-1">
+										MY PROJECTS
+									</h4>
+									<button
+										disabled={!projectsLoaded}
+										className="p-1.5 cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900
+										rounded-lg mr-5 disabled:opacity-50 disabled:pointer-events-none"
+										onClick={() => setShowNewProjectModal(true)}
+									>
+										<SquarePlus className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
+									</button>
+								</div>
+								{projectsLoaded ? (
+									<ul className="h-full flex flex-col gap-y-1 font-medium text-sm px-3">
+										{projects.map((project) => (
+											<NavLink
+												key={project.id}
+												to={`projects/${project.id}/my-tasks`}
+												className={({ isActive }) => `px-3 py-2.5 dark:hover:bg-neutral-900 
+												dark:hover:text-white hover:bg-[rgb(225,225,225)] hover:text-black 
+												flex items-center gap-x-3 rounded-md transition-[background-color] duration-200
+												${isActive 
+													? "bg-[rgb(225,225,225)] dark:bg-neutral-900 text-black dark:text-white" 
+													: "text-neutral-600 dark:text-neutral-300"
+												}`}
+											>
+												<h1 className="truncate">{project.title}</h1>
+											</NavLink>
+										))}
+									</ul>
+								) : (
+									<div className="grow overflow-y-auto flex flex-col gap-y-1 font-medium 
+									text-sm px-3">
+										{Array.from(
+											{ length: userProjectCount },
+											(_, i) => {
+												return (
+													<div
+														key={i}
+														className="px-3 py-2 flex items-center gap-x-3 rounded-md
+													bg-slate-300 dark:bg-neutral-800 animate-pulse"
+													>
+														<span className="invisible">
+															Project Title
+														</span>
+													</div>
+												);
+											},
+										)}
+									</div>
+								)}
+							</div>
+							<div className="flex flex-col gap-y-5 px-4 pb-4">
 								<button
 									className="dark:bg-black dark:hover:bg-neutral-950 dark:border-neutral-800 
 									dark:text-neutral-300 dark:hover:text-white bg-white hover:bg-neutral-100 border-neutral-200

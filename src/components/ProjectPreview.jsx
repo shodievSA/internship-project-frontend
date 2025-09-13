@@ -34,8 +34,8 @@ function ProjectPreview({ projectPreview }) {
 			transition-transform"
 			onClick={handleClick}
 		>
-			<div className="flex items-start justify-between mb-4">
-				<h2 className="font-medium text-gray-900 dark:text-white line-clamp-1">
+			<div className="flex items-start justify-between mb-4 gap-x-3">
+				<h2 className="font-medium text-gray-900 dark:text-white line-clamp-1 truncate">
 					{title || ""}
 				</h2>
 				<div className="flex gap-2">
